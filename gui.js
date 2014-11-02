@@ -69,7 +69,7 @@ SpeechBubbleMorph*/
 
 // Global stuff ////////////////////////////////////////////////////////
 
-modules.gui = '2014-October-06';
+modules.gui = '2014-July-30';
 
 // Declarations
 
@@ -703,11 +703,9 @@ IDE_Morph.prototype.createControlBar = function () {
             }
         );
 
-        x = Math.min(
-            startButton.left() - (3 * padding + 2 * stageSizeButton.width()),
-            myself.right() - StageMorph.prototype.dimensions.x *
-                (myself.isSmallStage ? myself.stageRatio : 1)
-        );
+        x = myself.right() - (StageMorph.prototype.dimensions.x
+            * (myself.isSmallStage ? myself.stageRatio : 1));
+
         [stageSizeButton, appModeButton].forEach(
             function (button) {
                 x += padding;
@@ -1133,7 +1131,7 @@ IDE_Morph.prototype.createSpriteBar = function () {
 
     this.spriteBar.fixLayout = function () {
         this.tabBar.setLeft(this.left());
-        this.tabBar.setBottom(this.bottom());
+        this.tabBar.setBottom(this.bottom() + 75);
     };
 };
 
@@ -1209,6 +1207,8 @@ IDE_Morph.prototype.createCorralBar = function () {
     var padding = 5,
         newbutton,
         paintbutton,
+		paintbutton2,
+		newbutton2,
         colors = [
             this.groupColor,
             this.frameColor.darker(50),
@@ -1266,10 +1266,61 @@ IDE_Morph.prototype.createCorralBar = function () {
     paintbutton.hint = "paint a new sprite";
     paintbutton.fixLayout();
     paintbutton.setCenter(this.corralBar.center());
-    paintbutton.setLeft(
-        this.corralBar.left() + padding + newbutton.width() + padding
-    );
+    //paintbutton.setLeft(
+    //    this.corralBar.left() + padding + newbutton.width() + padding
+    //);
+	paintbutton.setTop(newbutton.bottom() + padding);
     this.corralBar.add(paintbutton);
+	
+	paintbutton2 = new PushButtonMorph(
+        this,
+        "",
+        new SymbolMorph("", 10)
+    );
+	paintbutton2.corner = 12;
+    paintbutton2.color = colors[0];
+    paintbutton2.highlightColor = colors[1];
+    paintbutton2.pressColor = colors[2];
+    paintbutton2.labelMinExtent = new Point(36, 18);
+    paintbutton2.padding = 0;
+    paintbutton2.labelShadowOffset = new Point(-1, -1);
+    paintbutton2.labelShadowColor = colors[1];
+    paintbutton2.labelColor = this.buttonLabelColor;
+    paintbutton2.contrast = this.buttonContrast;
+    paintbutton2.drawNew();
+    paintbutton2.hint = "from library";
+    paintbutton2.fixLayout();
+    paintbutton2.setCenter(this.corralBar.center());
+    //paintbutton2.setLeft(
+    //    this.corralBar.left() + padding + newbutton.width() + padding + newbutton.width() + padding
+    //);
+	paintbutton2.setTop(paintbutton.bottom() + padding);
+	this.corralBar.add(paintbutton2);
+	/*
+	newbutton2 = new PushButtonMorph(
+        this,
+        "addNewSprite",
+        new SymbolMorph("turtle", 17)
+    );
+	
+    newbutton2.corner = 12;
+    newbutton2.color = colors[0];
+    newbutton2.highlightColor = colors[1];
+    newbutton2.pressColor = colors[2];
+    newbutton2.labelMinExtent = new Point(36, 18);
+    newbutton2.padding = 0;
+    newbutton2.labelShadowOffset = new Point(-1, -1);
+    newbutton2.labelShadowColor = colors[1];
+    newbutton2.labelColor = this.buttonLabelColor;
+    newbutton2.contrast = this.buttonContrast;
+    newbutton2.drawNew();
+    newbutton2.hint = "add a new Turtle sprite";
+    newbutton2.fixLayout();
+    newbutton2.setCenter(this.corralBar.center());
+    newbutton2.setLeft(this.corralBar.left() + padding + 3 * (newbutton.width() + padding));
+    this.corralBar.add(newbutton2);
+	*/
+	
 };
 
 IDE_Morph.prototype.createCorral = function () {
@@ -1286,7 +1337,12 @@ IDE_Morph.prototype.createCorral = function () {
 
     this.corral.stageIcon = new SpriteIconMorph(this.stage);
     this.corral.stageIcon.isDraggable = false;
+	//this.corral.stageIcon.setPosition(new Point(0,-20));
     this.corral.add(this.corral.stageIcon);
+	
+	//this.corral.stageIcon = new SpriteIconMorph(this.stage);
+    //this.corral.stageIcon.isDraggable = false;
+    //this.corral.add(this.corral.stageIcon);
 
     frame = new ScrollFrameMorph(null, null, this.sliderColor);
     frame.acceptsDrops = false;
@@ -1309,10 +1365,10 @@ IDE_Morph.prototype.createCorral = function () {
 
     this.corral.frame = frame;
     this.corral.add(frame);
-
+	
     this.corral.fixLayout = function () {
-        this.stageIcon.setCenter(this.center());
-        this.stageIcon.setLeft(this.left() + padding);
+        //this.stageIcon.setCenter(this.center());
+        //this.stageIcon.setLeft(this.left() + padding);
         this.frame.setLeft(this.stageIcon.right() + padding);
         this.frame.setExtent(new Point(
             this.right() - this.frame.left(),
@@ -1321,7 +1377,7 @@ IDE_Morph.prototype.createCorral = function () {
         this.arrangeIcons();
         this.refresh();
     };
-
+	
     this.corral.arrangeIcons = function () {
         var x = this.frame.left(),
             y = this.frame.top(),
@@ -1340,7 +1396,7 @@ IDE_Morph.prototype.createCorral = function () {
         });
         this.frame.contents.adjustBounds();
     };
-
+	
     this.corral.addSprite = function (sprite) {
         this.frame.contents.add(new SpriteIconMorph(sprite));
         this.fixLayout();
@@ -1370,6 +1426,7 @@ IDE_Morph.prototype.createCorral = function () {
         myself.createCorral();
         myself.fixLayout();
     };
+	
 };
 
 // IDE_Morph layout
@@ -1415,6 +1472,7 @@ IDE_Morph.prototype.fixLayout = function (situation) {
 
         // spriteBar
         this.spriteBar.setPosition(this.logo.bottomRight().add(padding));
+		this.spriteBar.setPosition(new Point(205,145));
         this.spriteBar.setExtent(new Point(
             Math.max(0, this.stage.left() - padding - this.spriteBar.left()),
             this.categories.bottom() - this.spriteBar.top() - padding
@@ -1424,6 +1482,7 @@ IDE_Morph.prototype.fixLayout = function (situation) {
         // spriteEditor
         if (this.spriteEditor.isVisible) {
             this.spriteEditor.setPosition(this.spriteBar.bottomLeft());
+			this.spriteEditor.setPosition(new Point(205,220));
             this.spriteEditor.setExtent(new Point(
                 this.spriteBar.width(),
                 this.bottom() - this.spriteEditor.top()
@@ -1431,15 +1490,22 @@ IDE_Morph.prototype.fixLayout = function (situation) {
         }
 
         // corralBar
-        this.corralBar.setLeft(this.stage.left());
-        this.corralBar.setTop(this.stage.bottom() + padding);
-        this.corralBar.setWidth(this.stage.width());
+        //this.corralBar.setLeft(this.stage.left());
+		this.corralBar.setLeft(this.stage.left());
+		this.corralBar.setPosition(this.logo.bottomRight().add(padding));
+        //this.corralBar.setTop(this.stage.bottom() + padding);
+        //this.corralBar.setWidth(this.stage.width());
+		this.corralBar.setHeight(90);
 
         // corral
         if (!contains(['selectSprite', 'tabEditor'], situation)) {
-            this.corral.setPosition(this.corralBar.bottomLeft());
-            this.corral.setWidth(this.stage.width());
-            this.corral.setHeight(this.bottom() - this.corral.top());
+            this.corral.setPosition(new Point(260, 50));
+			this.corral.setTop(this.logo.bottom() + 5);
+			//this.corral.setLeft(240);
+            //this.corral.setWidth(this.stage.width());
+			this.corral.setWidth(this.spriteBar.width() - 60);
+            //this.corral.setHeight(this.bottom() - this.corral.top());
+			this.corral.setHeight(90);
             this.corral.fixLayout();
         }
     }
@@ -1861,7 +1927,7 @@ IDE_Morph.prototype.newSpriteName = function (name, ignoredSprite) {
         stem = (ix < 0) ? name : name.substring(0, ix),
         count = 1,
         newName = stem,
-        all = this.sprites.asArray().concat(this.stage).filter(
+        all = this.sprites.asArray().filter(
             function (each) {return each !== ignoredSprite; }
         ).map(
             function (each) {return each.name; }
@@ -3328,20 +3394,15 @@ IDE_Morph.prototype.toggleAppMode = function (appMode) {
 
 IDE_Morph.prototype.toggleStageSize = function (isSmall) {
     var myself = this,
-        smallRatio = 0.5,
-        world = this.world(),
-        shiftClicked = (world.currentKey === 16);
-
-    function toggle() {
-        myself.isSmallStage = isNil(isSmall) ? !myself.isSmallStage : isSmall;
-    }
+        world = this.world();
 
     function zoomIn() {
+        myself.stageRatio = 1;
         myself.step = function () {
-            myself.stageRatio -= (myself.stageRatio - smallRatio) / 2;
+            myself.stageRatio -= (myself.stageRatio - 0.5) / 2;
             myself.setExtent(world.extent());
-            if (myself.stageRatio < (smallRatio + 0.1)) {
-                myself.stageRatio = smallRatio;
+            if (myself.stageRatio < 0.6) {
+                myself.stageRatio = 0.5;
                 myself.setExtent(world.extent());
                 delete myself.step;
             }
@@ -3350,11 +3411,11 @@ IDE_Morph.prototype.toggleStageSize = function (isSmall) {
 
     function zoomOut() {
         myself.isSmallStage = true;
+        myself.stageRatio = 0.5;
         myself.step = function () {
             myself.stageRatio += (1 - myself.stageRatio) / 2;
             myself.setExtent(world.extent());
             if (myself.stageRatio > 0.9) {
-                myself.stageRatio = 1;
                 myself.isSmallStage = false;
                 myself.setExtent(world.extent());
                 myself.controlBar.stageSizeButton.refresh();
@@ -3363,15 +3424,7 @@ IDE_Morph.prototype.toggleStageSize = function (isSmall) {
         };
     }
 
-    if (shiftClicked) {
-        smallRatio = SpriteIconMorph.prototype.thumbSize.x * 3 /
-            this.stage.dimensions.x;
-        if (!this.isSmallStage || (smallRatio === this.stageRatio)) {
-            toggle();
-        }
-    } else {
-        toggle();
-    }
+    this.isSmallStage = isNil(isSmall) ? !this.isSmallStage : isSmall;
     if (this.isAnimating) {
         if (this.isSmallStage) {
             zoomIn();
@@ -3379,7 +3432,7 @@ IDE_Morph.prototype.toggleStageSize = function (isSmall) {
             zoomOut();
         }
     } else {
-        if (this.isSmallStage) {this.stageRatio = smallRatio; }
+        if (this.isSmallStage) {this.stageRatio = 0.5; }
         this.setExtent(world.extent());
     }
 };
@@ -5962,7 +6015,7 @@ WardrobeMorph.prototype.removeCostumeAt = function (idx) {
 WardrobeMorph.prototype.paintNew = function () {
     var cos = new Costume(
             newCanvas(),
-            this.sprite.newCostumeName(localize('Untitled'))
+            this.sprite.newCostumeName('Untitled')
         ),
         ide = this.parentThatIsA(IDE_Morph),
         myself = this;
