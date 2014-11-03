@@ -1515,26 +1515,20 @@ IDE_Morph.prototype.createShareBoxBar = function () {
 }
 
 IDE_Morph.prototype.createShareBox = function () {
-	/*
-	var rotationStyleButtons = [],
-        thumbSize = new Point(45, 45),
-        tabCorner = 15,
-        tabColors = this.tabColors,
-        tabBar = new AlignmentMorph('row', -tabCorner * 2),
-        tab,
-        myself = this;
-	*/
 	this.shareBox = new Morph();
 	this.shareBox.color = this.groupColor;
-	
-	//this.shareBox.setPosition(new Point(1440, 0));
-	
-	//this.shareBox.setLeft();
-	//this.shareBox.setLeft(this.categories.width() + this.spriteBar.width());
+    this.shareBox.acceptsDrops = true;
+
 	this.add(this.shareBox);
-	
-	
-	
+
+    this.shareBox.reactToDropOf = function (droppedMorph) {
+       if (droppedMorph instanceof BlockMorph) {
+           this.copyStack(droppedMorph);
+        } else {
+            droppedMorph.destroy();
+        }
+    };
+    //this.add(this.shareBox);
 	/*
 	var scripts = this.currentSpriteShareBox.scripts,
 		myself = this;
