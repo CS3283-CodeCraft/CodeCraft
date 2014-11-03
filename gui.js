@@ -195,8 +195,8 @@ IDE_Morph.prototype.init = function (isAutoFill) {
 
     this.globalVariables = new VariableFrame();
     this.currentSprite = new SpriteMorph(this.globalVariables);
-	this.currentSpriteShareBox = new SpriteMorph(this.globalVariables);
-    this.sprites = new List([this.currentSprite]);
+    this.shareBoxPlaceholderSprite = new SpriteMorph(this.globalVariables);
+    this.sprites = new List([this.currentSprite, this.shareBoxPlaceholderSprite]);
     this.currentCategory = 'motion';
     this.currentTab = 'scripts';
 	this.currentShareBoxTab = 'scripts';
@@ -1538,75 +1538,50 @@ IDE_Morph.prototype.createShareBoxBar = function () {
 }
 
 IDE_Morph.prototype.createShareBox = function () {
-	this.shareBox = new Morph();
-	this.shareBox.color = this.groupColor;
-    this.shareBox.acceptsDrops = true;
+    var scripts = this.shareBoxPlaceholderSprite.scripts,
+        myself = this;
 
-	this.add(this.shareBox);
-
-    this.shareBox.reactToDropOf = function (droppedMorph) {
-       if (droppedMorph instanceof BlockMorph) {
-           this.add(droppedMorph);
-       } else {
-           droppedMorph.destroy();
-        }
-    };
-    /*
-
-	var scripts = this.currentSpriteShareBox.scripts,
-		myself = this;
-     if (this.shareBox) {
+    if (this.shareBox) {
         this.shareBox.destroy();
     }
+    scripts.isDraggable = false;
+    scripts.color = this.groupColor;
+    scripts.texture = this.scriptsPaneTexture;
 
 
-    if (this.currentShareBoxTab === 'scripts') {
-        scripts.isDraggable = false;
-        scripts.color = this.groupColor;
-        scripts.texture = this.scriptsPaneTexture;
+    //this.shareBox = new Morph();
 
-        this.shareBox = new ScrollFrameMorph(
-            scripts,
-            null,
-            this.sliderColor
-        );
-        this.shareBox.padding = 10;
-        this.shareBox.growth = 50;
-        this.shareBox.isDraggable = false;
-        this.shareBox.acceptsDrops = false;
-        this.shareBox.contents.acceptsDrops = true;
 
-        scripts.scrollFrame = this.shareBox;
-        this.add(this.shareBox);
-        this.shareBox.scrollX(this.shareBox.padding);
-        this.shareBox.scrollY(this.shareBox.padding);
-    } else if (this.currentShareBoxTab === 'costumes') {
-        this.shareBox = new WardrobeMorph(
-            this.currentSpriteShareBox,
-            this.sliderColor
-        );
-        this.shareBox.color = this.groupColor;
-        this.add(this.shareBox);
-        this.shareBox.updateSelection();
+    this.shareBox = new ScrollFrameMorph(
+        scripts,
+        null,
+        this.sliderColor
+    );
+    this.shareBox.color = this.groupColor;
+    this.shareBox.acceptsDrops = true;
 
-        this.shareBox.acceptsDrops = false;
-        this.shareBox.contents.acceptsDrops = false;
-    } else {
-        this.shareBox = new Morph();
-        this.shareBox.color = this.groupColor;
-        this.shareBox.acceptsDrops = true;
-        this.shareBox.reactToDropOf = function (droppedMorph) {
-            if (droppedMorph instanceof DialogBoxMorph) {
-                myself.world().add(droppedMorph);
-            } else if (droppedMorph instanceof SpriteMorph) {
-                myself.removeSprite(droppedMorph);
-            } else {
-                droppedMorph.destroy();
-            }
-        };
-        this.add(this.shareBox);
-    }
-	*/
+    scripts.texture = IDE_Morph.prototype.scriptsPaneTexture;
+    this.shareBox.reactToDropOf = function (droppedMorph) {
+        if (droppedMorph instanceof BlockMorph) {
+            this.add(droppedMorph);
+        } else {
+            droppedMorph.destroy();
+        }
+    };
+
+
+
+
+
+    //scripts.scrollFrame = this.shareBox;
+
+    /*
+    this.add(this.shareBox);
+    this.shareBox.scrollX(this.shareBox.padding);
+    this.shareBox.scrollY(this.shareBox.padding);
+*/
+
+
 }
 
 // IDE_Morph layout
