@@ -1327,6 +1327,30 @@ IDE_Morph.prototype.createCorralBar = function () {
     this.corralBar.add(newbutton2);
 	*/
 	
+
+   librarybutton = new PushButtonMorph(
+        this,
+        "openLibrary",
+        new SymbolMorph("pipette", 15)
+    );
+    librarybutton.corner = 12;
+    librarybutton.color = colors[0];
+    librarybutton.highlightColor = colors[1];
+    librarybutton.pressColor = colors[2];
+    librarybutton.labelMinExtent = new Point(36, 18);
+    librarybutton.padding = 0;
+    librarybutton.labelShadowOffset = new Point(-1, -1);
+    librarybutton.labelShadowColor = colors[1];
+    librarybutton.labelColor = this.buttonLabelColor;
+    librarybutton.contrast = this.buttonContrast;
+    librarybutton.drawNew();
+    librarybutton.hint = "paint a new sprite";
+    librarybutton.fixLayout();
+    librarybutton.setCenter(this.corralBar.center());
+    librarybutton.setLeft(
+        this.corralBar.left() + padding + newbutton.width() + padding
+    + paintbutton.width() + padding);
+    this.corralBar.add(librarybutton);
 };
 
 IDE_Morph.prototype.createCorral = function () {
@@ -2056,6 +2080,30 @@ IDE_Morph.prototype.paintNewSprite = function () {
         }
     );
 };
+
+IDE_Morph.prototype.openLibrary = function(){
+    var db = new DialogBoxMorph()
+    var pic = newCanvas(new Point(
+            434, 294
+        ))
+
+    ctx = pic.getContext("2d")
+    img = new Image()
+    img.src = 'thats-all-folks.jpg'
+    img.onload = function(){
+    // create pattern
+    var ptrn = ctx.createPattern(img, 'repeat'); // Create a pattern with this image, and set it to "repeat".
+    ctx.fillStyle = ptrn;
+    ctx.fillRect(0, 0, pic.width, pic.height); // context.fillRect(x, y, width, height);
+}
+
+    db.inform(
+            'Well',
+            'Ops',
+            this.world(),
+            pic
+        );
+}
 
 IDE_Morph.prototype.duplicateSprite = function (sprite) {
     var duplicate = sprite.fullCopy();
