@@ -1511,7 +1511,6 @@ IDE_Morph.prototype.createShareBoxBar = function () {
         this.tabBar.setLeft(this.left());
         this.tabBar.setBottom(this.bottom() + 75);
     };
-		
 }
 
 IDE_Morph.prototype.createShareBox = function () {
@@ -1523,19 +1522,19 @@ IDE_Morph.prototype.createShareBox = function () {
 
     this.shareBox.reactToDropOf = function (droppedMorph) {
        if (droppedMorph instanceof BlockMorph) {
-           this.copyStack(droppedMorph);
-        } else {
-            droppedMorph.destroy();
+           this.add(droppedMorph);
+       } else {
+           droppedMorph.destroy();
         }
     };
-    //this.add(this.shareBox);
-	/*
+    /*
+
 	var scripts = this.currentSpriteShareBox.scripts,
 		myself = this;
-
-    if (this.shareBox) {
+     if (this.shareBox) {
         this.shareBox.destroy();
     }
+
 
     if (this.currentShareBoxTab === 'scripts') {
         scripts.isDraggable = false;
