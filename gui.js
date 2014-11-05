@@ -468,9 +468,9 @@ IDE_Morph.prototype.createControlBar = function () {
         cloudButton,
         x,
         colors = [
-            this.groupColor,
-            this.frameColor.darker(50),
-            this.frameColor.darker(50)
+            this.groupColor.darker(3),
+            this.frameColor.darker(40),
+            this.frameColor.darker(40)
         ],
         myself = this;
 
@@ -722,7 +722,7 @@ IDE_Morph.prototype.createControlBar = function () {
         );
 
         settingsButton.setCenter(myself.controlBar.center());
-        settingsButton.setLeft(this.left());
+        settingsButton.setLeft(this.left() + 93);
 
         cloudButton.setCenter(myself.controlBar.center());
         cloudButton.setRight(settingsButton.left() - padding);
