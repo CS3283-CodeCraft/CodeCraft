@@ -172,7 +172,7 @@ IDE_Morph.prototype.setFlatDesign = function () {
         = IDE_Morph.prototype.buttonLabelColor;
 };
 
-IDE_Morph.prototype.setDefaultDesign();
+IDE_Morph.prototype.setFlatDesign();
 
 // IDE_Morph instance creation:
 
@@ -415,7 +415,7 @@ IDE_Morph.prototype.createLogo = function () {
     }
 
     this.logo = new Morph();
-    this.logo.texture = 'snap_logo_sm.png';
+    this.logo.texture = 'images/cc_logo.png';
     this.logo.drawNew = function () {
         this.image = newCanvas(this.extent());
         var context = this.image.getContext('2d'),
@@ -425,8 +425,8 @@ IDE_Morph.prototype.createLogo = function () {
                 this.width(),
                 0
             );
-        gradient.addColorStop(0, 'black');
-        gradient.addColorStop(0.5, myself.frameColor.toString());
+        //gradient.addColorStop(0, 'grey');
+        //gradient.addColorStop(0.5, myself.frameColor.toString());
         context.fillStyle = MorphicPreferences.isFlat ?
                 myself.frameColor.toString() : gradient;
         context.fillRect(0, 0, this.width(), this.height());
@@ -1277,7 +1277,7 @@ IDE_Morph.prototype.createCorralBar = function () {
     //);
 	paintbutton.setTop(newbutton.bottom() + padding);
     this.corralBar.add(paintbutton);
-	
+
 	paintbutton2 = new PushButtonMorph(
         this,
         "",
@@ -1308,7 +1308,7 @@ IDE_Morph.prototype.createCorralBar = function () {
         "addNewSprite",
         new SymbolMorph("turtle", 17)
     );
-	
+
     newbutton2.corner = 12;
     newbutton2.color = colors[0];
     newbutton2.highlightColor = colors[1];
@@ -1326,7 +1326,7 @@ IDE_Morph.prototype.createCorralBar = function () {
     newbutton2.setLeft(this.corralBar.left() + padding + 3 * (newbutton.width() + padding));
     this.corralBar.add(newbutton2);
 	*/
-	
+
 
    librarybutton = new PushButtonMorph(
         this,
@@ -1369,7 +1369,7 @@ IDE_Morph.prototype.createCorral = function () {
     this.corral.stageIcon.isDraggable = false;
 	//this.corral.stageIcon.setPosition(new Point(0,-20));
     this.corral.add(this.corral.stageIcon);
-	
+
 	//this.corral.stageIcon = new SpriteIconMorph(this.stage);
     //this.corral.stageIcon.isDraggable = false;
     //this.corral.add(this.corral.stageIcon);
@@ -1395,7 +1395,7 @@ IDE_Morph.prototype.createCorral = function () {
 
     this.corral.frame = frame;
     this.corral.add(frame);
-	
+
     this.corral.fixLayout = function () {
         //this.stageIcon.setCenter(this.center());
         //this.stageIcon.setLeft(this.left() + padding);
@@ -1407,7 +1407,7 @@ IDE_Morph.prototype.createCorral = function () {
         this.arrangeIcons();
         this.refresh();
     };
-	
+
     this.corral.arrangeIcons = function () {
         var x = this.frame.left(),
             y = this.frame.top(),
@@ -1426,7 +1426,7 @@ IDE_Morph.prototype.createCorral = function () {
         });
         this.frame.contents.adjustBounds();
     };
-	
+
     this.corral.addSprite = function (sprite) {
         this.frame.contents.add(new SpriteIconMorph(sprite));
         this.fixLayout();
@@ -1456,22 +1456,22 @@ IDE_Morph.prototype.createCorral = function () {
         myself.createCorral();
         myself.fixLayout();
     };
-	
+
 };
 
 IDE_Morph.prototype.createShareBoxBar = function () {
-	var 
+	var
         //thumbSize = new Point(45, 45),
         tabCorner = 15,
         tabColors = this.tabColors,
         tabBar = new AlignmentMorph('row', -tabCorner * 2),
         tab,
         myself = this;
-		
+
 	this.shareBoxBar = new Morph();
     this.shareBoxBar.color = null;
     this.add(this.shareBoxBar);
-	
+
 	// tab bar
     tabBar.tabTo = function (tabString) {
         var active;
@@ -1523,7 +1523,7 @@ IDE_Morph.prototype.createShareBoxBar = function () {
     tab.fixLayout();
 	//tab.setPosition(new Point(500,500));
     tabBar.add(tab);
-	
+
 	tabBar.fixLayout();
     tabBar.children.forEach(function (each) {
         each.refresh();
@@ -1688,13 +1688,13 @@ IDE_Morph.prototype.fixLayout = function (situation) {
 			this.corral.setHeight(90);
             this.corral.fixLayout();
         }
-		
+
 		//Share Box Bar
 		this.shareBoxBar.setTop(this.stage.bottom() + 20);
 		this.shareBoxBar.setLeft(this.categories.width() + this.spriteBar.width() + 2* padding + this.stage.width()/1.5);
 		//this.shareBoxBar.setWidth(this.stage.width());
 		//this.shareBoxBar.setHeight(1000);
-		
+
 		//Share Box
 		this.shareBox.setTop(this.stage.bottom() + 35);
 		this.shareBox.setLeft(this.categories.width() + this.spriteBar.width() + 2* padding);
