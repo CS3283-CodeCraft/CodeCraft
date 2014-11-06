@@ -89,7 +89,7 @@ PaintEditorMorph.prototype.padding = 10;
 
 function PaintEditorMorph() {
     this.init();
-}
+};
 
 PaintEditorMorph.prototype.init = function () {
     // additional properties:
