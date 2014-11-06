@@ -1,0 +1,377 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="272efa0b-d18e-4962-a301-355e52759d7b" name="Default" comment="" />
+    <ignored path="CodeCraft.iws" />
+    <ignored path=".idea/workspace.xml" />
+    <option name="TRACKING_ENABLED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ChangesViewManager" flattened_view="true" show_ignored="false" />
+  <component name="CreatePatchCommitExecutor">
+    <option name="PATCH_PATH" value="" />
+  </component>
+  <component name="DaemonCodeAnalyzer">
+    <disable_hints />
+  </component>
+  <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
+  <component name="FavoritesManager">
+    <favorites_list name="CodeCraft" />
+  </component>
+  <component name="FileEditorManager">
+    <leaf>
+      <file leaf-file-name="gui.js" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/gui.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="29.857143" vertical-offset="1533" max-vertical-offset="86853">
+              <caret line="94" column="43" selection-start-line="94" selection-start-column="43" selection-end-line="94" selection-end-column="43" />
+              <folding>
+                <element signature="e#4728#6427#0" expanded="false" />
+                <element signature="e#8250#13694#0" expanded="false" />
+                <element signature="e#13769#14066#0" expanded="false" />
+                <element signature="e#14114#15436#0" expanded="false" />
+                <element signature="e#15490#24911#0" expanded="false" />
+                <element signature="e#24965#27868#0" expanded="false" />
+                <element signature="e#27931#29237#0" expanded="false" />
+                <element signature="e#29286#29866#0" expanded="false" />
+                <element signature="e#36946#39286#0" expanded="false" />
+                <element signature="e#42739#45815#0" expanded="false" />
+                <element signature="e#45870#47999#0" expanded="false" />
+                <element signature="e#48051#49008#0" expanded="false" />
+                <element signature="e#49085#52663#0" expanded="false" />
+                <element signature="e#52721#52870#0" expanded="false" />
+                <element signature="e#52945#53820#0" expanded="false" />
+                <element signature="e#53901#54132#0" expanded="false" />
+                <element signature="e#54195#54973#0" expanded="false" />
+                <element signature="e#55034#55378#0" expanded="false" />
+                <element signature="e#55441#55598#0" expanded="false" />
+                <element signature="e#55660#56212#0" expanded="false" />
+                <element signature="e#56282#57080#0" expanded="false" />
+                <element signature="e#57181#57380#0" expanded="false" />
+                <element signature="e#57428#57570#0" expanded="false" />
+                <element signature="e#57626#57751#0" expanded="false" />
+                <element signature="e#57812#58022#0" expanded="false" />
+                <element signature="e#58077#58305#0" expanded="false" />
+                <element signature="e#58359#58606#0" expanded="false" />
+                <element signature="e#58749#58954#0" expanded="false" />
+                <element signature="e#59000#59083#0" expanded="false" />
+                <element signature="e#59135#59173#0" expanded="false" />
+                <element signature="e#59229#59460#0" expanded="false" />
+                <element signature="e#59531#59620#0" expanded="false" />
+                <element signature="e#59668#59760#0" expanded="false" />
+                <element signature="e#59808#60341#0" expanded="false" />
+                <element signature="e#60432#61551#0" expanded="false" />
+                <element signature="e#61610#61697#0" expanded="false" />
+                <element signature="e#61748#61851#0" expanded="false" />
+                <element signature="e#61905#61991#0" expanded="false" />
+                <element signature="e#62074#62674#0" expanded="false" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="library.js" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/library.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.27114716" vertical-offset="905" max-vertical-offset="1955">
+              <caret line="67" column="62" selection-start-line="67" selection-start-column="62" selection-end-line="67" selection-end-column="62" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="paint.js" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/paint.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="2148" max-vertical-offset="17187">
+              <caret line="137" column="0" selection-start-line="137" selection-start-column="0" selection-end-line="137" selection-end-column="0" />
+              <folding>
+                <element signature="n#!!doc" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="FindManager">
+    <FindUsagesManager>
+      <setting name="OPEN_NEW_TAB" value="true" />
+    </FindUsagesManager>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="changedFiles">
+      <list>
+        <option value="$PROJECT_DIR$/gui.js" />
+        <option value="$PROJECT_DIR$/paint.js" />
+        <option value="$PROJECT_DIR$/library.js" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectFrameBounds">
+    <option name="x" value="-8" />
+    <option name="y" value="-8" />
+    <option name="width" value="1936" />
+    <option name="height" value="1056" />
+  </component>
+  <component name="ProjectLevelVcsManager" settingsEditedManually="false">
+    <OptionsSetting value="true" id="Add" />
+    <OptionsSetting value="true" id="Remove" />
+    <OptionsSetting value="true" id="Checkout" />
+    <OptionsSetting value="true" id="Update" />
+    <OptionsSetting value="true" id="Status" />
+    <OptionsSetting value="true" id="Edit" />
+    <ConfirmationsSetting value="0" id="Add" />
+    <ConfirmationsSetting value="0" id="Remove" />
+  </component>
+  <component name="ProjectReloadState">
+    <option name="STATE" value="0" />
+  </component>
+  <component name="ProjectView">
+    <navigator currentView="ProjectPane" proportions="" version="1">
+      <flattenPackages />
+      <showMembers />
+      <showModules />
+      <showLibraryContents />
+      <hideEmptyPackages />
+      <abbreviatePackageNames />
+      <autoscrollToSource />
+      <autoscrollFromSource />
+      <sortByType />
+    </navigator>
+    <panes>
+      <pane id="ProjectPane">
+        <subPane>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="CodeCraft" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="CodeCraft" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="CodeCraft" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+        </subPane>
+      </pane>
+      <pane id="Scope" />
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="options.lastSelected" value="http.proxy" />
+    <property name="options.splitter.main.proportions" value="0.3" />
+    <property name="options.splitter.details.proportions" value="0.2" />
+    <property name="options.searchVisible" value="true" />
+  </component>
+  <component name="RunManager">
+    <configuration default="true" type="DartUnitRunConfigurationType" factoryName="DartUnit">
+      <option name="VMOptions" />
+      <option name="arguments" />
+      <option name="filePath" />
+      <option name="scope" value="ALL" />
+      <option name="testName" />
+      <method />
+    </configuration>
+    <configuration default="true" type="DartCommandLineRunConfigurationType" factoryName="Dart Command Line Application">
+      <option name="VMOptions" />
+      <option name="arguments" />
+      <option name="filePath" />
+      <option name="name" value="Dart" />
+      <option name="saveOutputToFile" value="false" />
+      <option name="showConsoleOnStdErr" value="false" />
+      <option name="showConsoleOnStdOut" value="false" />
+      <method />
+    </configuration>
+    <configuration default="true" type="CucumberJavaScriptRunConfigurationType" factoryName="Cucumber.js">
+      <option name="cucumberJsArguments" />
+      <option name="executablePath" />
+      <option name="filePath" />
+      <method />
+    </configuration>
+    <configuration default="true" type="JavaScriptTestRunnerKarma" factoryName="Karma" config-file="">
+      <envs />
+      <method />
+    </configuration>
+    <configuration default="true" type="JSTestDriver:ConfigurationType" factoryName="JsTestDriver">
+      <setting name="configLocationType" value="CONFIG_FILE" />
+      <setting name="settingsFile" value="" />
+      <setting name="serverType" value="INTERNAL" />
+      <setting name="preferredDebugBrowser" value="Chrome" />
+      <method />
+    </configuration>
+    <configuration default="true" type="JavascriptDebugType" factoryName="JavaScript Debug">
+      <method />
+    </configuration>
+    <configuration default="true" type="NodeJSConfigurationType" factoryName="Node.js" working-dir="">
+      <method />
+    </configuration>
+    <list size="0" />
+  </component>
+  <component name="ShelveChangesManager" show_recycled="false" />
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="272efa0b-d18e-4962-a301-355e52759d7b" name="Default" comment="" />
+      <created>1415264169878</created>
+      <updated>1415264169878</updated>
+    </task>
+    <task id="LOCAL-00001" summary="Test">
+      <created>1415264284549</created>
+      <updated>1415264284549</updated>
+    </task>
+    <task id="LOCAL-00002" summary="Created Library.js. Changed the line endings of some stuff because autizmz.">
+      <created>1415282949591</created>
+      <updated>1415282949591</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
+    <servers />
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
+    <editor active="true" />
+    <layout>
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.15260416" sideWeight="0.5" order="1" side_tool="false" content_ui="combo" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
+    </layout>
+  </component>
+  <component name="Vcs.Log.UiProperties">
+    <option name="RECENTLY_FILTERED_USER_GROUPS">
+      <collection />
+    </option>
+    <option name="RECENTLY_FILTERED_BRANCH_GROUPS">
+      <collection />
+    </option>
+  </component>
+  <component name="VcsContentAnnotationSettings">
+    <option name="myLimit" value="2678400000" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="myTodoPanelSettings">
+      <TodoPanelSettings />
+    </option>
+    <MESSAGE value="Test" />
+    <MESSAGE value="Created Library.js. Changed the line endings of some stuff because autizmz." />
+    <option name="LAST_COMMIT_MESSAGE" value="Created Library.js. Changed the line endings of some stuff because autizmz." />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <option name="time" value="2" />
+    </breakpoint-manager>
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/gui.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="29.857143" vertical-offset="1533" max-vertical-offset="86853">
+          <caret line="94" column="43" selection-start-line="94" selection-start-column="43" selection-end-line="94" selection-end-column="43" />
+          <folding>
+            <element signature="e#4728#6427#0" expanded="false" />
+            <element signature="e#8250#13694#0" expanded="false" />
+            <element signature="e#13769#14066#0" expanded="false" />
+            <element signature="e#14114#15436#0" expanded="false" />
+            <element signature="e#15490#24911#0" expanded="false" />
+            <element signature="e#24965#27868#0" expanded="false" />
+            <element signature="e#27931#29237#0" expanded="false" />
+            <element signature="e#29286#29866#0" expanded="false" />
+            <element signature="e#36946#39286#0" expanded="false" />
+            <element signature="e#42739#45815#0" expanded="false" />
+            <element signature="e#45870#47999#0" expanded="false" />
+            <element signature="e#48051#49008#0" expanded="false" />
+            <element signature="e#49085#52663#0" expanded="false" />
+            <element signature="e#52721#52870#0" expanded="false" />
+            <element signature="e#52945#53820#0" expanded="false" />
+            <element signature="e#53901#54132#0" expanded="false" />
+            <element signature="e#54195#54973#0" expanded="false" />
+            <element signature="e#55034#55378#0" expanded="false" />
+            <element signature="e#55441#55598#0" expanded="false" />
+            <element signature="e#55660#56212#0" expanded="false" />
+            <element signature="e#56282#57080#0" expanded="false" />
+            <element signature="e#57181#57380#0" expanded="false" />
+            <element signature="e#57428#57570#0" expanded="false" />
+            <element signature="e#57626#57751#0" expanded="false" />
+            <element signature="e#57812#58022#0" expanded="false" />
+            <element signature="e#58077#58305#0" expanded="false" />
+            <element signature="e#58359#58606#0" expanded="false" />
+            <element signature="e#58749#58954#0" expanded="false" />
+            <element signature="e#59000#59083#0" expanded="false" />
+            <element signature="e#59135#59173#0" expanded="false" />
+            <element signature="e#59229#59460#0" expanded="false" />
+            <element signature="e#59531#59620#0" expanded="false" />
+            <element signature="e#59668#59760#0" expanded="false" />
+            <element signature="e#59808#60341#0" expanded="false" />
+            <element signature="e#60432#61551#0" expanded="false" />
+            <element signature="e#61610#61697#0" expanded="false" />
+            <element signature="e#61748#61851#0" expanded="false" />
+            <element signature="e#61905#61991#0" expanded="false" />
+            <element signature="e#62074#62674#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/objects.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.25869566" vertical-offset="1020" max-vertical-offset="121856">
+          <caret line="139" column="23" selection-start-line="139" selection-start-column="22" selection-end-line="139" selection-end-column="23" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/widgets.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.3326087" vertical-offset="42806" max-vertical-offset="54944">
+          <caret line="2602" column="25" selection-start-line="2602" selection-start-column="25" selection-end-line="2602" selection-end-column="25" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/paint.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="2148" max-vertical-offset="17187">
+          <caret line="137" column="0" selection-start-line="137" selection-start-column="0" selection-end-line="137" selection-end-column="0" />
+          <folding>
+            <element signature="n#!!doc" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/library.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.27114716" vertical-offset="905" max-vertical-offset="1955">
+          <caret line="67" column="62" selection-start-line="67" selection-start-column="62" selection-end-line="67" selection-end-column="62" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+  </component>
+</project>
+
