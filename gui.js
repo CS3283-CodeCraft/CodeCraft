@@ -722,7 +722,7 @@ IDE_Morph.prototype.createControlBar = function () {
         );
 
         settingsButton.setCenter(myself.controlBar.center());
-        settingsButton.setLeft(this.left() + 93);
+        settingsButton.setLeft(this.left() + 100);
 
         cloudButton.setCenter(myself.controlBar.center());
         cloudButton.setRight(settingsButton.left() - padding);
@@ -1593,7 +1593,7 @@ IDE_Morph.prototype.fixLayout = function (situation) {
             this.spriteEditor.setPosition(this.spriteBar.bottomLeft());
 			this.spriteEditor.setPosition(new Point(205,220));
             this.spriteEditor.setExtent(new Point(
-                this.spriteBar.width(),
+                this.spriteBar.width()-5,
                 this.bottom() - this.spriteEditor.top()
             ));
         }
@@ -1601,7 +1601,7 @@ IDE_Morph.prototype.fixLayout = function (situation) {
         // corralBar
         //this.corralBar.setLeft(this.stage.left());
 		this.corralBar.setLeft(this.stage.left());
-		this.corralBar.setPosition(this.logo.bottomRight().add(padding));
+		this.corralBar.setPosition(this.logo.bottomRight().add(5));
         //this.corralBar.setTop(this.stage.bottom() + padding);
         //this.corralBar.setWidth(this.stage.width());
 		this.corralBar.setHeight(90);
@@ -1627,7 +1627,7 @@ IDE_Morph.prototype.fixLayout = function (situation) {
 
 		//Share Box
 		this.shareBox.setTop(this.stage.bottom() + 35);
-		this.shareBox.setLeft(this.categories.width() + this.spriteBar.width() + 2* padding);
+		this.shareBox.setLeft(this.categories.width() + this.spriteBar.width() + 6);
 		this.shareBox.setWidth(this.stage.width());
 		this.shareBox.setHeight(this.bottom() - this.shareBox.top());
     }
