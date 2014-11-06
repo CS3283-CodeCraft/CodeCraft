@@ -132,7 +132,6 @@ IDE_Morph.prototype.setDefaultDesign = function () {
         = IDE_Morph.prototype.buttonLabelColor;
 };
 
-
 IDE_Morph.prototype.setFlatDesign = function () {
     MorphicPreferences.isFlat = true;
     SpriteMorph.prototype.paletteColor = new Color(255, 255, 255);
@@ -1488,7 +1487,7 @@ IDE_Morph.prototype.createShareBoxBar = function () {
         this.tabBar.setLeft(this.left());
         this.tabBar.setBottom(this.bottom() + 75);
     };
-}
+};
 
 IDE_Morph.prototype.createShareBox = function () {
     var scripts = this.shareBoxPlaceholderSprite.scripts,
@@ -1523,9 +1522,6 @@ IDE_Morph.prototype.createShareBox = function () {
     };
 
 
-
-
-
     //scripts.scrollFrame = this.shareBox;
 
     /*
@@ -1534,8 +1530,7 @@ IDE_Morph.prototype.createShareBox = function () {
     this.shareBox.scrollY(this.shareBox.padding);
 */
 
-
-}
+};
 
 // IDE_Morph layout
 
@@ -2001,7 +1996,9 @@ IDE_Morph.prototype.paintNewSprite = function () {
         this.world(),
         this,
         true,
-        function () {myself.removeSprite(sprite); },
+        function () {
+            myself.removeSprite(sprite);
+        },
         function () {
             sprite.addCostume(cos);
             sprite.wearCostume(cos);
@@ -2012,25 +2009,26 @@ IDE_Morph.prototype.paintNewSprite = function () {
 IDE_Morph.prototype.openLibrary = function(){
     var db = new DialogBoxMorph();
     var pic = newCanvas(new Point(
-            434, 294
-        ));
+        //434, 294
+        800, 600
+    ));
 
     ctx = pic.getContext("2d");
     img = new Image();
     img.src = 'thats-all-folks.jpg';
     img.onload = function(){
-    // create pattern
-    var ptrn = ctx.createPattern(img, 'repeat'); // Create a pattern with this image, and set it to "repeat".
-    ctx.fillStyle = ptrn;
-    ctx.fillRect(0, 0, pic.width, pic.height); // context.fillRect(x, y, width, height);
-}
+        // create pattern
+        var ptrn = ctx.createPattern(img, 'repeat'); // Create a pattern with this image, and set it to "repeat".
+        ctx.fillStyle = ptrn;
+        ctx.fillRect(0, 0, pic.width, pic.height); // context.fillRect(x, y, width, height);
+    };
 
     db.inform(
-            'Well',
-            'Ops',
-            this.world(),
-            pic
-        );
+        'Import Resource',
+        'I have a gigantic unicorn',
+        this.world(),
+        pic
+    );
 };
 
 IDE_Morph.prototype.duplicateSprite = function (sprite) {
