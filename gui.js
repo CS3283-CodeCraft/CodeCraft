@@ -1213,8 +1213,7 @@ IDE_Morph.prototype.createCorralBar = function () {
     var padding = 5,
         newbutton,
         paintbutton,
-		paintbutton2,
-		newbutton2,
+        librarybutton,
         colors = [
             this.groupColor,
             this.frameColor.darker(50),
@@ -1230,7 +1229,7 @@ IDE_Morph.prototype.createCorralBar = function () {
     this.corralBar.setHeight(this.logo.height()); // height is fixed
     this.add(this.corralBar);
 
-    // new sprite button
+    // NEW SPRITE BUTTON ///////////////////////////////////////////
     newbutton = new PushButtonMorph(
         this,
         "addNewSprite",
@@ -1247,12 +1246,13 @@ IDE_Morph.prototype.createCorralBar = function () {
     newbutton.labelColor = this.buttonLabelColor;
     newbutton.contrast = this.buttonContrast;
     newbutton.drawNew();
-    newbutton.hint = "add a new Turtle sprite";
+    newbutton.hint = "Add a new Turtle sprite";
     newbutton.fixLayout();
     newbutton.setCenter(this.corralBar.center());
     newbutton.setLeft(this.corralBar.left() + padding);
     this.corralBar.add(newbutton);
 
+    // PAINT BUTTON ////////////////////////////////////////////////
     paintbutton = new PushButtonMorph(
         this,
         "paintNewSprite",
@@ -1269,66 +1269,17 @@ IDE_Morph.prototype.createCorralBar = function () {
     paintbutton.labelColor = this.buttonLabelColor;
     paintbutton.contrast = this.buttonContrast;
     paintbutton.drawNew();
-    paintbutton.hint = "paint a new sprite";
+    paintbutton.hint = "Paint a new sprite";
     paintbutton.fixLayout();
     paintbutton.setCenter(this.corralBar.center());
-    //paintbutton.setLeft(
-    //    this.corralBar.left() + padding + newbutton.width() + padding
-    //);
-	paintbutton.setTop(newbutton.bottom() + padding);
+//	paintbutton.setLeft(
+//		this.corralBar.left() + padding + newbutton.width() + padding
+//	);
+    paintbutton.setTop(newbutton.bottom() + padding);
     this.corralBar.add(paintbutton);
 
-	paintbutton2 = new PushButtonMorph(
-        this,
-        "",
-        new SymbolMorph("", 10)
-    );
-	paintbutton2.corner = 12;
-    paintbutton2.color = colors[0];
-    paintbutton2.highlightColor = colors[1];
-    paintbutton2.pressColor = colors[2];
-    paintbutton2.labelMinExtent = new Point(36, 18);
-    paintbutton2.padding = 0;
-    paintbutton2.labelShadowOffset = new Point(-1, -1);
-    paintbutton2.labelShadowColor = colors[1];
-    paintbutton2.labelColor = this.buttonLabelColor;
-    paintbutton2.contrast = this.buttonContrast;
-    paintbutton2.drawNew();
-    paintbutton2.hint = "from library";
-    paintbutton2.fixLayout();
-    paintbutton2.setCenter(this.corralBar.center());
-    //paintbutton2.setLeft(
-    //    this.corralBar.left() + padding + newbutton.width() + padding + newbutton.width() + padding
-    //);
-	paintbutton2.setTop(paintbutton.bottom() + padding);
-	this.corralBar.add(paintbutton2);
-	/*
-	newbutton2 = new PushButtonMorph(
-        this,
-        "addNewSprite",
-        new SymbolMorph("turtle", 17)
-    );
-
-    newbutton2.corner = 12;
-    newbutton2.color = colors[0];
-    newbutton2.highlightColor = colors[1];
-    newbutton2.pressColor = colors[2];
-    newbutton2.labelMinExtent = new Point(36, 18);
-    newbutton2.padding = 0;
-    newbutton2.labelShadowOffset = new Point(-1, -1);
-    newbutton2.labelShadowColor = colors[1];
-    newbutton2.labelColor = this.buttonLabelColor;
-    newbutton2.contrast = this.buttonContrast;
-    newbutton2.drawNew();
-    newbutton2.hint = "add a new Turtle sprite";
-    newbutton2.fixLayout();
-    newbutton2.setCenter(this.corralBar.center());
-    newbutton2.setLeft(this.corralBar.left() + padding + 3 * (newbutton.width() + padding));
-    this.corralBar.add(newbutton2);
-	*/
-
-
-   librarybutton = new PushButtonMorph(
+    // IMPORT FROM LIBRARY /////////////////////////////////////////
+    librarybutton = new PushButtonMorph(
         this,
         "openLibrary",
         new SymbolMorph("pipette", 15)
@@ -1344,12 +1295,13 @@ IDE_Morph.prototype.createCorralBar = function () {
     librarybutton.labelColor = this.buttonLabelColor;
     librarybutton.contrast = this.buttonContrast;
     librarybutton.drawNew();
-    librarybutton.hint = "paint a new sprite";
+    librarybutton.hint = "Open library";
     librarybutton.fixLayout();
     librarybutton.setCenter(this.corralBar.center());
-    librarybutton.setLeft(
-        this.corralBar.left() + padding + newbutton.width() + padding
-    + paintbutton.width() + padding);
+//	librarybutton.setLeft(
+//		this.corralBar.left() + padding + newbutton.width() + padding
+//		+ paintbutton.width() + padding);
+    librarybutton.setTop(paintbutton.bottom() + padding);
     this.corralBar.add(librarybutton);
 };
 
@@ -2057,14 +2009,14 @@ IDE_Morph.prototype.paintNewSprite = function () {
 };
 
 IDE_Morph.prototype.openLibrary = function(){
-    var db = new DialogBoxMorph()
+    var db = new DialogBoxMorph();
     var pic = newCanvas(new Point(
             434, 294
-        ))
+        ));
 
-    ctx = pic.getContext("2d")
-    img = new Image()
-    img.src = 'thats-all-folks.jpg'
+    ctx = pic.getContext("2d");
+    img = new Image();
+    img.src = 'thats-all-folks.jpg';
     img.onload = function(){
     // create pattern
     var ptrn = ctx.createPattern(img, 'repeat'); // Create a pattern with this image, and set it to "repeat".
@@ -2078,7 +2030,7 @@ IDE_Morph.prototype.openLibrary = function(){
             this.world(),
             pic
         );
-}
+};
 
 IDE_Morph.prototype.duplicateSprite = function (sprite) {
     var duplicate = sprite.fullCopy();
