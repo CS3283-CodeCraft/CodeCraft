@@ -1502,14 +1502,14 @@ IDE_Morph.prototype.createShareBox = function () {
     scripts.texture = this.scriptsPaneTexture;
 
 
-    //this.shareBox = new Morph();
+    this.shareBox = new Morph();
 
-
+/*
     this.shareBox = new ScrollFrameMorph(
         scripts,
         null,
         this.sliderColor
-    );
+    );*/
     this.shareBox.color = this.groupColor;
     this.shareBox.acceptsDrops = true;
 
@@ -1521,20 +1521,12 @@ IDE_Morph.prototype.createShareBox = function () {
             droppedMorph.destroy();
         }
     };
-
-
-
-
-
     //scripts.scrollFrame = this.shareBox;
-
-    /*
     this.add(this.shareBox);
+    /*
     this.shareBox.scrollX(this.shareBox.padding);
     this.shareBox.scrollY(this.shareBox.padding);
 */
-
-
 }
 
 // IDE_Morph layout
