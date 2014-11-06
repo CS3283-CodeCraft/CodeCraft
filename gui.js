@@ -1420,7 +1420,12 @@ IDE_Morph.prototype.createShareBoxBar = function () {
         tab,
         myself = this;
 
-	this.shareBoxBar = new Morph();
+    if (this.shareBoxBar) {
+        this.shareBoxBar.destroy();
+    }
+
+    this.shareBoxBar = new Morph();
+    this.shareBoxBar.bounds = new Rectangle(0, 0, 0, 0);
     this.shareBoxBar.color = null;
     this.add(this.shareBoxBar);
 
@@ -1473,7 +1478,7 @@ IDE_Morph.prototype.createShareBoxBar = function () {
     tab.labelColor = this.buttonLabelColor;
     tab.drawNew();
     tab.fixLayout();
-	//tab.setPosition(new Point(500,500));
+    //tab.setPosition(new Point(500,500));
     tabBar.add(tab);
 
 	tabBar.fixLayout();
@@ -1484,6 +1489,10 @@ IDE_Morph.prototype.createShareBoxBar = function () {
     this.shareBoxBar.add(this.shareBoxBar.tabBar);
 
     this.shareBoxBar.fixLayout = function () {
+        this.setExtent(new Point(
+                this.right() - this.left(),
+            this.height()
+        ));
         this.tabBar.setLeft(this.left());
         this.tabBar.setBottom(this.bottom() + 75);
     };
@@ -1610,9 +1619,10 @@ IDE_Morph.prototype.fixLayout = function (situation) {
         }
 
 		//Share Box Bar
-		this.shareBoxBar.setTop(this.stage.bottom() + 20);
+		this.shareBoxBar.setTop(this.stage.bottom()-40);
 		this.shareBoxBar.setLeft(this.categories.width() + this.spriteBar.width() + 2* padding + this.stage.width()/1.5);
-		//this.shareBoxBar.setWidth(this.stage.width());
+        this.shareBoxBar.fixLayout();
+        //this.shareBoxBar.setWidth(this.stage.width());
 		//this.shareBoxBar.setHeight(1000);
 
 		//Share Box
