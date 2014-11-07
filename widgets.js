@@ -2401,6 +2401,7 @@ DialogBoxMorph.prototype.addButton = function (action, label) {
     button.fontSize = this.buttonFontSize;
     button.corner = this.buttonCorner;
     button.edge = this.buttonEdge;
+    button.color = this.color.darker(10);    // xinni: make button bg colour different.
     button.outline = this.buttonOutline;
     button.outlineColor = this.buttonOutlineColor;
     button.outlineGradient = this.buttonOutlineGradient;
