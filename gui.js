@@ -415,7 +415,7 @@ IDE_Morph.prototype.createLogo = function () {
     }
 
     this.logo = new Morph();
-    this.logo.texture = 'images/cc_logo.png';
+    this.logo.texture = 'images/cc_logo.png'; // xinni: new logo
     this.logo.drawNew = function () {
         this.image = newCanvas(this.extent());
         var context = this.image.getContext('2d'),
@@ -450,7 +450,7 @@ IDE_Morph.prototype.createLogo = function () {
     };
 
     this.logo.color = new Color();
-    this.logo.setExtent(new Point(200, 28)); // dimensions are fixed
+    this.logo.setExtent(new Point(200, 28)); // xinni: edited dimensions of the logo
     this.add(this.logo);
 };
 
@@ -722,7 +722,7 @@ IDE_Morph.prototype.createControlBar = function () {
         );
 
         settingsButton.setCenter(myself.controlBar.center());
-        settingsButton.setLeft(this.left() + 93);
+        settingsButton.setLeft(this.left() + 100); // xinni: new logo is bigger, hence shifted top buttons right.
 
         cloudButton.setCenter(myself.controlBar.center());
         cloudButton.setRight(settingsButton.left() - padding);
@@ -1413,14 +1413,18 @@ IDE_Morph.prototype.createCorral = function () {
 
 IDE_Morph.prototype.createShareBoxBar = function () {
 	var
-        //thumbSize = new Point(45, 45),
         tabCorner = 15,
         tabColors = this.tabColors,
         tabBar = new AlignmentMorph('row', -tabCorner * 2),
         tab,
         myself = this;
 
-	this.shareBoxBar = new Morph();
+    if (this.shareBoxBar) {
+        this.shareBoxBar.destroy();
+    }
+
+    this.shareBoxBar = new Morph();
+    this.shareBoxBar.bounds = new Rectangle(0, 0, 0, 0); // xinni: remove unwanted floating rectangle
     this.shareBoxBar.color = null;
     this.add(this.shareBoxBar);
 
@@ -1473,7 +1477,7 @@ IDE_Morph.prototype.createShareBoxBar = function () {
     tab.labelColor = this.buttonLabelColor;
     tab.drawNew();
     tab.fixLayout();
-	//tab.setPosition(new Point(500,500));
+    //tab.setPosition(new Point(500,500));
     tabBar.add(tab);
 
 	tabBar.fixLayout();
@@ -1484,10 +1488,83 @@ IDE_Morph.prototype.createShareBoxBar = function () {
     this.shareBoxBar.add(this.shareBoxBar.tabBar);
 
     this.shareBoxBar.fixLayout = function () {
+        this.setExtent(new Point(
+                this.right() - this.left(),
+            this.height()
+        ));
         this.tabBar.setLeft(this.left());
         this.tabBar.setBottom(this.bottom() + 75);
     };
 };
+
+/*
+// xinni: displays messages to initialize collaborations
+IDE_Morph.prototype.displayShareBoxMsg = function() {
+    var msgBox,
+        usernameField,
+        noPartner, awaitingReply, receivedReq,
+        goBtn, cancelBtn, acceptBtn, rejectBtn,
+        world = this.world();
+
+    // Username entered here.
+    usernameField = new InputFieldMorph("Enter username here");
+    usernameField.setWidth(300); // fixed dimensions
+    usernameField.contrast = 90;
+    usernameField.setPosition(this.shareBoxBar.bottomLeft().add(new Point(10, 3)));
+    msgBox.add(usernameField);
+    usernameField.drawNew();
+    usernameField.accept = function () {
+        var newName = usernameField.getValue();
+        myself.currentSprite.setName(
+            myself.newSpriteName(newName, myself.currentSprite)
+        );
+        usernameField.setContents(myself.currentSprite.name);
+    };
+    //this.spriteBar.reactToEdit = usernameField.accept;
+
+    noPartner = 'ShareBox'
+        + '\n\n Start a collaboration session with a partner by entering their username below:';
+
+    awaitingReply = localize('Request Sent')
+        + '\n\n'
+        + 'Awaiting johntan\'s reply. \n'
+        + '\nTimeout in x seconds.';
+
+    receivedReq = localize('New Request')
+        + '\n\n'
+        + 'marylim would like to collaborate with you.'
+        + '\nTimeout in x seconds.';
+
+
+    msgBox = new TextMorph();
+    msgBox.inform('ShareBox', aboutTxt, world);
+    //btn1 = msgBox.buttons.children[0]; // xinni: ok button
+
+    cancelBtn = msgBox.addButton(
+        function () {
+            msgBox.body.text = noPartner;
+            msgBox.body.drawNew();
+            msgBox.fixLayout();
+            msgBox.drawNew();
+            msgBox.setCenter(world.center());
+        },
+        'Cancel Request'
+    );
+    goBtn = msgBox.addButton(
+        function () {
+            msgBox.body.text = noticeTxt;
+            msgBox.body.drawNew();
+            msgBox.fixLayout();
+            msgBox.drawNew();
+            msgBox.setCenter(world.center());
+        },
+        'Go!'
+    );
+
+    msgBox.fixLayout();
+    msgBox.drawNew();
+};
+*/
 
 IDE_Morph.prototype.createShareBox = function () {
     var scripts = this.shareBoxPlaceholderSprite.scripts,
@@ -1501,14 +1578,14 @@ IDE_Morph.prototype.createShareBox = function () {
     scripts.texture = this.scriptsPaneTexture;
 
 
-    //this.shareBox = new Morph();
-
-
-    this.shareBox = new ScrollFrameMorph(
-        scripts,
-        null,
-        this.sliderColor
-    );
+    this.shareBox = new Morph();
+    //this.displayShareBoxMsg(); // xinni: show initialization message
+    /*
+     this.shareBox = new ScrollFrameMorph(
+     scripts,
+     null,
+     this.sliderColor
+     );*/
     this.shareBox.color = this.groupColor;
     this.shareBox.acceptsDrops = true;
 
@@ -1520,15 +1597,12 @@ IDE_Morph.prototype.createShareBox = function () {
             droppedMorph.destroy();
         }
     };
-
-
     //scripts.scrollFrame = this.shareBox;
-
-    /*
     this.add(this.shareBox);
-    this.shareBox.scrollX(this.shareBox.padding);
-    this.shareBox.scrollY(this.shareBox.padding);
-*/
+    /*
+     this.shareBox.scrollX(this.shareBox.padding);
+     this.shareBox.scrollY(this.shareBox.padding);
+     */
 
 };
 
@@ -1587,7 +1661,7 @@ IDE_Morph.prototype.fixLayout = function (situation) {
             this.spriteEditor.setPosition(this.spriteBar.bottomLeft());
 			this.spriteEditor.setPosition(new Point(205,220));
             this.spriteEditor.setExtent(new Point(
-                this.spriteBar.width(),
+                this.spriteBar.width()-5,
                 this.bottom() - this.spriteEditor.top()
             ));
         }
@@ -1595,7 +1669,7 @@ IDE_Morph.prototype.fixLayout = function (situation) {
         // corralBar
         //this.corralBar.setLeft(this.stage.left());
 		this.corralBar.setLeft(this.stage.left());
-		this.corralBar.setPosition(this.logo.bottomRight().add(padding));
+		this.corralBar.setPosition(this.logo.bottomRight().add(5)); // xinni: +5 aligns corralbar
         //this.corralBar.setTop(this.stage.bottom() + padding);
         //this.corralBar.setWidth(this.stage.width());
 		this.corralBar.setHeight(90);
@@ -1613,14 +1687,15 @@ IDE_Morph.prototype.fixLayout = function (situation) {
         }
 
 		//Share Box Bar
-		this.shareBoxBar.setTop(this.stage.bottom() + 20);
+		this.shareBoxBar.setTop(this.stage.bottom()-40);
 		this.shareBoxBar.setLeft(this.categories.width() + this.spriteBar.width() + 2* padding + this.stage.width()/1.5);
-		//this.shareBoxBar.setWidth(this.stage.width());
+        this.shareBoxBar.fixLayout(); // xinni: position the tabs
+        //this.shareBoxBar.setWidth(this.stage.width());
 		//this.shareBoxBar.setHeight(1000);
 
 		//Share Box
 		this.shareBox.setTop(this.stage.bottom() + 35);
-		this.shareBox.setLeft(this.categories.width() + this.spriteBar.width() + 2* padding);
+		this.shareBox.setLeft(this.categories.width() + this.spriteBar.width() + 6); // xinni: +6 aligns sharebox with stage.
 		this.shareBox.setWidth(this.stage.width());
 		this.shareBox.setHeight(this.bottom() - this.shareBox.top());
     }
