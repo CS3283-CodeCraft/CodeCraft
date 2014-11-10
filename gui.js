@@ -200,6 +200,7 @@ IDE_Morph.prototype.init = function (isAutoFill) {
     this.currentCategory = 'motion';
     this.currentTab = 'scripts';
 	this.currentShareBoxTab = 'scripts';
+    this.currentShareBoxConnectTab = 'connect';
     this.projectName = '';
     this.projectNotes = '';
 
@@ -214,6 +215,8 @@ IDE_Morph.prototype.init = function (isAutoFill) {
     this.corral = null;
 	this.shareBoxBar = null;
 	this.shareBox = null;
+    this.shareBoxConnectBar = null;
+    this.shareBoxConnect = null;
 
     this.isAutoFill = isAutoFill || true;
     this.isAppMode = false;
@@ -405,6 +408,8 @@ IDE_Morph.prototype.buildPanes = function () {
     this.createCorral();
 	this.createShareBoxBar();
 	this.createShareBox();
+    this.createShareBoxConnectBar();
+    this.createShareBoxConnect();
 };
 
 IDE_Morph.prototype.createLogo = function () {
@@ -1423,7 +1428,7 @@ IDE_Morph.prototype.createShareBoxBar = function () {
         this.shareBoxBar.destroy();
     }
 
-    this.shareBoxBar = new Morph();
+        this.shareBoxBar = new Morph();
     this.shareBoxBar.bounds = new Rectangle(0, 0, 0, 0); // xinni: remove unwanted floating rectangle
     this.shareBoxBar.color = null;
     this.add(this.shareBoxBar);
@@ -1480,7 +1485,8 @@ IDE_Morph.prototype.createShareBoxBar = function () {
     //tab.setPosition(new Point(500,500));
     tabBar.add(tab);
 
-	tabBar.fixLayout();
+
+    tabBar.fixLayout();
     tabBar.children.forEach(function (each) {
         each.refresh();
     });
@@ -1496,6 +1502,130 @@ IDE_Morph.prototype.createShareBoxBar = function () {
         this.tabBar.setBottom(this.bottom() + 75);
     };
 };
+
+IDE_Morph.prototype.createShareBox = function () {
+    var scripts = this.shareBoxPlaceholderSprite.scripts,
+        myself = this;
+
+    if (this.shareBox) {
+        this.shareBox.destroy();
+    }
+    scripts.isDraggable = false;
+    scripts.color = this.groupColor;
+    scripts.texture = this.scriptsPaneTexture;
+
+
+    this.shareBox = new Morph();
+    this.shareBox.color = this.groupColor;
+    this.shareBox.acceptsDrops = true;
+
+    scripts.texture = IDE_Morph.prototype.scriptsPaneTexture;
+    this.shareBox.reactToDropOf = function (droppedMorph) {
+        if (droppedMorph instanceof BlockMorph) {
+            this.add(droppedMorph);
+        } else {
+            droppedMorph.destroy();
+        }
+    };
+    //scripts.scrollFrame = this.shareBox;
+    this.add(this.shareBox);
+    /*
+     this.shareBox.scrollX(this.shareBox.padding);
+     this.shareBox.scrollY(this.shareBox.padding);
+     */
+
+};
+
+
+IDE_Morph.prototype.createShareBoxConnectBar = function () {
+    var
+        tabCorner = 15,
+        tabColors = this.tabColors,
+        tabBar = new AlignmentMorph('row', -tabCorner * 2),
+        tab,
+        myself = this;
+
+    if (this.shareBoxConnectBar) {
+        this.shareBoxConnectBar.destroy();
+    }
+
+    // hide the sharebox bar when currently not connected.
+    if(this.shareBoxBar) {
+        this.shareBoxBar.hide();
+    }
+
+    this.shareBoxConnectBar = new Morph();
+    this.shareBoxConnectBar.bounds = new Rectangle(0, 0, 0, 0); // xinni: remove unwanted floating rectangle
+    this.shareBoxConnectBar.color = null;
+    this.add(this.shareBoxConnectBar);
+
+    // tab bar
+    tabBar.tabTo = function (tabString) {
+        var active;
+        myself.currentShareBoxConnectTab = tabString;
+        this.children.forEach(function (each) {
+            each.refresh();
+            if (each.state) {active = each; }
+        });
+        active.refresh(); // needed when programmatically tabbing
+        myself.createShareBoxConnect();
+        //myself.fixLayout('tabEditor');
+    };
+
+    tab = new TabMorph(
+        tabColors,
+        null, // target
+        function () {tabBar.tabTo('connect'); },
+        localize('Connect'), // label
+        function () {  // query
+            return myself.currentShareBoxConnectTab === 'connect';
+        }
+    );
+    tab.padding = 3;
+    tab.corner = tabCorner;
+    tab.edge = 1;
+    tab.labelShadowOffset = new Point(-1, -1);
+    tab.labelShadowColor = tabColors[1];
+    tab.labelColor = this.buttonLabelColor;
+    tab.drawNew();
+    tab.fixLayout();
+    tabBar.add(tab);
+
+    tabBar.fixLayout();
+    tabBar.children.forEach(function (each) {
+        each.refresh();
+    });
+    this.shareBoxConnectBar.tabBar = tabBar;
+    this.shareBoxConnectBar.add(this.shareBoxConnectBar.tabBar);
+
+    this.shareBoxConnectBar.fixLayout = function () {
+        this.setExtent(new Point(
+                this.right() - this.left(),
+            this.height()
+        ));
+        this.tabBar.setLeft(this.left());
+        this.tabBar.setBottom(this.bottom() + 75);
+    };
+};
+
+IDE_Morph.prototype.createShareBoxConnect = function () {
+
+    // hide sharebox if haven't connected
+    if (this.shareBox) {
+        this.shareBox.hide();
+    }
+
+    // destroy if already exists
+    if (this.shareBoxConnect) {
+        this.shareBoxConnect.destroy();
+    }
+
+    this.shareBoxConnect = new Morph();
+    this.shareBoxConnect.color = this.groupColor;
+
+    this.add(this.shareBoxConnect);
+};
+
 
 /*
 // xinni: displays messages to initialize collaborations
@@ -1566,46 +1696,6 @@ IDE_Morph.prototype.displayShareBoxMsg = function() {
 };
 */
 
-IDE_Morph.prototype.createShareBox = function () {
-    var scripts = this.shareBoxPlaceholderSprite.scripts,
-        myself = this;
-
-    if (this.shareBox) {
-        this.shareBox.destroy();
-    }
-    scripts.isDraggable = false;
-    scripts.color = this.groupColor;
-    scripts.texture = this.scriptsPaneTexture;
-
-
-    this.shareBox = new Morph();
-    //this.displayShareBoxMsg(); // xinni: show initialization message
-    /*
-     this.shareBox = new ScrollFrameMorph(
-     scripts,
-     null,
-     this.sliderColor
-     );*/
-    this.shareBox.color = this.groupColor;
-    this.shareBox.acceptsDrops = true;
-
-    scripts.texture = IDE_Morph.prototype.scriptsPaneTexture;
-    this.shareBox.reactToDropOf = function (droppedMorph) {
-        if (droppedMorph instanceof BlockMorph) {
-            this.add(droppedMorph);
-        } else {
-            droppedMorph.destroy();
-        }
-    };
-    //scripts.scrollFrame = this.shareBox;
-    this.add(this.shareBox);
-    /*
-     this.shareBox.scrollX(this.shareBox.padding);
-     this.shareBox.scrollY(this.shareBox.padding);
-     */
-
-};
-
 // IDE_Morph layout
 
 IDE_Morph.prototype.fixLayout = function (situation) {
@@ -1631,6 +1721,8 @@ IDE_Morph.prototype.fixLayout = function (situation) {
     this.palette.setTop(this.categories.bottom());
     this.palette.setHeight(this.bottom() - this.palette.top());
 
+
+    // layout of stage, sprite editor, corral, sharebox.
     if (situation !== 'refreshPalette') {
         // stage
         if (this.isAppMode) {
@@ -1686,18 +1778,29 @@ IDE_Morph.prototype.fixLayout = function (situation) {
             this.corral.fixLayout();
         }
 
-		//Share Box Bar
+		// Share Box Bar
 		this.shareBoxBar.setTop(this.stage.bottom()-40);
-		this.shareBoxBar.setLeft(this.categories.width() + this.spriteBar.width() + 2* padding + this.stage.width()/1.5);
+		this.shareBoxBar.setLeft(this.categories.width() + this.spriteBar.width() + 2* padding + this.stage.width()/1.77);
         this.shareBoxBar.fixLayout(); // xinni: position the tabs
         //this.shareBoxBar.setWidth(this.stage.width());
 		//this.shareBoxBar.setHeight(1000);
 
-		//Share Box
+		// Share Box
 		this.shareBox.setTop(this.stage.bottom() + 35);
 		this.shareBox.setLeft(this.categories.width() + this.spriteBar.width() + 6); // xinni: +6 aligns sharebox with stage.
 		this.shareBox.setWidth(this.stage.width());
 		this.shareBox.setHeight(this.bottom() - this.shareBox.top());
+
+        // Share Box Connect Bar
+        this.shareBoxConnectBar.setTop(this.stage.bottom()-40);
+        this.shareBoxConnectBar.setLeft(this.categories.width() + this.spriteBar.width() + 2* padding);
+        this.shareBoxConnectBar.fixLayout();
+
+        // Share Box Connect
+        this.shareBoxConnect.setTop(this.stage.bottom() + 35);
+        this.shareBoxConnect.setLeft(this.categories.width() + this.spriteBar.width() + 6);
+        this.shareBoxConnect.setWidth(this.stage.width());
+        this.shareBoxConnect.setHeight(this.bottom() - this.shareBox.top());
     }
 
     Morph.prototype.trackChanges = true;
