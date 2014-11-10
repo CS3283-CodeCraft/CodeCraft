@@ -2082,7 +2082,15 @@ IDE_Morph.prototype.paintNewSprite = function () {
 };
 
 IDE_Morph.prototype.openLibrary = function(){
-    var db = new DialogBoxMorph();
+/*	var myself = this,
+		editor = new LibraryMorph();
+	editor.oncancel = oncancel || nop;
+	editor.openIn(
+		aWorld,
+		null // Call back null for now
+	);*/
+
+	var db = new DialogBoxMorph();
     var pic = newCanvas(new Point(
         //434, 294
         800, 600
