@@ -1705,7 +1705,7 @@ IDE_Morph.prototype.createShareBoxConnect = function () {
     this.addPartnerScreen.add(inputUser);
 
     // screen 1: ADD A PARTNER Go button
-    goButton = new PushButtonMorph(null, null, "Go", null, null, null)
+    goButton = new PushButtonMorph(null, null, "Go", null, null, null);
     goButton.color = new Color(60, 158, 0);
     goButton.setExtent(new Point(addPartnerLogo.width()/5 - padding, inputUser.height()));
     goButton.setPosition(new Point(inputUser.left() + inputUser.width() + padding, txt.bottom() + padding));
