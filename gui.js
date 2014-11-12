@@ -1655,10 +1655,9 @@ IDE_Morph.prototype.createShareBoxConnect = function () {
     if (this.addPartnerScreen) {
         this.addPartnerScreen.destroy();
     }
-    this.addPartnerScreen = new ScrollFrameMorph();
+    this.addPartnerScreen = new FrameMorph();
     this.addPartnerScreen.color = this.shareBoxConnect.color;
     this.shareBoxConnect.addContents(this.addPartnerScreen);
-
 
     // screen 1: ADD A PARTNER logo
     if (this.addPartnerLogo) {
@@ -1688,17 +1687,32 @@ IDE_Morph.prototype.createShareBoxConnect = function () {
     addPartnerLogo.setExtent(new Point(181, 123));
     addPartnerLogo.setLeft(this.stage.width()/2 - addPartnerLogo.width()/2);
     addPartnerLogo.setTop(this.stage.height()/8);
-    this.addPartnerScreen.addContents(addPartnerLogo);
-
+    this.addPartnerScreen.add(addPartnerLogo);
 
     // screen 1: ADD A PARTNER text
     txt = new TextMorph("Start a collaboration session");
     txt.fontSize = 13;
     txt.fontName = "verdana";
     txt.setColor(SpriteMorph.prototype.paletteTextColor);
-    txt.setExtent(new Point(addPartnerLogo.width()*2, addPartnerLogo.height()/1.5));
-    txt.setPosition(new Point(150, addPartnerLogo.bottom() + padding));
-    this.addPartnerScreen.addContents(txt);
+    //txt.setExtent(new Point(addPartnerLogo.width()*2, addPartnerLogo.height()/1.5));
+    txt.setPosition(new Point(this.stage.width()/2 - txt.width()/2, addPartnerLogo.bottom() + padding));
+    this.addPartnerScreen.add(txt);
+
+    // screen 1: ADD A PARTNER input username
+    inputUser = new InputFieldMorph("Username");
+    //inputUser.setExtent(new Point(addPartnerLogo.width()/5 * 4, txt.height()));
+    inputUser.setPosition(new Point(this.stage.width()/2 - inputUser.width()/2 - addPartnerLogo.width()/5 + padding*2, txt.bottom() + padding));
+    this.addPartnerScreen.add(inputUser);
+
+    // screen 1: ADD A PARTNER Go button
+    goButton = new PushButtonMorph(null, null, "Go", null, null, null)
+    goButton.color = new Color(60, 158, 0);
+    goButton.setExtent(new Point(addPartnerLogo.width()/5 - padding, inputUser.height()));
+    goButton.setPosition(new Point(inputUser.left() + inputUser.width() + padding, txt.bottom() + padding));
+    goButton.label.setCenter(goButton.center());
+    this.addPartnerScreen.add(goButton);
+
+
 };
 
 /*
