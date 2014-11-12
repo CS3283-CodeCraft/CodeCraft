@@ -1626,10 +1626,45 @@ IDE_Morph.prototype.createShareBoxConnectBar = function () {
     };
 };
 
+// xinni: countdown object
+function Countdown(options) {
+    var timer,
+        instance = this,
+        seconds = options.seconds || 10,
+        updateStatus = options.onUpdateStatus || function () {},
+        counterEnd = options.onCounterEnd || function () {};
+
+    function decrementCounter() {
+        updateStatus(seconds);
+        if (seconds === 0) {
+            counterEnd();
+            instance.stop();
+        }
+        seconds--;
+    }
+
+    this.start = function () {
+        clearInterval(timer);
+        timer = 0;
+        seconds = options.seconds;
+        timer = setInterval(decrementCounter, 1000);
+    };
+
+    this.stop = function () {
+        clearInterval(timer);
+    };
+
+}
+
 // xinni: ShareBox connection morph
 IDE_Morph.prototype.createShareBoxConnect = function () {
+
+    // init variables
     var myself = this;
     var padding = 10;
+    var cancelButtonPressed = false;
+    this.addPartnerScreen = new FrameMorph();
+    this.awaitingReplyScreen = new FrameMorph();
 
     // hide sharebox if haven't connected
     if (this.shareBox) {
@@ -1652,9 +1687,12 @@ IDE_Morph.prototype.createShareBoxConnect = function () {
     // *****************************
     // screen 1: ADD A PARTNER
     // *****************************
+
+    // init screen
     if (this.addPartnerScreen) {
         this.addPartnerScreen.destroy();
     }
+
     this.addPartnerScreen = new FrameMorph();
     this.addPartnerScreen.color = this.shareBoxConnect.color;
     this.shareBoxConnect.addContents(this.addPartnerScreen);
@@ -1675,15 +1713,7 @@ IDE_Morph.prototype.createShareBoxConnect = function () {
             this.drawTexture(this.texture);
         }
     };
-    /*this.addPartnerLogo.drawCachedTexture = function () {
-        var context = this.image.getContext('2d');
-        context.drawImage(
-            this.cachedTexture,
-            5,
-            Math.round((this.height() - this.cachedTexture.height) / 2)
-        );
-        this.changed();
-    };*/
+
     addPartnerLogo.setExtent(new Point(181, 123));
     addPartnerLogo.setLeft(this.stage.width()/2 - addPartnerLogo.width()/2);
     addPartnerLogo.setTop(this.stage.height()/8);
@@ -1710,7 +1740,177 @@ IDE_Morph.prototype.createShareBoxConnect = function () {
     goButton.setExtent(new Point(addPartnerLogo.width()/5 - padding, inputUser.height()));
     goButton.setPosition(new Point(inputUser.left() + inputUser.width() + padding, txt.bottom() + padding));
     goButton.label.setCenter(goButton.center());
+    goButton.action = function() {
+        myself.addPartnerScreen.hide();
+        myself.awaitingReplyScreen.show();
+
+        // start the expire timer
+        var replyCounter = new Countdown({
+            seconds: 5,  // number of seconds to count down
+            onUpdateStatus: function(sec) {
+
+                if (!cancelButtonPressed) {
+                    console.log(sec);
+                    // xinni: how to make this text morph refresh to countdown the seconds?
+                    countdownTxt.text = "Time out in " + sec + " seconds";
+                } else {
+                    console.log("Cancelled, stopping timer.");
+                    this.stop();
+                }
+            }, // callback for each second
+            onCounterEnd: function() {
+                if (!cancelButtonPressed) {
+                    myself.addPartnerScreen.show();
+                    myself.awaitingReplyScreen.hide();
+                }
+            } // send back to add partner
+        });
+
+        replyCounter.start();
+        console.log("Starting counter, resetting cancelled back to false.")
+        cancelButtonPressed = false;
+    };
     this.addPartnerScreen.add(goButton);
+
+
+    // *****************************
+    // screen 2: Awaiting reply
+    // *****************************
+
+    // init screen
+    if (this.awaitingReplyScreen) {
+        this.awaitingReplyScreen.destroy();
+    }
+    this.awaitingReplyScreen = new FrameMorph();
+    this.awaitingReplyScreen.color = this.shareBoxConnect.color;
+    this.shareBoxConnect.addContents(this.awaitingReplyScreen);
+
+    // screen 2: Awaiting reply logo
+    if (this.awaitingReplyLogo) {
+        this.awaitingReplyLogo.destroy();
+    }
+    awaitingReplyLogo = new Morph();
+    awaitingReplyLogo.texture = 'images/pending.png';
+    awaitingReplyLogo.drawNew = function () {
+        this.image = newCanvas(this.extent());
+        var context = this.image.getContext('2d');
+        var picBgColor = myself.shareBoxConnect.color;
+        context.fillStyle = picBgColor.toString();
+        context.fillRect(0, 0, this.width(), this.height());
+        if (this.texture) {
+            this.drawTexture(this.texture);
+        }
+    };
+    awaitingReplyLogo.setExtent(new Point(200, 200));
+    awaitingReplyLogo.setLeft(this.stage.width()/2 - awaitingReplyLogo.width()/2);
+    awaitingReplyLogo.setTop(0);
+    this.awaitingReplyScreen.add(awaitingReplyLogo);
+
+    // screen 2: Awaiting reply text
+    txt = new TextMorph("Request sent to 'johntan' \n       Awaiting reply... ");
+    txt.fontSize = 13;
+    txt.fontName = "verdana";
+    txt.setColor(SpriteMorph.prototype.paletteTextColor);
+    txt.setPosition(new Point(this.stage.width()/2 - txt.width()/2, awaitingReplyLogo.bottom() + padding));
+    this.awaitingReplyScreen.add(txt);
+
+    // screen 2: Countdown timer text
+    countdownTxt = new TextMorph("Time out in" + " 5 " + "seconds");
+    countdownTxt.fontSize = 10;
+    countdownTxt.isBold = true;
+    countdownTxt.fontName = "verdana";
+    countdownTxt.setColor(new Color(155, 0, 51));
+    countdownTxt.setPosition(new Point(this.stage.width()/2 - countdownTxt.width()/2, txt.bottom() + padding));
+    this.awaitingReplyScreen.add(countdownTxt);
+
+    // screen 2: Cancel button
+    cancelButton = new PushButtonMorph(null, null, "Cancel", null, null, null);
+    cancelButton.color = new Color(200, 0, 100);
+    cancelButton.setExtent(new Point(100, 30));
+    cancelButton.setPosition(new Point(myself.stage.width()/2 - 50, countdownTxt.bottom() + padding));
+    cancelButton.label.setCenter(cancelButton.center());
+    cancelButton.action = function() {
+        console.log("Cancel button pressed.");
+        cancelButtonPressed = true;
+        myself.addPartnerScreen.show();
+        myself.awaitingReplyScreen.hide();
+    };
+    this.awaitingReplyScreen.add(cancelButton);
+
+    // hide this screen first
+    this.awaitingReplyScreen.hide();
+
+    // *****************************
+    // screen 3: Request received
+    // *****************************
+
+    // init screen
+    if (this.requestReceivedScreen) {
+        this.requestReceivedScreen.destroy();
+    }
+    this.requestReceivedScreen = new FrameMorph();
+    this.requestReceivedScreen.color = this.shareBoxConnect.color;
+    this.shareBoxConnect.addContents(this.requestReceivedScreen);
+
+    // screen 3: Awaiting reply logo
+    if (this.requestReceivedLogo) {
+        this.requestReceivedLogo.destroy();
+    }
+    requestReceivedLogo = new Morph();
+    requestReceivedLogo.texture = 'images/notification.png';
+    requestReceivedLogo.drawNew = function () {
+        this.image = newCanvas(this.extent());
+        var context = this.image.getContext('2d');
+        var picBgColor = myself.shareBoxConnect.color;
+        context.fillStyle = picBgColor.toString();
+        context.fillRect(0, 0, this.width(), this.height());
+        if (this.texture) {
+            this.drawTexture(this.texture);
+        }
+    };
+    requestReceivedLogo.setExtent(new Point(129, 123));
+    requestReceivedLogo.setLeft(this.stage.width()/2 - requestReceivedLogo.width()/2);
+    requestReceivedLogo.setTop(this.stage.width()/8);
+    this.requestReceivedScreen.add(requestReceivedLogo);
+
+    // screen 3: Awaiting reply text
+    txt = new TextMorph("'marylim' has just sent you a request for collaboration.");
+    txt.fontSize = 13;
+    txt.fontName = "verdana";
+    txt.setColor(SpriteMorph.prototype.paletteTextColor);
+    txt.setPosition(new Point(this.stage.width()/2 - txt.width()/2, requestReceivedLogo.bottom() + padding));
+    this.requestReceivedScreen.add(txt);
+
+    // screen 3: Accept button
+    acceptButton = new PushButtonMorph(null, null, "Accept", null, null, null);
+    acceptButton.color = new Color(60, 158, 0);
+    acceptButton.setExtent(new Point(100, 30));
+    acceptButton.setPosition(new Point(myself.stage.width()/2 - acceptButton.width() - padding, txt.bottom() + padding));
+    acceptButton.label.setCenter(acceptButton.center());
+    acceptButton.action = function() {
+        console.log("Accept button pressed. Launch Sharebox.");
+        myself.createShareBoxBar();
+        myself.createShareBox();
+        myself.fixLayout();
+    };
+    this.requestReceivedScreen.add(acceptButton);
+
+    // screen 3: Reject button
+    rejectButton = new PushButtonMorph(null, null, "Reject", null, null, null);
+    rejectButton.color = new Color(200, 0, 100);
+    rejectButton.setExtent(new Point(100, 30));
+    rejectButton.setPosition(new Point(myself.stage.width()/2 + padding, txt.bottom() + padding));
+    rejectButton.label.setCenter(rejectButton.center());
+    rejectButton.action = function() {
+        console.log("Reject button pressed. Back to add partner screen.");
+        myself.addPartnerScreen.show();
+        myself.requestReceivedScreen.hide();
+    };
+    this.requestReceivedScreen.add(rejectButton);
+
+
+    // hide this screen first
+    this.requestReceivedScreen.show();
 
 
 };
@@ -1896,8 +2096,9 @@ IDE_Morph.prototype.fixLayout = function (situation) {
             this.shareBoxConnect.setLeft(this.shareBox.left());
             this.shareBoxConnect.setWidth(this.stage.width());
             this.shareBoxConnect.setHeight(this.bottom() - this.stage.bottom() + 35);
-            this.addPartnerScreen.setWidth(this.shareBoxConnect.width());
-            this.addPartnerScreen.setHeight(this.shareBoxConnect.height());
+            this.addPartnerScreen.setExtent(new Point(this.shareBoxConnect.width(), this.shareBoxConnect.height()));
+            this.awaitingReplyScreen.setExtent(new Point(this.shareBoxConnect.width(), this.shareBoxConnect.height()));
+            this.requestReceivedScreen.setExtent(new Point(this.shareBoxConnect.width(), this.shareBoxConnect.height()));
         }
 
     }
