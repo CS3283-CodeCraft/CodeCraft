@@ -1511,10 +1511,94 @@ IDE_Morph.prototype.createShareBoxBar = function () {
     //myself.fixLayout();
 };
 
+IDE_Morph.shareBoxPrototypeFunctionality = function(myself) {
+    /*Prototyping Code
+          * Mary Lim's Screens
+          * */
+    // First Screen: Script drag behavior to load the next screen for naming.
+    // Override default behavior
+    this.shareBox.reactToDropOf = function (droppedMorph) {
+        if (droppedMorph instanceof BlockMorph) {
+            this.add(droppedMorph);
+            myself.shareBox.hide();
+            myself.addScriptScreen.show();
+        } else {
+            droppedMorph.destroy();
+        }
+    };
+    /*
+          Second Screen: Static screen with text box and button requesting script name.
+          */
+    // init screen
+    if (this.addScriptScreen) {
+        this.addScriptScreen.destroy();
+    }
+    this.addScriptScreen = new FrameMorph();
+    this.addScriptScreen.color = this.shareBox.color;
+    var padding = 20;
+    this.add(this.addScriptScreen);
+
+    // Add-a-script instruction
+    var txt = new TextMorph("Name your new script.");
+    txt.fontSize = 13;
+    txt.fontName = "verdana";
+    txt.setColor(SpriteMorph.prototype.paletteTextColor);
+    txt.setPosition(new Point(this.stage.width() / 2 - txt.width() / 2 + 20, padding));
+    this.addScriptScreen.add(txt);
+
+    // Add-a-script input box
+    var inputName = new InputFieldMorph("Script Name");
+    inputName.setPosition(new Point(this.stage.width() / 2 - inputName.width() / 2, txt.bottom() + padding));
+    this.addScriptScreen.add(inputName);
+
+    // Add-a-script Go button
+    var goButton = new PushButtonMorph(null, null, "Go", null, null, null);
+    goButton.color = new Color(60, 158, 0);
+    goButton.setExtent(new Point(padding, inputName.height()));
+    goButton.setPosition(new Point(inputName.left() + inputName.width() + padding, txt.bottom() + padding));
+    goButton.label.setCenter(goButton.center());
+    goButton.action = function () {
+        myself.addScriptScreen.hide();
+        myself.scriptListScreen.show();
+    };
+    this.addScriptScreen.add(goButton);
+    this.addScriptScreen.hide();
+
+    /*
+     Third Screen: Static screen with list of existing scripts.
+     */
+    // Existing scripts list
+    if (this.scriptListScreen) {
+        this.scriptListScreen.destroy();
+    }
+    this.scriptListScreen = new FrameMorph();
+    this.scriptListScreen.color = this.shareBox.color;
+    var padding = 20;
+    this.add(this.scriptListScreen);
+
+    // Add an image of a script list. When clicked, script is shown.
+    var scriptNameImg = new PushButtonMorph(null, null, "Go", null, null, null);
+    scriptNameImg.color = new Color(60, 158, 0);
+    scriptNameImg.setExtent(new Point(padding, padding));
+    scriptNameImg.setPosition(new Point(padding, txt.bottom() + padding));
+    scriptNameImg.label.setCenter(scriptNameImg.center());
+    scriptNameImg.action = function () {
+        //myself.scriptListScreen.add(this.currentSprite.scripts);
+        myself.scriptListScreen.hide();
+        myself.shareBox.show();
+    };
+    this.scriptListScreen.add(scriptNameImg);
+    this.scriptListScreen.hide();
+}
+
 IDE_Morph.prototype.createShareBox = function () {
+    /*
+    * Initialization of Sharebox and its default behavior
+    * */
     var scripts = this.shareBoxPlaceholderSprite.scripts,
         myself = this;
 
+    // Destroy if sharebox exists
     if (this.shareBox) {
         this.shareBox.destroy();
     }
@@ -1528,12 +1612,12 @@ IDE_Morph.prototype.createShareBox = function () {
     scripts.color = this.groupColor;
     scripts.texture = this.scriptsPaneTexture;
 
-
-    this.shareBox = new Morph();
+    this.shareBox = new FrameMorph();
     this.shareBox.color = this.groupColor;
     this.shareBox.acceptsDrops = true;
-
+    this.add(this.shareBox);
     scripts.texture = IDE_Morph.prototype.scriptsPaneTexture;
+
     this.shareBox.reactToDropOf = function (droppedMorph) {
         if (droppedMorph instanceof BlockMorph) {
             this.add(droppedMorph);
@@ -1541,14 +1625,11 @@ IDE_Morph.prototype.createShareBox = function () {
             droppedMorph.destroy();
         }
     };
-    //scripts.scrollFrame = this.shareBox;
-    this.add(this.shareBox);
-    /*
-     this.shareBox.scrollX(this.shareBox.padding);
-     this.shareBox.scrollY(this.shareBox.padding);
-     */
 
+    // Executes shareBox prototype functionality. To be modified/deleted thereafter
+    IDE_Morph.shareBoxPrototypeFunctionality.call(this, myself);
 };
+
 
 // xinni: ShareBox connection tab
 IDE_Morph.prototype.createShareBoxConnectBar = function () {
@@ -2101,6 +2182,19 @@ IDE_Morph.prototype.fixLayout = function (situation) {
             this.requestReceivedScreen.setExtent(new Point(this.shareBoxConnect.width(), this.shareBoxConnect.height()));
         }
 
+        if (this.addScriptScreen) {
+            this.addScriptScreen.setTop(this.stage.bottom() + 35);
+            this.addScriptScreen.setLeft(this.categories.width() + this.spriteBar.width() + 6);
+            this.addScriptScreen.setWidth(this.stage.width());
+            this.addScriptScreen.setHeight(this.bottom() - this.shareBox.top());
+        }
+
+        if (this.scriptListScreen) {
+            this.scriptListScreen.setTop(this.stage.bottom() + 35);
+            this.scriptListScreen.setLeft(this.categories.width() + this.spriteBar.width() + 6);
+            this.scriptListScreen.setWidth(this.stage.width());
+            this.scriptListScreen.setHeight(this.bottom() - this.shareBox.top());
+        }
     }
 
     Morph.prototype.trackChanges = true;
