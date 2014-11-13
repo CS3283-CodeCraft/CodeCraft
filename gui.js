@@ -1535,11 +1535,36 @@ IDE_Morph.shareBoxPrototypeFunctionality = function(myself) {
           * */
     // First Screen: Script drag behavior to load the next screen for naming.
     // Override default behavior
+    var shareBoxBGEmpty = new Morph();
+    shareBoxBGEmpty.texture = 'images/sharebox_prototype.png';
+    shareBoxBGEmpty.drawNew = function () {
+        this.image = newCanvas(this.extent());
+        var context = this.image.getContext('2d');
+        var picBgColor = myself.shareBox.color;
+        context.fillStyle = picBgColor.toString();
+        context.fillRect(0, 0, this.width(), this.height());
+        if (this.texture) {
+            this.drawTexture(this.texture);
+        }
+    };
+    shareBoxBGEmpty.setExtent(new Point(448, 265));
+    shareBoxBGEmpty.setLeft(this.stage.width()/2 - shareBoxBGEmpty.width()/2);
+    shareBoxBGEmpty.setTop(-2);
+    this.shareBox.add(shareBoxBGEmpty);
+
+
     this.shareBox.reactToDropOf = function (droppedMorph) {
         if (droppedMorph instanceof BlockMorph) {
+            new DialogBoxMorph(
+                myself,
+                function() { myself.scriptListScreen.show(); myself.shareBox.hide();},
+                myself
+            ).prompt(
+                'Enter a name for the script',
+                null,
+                myself.world()
+            );
             this.add(droppedMorph);
-            myself.shareBox.hide();
-            myself.addScriptScreen.show();
         } else {
             droppedMorph.destroy();
         }
@@ -1555,7 +1580,6 @@ IDE_Morph.shareBoxPrototypeFunctionality = function(myself) {
     this.addScriptScreen.color = this.shareBox.color;
     var padding = 20;
     this.add(this.addScriptScreen);
-
     // Add-a-script instruction
     var txt = new TextMorph("Name your new script.");
     txt.fontSize = 13;
@@ -1569,19 +1593,7 @@ IDE_Morph.shareBoxPrototypeFunctionality = function(myself) {
     inputName.setPosition(new Point(this.stage.width() / 2 - inputName.width() / 2, txt.bottom() + padding));
     this.addScriptScreen.add(inputName);
 
-    // Add-a-script Go button
-    var goButton = new PushButtonMorph(null, null, "Go", null, null, null);
-    goButton.color = new Color(60, 158, 0);
-    goButton.setExtent(new Point(padding, inputName.height()));
-    goButton.setPosition(new Point(inputName.left() + inputName.width() + padding, txt.bottom() + padding));
-    goButton.label.setCenter(goButton.center());
-    goButton.action = function () {
-        myself.addScriptScreen.hide();
-        myself.scriptListScreen.show();
-    };
-    this.addScriptScreen.add(goButton);
     this.addScriptScreen.hide();
-
     /*
      Third Screen: Static screen with list of existing scripts.
      */
@@ -1591,21 +1603,25 @@ IDE_Morph.shareBoxPrototypeFunctionality = function(myself) {
     }
     this.scriptListScreen = new FrameMorph();
     this.scriptListScreen.color = this.shareBox.color;
-    var padding = 20;
     this.add(this.scriptListScreen);
 
-    // Add an image of a script list. When clicked, script is shown.
-    var scriptNameImg = new PushButtonMorph(null, null, "Go", null, null, null);
-    scriptNameImg.color = new Color(60, 158, 0);
-    scriptNameImg.setExtent(new Point(padding, padding));
-    scriptNameImg.setPosition(new Point(padding, txt.bottom() + padding));
-    scriptNameImg.label.setCenter(scriptNameImg.center());
-    scriptNameImg.action = function () {
-        //myself.scriptListScreen.add(this.currentSprite.scripts);
-        myself.scriptListScreen.hide();
-        myself.shareBox.show();
+    var shareBoxBG = new Morph();
+    shareBoxBG.texture = 'images/sharebox_prototype_add.png';
+    shareBoxBG.drawNew = function () {
+        this.image = newCanvas(this.extent());
+        var context = this.image.getContext('2d');
+        var picBgColor = myself.shareBox.color;
+        context.fillStyle = picBgColor.toString();
+        context.fillRect(0, 0, this.width(), this.height());
+        if (this.texture) {
+            this.drawTexture(this.texture);
+        }
     };
-    this.scriptListScreen.add(scriptNameImg);
+    shareBoxBG.setExtent(new Point(448, 265));
+    shareBoxBG.setLeft(this.stage.width()/2 - shareBoxBG.width()/2);
+    shareBoxBG.setTop(-2);
+    this.scriptListScreen.add(shareBoxBG);
+
     this.scriptListScreen.hide();
 }
 
