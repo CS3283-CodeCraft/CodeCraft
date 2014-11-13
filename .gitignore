@@ -1,4 +1,3 @@
 .DS_Store
 *.swp
-.idea/workspace.xml
-.idea
+.idea/
