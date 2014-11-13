@@ -153,7 +153,7 @@ PushButtonMorph.prototype.init = function (
     this.label = null;
     this.labelMinExtent = new Point(0, 0);
     this.hint = hint || null;
-    this.template = template || null; // for pre-computed backbrounds
+    this.template = template || null; // for pre-computed backgrounds
     // if a template is specified, its background images are used as cache
 
     // initialize inherited properties:

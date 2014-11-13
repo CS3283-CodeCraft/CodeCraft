@@ -2091,9 +2091,12 @@ IDE_Morph.prototype.openLibrary = function(){
 	);*/
 
 	var db = new DialogBoxMorph();
-	var pic = newCanvas(new Point(
+    var pic = new ImageMorph('library_mockup.png', 900, 550);
+
+/*
+    var pic = newCanvas(new Point(
 		//434, 294
-		900, 600
+		900, 550
 	));
 
 	var ctx = pic.getContext('2d');
@@ -2105,7 +2108,9 @@ IDE_Morph.prototype.openLibrary = function(){
 		ctx.fillStyle = ptrn;
 		ctx.fillRect(0, 0, pic.width, pic.height); // context.fillRect(x, y, width, height);
 	};
+*/
 
+/*
     var nextstep = new PushButtonMorph(
         this,
         'nextstep',
@@ -2124,10 +2129,11 @@ IDE_Morph.prototype.openLibrary = function(){
     nextstep.drawNew();
     nextstep.hint = "Next";
     db.add(nextstep);
+*/
 
     db.inform(
-        'Import Resource',
-        'I have a gigantic unicorn',
+        'Sprite Library',
+        'Some placeholder text',
         this.world(),
         pic
     );
