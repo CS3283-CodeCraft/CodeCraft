@@ -1448,7 +1448,9 @@ IDE_Morph.prototype.createShareBoxBar = function () {
             if (each.state) {active = each; }
         });
         active.refresh(); // needed when programmatically tabbing
-        myself.createShareBox();
+        if (!myself.shareBox) {
+            myself.createShareBox();
+        }
         myself.fixLayout('tabEditor');
     };
 
