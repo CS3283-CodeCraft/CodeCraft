@@ -215,6 +215,7 @@ IDE_Morph.prototype.init = function (isAutoFill) {
     this.corral = null;
 	this.shareBoxBar = null;
 	this.shareBox = null;
+    this.shareAssetsBox = null;
     this.shareBoxConnectBar = null;
     this.shareBoxConnect = null;
 
@@ -408,6 +409,7 @@ IDE_Morph.prototype.buildPanes = function () {
     this.createCorral();
 	this.createShareBoxBar();
 	this.createShareBox();
+    this.createShareAssetsBox();
     // xinni: Swap the bottom two lines with the above two lines to see the ShareBox.
     this.createShareBoxConnectBar();
     this.createShareBoxConnect();
@@ -1448,8 +1450,22 @@ IDE_Morph.prototype.createShareBoxBar = function () {
             if (each.state) {active = each; }
         });
         active.refresh(); // needed when programmatically tabbing
-        if (!myself.shareBox) {
-            myself.createShareBox();
+        if (tabString === 'scripts') {
+            if (!myself.shareBox) {
+                myself.createShareBox();
+                myself.shareAssetsBox.hide();
+            } else {
+                myself.shareBox.show();
+                myself.shareAssetsBox.hide();
+            }
+        } else {
+            if (!myself.shareAssetsBox) {
+                myself.createShareAssetsBox();
+                myself.shareBox.hide();
+            } else {
+                myself.shareAssetsBox.show();
+                myself.shareBox.hide();
+            }
         }
         myself.fixLayout('tabEditor');
     };
@@ -1622,7 +1638,7 @@ IDE_Morph.prototype.createShareBox = function () {
 
     this.shareBox.reactToDropOf = function (droppedMorph) {
         if (droppedMorph instanceof BlockMorph) {
-            this.add(droppedMorph);
+            myself.shareBox.add(droppedMorph);
         } else {
             droppedMorph.destroy();
         }
@@ -1632,6 +1648,38 @@ IDE_Morph.prototype.createShareBox = function () {
     IDE_Morph.shareBoxPrototypeFunctionality.call(this, myself);
 };
 
+IDE_Morph.prototype.createShareAssetsBox = function () {
+    /*
+     * Initialization of ShareAssetsBox and its default behavior
+     * */
+    var myself = this;
+
+    // Destroy if sharebox exists
+    if (this.shareAssetsBox) {
+        this.shareAssetsBox.destroy();
+    }
+
+    // delete the connect morph if sharebox is in operation
+    if (this.shareBoxConnect) {
+        this.shareBoxConnect.destroy();
+    }
+
+    this.shareAssetsBox = new FrameMorph();
+    this.shareAssetsBox.color = this.groupColor;
+    this.shareAssetsBox.acceptsDrops = true;
+    this.add(this.shareAssetsBox);
+
+    this.shareAssetsBox.reactToDropOf = function (droppedMorph) {
+        if (droppedMorph instanceof BlockMorph) {
+            myself.shareAssetsBox.add(droppedMorph);
+        } else {
+            droppedMorph.destroy();
+        }
+    };
+
+    // Executes shareBox prototype functionality. To be modified/deleted thereafter
+    //IDE_Morph.shareBoxPrototypeFunctionality.call(this, myself);
+};
 
 // xinni: ShareBox connection tab
 IDE_Morph.prototype.createShareBoxConnectBar = function () {
@@ -2164,6 +2212,14 @@ IDE_Morph.prototype.fixLayout = function (situation) {
             this.shareBox.setLeft(this.categories.width() + this.spriteBar.width() + 6); // xinni: +6 aligns sharebox with stage.
             this.shareBox.setWidth(this.stage.width());
             this.shareBox.setHeight(this.bottom() - this.shareBox.top());
+        }
+
+        // Share Box
+        if (this.shareAssetsBox) {
+            this.shareAssetsBox.setTop(this.stage.bottom() + 35);
+            this.shareAssetsBox.setLeft(this.categories.width() + this.spriteBar.width() + 6);
+            this.shareAssetsBox.setWidth(this.stage.width());
+            this.shareAssetsBox.setHeight(this.bottom() - this.shareAssetsBox.top());
         }
 
         // Share Box Connect Bar
