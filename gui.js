@@ -1534,9 +1534,6 @@ IDE_Morph.prototype.createShareBoxBar = function () {
 };
 
 IDE_Morph.shareBoxPrototypeFunctionality = function(myself) {
-    /*Prototyping Code
-          * Mary Lim's Screens
-          * */
     // First Screen: Script drag behavior to load the next screen for naming.
     // Override default behavior
     var shareBoxBGEmpty = new Morph();
@@ -1556,7 +1553,6 @@ IDE_Morph.shareBoxPrototypeFunctionality = function(myself) {
     shareBoxBGEmpty.setTop(-2);
     this.shareBox.add(shareBoxBGEmpty);
 
-
     this.shareBox.reactToDropOf = function (droppedMorph) {
         if (droppedMorph instanceof BlockMorph) {
             new DialogBoxMorph(
@@ -1573,9 +1569,8 @@ IDE_Morph.shareBoxPrototypeFunctionality = function(myself) {
             droppedMorph.destroy();
         }
     };
-    /*
-          Second Screen: Static screen with text box and button requesting script name.
-          */
+
+    // Second Screen: Static screen with text box and button requesting script name.
     // init screen
     if (this.addScriptScreen) {
         this.addScriptScreen.destroy();
@@ -1598,9 +1593,8 @@ IDE_Morph.shareBoxPrototypeFunctionality = function(myself) {
     this.addScriptScreen.add(inputName);
 
     this.addScriptScreen.hide();
-    /*
-     Third Screen: Static screen with list of existing scripts.
-     */
+
+    // Third Screen: Static screen with list of existing scripts.
     // Existing scripts list
     if (this.scriptListScreen) {
         this.scriptListScreen.destroy();
@@ -1630,9 +1624,7 @@ IDE_Morph.shareBoxPrototypeFunctionality = function(myself) {
 }
 
 IDE_Morph.prototype.createShareBox = function () {
-    /*
-    * Initialization of Sharebox and its default behavior
-    * */
+    // Initialization of Sharebox and its default behavior
     var scripts = this.shareBoxPlaceholderSprite.scripts,
         myself = this;
 
@@ -1652,7 +1644,6 @@ IDE_Morph.prototype.createShareBox = function () {
 
     this.shareBox = new FrameMorph();
     this.shareBox.color = this.groupColor;
-    this.shareBox.texture = 'scriptsPaneTexture.gif';
     this.shareBox.acceptsDrops = true;
     this.add(this.shareBox);
     //this.shareBox.texture = IDE_Morph.prototype.scriptsPaneTexture;
@@ -1670,9 +1661,7 @@ IDE_Morph.prototype.createShareBox = function () {
 };
 
 IDE_Morph.prototype.createShareAssetsBox = function () {
-    /*
-     * Initialization of ShareAssetsBox and its default behavior
-     * */
+    // Initialization of ShareAssetsBox and its default behavior
     var myself = this;
 
     // Destroy if sharebox exists
@@ -1699,7 +1688,7 @@ IDE_Morph.prototype.createShareAssetsBox = function () {
     };
 
     // Executes shareBox prototype functionality. To be modified/deleted thereafter
-    //IDE_Morph.shareBoxPrototypeFunctionality.call(this, myself);
+    // IDE_Morph.shareBoxPrototypeFunctionality.call(this, myself);
 };
 
 // xinni: ShareBox connection tab
