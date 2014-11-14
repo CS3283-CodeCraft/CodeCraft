@@ -2646,6 +2646,38 @@ IDE_Morph.prototype.paintNewSprite = function () {
     );
 };
 
+IDE_Morph.prototype.nextScene = function(){
+	var db = new DialogBoxMorph();
+	//var button;
+	var nextscenebutton;
+    var pic = newCanvas(new Point(
+        //434, 294
+        900, 550
+    ));
+	
+	//this.openLibrary = new Morph();
+    //this.openLibrary.color = this.frameColor;
+    //this.openLibrary.setHeight(this.logo.height()); // height is fixed
+    //this.add(this.openLibrary);
+
+    ctx = pic.getContext("2d");
+    img = new Image();
+    img.src = 'thats-all-folks.jpg';
+    img.onload = function(){
+        // create pattern
+        var ptrn = ctx.createPattern(img, 'repeat'); // Create a pattern with this image, and set it to "repeat".
+        ctx.fillStyle = ptrn;
+        ctx.fillRect(0, 0, pic.width, pic.height); // context.fillRect(x, y, width, height);
+    };
+
+    db.inform(
+        'Import Resource',
+        'I have a gigantic unicorn',
+        this.world(),
+        pic
+    );
+}
+
 IDE_Morph.prototype.openLibrary = function(){
     var db = new DialogBoxMorph();
 	//var button;
@@ -2690,7 +2722,7 @@ IDE_Morph.prototype.openLibrary = function(){
 	var button;
     button = new PushButtonMorph(
         this,
-        'addNewSprite',
+        'nextScene',
         new SymbolMorph('', 0),
 		null,
 		null,
