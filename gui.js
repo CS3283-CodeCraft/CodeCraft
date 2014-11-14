@@ -2648,14 +2648,21 @@ IDE_Morph.prototype.paintNewSprite = function () {
 
 IDE_Morph.prototype.openLibrary = function(){
     var db = new DialogBoxMorph();
+	//var button;
+	var nextscenebutton;
     var pic = newCanvas(new Point(
         //434, 294
-        800, 600
+        900, 550
     ));
+	
+	//this.openLibrary = new Morph();
+    //this.openLibrary.color = this.frameColor;
+    //this.openLibrary.setHeight(this.logo.height()); // height is fixed
+    //this.add(this.openLibrary);
 
     ctx = pic.getContext("2d");
     img = new Image();
-    img.src = 'thats-all-folks.jpg';
+    img.src = 'library_mockup.png';
     img.onload = function(){
         // create pattern
         var ptrn = ctx.createPattern(img, 'repeat'); // Create a pattern with this image, and set it to "repeat".
@@ -2669,6 +2676,82 @@ IDE_Morph.prototype.openLibrary = function(){
         this.world(),
         pic
     );
+	
+	//db.addButton('ok', 'OK™');
+    //db.addButton('cancel', 'Cancel');
+    //db.fixLayout();
+    //db.drawNew();
+	//db.setDimension(new Point (800, 800));
+    //db.popUp(world);
+    //db.setCenter(world.center());
+	//db.addButton();
+	
+	// stopButton
+	var button;
+    button = new PushButtonMorph(
+        this,
+        'addNewSprite',
+        new SymbolMorph('', 0),
+		null,
+		null,
+		null,
+		'fuck you, morph'
+    );
+	//this.add(button);
+	button.setWidth(100);
+	button.setHeight(100);
+	button.setPosition(new Point(765,250));
+	//button.color = new Color(255,255,255,0);
+	//button.drawBackgrounds(img);
+	db.add(button);
+	//db.fixLayout();
+	//db.drawNew();
+	//db.setDimension(new Point (800, 800));
+    //db.popUp(world);
+    //db.setCenter(world.center());
+	//db.addButton();
+	
+	/*
+	button.corner = 12;
+    button.color = colors[0];
+    button.highlightColor = colors[1];
+    button.pressColor = colors[2];
+    button.labelMinExtent = new Point(36, 18);
+    button.padding = 0;
+    button.labelShadowOffset = new Point(-1, -1);
+    button.labelShadowColor = colors[1];
+    button.labelColor = new Color(200, 0, 0);
+    button.contrast = this.buttonContrast;
+    //button.drawNew();
+    // button.hint = 'stop\nevery-\nthing';
+    //button.fixLayout();
+	button.setPosition(new Point(400, 400));
+	button.setDimension(new Point(800, 800));
+	*/
+	//button.setDimension(new Point(800,800));
+    //nextscenebutton = button;
+	//this.add(nextscenebutton);
+	//this.add(button);
+	//this.openLibrary.add(button);
+	/*
+    button.corner = 12;
+    button.color = colors[0];
+    button.highlightColor = colors[1];
+    button.pressColor = colors[2];
+    button.labelMinExtent = new Point(36, 18);
+    button.padding = 0;
+    button.labelShadowOffset = new Point(-1, -1);
+    button.labelShadowColor = colors[1];
+    button.labelColor = new Color(200, 0, 0);
+    button.contrast = this.buttonContrast;
+    button.drawNew();
+    // button.hint = 'stop\nevery-\nthing';
+    button.fixLayout();
+	button.setPosition(new Point(400, 400));
+	//button.setDimension(new Point(800, 800));
+    nextscenebutton = button;
+	this.openLibrary.add(nextscenebutton);
+	*/
 };
 
 IDE_Morph.prototype.duplicateSprite = function (sprite) {
