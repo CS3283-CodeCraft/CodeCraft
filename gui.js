@@ -82,10 +82,10 @@ var WardrobeMorph;
 var SoundIconMorph;
 var JukeboxMorph;
 
+
 // IDE_Morph ///////////////////////////////////////////////////////////
 
 // I am SNAP's top-level frame, the Editor window
-
 // IDE_Morph inherits from Morph:
 
 IDE_Morph.prototype = new Morph();
@@ -172,7 +172,7 @@ IDE_Morph.prototype.setFlatDesign = function () {
         = IDE_Morph.prototype.buttonLabelColor;
 };
 
-IDE_Morph.prototype.setDefaultDesign();
+IDE_Morph.prototype.setFlatDesign();
 
 // IDE_Morph instance creation:
 
@@ -195,9 +195,12 @@ IDE_Morph.prototype.init = function (isAutoFill) {
 
     this.globalVariables = new VariableFrame();
     this.currentSprite = new SpriteMorph(this.globalVariables);
-    this.sprites = new List([this.currentSprite]);
+    this.shareBoxPlaceholderSprite = new SpriteMorph(this.globalVariables);
+    this.sprites = new List([this.currentSprite, this.shareBoxPlaceholderSprite]);
     this.currentCategory = 'motion';
     this.currentTab = 'scripts';
+	this.currentShareBoxTab = 'scripts';
+    this.currentShareBoxConnectTab = 'connect';
     this.projectName = '';
     this.projectNotes = '';
 
@@ -210,6 +213,11 @@ IDE_Morph.prototype.init = function (isAutoFill) {
     this.stage = null;
     this.corralBar = null;
     this.corral = null;
+	this.shareBoxBar = null;
+	this.shareBox = null;
+    this.shareBoxConnectBar = null;
+    this.shareBoxConnect = null;
+	//this.openLibrary = null;
 
     this.isAutoFill = isAutoFill || true;
     this.isAppMode = false;
@@ -399,6 +407,12 @@ IDE_Morph.prototype.buildPanes = function () {
     this.createSpriteEditor();
     this.createCorralBar();
     this.createCorral();
+	this.createShareBoxBar();
+	this.createShareBox();
+    // xinni: Swap the bottom two lines with the above two lines to see the ShareBox.
+    this.createShareBoxConnectBar();
+    this.createShareBoxConnect();
+	//this.openLibrary();
 };
 
 IDE_Morph.prototype.createLogo = function () {
@@ -409,7 +423,7 @@ IDE_Morph.prototype.createLogo = function () {
     }
 
     this.logo = new Morph();
-    this.logo.texture = 'snap_logo_sm.png';
+    this.logo.texture = 'images/cc_logo.png'; // xinni: new logo
     this.logo.drawNew = function () {
         this.image = newCanvas(this.extent());
         var context = this.image.getContext('2d'),
@@ -419,8 +433,8 @@ IDE_Morph.prototype.createLogo = function () {
                 this.width(),
                 0
             );
-        gradient.addColorStop(0, 'black');
-        gradient.addColorStop(0.5, myself.frameColor.toString());
+        //gradient.addColorStop(0, 'grey');
+        //gradient.addColorStop(0.5, myself.frameColor.toString());
         context.fillStyle = MorphicPreferences.isFlat ?
                 myself.frameColor.toString() : gradient;
         context.fillRect(0, 0, this.width(), this.height());
@@ -444,7 +458,7 @@ IDE_Morph.prototype.createLogo = function () {
     };
 
     this.logo.color = new Color();
-    this.logo.setExtent(new Point(200, 28)); // dimensions are fixed
+    this.logo.setExtent(new Point(200, 28)); // xinni: edited dimensions of the logo
     this.add(this.logo);
 };
 
@@ -462,9 +476,9 @@ IDE_Morph.prototype.createControlBar = function () {
         cloudButton,
         x,
         colors = [
-            this.groupColor,
-            this.frameColor.darker(50),
-            this.frameColor.darker(50)
+            this.groupColor.darker(3),
+            this.frameColor.darker(40),
+            this.frameColor.darker(40)
         ],
         myself = this;
 
@@ -716,7 +730,7 @@ IDE_Morph.prototype.createControlBar = function () {
         );
 
         settingsButton.setCenter(myself.controlBar.center());
-        settingsButton.setLeft(this.left());
+        settingsButton.setLeft(this.left() + 100); // xinni: new logo is bigger, hence shifted top buttons right.
 
         cloudButton.setCenter(myself.controlBar.center());
         cloudButton.setRight(settingsButton.left() - padding);
@@ -1207,8 +1221,7 @@ IDE_Morph.prototype.createCorralBar = function () {
     var padding = 5,
         newbutton,
         paintbutton,
-		paintbutton2,
-		newbutton2,
+        librarybutton,
         colors = [
             this.groupColor,
             this.frameColor.darker(50),
@@ -1224,7 +1237,7 @@ IDE_Morph.prototype.createCorralBar = function () {
     this.corralBar.setHeight(this.logo.height()); // height is fixed
     this.add(this.corralBar);
 
-    // new sprite button
+    // NEW SPRITE BUTTON ///////////////////////////////////////////
     newbutton = new PushButtonMorph(
         this,
         "addNewSprite",
@@ -1241,12 +1254,13 @@ IDE_Morph.prototype.createCorralBar = function () {
     newbutton.labelColor = this.buttonLabelColor;
     newbutton.contrast = this.buttonContrast;
     newbutton.drawNew();
-    newbutton.hint = "add a new Turtle sprite";
+    newbutton.hint = "Add a new Turtle sprite";
     newbutton.fixLayout();
     newbutton.setCenter(this.corralBar.center());
     newbutton.setLeft(this.corralBar.left() + padding);
     this.corralBar.add(newbutton);
 
+    // PAINT BUTTON ////////////////////////////////////////////////
     paintbutton = new PushButtonMorph(
         this,
         "paintNewSprite",
@@ -1263,64 +1277,40 @@ IDE_Morph.prototype.createCorralBar = function () {
     paintbutton.labelColor = this.buttonLabelColor;
     paintbutton.contrast = this.buttonContrast;
     paintbutton.drawNew();
-    paintbutton.hint = "paint a new sprite";
+    paintbutton.hint = "Paint a new sprite";
     paintbutton.fixLayout();
     paintbutton.setCenter(this.corralBar.center());
-    //paintbutton.setLeft(
-    //    this.corralBar.left() + padding + newbutton.width() + padding
-    //);
-	paintbutton.setTop(newbutton.bottom() + padding);
+//	paintbutton.setLeft(
+//		this.corralBar.left() + padding + newbutton.width() + padding
+//	);
+    paintbutton.setTop(newbutton.bottom() + padding);
     this.corralBar.add(paintbutton);
-	
-	paintbutton2 = new PushButtonMorph(
+
+    // IMPORT FROM LIBRARY /////////////////////////////////////////
+    librarybutton = new PushButtonMorph(
         this,
-        "",
-        new SymbolMorph("", 10)
+        "openLibrary",
+        new SymbolMorph("pipette", 15)
     );
-	paintbutton2.corner = 12;
-    paintbutton2.color = colors[0];
-    paintbutton2.highlightColor = colors[1];
-    paintbutton2.pressColor = colors[2];
-    paintbutton2.labelMinExtent = new Point(36, 18);
-    paintbutton2.padding = 0;
-    paintbutton2.labelShadowOffset = new Point(-1, -1);
-    paintbutton2.labelShadowColor = colors[1];
-    paintbutton2.labelColor = this.buttonLabelColor;
-    paintbutton2.contrast = this.buttonContrast;
-    paintbutton2.drawNew();
-    paintbutton2.hint = "from library";
-    paintbutton2.fixLayout();
-    paintbutton2.setCenter(this.corralBar.center());
-    //paintbutton2.setLeft(
-    //    this.corralBar.left() + padding + newbutton.width() + padding + newbutton.width() + padding
-    //);
-	paintbutton2.setTop(paintbutton.bottom() + padding);
-	this.corralBar.add(paintbutton2);
-	/*
-	newbutton2 = new PushButtonMorph(
-        this,
-        "addNewSprite",
-        new SymbolMorph("turtle", 17)
-    );
-	
-    newbutton2.corner = 12;
-    newbutton2.color = colors[0];
-    newbutton2.highlightColor = colors[1];
-    newbutton2.pressColor = colors[2];
-    newbutton2.labelMinExtent = new Point(36, 18);
-    newbutton2.padding = 0;
-    newbutton2.labelShadowOffset = new Point(-1, -1);
-    newbutton2.labelShadowColor = colors[1];
-    newbutton2.labelColor = this.buttonLabelColor;
-    newbutton2.contrast = this.buttonContrast;
-    newbutton2.drawNew();
-    newbutton2.hint = "add a new Turtle sprite";
-    newbutton2.fixLayout();
-    newbutton2.setCenter(this.corralBar.center());
-    newbutton2.setLeft(this.corralBar.left() + padding + 3 * (newbutton.width() + padding));
-    this.corralBar.add(newbutton2);
-	*/
-	
+    librarybutton.corner = 12;
+    librarybutton.color = colors[0];
+    librarybutton.highlightColor = colors[1];
+    librarybutton.pressColor = colors[2];
+    librarybutton.labelMinExtent = new Point(36, 18);
+    librarybutton.padding = 0;
+    librarybutton.labelShadowOffset = new Point(-1, -1);
+    librarybutton.labelShadowColor = colors[1];
+    librarybutton.labelColor = this.buttonLabelColor;
+    librarybutton.contrast = this.buttonContrast;
+    librarybutton.drawNew();
+    librarybutton.hint = "Open library";
+    librarybutton.fixLayout();
+    librarybutton.setCenter(this.corralBar.center());
+//	librarybutton.setLeft(
+//		this.corralBar.left() + padding + newbutton.width() + padding
+//		+ paintbutton.width() + padding);
+    librarybutton.setTop(paintbutton.bottom() + padding);
+    this.corralBar.add(librarybutton);
 };
 
 IDE_Morph.prototype.createCorral = function () {
@@ -1339,7 +1329,7 @@ IDE_Morph.prototype.createCorral = function () {
     this.corral.stageIcon.isDraggable = false;
 	//this.corral.stageIcon.setPosition(new Point(0,-20));
     this.corral.add(this.corral.stageIcon);
-	
+
 	//this.corral.stageIcon = new SpriteIconMorph(this.stage);
     //this.corral.stageIcon.isDraggable = false;
     //this.corral.add(this.corral.stageIcon);
@@ -1365,7 +1355,7 @@ IDE_Morph.prototype.createCorral = function () {
 
     this.corral.frame = frame;
     this.corral.add(frame);
-	
+
     this.corral.fixLayout = function () {
         //this.stageIcon.setCenter(this.center());
         //this.stageIcon.setLeft(this.left() + padding);
@@ -1377,7 +1367,7 @@ IDE_Morph.prototype.createCorral = function () {
         this.arrangeIcons();
         this.refresh();
     };
-	
+
     this.corral.arrangeIcons = function () {
         var x = this.frame.left(),
             y = this.frame.top(),
@@ -1396,7 +1386,7 @@ IDE_Morph.prototype.createCorral = function () {
         });
         this.frame.contents.adjustBounds();
     };
-	
+
     this.corral.addSprite = function (sprite) {
         this.frame.contents.add(new SpriteIconMorph(sprite));
         this.fixLayout();
@@ -1426,8 +1416,575 @@ IDE_Morph.prototype.createCorral = function () {
         myself.createCorral();
         myself.fixLayout();
     };
-	
+
 };
+
+IDE_Morph.prototype.createShareBoxBar = function () {
+	var
+        tabCorner = 15,
+        tabColors = this.tabColors,
+        tabBar = new AlignmentMorph('row', -tabCorner * 2),
+        tab,
+        myself = this;
+
+    if (this.shareBoxBar) {
+        this.shareBoxBar.destroy();
+    }
+
+    // delete the connect bar if sharebox is in operation
+    if (this.shareBoxConnectBar) {
+        this.shareBoxConnectBar.destroy();
+    }
+
+    this.shareBoxBar = new Morph();
+    this.shareBoxBar.bounds = new Rectangle(0, 0, 0, 0); // xinni: remove unwanted floating rectangle
+    this.shareBoxBar.color = null;
+    this.add(this.shareBoxBar);
+
+	// tab bar
+    tabBar.tabTo = function (tabString) {
+        var active;
+        myself.currentShareBoxTab = tabString;
+        this.children.forEach(function (each) {
+            each.refresh();
+            if (each.state) {active = each; }
+        });
+        active.refresh(); // needed when programmatically tabbing
+        myself.createShareBox();
+        myself.fixLayout('tabEditor');
+    };
+
+    tab = new TabMorph(
+        tabColors,
+        null, // target
+        function () {tabBar.tabTo('scripts'); },
+        localize('Scripts'), // label
+        function () {  // query
+            return myself.currentShareBoxTab === 'scripts';
+        }
+    );
+    tab.padding = 3;
+    tab.corner = tabCorner;
+    tab.edge = 1;
+    tab.labelShadowOffset = new Point(-1, -1);
+    tab.labelShadowColor = tabColors[1];
+    tab.labelColor = this.buttonLabelColor;
+    tab.drawNew();
+    tab.fixLayout();
+    tabBar.add(tab);
+
+    tab = new TabMorph(
+        tabColors,
+        null, // target
+        function () {tabBar.tabTo('assets'); },
+        localize('Assets'), // label
+        function () {  // query
+            return myself.currentShareBoxTab === 'assets';
+        }
+    );
+    tab.padding = 3;
+    tab.corner = tabCorner;
+    tab.edge = 1;
+    tab.labelShadowOffset = new Point(-1, -1);
+    tab.labelShadowColor = tabColors[1];
+    tab.labelColor = this.buttonLabelColor;
+    tab.drawNew();
+    tab.fixLayout();
+    //tab.setPosition(new Point(500,500));
+    tabBar.add(tab);
+
+
+    tabBar.fixLayout();
+    tabBar.children.forEach(function (each) {
+        each.refresh();
+    });
+    this.shareBoxBar.tabBar = tabBar;
+    this.shareBoxBar.add(this.shareBoxBar.tabBar);
+
+    this.shareBoxBar.fixLayout = function () {
+        this.setExtent(new Point(
+                this.right() - this.left(),
+            this.height()
+        ));
+        this.tabBar.setLeft(this.left());
+        this.tabBar.setBottom(this.bottom() + 75);
+    };
+
+    //myself.fixLayout();
+};
+
+IDE_Morph.prototype.createShareBox = function () {
+    var scripts = this.shareBoxPlaceholderSprite.scripts,
+        myself = this;
+
+    if (this.shareBox) {
+        this.shareBox.destroy();
+    }
+
+    // delete the connect morph if sharebox is in operation
+    if (this.shareBoxConnect) {
+        this.shareBoxConnect.destroy();
+    }
+
+    scripts.isDraggable = false;
+    scripts.color = this.groupColor;
+    scripts.texture = this.scriptsPaneTexture;
+
+
+    this.shareBox = new Morph();
+    this.shareBox.color = this.groupColor;
+    this.shareBox.acceptsDrops = true;
+
+    scripts.texture = IDE_Morph.prototype.scriptsPaneTexture;
+    this.shareBox.reactToDropOf = function (droppedMorph) {
+        if (droppedMorph instanceof BlockMorph) {
+            this.add(droppedMorph);
+        } else {
+            droppedMorph.destroy();
+        }
+    };
+    //scripts.scrollFrame = this.shareBox;
+    this.add(this.shareBox);
+    /*
+     this.shareBox.scrollX(this.shareBox.padding);
+     this.shareBox.scrollY(this.shareBox.padding);
+     */
+
+};
+
+// xinni: ShareBox connection tab
+IDE_Morph.prototype.createShareBoxConnectBar = function () {
+    if (this.shareBoxConnectBar) {
+        this.shareBoxConnectBar.destroy();
+    }
+
+    // destroy the sharebox bar when currently not connected.
+    if (this.shareBoxBar) {
+        this.shareBoxBar.destroy();
+    }
+
+    var
+        tabCorner = 15,
+        tabColors = this.tabColors,
+        tabBar = new AlignmentMorph('row', -tabCorner * 2),
+        tab,
+        myself = this;
+
+
+    this.shareBoxConnectBar = new Morph();
+    this.shareBoxConnectBar.bounds = new Rectangle(0, 0, 0, 0); // xinni: remove unwanted floating rectangle
+    this.shareBoxConnectBar.color = null;
+    this.add(this.shareBoxConnectBar);
+
+    // tab bar
+    // disable tabTo function for now as not needed
+    /*
+    tabBar.tabTo = function (tabString) {
+        var active;
+        myself.currentShareBoxConnectTab = tabString;
+        this.children.forEach(function (each) {
+            each.refresh();
+            if (each.state) {active = each; }
+        });
+        active.refresh(); // needed when programmatically tabbing
+        myself.createShareBoxConnect();
+        myself.fixLayout('tabEditor');
+    };
+    */
+
+    tab = new TabMorph(
+        tabColors,
+        null, // target
+        function () {tabBar.tabTo('connect'); },
+        localize('Connect to a Partner'), // label
+        function () {  // query
+            return myself.currentShareBoxConnectTab === 'connect';
+        }
+    );
+    tab.padding = 3;
+    tab.corner = tabCorner;
+    tab.edge = 1;
+    tab.labelShadowOffset = new Point(-1, -1);
+    tab.labelShadowColor = tabColors[1];
+    tab.labelColor = this.buttonLabelColor;
+    tab.drawNew();
+    tab.fixLayout();
+    tabBar.add(tab);
+
+    tabBar.fixLayout();
+    tabBar.children.forEach(function (each) {
+        each.refresh();
+    });
+    this.shareBoxConnectBar.tabBar = tabBar;
+    this.shareBoxConnectBar.add(this.shareBoxConnectBar.tabBar);
+
+    this.shareBoxConnectBar.fixLayout = function () {
+        this.setExtent(new Point(
+                this.right() - this.left(),
+            this.height()
+        ));
+        this.tabBar.setLeft(this.left());
+        this.tabBar.setBottom(this.bottom() + 75);
+    };
+};
+
+// xinni: countdown object
+function Countdown(options) {
+    var timer,
+        instance = this,
+        seconds = options.seconds || 10,
+        updateStatus = options.onUpdateStatus || function () {},
+        counterEnd = options.onCounterEnd || function () {};
+
+    function decrementCounter() {
+        updateStatus(seconds);
+        if (seconds === 0) {
+            counterEnd();
+            instance.stop();
+        }
+        seconds--;
+    }
+
+    this.start = function () {
+        clearInterval(timer);
+        timer = 0;
+        seconds = options.seconds;
+        timer = setInterval(decrementCounter, 1000);
+    };
+
+    this.stop = function () {
+        clearInterval(timer);
+    };
+
+}
+
+// xinni: ShareBox connection morph
+IDE_Morph.prototype.createShareBoxConnect = function () {
+
+    // init variables
+    var myself = this;
+    var padding = 10;
+    var cancelButtonPressed = false;
+    this.addPartnerScreen = new FrameMorph();
+    this.awaitingReplyScreen = new FrameMorph();
+
+    // hide sharebox if haven't connected
+    if (this.shareBox) {
+        this.shareBox.destroy();
+    }
+
+    // destroy if already exists
+    if (this.shareBoxConnect) {
+        this.shareBoxConnect.destroy();
+    }
+
+    // init shareBoxConnect
+    this.shareBoxConnect = new ScrollFrameMorph();
+    this.shareBoxConnect.color = this.groupColor;
+    this.shareBoxConnect.acceptsDrops = false;
+
+    // add to myself
+    this.add(this.shareBoxConnect);
+
+    // *****************************
+    // screen 1: ADD A PARTNER
+    // *****************************
+
+    // init screen
+    if (this.addPartnerScreen) {
+        this.addPartnerScreen.destroy();
+    }
+
+    this.addPartnerScreen = new FrameMorph();
+    this.addPartnerScreen.color = this.shareBoxConnect.color;
+    this.shareBoxConnect.addContents(this.addPartnerScreen);
+
+    // screen 1: ADD A PARTNER logo
+    if (this.addPartnerLogo) {
+        this.addPartnerLogo.destroy();
+    }
+    addPartnerLogo = new Morph();
+    addPartnerLogo.texture = 'images/share.png';
+    addPartnerLogo.drawNew = function () {
+        this.image = newCanvas(this.extent());
+        var context = this.image.getContext('2d');
+        var picBgColor = myself.shareBoxConnect.color;
+        context.fillStyle = picBgColor.toString();
+        context.fillRect(0, 0, this.width(), this.height());
+        if (this.texture) {
+            this.drawTexture(this.texture);
+        }
+    };
+
+    addPartnerLogo.setExtent(new Point(181, 123));
+    addPartnerLogo.setLeft(this.stage.width()/2 - addPartnerLogo.width()/2);
+    addPartnerLogo.setTop(this.stage.height()/8);
+    this.addPartnerScreen.add(addPartnerLogo);
+
+    // screen 1: ADD A PARTNER text
+    txt = new TextMorph("Start a collaboration session");
+    txt.fontSize = 13;
+    txt.fontName = "verdana";
+    txt.setColor(SpriteMorph.prototype.paletteTextColor);
+    //txt.setExtent(new Point(addPartnerLogo.width()*2, addPartnerLogo.height()/1.5));
+    txt.setPosition(new Point(this.stage.width()/2 - txt.width()/2, addPartnerLogo.bottom() + padding));
+    this.addPartnerScreen.add(txt);
+
+    // screen 1: ADD A PARTNER input username
+    inputUser = new InputFieldMorph("Username");
+    //inputUser.setExtent(new Point(addPartnerLogo.width()/5 * 4, txt.height()));
+    inputUser.setPosition(new Point(this.stage.width()/2 - inputUser.width()/2 - addPartnerLogo.width()/5 + padding*2, txt.bottom() + padding));
+    this.addPartnerScreen.add(inputUser);
+
+    // screen 1: ADD A PARTNER Go button
+    goButton = new PushButtonMorph(null, null, "Go", null, null, null);
+    goButton.color = new Color(60, 158, 0);
+    goButton.setExtent(new Point(addPartnerLogo.width()/5 - padding, inputUser.height()));
+    goButton.setPosition(new Point(inputUser.left() + inputUser.width() + padding, txt.bottom() + padding));
+    goButton.label.setCenter(goButton.center());
+    goButton.action = function() {
+        myself.addPartnerScreen.hide();
+        myself.awaitingReplyScreen.show();
+
+        // start the expire timer
+        var replyCounter = new Countdown({
+            seconds: 5,  // number of seconds to count down
+            onUpdateStatus: function(sec) {
+
+                if (!cancelButtonPressed) {
+                    console.log(sec);
+                    // xinni: how to make this text morph refresh to countdown the seconds?
+                    countdownTxt.text = "Time out in " + sec + " seconds";
+                } else {
+                    console.log("Cancelled, stopping timer.");
+                    this.stop();
+                }
+            }, // callback for each second
+            onCounterEnd: function() {
+                if (!cancelButtonPressed) {
+                    myself.addPartnerScreen.show();
+                    myself.awaitingReplyScreen.hide();
+                }
+            } // send back to add partner
+        });
+
+        replyCounter.start();
+        console.log("Starting counter, resetting cancelled back to false.")
+        cancelButtonPressed = false;
+    };
+    this.addPartnerScreen.add(goButton);
+
+
+    // *****************************
+    // screen 2: Awaiting reply
+    // *****************************
+
+    // init screen
+    if (this.awaitingReplyScreen) {
+        this.awaitingReplyScreen.destroy();
+    }
+    this.awaitingReplyScreen = new FrameMorph();
+    this.awaitingReplyScreen.color = this.shareBoxConnect.color;
+    this.shareBoxConnect.addContents(this.awaitingReplyScreen);
+
+    // screen 2: Awaiting reply logo
+    if (this.awaitingReplyLogo) {
+        this.awaitingReplyLogo.destroy();
+    }
+    awaitingReplyLogo = new Morph();
+    awaitingReplyLogo.texture = 'images/pending.png';
+    awaitingReplyLogo.drawNew = function () {
+        this.image = newCanvas(this.extent());
+        var context = this.image.getContext('2d');
+        var picBgColor = myself.shareBoxConnect.color;
+        context.fillStyle = picBgColor.toString();
+        context.fillRect(0, 0, this.width(), this.height());
+        if (this.texture) {
+            this.drawTexture(this.texture);
+        }
+    };
+    awaitingReplyLogo.setExtent(new Point(200, 200));
+    awaitingReplyLogo.setLeft(this.stage.width()/2 - awaitingReplyLogo.width()/2);
+    awaitingReplyLogo.setTop(0);
+    this.awaitingReplyScreen.add(awaitingReplyLogo);
+
+    // screen 2: Awaiting reply text
+    txt = new TextMorph("Request sent to 'johntan' \n       Awaiting reply... ");
+    txt.fontSize = 13;
+    txt.fontName = "verdana";
+    txt.setColor(SpriteMorph.prototype.paletteTextColor);
+    txt.setPosition(new Point(this.stage.width()/2 - txt.width()/2, awaitingReplyLogo.bottom() + padding));
+    this.awaitingReplyScreen.add(txt);
+
+    // screen 2: Countdown timer text
+    countdownTxt = new TextMorph("Time out in" + " 5 " + "seconds");
+    countdownTxt.fontSize = 10;
+    countdownTxt.isBold = true;
+    countdownTxt.fontName = "verdana";
+    countdownTxt.setColor(new Color(155, 0, 51));
+    countdownTxt.setPosition(new Point(this.stage.width()/2 - countdownTxt.width()/2, txt.bottom() + padding));
+    this.awaitingReplyScreen.add(countdownTxt);
+
+    // screen 2: Cancel button
+    cancelButton = new PushButtonMorph(null, null, "Cancel", null, null, null);
+    cancelButton.color = new Color(200, 0, 100);
+    cancelButton.setExtent(new Point(100, 30));
+    cancelButton.setPosition(new Point(myself.stage.width()/2 - 50, countdownTxt.bottom() + padding));
+    cancelButton.label.setCenter(cancelButton.center());
+    cancelButton.action = function() {
+        console.log("Cancel button pressed.");
+        cancelButtonPressed = true;
+        myself.addPartnerScreen.show();
+        myself.awaitingReplyScreen.hide();
+    };
+    this.awaitingReplyScreen.add(cancelButton);
+
+    // hide this screen first
+    this.awaitingReplyScreen.hide();
+
+    // *****************************
+    // screen 3: Request received
+    // *****************************
+
+    // init screen
+    if (this.requestReceivedScreen) {
+        this.requestReceivedScreen.destroy();
+    }
+    this.requestReceivedScreen = new FrameMorph();
+    this.requestReceivedScreen.color = this.shareBoxConnect.color;
+    this.shareBoxConnect.addContents(this.requestReceivedScreen);
+
+    // screen 3: Awaiting reply logo
+    if (this.requestReceivedLogo) {
+        this.requestReceivedLogo.destroy();
+    }
+    requestReceivedLogo = new Morph();
+    requestReceivedLogo.texture = 'images/notification.png';
+    requestReceivedLogo.drawNew = function () {
+        this.image = newCanvas(this.extent());
+        var context = this.image.getContext('2d');
+        var picBgColor = myself.shareBoxConnect.color;
+        context.fillStyle = picBgColor.toString();
+        context.fillRect(0, 0, this.width(), this.height());
+        if (this.texture) {
+            this.drawTexture(this.texture);
+        }
+    };
+    requestReceivedLogo.setExtent(new Point(129, 123));
+    requestReceivedLogo.setLeft(this.stage.width()/2 - requestReceivedLogo.width()/2);
+    requestReceivedLogo.setTop(this.stage.width()/8);
+    this.requestReceivedScreen.add(requestReceivedLogo);
+
+    // screen 3: Awaiting reply text
+    txt = new TextMorph("'marylim' has just sent you a request for collaboration.");
+    txt.fontSize = 13;
+    txt.fontName = "verdana";
+    txt.setColor(SpriteMorph.prototype.paletteTextColor);
+    txt.setPosition(new Point(this.stage.width()/2 - txt.width()/2, requestReceivedLogo.bottom() + padding));
+    this.requestReceivedScreen.add(txt);
+
+    // screen 3: Accept button
+    acceptButton = new PushButtonMorph(null, null, "Accept", null, null, null);
+    acceptButton.color = new Color(60, 158, 0);
+    acceptButton.setExtent(new Point(100, 30));
+    acceptButton.setPosition(new Point(myself.stage.width()/2 - acceptButton.width() - padding, txt.bottom() + padding));
+    acceptButton.label.setCenter(acceptButton.center());
+    acceptButton.action = function() {
+        console.log("Accept button pressed. Launch Sharebox.");
+        myself.createShareBoxBar();
+        myself.createShareBox();
+        myself.fixLayout();
+    };
+    this.requestReceivedScreen.add(acceptButton);
+
+    // screen 3: Reject button
+    rejectButton = new PushButtonMorph(null, null, "Reject", null, null, null);
+    rejectButton.color = new Color(200, 0, 100);
+    rejectButton.setExtent(new Point(100, 30));
+    rejectButton.setPosition(new Point(myself.stage.width()/2 + padding, txt.bottom() + padding));
+    rejectButton.label.setCenter(rejectButton.center());
+    rejectButton.action = function() {
+        console.log("Reject button pressed. Back to add partner screen.");
+        myself.addPartnerScreen.show();
+        myself.requestReceivedScreen.hide();
+    };
+    this.requestReceivedScreen.add(rejectButton);
+
+
+    // hide this screen first
+    this.requestReceivedScreen.show();
+
+
+};
+
+/*
+// xinni: displays messages to initialize collaborations
+IDE_Morph.prototype.displayShareBoxMsg = function() {
+    var msgBox,
+        usernameField,
+        noPartner, awaitingReply, receivedReq,
+        goBtn, cancelBtn, acceptBtn, rejectBtn,
+        world = this.world();
+
+    // Username entered here.
+    usernameField = new InputFieldMorph("Enter username here");
+    usernameField.setWidth(300); // fixed dimensions
+    usernameField.contrast = 90;
+    usernameField.setPosition(this.shareBoxBar.bottomLeft().add(new Point(10, 3)));
+    msgBox.add(usernameField);
+    usernameField.drawNew();
+    usernameField.accept = function () {
+        var newName = usernameField.getValue();
+        myself.currentSprite.setName(
+            myself.newSpriteName(newName, myself.currentSprite)
+        );
+        usernameField.setContents(myself.currentSprite.name);
+    };
+    //this.spriteBar.reactToEdit = usernameField.accept;
+
+    noPartner = 'ShareBox'
+        + '\n\n Start a collaboration session with a partner by entering their username below:';
+
+    awaitingReply = localize('Request Sent')
+        + '\n\n'
+        + 'Awaiting johntan\'s reply. \n'
+        + '\nTimeout in x seconds.';
+
+    receivedReq = localize('New Request')
+        + '\n\n'
+        + 'marylim would like to collaborate with you.'
+        + '\nTimeout in x seconds.';
+
+
+    msgBox = new TextMorph();
+    msgBox.inform('ShareBox', aboutTxt, world);
+    //btn1 = msgBox.buttons.children[0]; // xinni: ok button
+
+    cancelBtn = msgBox.addButton(
+        function () {
+            msgBox.body.text = noPartner;
+            msgBox.body.drawNew();
+            msgBox.fixLayout();
+            msgBox.drawNew();
+            msgBox.setCenter(world.center());
+        },
+        'Cancel Request'
+    );
+    goBtn = msgBox.addButton(
+        function () {
+            msgBox.body.text = noticeTxt;
+            msgBox.body.drawNew();
+            msgBox.fixLayout();
+            msgBox.drawNew();
+            msgBox.setCenter(world.center());
+        },
+        'Go!'
+    );
+
+    msgBox.fixLayout();
+    msgBox.drawNew();
+};
+*/
 
 // IDE_Morph layout
 
@@ -1454,6 +2011,8 @@ IDE_Morph.prototype.fixLayout = function (situation) {
     this.palette.setTop(this.categories.bottom());
     this.palette.setHeight(this.bottom() - this.palette.top());
 
+
+    // layout of stage, sprite editor, corral, sharebox.
     if (situation !== 'refreshPalette') {
         // stage
         if (this.isAppMode) {
@@ -1484,7 +2043,7 @@ IDE_Morph.prototype.fixLayout = function (situation) {
             this.spriteEditor.setPosition(this.spriteBar.bottomLeft());
 			this.spriteEditor.setPosition(new Point(205,220));
             this.spriteEditor.setExtent(new Point(
-                this.spriteBar.width(),
+                this.spriteBar.width()-5,
                 this.bottom() - this.spriteEditor.top()
             ));
         }
@@ -1492,7 +2051,7 @@ IDE_Morph.prototype.fixLayout = function (situation) {
         // corralBar
         //this.corralBar.setLeft(this.stage.left());
 		this.corralBar.setLeft(this.stage.left());
-		this.corralBar.setPosition(this.logo.bottomRight().add(padding));
+		this.corralBar.setPosition(this.logo.bottomRight().add(5)); // xinni: +5 aligns corralbar
         //this.corralBar.setTop(this.stage.bottom() + padding);
         //this.corralBar.setWidth(this.stage.width());
 		this.corralBar.setHeight(90);
@@ -1508,6 +2067,42 @@ IDE_Morph.prototype.fixLayout = function (situation) {
 			this.corral.setHeight(90);
             this.corral.fixLayout();
         }
+
+		// Share Box Bar
+        if (this.shareBoxBar) {
+            this.shareBoxBar.setTop(this.stage.bottom() - 40);
+            this.shareBoxBar.setLeft(this.categories.width() + this.spriteBar.width() + 2 * padding + this.stage.width() / 1.5);
+            this.shareBoxBar.fixLayout(); // xinni: position the tabs
+            //this.shareBoxBar.setWidth(this.stage.width());
+            //this.shareBoxBar.setHeight(1000);
+        }
+
+		// Share Box
+        if (this.shareBox) {
+            this.shareBox.setTop(this.stage.bottom() + 35);
+            this.shareBox.setLeft(this.categories.width() + this.spriteBar.width() + 6); // xinni: +6 aligns sharebox with stage.
+            this.shareBox.setWidth(this.stage.width());
+            this.shareBox.setHeight(this.bottom() - this.shareBox.top());
+        }
+
+        // Share Box Connect Bar
+        if (this.shareBoxConnectBar) {
+            this.shareBoxConnectBar.setTop(this.stage.bottom() - 40);
+            this.shareBoxConnectBar.setLeft(this.categories.width() + this.spriteBar.width() + 2 * padding);
+            this.shareBoxConnectBar.fixLayout();
+        }
+
+        // Share Box Connect
+        if (this.shareBoxConnect) {
+            this.shareBoxConnect.setTop(this.shareBox.top());
+            this.shareBoxConnect.setLeft(this.shareBox.left());
+            this.shareBoxConnect.setWidth(this.stage.width());
+            this.shareBoxConnect.setHeight(this.bottom() - this.stage.bottom() + 35);
+            this.addPartnerScreen.setExtent(new Point(this.shareBoxConnect.width(), this.shareBoxConnect.height()));
+            this.awaitingReplyScreen.setExtent(new Point(this.shareBoxConnect.width(), this.shareBoxConnect.height()));
+            this.requestReceivedScreen.setExtent(new Point(this.shareBoxConnect.width(), this.shareBoxConnect.height()));
+        }
+
     }
 
     Morph.prototype.trackChanges = true;
@@ -1881,12 +2476,122 @@ IDE_Morph.prototype.paintNewSprite = function () {
         this.world(),
         this,
         true,
-        function () {myself.removeSprite(sprite); },
+        function () {
+            myself.removeSprite(sprite);
+        },
         function () {
             sprite.addCostume(cos);
             sprite.wearCostume(cos);
         }
     );
+};
+
+IDE_Morph.prototype.openLibrary = function(){
+    var db = new DialogBoxMorph();
+	//var button;
+	var nextscenebutton;
+    var pic = newCanvas(new Point(
+        //434, 294
+        900, 550
+    ));
+	
+	//this.openLibrary = new Morph();
+    //this.openLibrary.color = this.frameColor;
+    //this.openLibrary.setHeight(this.logo.height()); // height is fixed
+    //this.add(this.openLibrary);
+
+    ctx = pic.getContext("2d");
+    img = new Image();
+    img.src = 'library_mockup.png';
+    img.onload = function(){
+        // create pattern
+        var ptrn = ctx.createPattern(img, 'repeat'); // Create a pattern with this image, and set it to "repeat".
+        ctx.fillStyle = ptrn;
+        ctx.fillRect(0, 0, pic.width, pic.height); // context.fillRect(x, y, width, height);
+    };
+
+    db.inform(
+        'Import Resource',
+        'I have a gigantic unicorn',
+        this.world(),
+        pic
+    );
+	
+	//db.addButton('ok', 'OK™');
+    //db.addButton('cancel', 'Cancel');
+    //db.fixLayout();
+    //db.drawNew();
+	//db.setDimension(new Point (800, 800));
+    //db.popUp(world);
+    //db.setCenter(world.center());
+	//db.addButton();
+	
+	// stopButton
+	var button;
+    button = new PushButtonMorph(
+        this,
+        'addNewSprite',
+        new SymbolMorph('', 0),
+		null,
+		null,
+		null,
+		'fuck you, morph'
+    );
+	//this.add(button);
+	button.setWidth(100);
+	button.setHeight(100);
+	button.setPosition(new Point(765,250));
+	//button.color = new Color(255,255,255,0);
+	//button.drawBackgrounds(img);
+	db.add(button);
+	//db.fixLayout();
+	//db.drawNew();
+	//db.setDimension(new Point (800, 800));
+    //db.popUp(world);
+    //db.setCenter(world.center());
+	//db.addButton();
+	
+	/*
+	button.corner = 12;
+    button.color = colors[0];
+    button.highlightColor = colors[1];
+    button.pressColor = colors[2];
+    button.labelMinExtent = new Point(36, 18);
+    button.padding = 0;
+    button.labelShadowOffset = new Point(-1, -1);
+    button.labelShadowColor = colors[1];
+    button.labelColor = new Color(200, 0, 0);
+    button.contrast = this.buttonContrast;
+    //button.drawNew();
+    // button.hint = 'stop\nevery-\nthing';
+    //button.fixLayout();
+	button.setPosition(new Point(400, 400));
+	button.setDimension(new Point(800, 800));
+	*/
+	//button.setDimension(new Point(800,800));
+    //nextscenebutton = button;
+	//this.add(nextscenebutton);
+	//this.add(button);
+	//this.openLibrary.add(button);
+	/*
+    button.corner = 12;
+    button.color = colors[0];
+    button.highlightColor = colors[1];
+    button.pressColor = colors[2];
+    button.labelMinExtent = new Point(36, 18);
+    button.padding = 0;
+    button.labelShadowOffset = new Point(-1, -1);
+    button.labelShadowColor = colors[1];
+    button.labelColor = new Color(200, 0, 0);
+    button.contrast = this.buttonContrast;
+    button.drawNew();
+    // button.hint = 'stop\nevery-\nthing';
+    button.fixLayout();
+	button.setPosition(new Point(400, 400));
+	//button.setDimension(new Point(800, 800));
+    nextscenebutton = button;
+	this.openLibrary.add(nextscenebutton);
+	*/
 };
 
 IDE_Morph.prototype.duplicateSprite = function (sprite) {

@@ -104,6 +104,7 @@ PushButtonMorph.prototype.labelShadowColor = new Color(255, 255, 255);
 PushButtonMorph.prototype.labelShadowOffset = new Point(1, 1);
 
 PushButtonMorph.prototype.color = new Color(220, 220, 220);
+//PushButtonMorph.prototype.color = "rgb(155, 102, 102)"; 
 PushButtonMorph.prototype.pressColor = new Color(115, 180, 240);
 PushButtonMorph.prototype.highlightColor
     = PushButtonMorph.prototype.pressColor.lighter(50);
@@ -124,7 +125,8 @@ function PushButtonMorph(
     labelString,
     environment,
     hint,
-    template
+    template,
+	demo
 ) {
     this.init(
         target,
@@ -132,7 +134,8 @@ function PushButtonMorph(
         labelString,
         environment,
         hint,
-        template
+        template,
+		demo
     );
 }
 
@@ -142,7 +145,8 @@ PushButtonMorph.prototype.init = function (
     labelString,
     environment,
     hint,
-    template
+    template,
+	demo
 ) {
     // additional properties:
     this.is3D = false; // for "flat" design exceptions
@@ -161,6 +165,18 @@ PushButtonMorph.prototype.init = function (
 
     // override inherited properites:
     this.color = PushButtonMorph.prototype.color;
+	if(demo != null){
+		var col = new Color(255,255,255,0.01);
+		
+		this.color = col;
+		this.highlightColor = col;
+		this.pressColor = col;
+		this.outlineColor = new Color(30,30,30,0.01);
+		this.outline = 0.0001;
+		this.edge = 0;
+		this.padding = 0;
+		this.corner = 0;
+	}
     this.drawNew();
     this.fixLayout();
 };
@@ -2401,6 +2417,7 @@ DialogBoxMorph.prototype.addButton = function (action, label) {
     button.fontSize = this.buttonFontSize;
     button.corner = this.buttonCorner;
     button.edge = this.buttonEdge;
+    button.color = this.color.darker(10);    // xinni: make button bg colour different.
     button.outline = this.buttonOutline;
     button.outlineColor = this.buttonOutlineColor;
     button.outlineGradient = this.buttonOutlineGradient;
