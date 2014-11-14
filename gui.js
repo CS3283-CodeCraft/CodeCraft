@@ -1454,17 +1454,21 @@ IDE_Morph.prototype.createShareBoxBar = function () {
             if (!myself.shareBox) {
                 myself.createShareBox();
                 myself.shareAssetsBox.hide();
+                myself.shareAssetsBox.destroy();
             } else {
                 myself.shareBox.show();
                 myself.shareAssetsBox.hide();
+                myself.shareAssetsBox.destroy();
             }
         } else {
             if (!myself.shareAssetsBox) {
                 myself.createShareAssetsBox();
                 myself.shareBox.hide();
+                myself.shareBox.destroy();
             } else {
                 myself.shareAssetsBox.show();
                 myself.shareBox.hide();
+                myself.shareBox.destroy();
             }
         }
         myself.fixLayout('tabEditor');
@@ -1648,9 +1652,10 @@ IDE_Morph.prototype.createShareBox = function () {
 
     this.shareBox = new FrameMorph();
     this.shareBox.color = this.groupColor;
+    this.shareBox.texture = 'scriptsPaneTexture.gif';
     this.shareBox.acceptsDrops = true;
     this.add(this.shareBox);
-    scripts.texture = IDE_Morph.prototype.scriptsPaneTexture;
+    //this.shareBox.texture = IDE_Morph.prototype.scriptsPaneTexture;
 
     this.shareBox.reactToDropOf = function (droppedMorph) {
         if (droppedMorph instanceof BlockMorph) {
