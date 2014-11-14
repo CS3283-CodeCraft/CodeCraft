@@ -1644,7 +1644,6 @@ IDE_Morph.prototype.createShareBox = function () {
 
     this.shareBox = new FrameMorph();
     this.shareBox.color = this.groupColor;
-    this.shareBox.texture = 'scriptsPaneTexture.gif';
     this.shareBox.acceptsDrops = true;
     this.add(this.shareBox);
     //this.shareBox.texture = IDE_Morph.prototype.scriptsPaneTexture;
