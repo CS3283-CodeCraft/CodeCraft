@@ -1870,6 +1870,7 @@ function Countdown(options) {
     };
 
     this.stop = function () {
+        seconds = options.seconds;
         clearInterval(timer);
     };
 
@@ -1953,6 +1954,28 @@ IDE_Morph.prototype.createShareBoxConnect = function () {
     inputUser.setPosition(new Point(this.stage.width()/2 - inputUser.width()/2 - addPartnerLogo.width()/5 + padding*2, txt.bottom() + padding));
     this.addPartnerScreen.add(inputUser);
 
+    // screen 1: INITIALIZE Counter
+
+    var replyCounter = new Countdown({
+        seconds: 4,  // number of seconds to count down
+        onUpdateStatus: function(sec) {
+            if (!cancelButtonPressed) {
+                // console.log(sec);
+                countdownTxt.updateText("Time out in " + sec + " seconds");
+
+            } else {
+                console.log("Cancelled, stopping timer.");
+                this.stop();
+            }
+        }, // callback for each second
+        onCounterEnd: function() {
+            if (!cancelButtonPressed) {
+                myself.addPartnerScreen.show();
+                myself.awaitingReplyScreen.hide();
+            }
+        } // send back to add partner
+    });
+
     // screen 1: ADD A PARTNER Go button
     goButton = new PushButtonMorph(null, null, "Go", null, null, null);
     goButton.color = new Color(60, 158, 0);
@@ -1962,29 +1985,8 @@ IDE_Morph.prototype.createShareBoxConnect = function () {
     goButton.action = function() {
         myself.addPartnerScreen.hide();
         myself.awaitingReplyScreen.show();
-
+        countdownTxt.updateText("Time out in" + " 5 " + "seconds");        // initialize displayed countdown value
         // start the expire timer
-        var replyCounter = new Countdown({
-            seconds: 5,  // number of seconds to count down
-            onUpdateStatus: function(sec) {
-
-                if (!cancelButtonPressed) {
-                    // console.log(sec);
-                    countdownTxt.updateText("Time out in " + sec + " seconds");
-
-                } else {
-                    console.log("Cancelled, stopping timer.");
-                    this.stop();
-                }
-            }, // callback for each second
-            onCounterEnd: function() {
-                if (!cancelButtonPressed) {
-                    myself.addPartnerScreen.show();
-                    myself.awaitingReplyScreen.hide();
-                }
-            } // send back to add partner
-        });
-
         replyCounter.start();
         console.log("Starting counter, resetting cancelled back to false.")
         cancelButtonPressed = false;
@@ -2051,6 +2053,7 @@ IDE_Morph.prototype.createShareBoxConnect = function () {
     cancelButton.action = function() {
         console.log("Cancel button pressed.");
         cancelButtonPressed = true;
+        replyCounter.stop();
         myself.addPartnerScreen.show();
         myself.awaitingReplyScreen.hide();
     };
