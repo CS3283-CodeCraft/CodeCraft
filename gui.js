@@ -1552,12 +1552,10 @@ IDE_Morph.prototype.createShareBoxBar = function () {
     //myself.fixLayout();
 };
 
-IDE_Morph.shareBoxPrototypeFunctionality = function(myself) {
-    // First Screen: Script drag behavior to load the next screen for naming.
-    // Override default behavior
-    var shareBoxBGEmpty = new Morph();
-    shareBoxBGEmpty.texture = 'images/sharebox_prototype.png';
-    shareBoxBGEmpty.drawNew = function () {
+function drawShareBoxPrototypeUsingImage(myself, image) {
+    var sharebox = new Morph();
+    sharebox.texture = image;
+    sharebox.drawNew = function () {
         this.image = newCanvas(this.extent());
         var context = this.image.getContext('2d');
         var picBgColor = myself.shareBox.color;
@@ -1567,9 +1565,28 @@ IDE_Morph.shareBoxPrototypeFunctionality = function(myself) {
             this.drawTexture(this.texture);
         }
     };
-    shareBoxBGEmpty.setExtent(new Point(448, 265));
-    shareBoxBGEmpty.setLeft(this.stage.width()/2 - shareBoxBGEmpty.width()/2);
-    shareBoxBGEmpty.setTop(-2);
+    sharebox.setExtent(new Point(448, 265));
+    sharebox.setLeft(this.stage.width() / 2 - sharebox.width() / 2);
+    sharebox.setTop(-2);
+    return sharebox;
+}
+
+function buildInvisibleButton(action, point, left, top) {
+    var button = new TriggerMorph(
+        this,
+        action,
+        "", 10, 'sans serif', null);
+    button.setExtent(point);
+    button.setLeft(left);
+    button.setTop(top);
+    button.setAlphaScaled(0);
+    return button;
+}
+
+IDE_Morph.shareBoxPrototypeFunctionality = function(myself) {
+    // First Screen: Script drag behavior to load the next screen for naming.
+    // Override default behavior
+    var shareBoxBGEmpty = drawShareBoxPrototypeUsingImage.call(this, myself, 'images/sharebox_prototype.png');
     this.shareBox.add(shareBoxBGEmpty);
 
     this.shareBox.reactToDropOf = function (droppedMorph) {
@@ -1622,54 +1639,31 @@ IDE_Morph.shareBoxPrototypeFunctionality = function(myself) {
     this.scriptListScreen.color = this.shareBox.color;
     this.add(this.scriptListScreen);
 
-    var shareBoxBG = new Morph();
-    shareBoxBG.texture = 'images/sharebox_prototype_add.png';
-    shareBoxBG.drawNew = function () {
-        this.image = newCanvas(this.extent());
-        var context = this.image.getContext('2d');
-        var picBgColor = myself.shareBox.color;
-        context.fillStyle = picBgColor.toString();
-        context.fillRect(0, 0, this.width(), this.height());
-        if (this.texture) {
-            this.drawTexture(this.texture);
-        }
-    };
+
+    // Button to fake-sync
+    var fakeSyncButton = buildInvisibleButton.call(this,
+        function () {
+            this.scriptListScreen.show();
+        },
+        new Point(20, 20), 0, 0);
+    this.shareBox.add(fakeSyncButton);
+
+    // Scripts before
+    var shareBoxBG = drawShareBoxPrototypeUsingImage.call(this, myself, 'images/sharebox_prototype_add.png');
     shareBoxBG.hide();
-    shareBoxBG.setExtent(new Point(448, 265));
-    shareBoxBG.setLeft(this.stage.width()/2 - shareBoxBG.width()/2);
-    shareBoxBG.setTop(-2);
 
-    var shareBoxCloseScript = new Morph();
-    shareBoxCloseScript.texture = 'images/sharebox_prototype_close.png';
-    shareBoxCloseScript.drawNew = function () {
-        this.image = newCanvas(this.extent());
-        var context = this.image.getContext('2d');
-        var picBgColor = myself.shareBox.color;
-        context.fillStyle = picBgColor.toString();
-        context.fillRect(0, 0, this.width(), this.height());
-        if (this.texture) {
-            this.drawTexture(this.texture);
-        }
-    };
-    shareBoxCloseScript.setExtent(new Point(448, 265));
-    shareBoxCloseScript.setLeft(this.stage.width()/2 - shareBoxCloseScript.width()/2);
-    shareBoxCloseScript.setTop(-2);
+    var shareBoxCloseScript = drawShareBoxPrototypeUsingImage.call(this, myself, 'images/sharebox_prototype_close.png');
 
-    var hiddenButton = new TriggerMorph(
-        this,
-    function () {
-        if (shareBoxBG.isVisible == false) {
-            shareBoxBG.show();
-        } else {
-            shareBoxBG.hide();
-        }
-    },
-    "", 10,'sans serif', null);
-    hiddenButton.setExtent(new Point(20, 20));
-    hiddenButton.setLeft(42);
-    hiddenButton.setTop(130);
-    hiddenButton.setAlphaScaled(0);
-
+    // Button to simulate accordion behavior
+    var hiddenButton = buildInvisibleButton.call(this,
+        function () {
+            if (shareBoxBG.isVisible == false) {
+                shareBoxBG.show();
+            } else {
+                shareBoxBG.hide();
+            }
+        },
+        new Point(20, 20), 42, 130);
     this.scriptListScreen.add(shareBoxCloseScript);
     this.scriptListScreen.add(shareBoxBG);
     this.scriptListScreen.add(hiddenButton);
