@@ -1615,11 +1615,45 @@ IDE_Morph.shareBoxPrototypeFunctionality = function(myself) {
             this.drawTexture(this.texture);
         }
     };
+    shareBoxBG.hide();
     shareBoxBG.setExtent(new Point(448, 265));
     shareBoxBG.setLeft(this.stage.width()/2 - shareBoxBG.width()/2);
     shareBoxBG.setTop(-2);
-    this.scriptListScreen.add(shareBoxBG);
 
+    var shareBoxCloseScript = new Morph();
+    shareBoxCloseScript.texture = 'images/sharebox_prototype_close.png';
+    shareBoxCloseScript.drawNew = function () {
+        this.image = newCanvas(this.extent());
+        var context = this.image.getContext('2d');
+        var picBgColor = myself.shareBox.color;
+        context.fillStyle = picBgColor.toString();
+        context.fillRect(0, 0, this.width(), this.height());
+        if (this.texture) {
+            this.drawTexture(this.texture);
+        }
+    };
+    shareBoxCloseScript.setExtent(new Point(448, 265));
+    shareBoxCloseScript.setLeft(this.stage.width()/2 - shareBoxCloseScript.width()/2);
+    shareBoxCloseScript.setTop(-2);
+
+    var hiddenButton = new TriggerMorph(
+        this,
+    function () {
+        if (shareBoxBG.isVisible == false) {
+            shareBoxBG.show();
+        } else {
+            shareBoxBG.hide();
+        }
+    },
+    "", 10,'sans serif', null);
+    hiddenButton.setExtent(new Point(20, 20));
+    hiddenButton.setLeft(42);
+    hiddenButton.setTop(130);
+    hiddenButton.setAlphaScaled(0);
+
+    this.scriptListScreen.add(shareBoxCloseScript);
+    this.scriptListScreen.add(shareBoxBG);
+    this.scriptListScreen.add(hiddenButton);
     this.scriptListScreen.hide();
 }
 
