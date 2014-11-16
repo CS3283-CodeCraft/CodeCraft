@@ -7764,7 +7764,8 @@ SymbolMorph.prototype.names = [
     'arrowDownOutline',
     'arrowRight',
     'arrowRightOutline',
-    'robot'
+    'robot',
+    'library'
 ];
 
 // SymbolMorph instance creation:
@@ -7928,6 +7929,8 @@ SymbolMorph.prototype.symbolCanvasColored = function (aColor) {
         return this.drawSymbolArrowRightOutline(canvas, aColor);
     case 'robot':
         return this.drawSymbolRobot(canvas, aColor);
+    case 'library':
+        return this.drawSymbolLibrary(canvas, aColor);
     default:
         return canvas;
     }
@@ -8512,6 +8515,11 @@ SymbolMorph.prototype.drawSymbolFlash = function (canvas, color) {
     return canvas;
 };
 
+SymbolMorph.prototype.drawSymbolLibrary = function (canvas, color) {
+    // to create a library symbol
+    return canvas
+}
+
 SymbolMorph.prototype.drawSymbolBrush = function (canvas, color) {
     // answer a canvas showing a paintbrush
     var ctx = canvas.getContext('2d'),
@@ -8991,6 +8999,8 @@ SymbolMorph.prototype.drawSymbolRobot = function (canvas, color) {
 
     return canvas;
 };
+
+
 
 // ColorSlotMorph //////////////////////////////////////////////////////
 

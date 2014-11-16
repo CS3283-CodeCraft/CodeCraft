@@ -1292,7 +1292,7 @@ IDE_Morph.prototype.createCorralBar = function () {
     librarybutton = new PushButtonMorph(
         this,
         "openLibrary",
-        new SymbolMorph('pipette', 15)
+        new SymbolMorph('flash', 15)
     );
 	librarybutton.texture = 'librarybutton.png';
     librarybutton.corner = 12;
@@ -1969,9 +1969,9 @@ IDE_Morph.prototype.createShareBoxConnect = function () {
             onUpdateStatus: function(sec) {
 
                 if (!cancelButtonPressed) {
-                    console.log(sec);
-                    // xinni: how to make this text morph refresh to countdown the seconds?
-                    countdownTxt.text = "Time out in " + sec + " seconds";
+                    // console.log(sec);
+                    countdownTxt.updateText("Time out in " + sec + " seconds");
+
                 } else {
                     console.log("Cancelled, stopping timer.");
                     this.stop();

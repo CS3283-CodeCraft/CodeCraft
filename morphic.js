@@ -7351,6 +7351,14 @@ StringMorph.prototype.setText = function (size) {
     this.changed();
 };
 
+StringMorph.prototype.updateText = function (text) {
+    // for context menu demo purposes
+    this.text = text.toString();
+    this.changed();
+    this.drawNew();
+    this.changed();
+};
+
 StringMorph.prototype.numericalSetters = function () {
     // for context menu demo purposes
     return [
@@ -7926,6 +7934,9 @@ TextMorph.prototype.setSerif = StringMorph.prototype.setSerif;
 TextMorph.prototype.setSansSerif = StringMorph.prototype.setSansSerif;
 
 TextMorph.prototype.setText = StringMorph.prototype.setText;
+
+// for dynamic text
+TextMorph.prototype.updateText = StringMorph.prototype.updateText;
 
 TextMorph.prototype.setFontSize = StringMorph.prototype.setFontSize;
 
