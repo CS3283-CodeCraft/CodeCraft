@@ -1287,11 +1287,14 @@ IDE_Morph.prototype.createCorralBar = function () {
     this.corralBar.add(paintbutton);
 
     // IMPORT FROM LIBRARY /////////////////////////////////////////
+	img = new Image();
+    img.src = 'merlion.jpg';
     librarybutton = new PushButtonMorph(
         this,
         "openLibrary",
-        new SymbolMorph("pipette", 15)
+        new SymbolMorph('pipette', 15)
     );
+	librarybutton.texture = 'librarybutton.png';
     librarybutton.corner = 12;
     librarybutton.color = colors[0];
     librarybutton.highlightColor = colors[1];
@@ -1441,6 +1444,7 @@ IDE_Morph.prototype.createShareBoxBar = function () {
     this.shareBoxBar.color = null;
     this.add(this.shareBoxBar);
 
+	/*
 	// tab bar
     tabBar.tabTo = function (tabString) {
         var active;
@@ -1473,7 +1477,22 @@ IDE_Morph.prototype.createShareBoxBar = function () {
         }
         myself.fixLayout('tabEditor');
     };
-
+	*/
+	
+	//Experiment-----------------------------------
+	tabBar.tabTo = function (tabString) {
+        var active;
+        myself.currentShareBoxTab = tabString;
+        this.children.forEach(function (each) {
+            each.refresh();
+            if (each.state) {active = each; }
+        });
+        active.refresh(); // needed when programmatically tabbing
+        myself.createShareBox();
+        myself.fixLayout('tabEditor');
+    };
+	//---------------------------------------------
+	
     tab = new TabMorph(
         tabColors,
         null, // target
@@ -1637,27 +1656,58 @@ IDE_Morph.prototype.createShareBox = function () {
     if (this.shareBoxConnect) {
         this.shareBoxConnect.destroy();
     }
+	
+	if(this.currentShareBoxTab === 'scripts'){
+		scripts.isDraggable = false;
+		scripts.color = this.groupColor;
+		scripts.texture = this.scriptsPaneTexture;
 
-    scripts.isDraggable = false;
-    scripts.color = this.groupColor;
-    scripts.texture = this.scriptsPaneTexture;
+		this.shareBox = new FrameMorph();
+		this.shareBox.color = this.groupColor;
+		this.shareBox.acceptsDrops = true;
+		this.add(this.shareBox);
+		//this.shareBox.texture = IDE_Morph.prototype.scriptsPaneTexture;
 
-    this.shareBox = new FrameMorph();
-    this.shareBox.color = this.groupColor;
-    this.shareBox.acceptsDrops = true;
-    this.add(this.shareBox);
-    //this.shareBox.texture = IDE_Morph.prototype.scriptsPaneTexture;
+		this.shareBox.reactToDropOf = function (droppedMorph) {
+			if (droppedMorph instanceof BlockMorph) {
+				myself.shareBox.add(droppedMorph);
+			} else {
+				droppedMorph.destroy();
+			}
+		};
 
-    this.shareBox.reactToDropOf = function (droppedMorph) {
-        if (droppedMorph instanceof BlockMorph) {
-            myself.shareBox.add(droppedMorph);
-        } else {
-            droppedMorph.destroy();
-        }
-    };
+		// Executes shareBox prototype functionality. To be modified/deleted thereafter
+		IDE_Morph.shareBoxPrototypeFunctionality.call(this, myself);
+	} else if(currentShareBoxTab === 'assets'){
+		use, dra
+		this.shareBox = new WardrobeMorph(
+            this.currentSprite,
+            this.sliderColor
+        );
+        this.shareBox.color = this.groupColor;
+        this.add(this.shareBox);
+        this.shareBox.updateSelection();
 
-    // Executes shareBox prototype functionality. To be modified/deleted thereafter
-    IDE_Morph.shareBoxPrototypeFunctionality.call(this, myself);
+        this.shareBox.acceptsDrops = false;
+        this.shareBox.contents.acceptsDrops = false;
+		
+		//this.createShareAssetsBox();
+	} else{
+		this.shareBox = new Morph();
+		
+		this.shareBox.color = this.groupColor;
+		this.shareBox.acceptsDrops = true;
+		
+		this.shareBox.reactToDropOf = function (droppedMorph) {
+			if (droppedMorph instanceof BlockMorph) {
+				this.world().add(droppedMorph);
+			} else {
+				droppedMorph.destroy();
+			}
+		};
+		this.add(this.shareBox);
+	}
+	
 };
 
 IDE_Morph.prototype.createShareAssetsBox = function () {
@@ -2646,6 +2696,30 @@ IDE_Morph.prototype.paintNewSprite = function () {
     );
 };
 
+IDE_Morph.prototype.addNewSpritePrototype = function(){
+	var sprite = new SpriteMorph(new Image()),
+		cos = new Costume(newCanvas(new Point(100,100)), new Image('library2.jpg')),
+        myself = this;
+	
+	img = new Image();
+    img.src = 'merlion.jpg';
+	
+	sprite.image = img;
+	
+	//sprite.name = this.newSpriteName('Merlion');
+	sprite.name = 'Merlion';
+	sprite.setCenter(this.stage.center());
+    this.stage.add(sprite);
+	
+	this.sprites.add(sprite);
+    this.corral.addSprite(sprite);
+    this.selectSprite(sprite);
+	
+	//myself.removeSprite(sprite);
+	//sprite.addCostume(cos);
+    //sprite.wearCostume(cos);
+}
+
 IDE_Morph.prototype.nextScene = function(){
 	var db = new DialogBoxMorph();
 	//var button;
@@ -2662,7 +2736,7 @@ IDE_Morph.prototype.nextScene = function(){
 
     ctx = pic.getContext("2d");
     img = new Image();
-    img.src = 'thats-all-folks.jpg';
+    img.src = 'library2.jpg';
     img.onload = function(){
         // create pattern
         var ptrn = ctx.createPattern(img, 'repeat'); // Create a pattern with this image, and set it to "repeat".
@@ -2674,8 +2748,118 @@ IDE_Morph.prototype.nextScene = function(){
         'Import Resource',
         'I have a gigantic unicorn',
         this.world(),
-        pic
+        pic,
+		'library window'
     );
+	
+	var button;		//merlion
+    button = new PushButtonMorph(
+        this,
+        'addNewSpritePrototype',
+        "+",
+		null,
+		null,
+		null,
+		'show green button'
+    );
+	
+	button.setWidth(70);
+	button.setHeight(70);
+
+	button.setPosition(new Point(780, 425));
+	
+	db.add(button);
+	
+	var button2;		//$1 coin
+    button2 = new PushButtonMorph(
+        this,
+        'addNewSpritePrototype',
+        "+",
+		null,
+		null,
+		null,
+		'show green button'
+    );
+	
+	button2.setWidth(70);
+	button2.setHeight(70);
+
+	button2.setPosition(new Point(935, 425));
+	
+	db.add(button2);
+	
+	var button3;		//Chinese boy
+    button3 = new PushButtonMorph(
+        this,
+        'addNewSpritePrototype',
+        "+",
+		null,
+		null,
+		null,
+		'show green button'
+    );
+	
+	button3.setWidth(70);
+	button3.setHeight(70);
+
+	button3.setPosition(new Point(780, 265));
+	
+	db.add(button3);
+	
+	var button4;		//malay girl
+    button4 = new PushButtonMorph(
+        this,
+        'addNewSpritePrototype',
+        "+",
+		null,
+		null,
+		null,
+		'show green button'
+    );
+	
+	button4.setWidth(70);
+	button4.setHeight(70);
+
+	button4.setPosition(new Point(935, 265));
+	
+	db.add(button4);
+	
+	var button5;		//indian boy
+    button5 = new PushButtonMorph(
+        this,
+        'addNewSpritePrototype',
+        "+",
+		null,
+		null,
+		null,
+		'show green button'
+    );
+	
+	button5.setWidth(70);
+	button5.setHeight(70);
+
+	button5.setPosition(new Point(1090, 265));
+	
+	db.add(button5);
+	
+	var button6;		//ah lian
+    button6 = new PushButtonMorph(
+        this,
+        'addNewSpritePrototype',
+        "+",
+		null,
+		null,
+		null,
+		'show green button'
+    );
+	
+	button6.setWidth(70);
+	button6.setHeight(70);
+
+	button6.setPosition(new Point(1245, 265));
+	
+	db.add(button6);
+	
 }
 
 IDE_Morph.prototype.openLibrary = function(){
@@ -2694,20 +2878,31 @@ IDE_Morph.prototype.openLibrary = function(){
 
     ctx = pic.getContext("2d");
     img = new Image();
-    img.src = 'library_mockup.png';
+    img.src = 'library1.jpg';
     img.onload = function(){
         // create pattern
         var ptrn = ctx.createPattern(img, 'repeat'); // Create a pattern with this image, and set it to "repeat".
         ctx.fillStyle = ptrn;
         ctx.fillRect(0, 0, pic.width, pic.height); // context.fillRect(x, y, width, height);
     };
-
+	
+	
     db.inform(
         'Import Resource',
         'I have a gigantic unicorn',
         this.world(),
-        pic
+        pic,
+		'library window'
     );
+	
+	
+	//db.addButton('close', 'Close');
+	//db.fixLayout();
+    //db.drawNew();
+	
+	//button.setDimension(new Point(800,800));
+	
+	//db.add(dummy);
 	
 	//db.addButton('ok', 'OK™');
     //db.addButton('cancel', 'Cancel');
@@ -2730,9 +2925,11 @@ IDE_Morph.prototype.openLibrary = function(){
 		'fuck you, morph'
     );
 	//this.add(button);
-	button.setWidth(100);
-	button.setHeight(100);
-	button.setPosition(new Point(765,250));
+	button.setWidth(150);
+	button.setHeight(25);
+	//button.setPosition(new Point(765,250));
+	button.setPosition(new Point(520, 450));
+	
 	//button.color = new Color(255,255,255,0);
 	//button.drawBackgrounds(img);
 	db.add(button);
