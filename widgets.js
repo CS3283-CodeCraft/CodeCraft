@@ -165,17 +165,31 @@ PushButtonMorph.prototype.init = function (
 
     // override inherited properites:
     this.color = PushButtonMorph.prototype.color;
-	if(demo != null){
+	if(demo === "fuck you, morph"){
 		var col = new Color(255,255,255,0.01);
 		
 		this.color = col;
 		this.highlightColor = col;
 		this.pressColor = col;
 		this.outlineColor = new Color(30,30,30,0.01);
-		this.outline = 0.0001;
+		this.outline = 0.01;
 		this.edge = 0;
 		this.padding = 0;
 		this.corner = 0;
+	}
+	if(demo === "show green button"){
+		var col = new Color(255,255,255,0.01);
+		
+		this.color = col;
+		this.labelColor = new Color(0,0,0,0.2);
+		this.highlightColor = new Color(0, 250, 0, 0.75);
+		this.pressColor = col;
+		this.outlineColor = new Color(30,30,30,0.1);
+		this.outline = 0.01;
+		this.edge = 0;
+		this.padding = 0;
+		this.corner = 35;
+		this.fontSize = 40;
 	}
     this.drawNew();
     this.fixLayout();
@@ -1525,7 +1539,8 @@ DialogBoxMorph.prototype.inform = function (
     title,
     textString,
     world,
-    pic
+    pic,
+	demo
 ) {
     var txt = new TextMorph(
         textString,
@@ -1550,10 +1565,17 @@ DialogBoxMorph.prototype.inform = function (
     if (textString) {
         this.addBody(txt);
     }
-    this.addButton('ok', 'OK');
-    this.drawNew();
-    this.fixLayout();
-    this.popUp(world);
+	if(demo === "library window"){
+		this.addButton('cancel', 'Close');
+		this.drawNew();
+		this.fixLayout();
+		this.popUp(world);
+	}else{
+		this.addButton('ok', 'OK');
+		this.drawNew();
+		this.fixLayout();
+		this.popUp(world);
+	}
 };
 
 DialogBoxMorph.prototype.askYesNo = function (
