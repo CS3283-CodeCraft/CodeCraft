@@ -7694,19 +7694,25 @@ ShareBoxAssetsMorph.prototype.updateList = function () {
 };
 
 ShareBoxAssetsMorph.prototype.reactToDropOf = function (icon) {
-    var idx = 0,
-        costume = icon.object,
-        top = icon.top();
+    icon.slideBackTo(world.hand.grabOrigin, 10);
+    if (!(world.hand.grabOrigin.origin.parent instanceof ShareBoxAssetsMorph)) {
 
-    icon.slideBackTo(world.hand.grabOrigin);
-    //icon.destroy();
-    this.contents.children.forEach(function (item) {
-        if (item instanceof CostumeIconMorph && item.top() < top - 4) {
-            idx += 1;
-        }
-    });
-    this.sprite.costumes.add(costume, idx + 1);
-    this.updateList();
-    icon.mouseClickLeft(); // select
-
+        var idx = 0,
+            costume = icon.object,
+            top = icon.top();
+        //icon.destroy();
+        this.contents.children.forEach(function (item) {
+            if (item instanceof CostumeIconMorph && item.top() < top - 4) {
+                idx += 1;
+            }
+        });
+        this.sprite.costumes.add(costume, idx + 1);
+        this.updateList();
+        icon.mouseClickLeft(); // select
+    } else {
+        this.sprite.costumes.add(icon.object);
+        this.updateList();
+        icon.mouseClickLeft();
+        icon.destroy();
+    }
 };
