@@ -1680,7 +1680,7 @@ IDE_Morph.shareBoxPrototypeFunctionality = function (myself) {
                 shareBoxBG.hide();
             }
         },
-        new Point(20, 20), 42, 130);
+        new Point(20, 20), 18, 130);
     this.scriptListScreen.add(shareBoxCloseScript);
     this.scriptListScreen.add(shareBoxBG);
     this.scriptListScreen.add(hiddenButton);
