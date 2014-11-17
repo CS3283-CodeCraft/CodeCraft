@@ -7670,11 +7670,18 @@ ShareBoxAssetsMorph.prototype.updateList = function () {
     this.addContents(txt);
     y = txt.bottom() + padding;
     */
+    var numCostumes = 0;
     this.sprite.costumes.asArray().forEach(function (costume) {
         template = icon = new CostumeIconMorph(costume, template);
         icon.setPosition(new Point(x, y));
         myself.addContents(icon);
-        x = icon.right() + padding;
+        numCostumes++;
+        if (numCostumes != 0 && numCostumes%5 == 0) {
+            y = icon.bottom() + padding;
+            x = myself.left() + 5;
+        } else {
+            x = icon.right() + padding;
+        }
     });
     this.costumesVersion = this.sprite.costumes.lastChanged;
 
