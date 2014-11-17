@@ -196,7 +196,7 @@ IDE_Morph.prototype.init = function (isAutoFill) {
     this.globalVariables = new VariableFrame();
     this.currentSprite = new SpriteMorph(this.globalVariables);
     this.shareBoxPlaceholderSprite = new SpriteMorph(this.globalVariables);
-    this.sprites = new List([this.currentSprite, this.shareBoxPlaceholderSprite]);
+    this.sprites = new List([this.currentSprite]);
     this.currentCategory = 'motion';
     this.currentTab = 'scripts';
 	this.currentShareBoxTab = 'scripts';
@@ -1706,10 +1706,9 @@ IDE_Morph.prototype.createShareBox = function () {
 
 		// Executes shareBox prototype functionality. To be modified/deleted thereafter
 		IDE_Morph.shareBoxPrototypeFunctionality.call(this, myself);
-	} else if(currentShareBoxTab === 'assets'){
-		use, dra
+	} else if(this.currentShareBoxTab === 'assets'){
 		this.shareBox = new WardrobeMorph(
-            this.currentSprite,
+            this.shareBoxPlaceholderSprite,
             this.sliderColor
         );
         this.shareBox.color = this.groupColor;
