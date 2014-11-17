@@ -7091,7 +7091,7 @@ WardrobeMorph.prototype.init = function (aSprite, sliderColor) {
     WardrobeMorph.uber.init.call(this, null, null, sliderColor);
 
     // configure inherited properties
-    this.fps = 2;
+    this.fps = 30;
     this.updateList();
 };
 
@@ -7602,7 +7602,7 @@ ShareBoxAssetsMorph.init = function (aSprite, sliderColor) {
     ShareBoxAssetsMorph.uber.init.call(this, null, null, sliderColor);
 
     // configure inherited properties
-    this.fps = 2;
+    this.fps = 30;
     this.updateList();
 };
 
@@ -7691,4 +7691,22 @@ ShareBoxAssetsMorph.prototype.updateList = function () {
     this.changed();
 
     this.updateSelection();
+};
+
+ShareBoxAssetsMorph.prototype.reactToDropOf = function (icon) {
+    var idx = 0,
+        costume = icon.object,
+        top = icon.top();
+
+    icon.slideBackTo(world.hand.grabOrigin);
+    //icon.destroy();
+    this.contents.children.forEach(function (item) {
+        if (item instanceof CostumeIconMorph && item.top() < top - 4) {
+            idx += 1;
+        }
+    });
+    this.sprite.costumes.add(costume, idx + 1);
+    this.updateList();
+    icon.mouseClickLeft(); // select
+
 };
