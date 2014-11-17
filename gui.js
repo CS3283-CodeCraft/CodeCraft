@@ -7693,10 +7693,16 @@ ShareBoxAssetsMorph.prototype.updateList = function () {
     this.updateSelection();
 };
 
+// Huan Song: Slightly modified version of the original WardrobeMorph reactToDropOf
 ShareBoxAssetsMorph.prototype.reactToDropOf = function (icon) {
-    icon.slideBackTo(world.hand.grabOrigin, 10);
-    if (!(world.hand.grabOrigin.origin.parent instanceof ShareBoxAssetsMorph)) {
+    // Primarily differs in preventing the costume from being removed from WardrobeMorph on sharing
+    // as well avoiding costume duplication from dragging around inside ShareBoxAssetsMorph as a result
+    // of the aforementioned
 
+    // Returns sprite to the original location regardless of origin
+    icon.slideBackTo(world.hand.grabOrigin, 10);
+    // If sprite isn't from ShareBoxAssetsMorph, add costumes
+    if (!(world.hand.grabOrigin.origin.parent instanceof ShareBoxAssetsMorph)) {
         var idx = 0,
             costume = icon.object,
             top = icon.top();
@@ -7710,6 +7716,7 @@ ShareBoxAssetsMorph.prototype.reactToDropOf = function (icon) {
         this.updateList();
         icon.mouseClickLeft(); // select
     } else {
+        // Restore dragged costume
         this.sprite.costumes.add(icon.object);
         this.updateList();
         icon.mouseClickLeft();
