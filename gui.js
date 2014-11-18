@@ -1597,7 +1597,7 @@ function buildInvisibleButton(action, point, left, top) {
     return button;
 }
 
-IDE_Morph.shareBoxPrototypeFunctionality = function (myself, skipToScriptList) {
+IDE_Morph.shareBoxPrototypeFunctionality = function (myself) {
     // First Screen: Script drag behavior to load the next screen for naming.
     // Override default behavior
     var shareBoxBGEmpty = drawShareBoxPrototypeUsingImage.call(this, myself, 'images/sharebox_prototype.png');
@@ -1721,7 +1721,7 @@ IDE_Morph.prototype.createShareBox = function () {
         };
 
         // Executes shareBox prototype functionality. To be modified/deleted thereafter
-        IDE_Morph.shareBoxPrototypeFunctionality.call(this, myself, false);
+        IDE_Morph.shareBoxPrototypeFunctionality.call(this, myself);
     } else if (this.currentShareBoxTab === 'assets') {
         this.shareBox = new ShareBoxAssetsMorph(
             this.shareBoxPlaceholderSprite,
