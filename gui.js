@@ -1597,12 +1597,11 @@ function buildInvisibleButton(action, point, left, top) {
     return button;
 }
 
-IDE_Morph.shareBoxPrototypeFunctionality = function (myself) {
+IDE_Morph.shareBoxPrototypeFunctionality = function (myself, skipToScriptList) {
     // First Screen: Script drag behavior to load the next screen for naming.
     // Override default behavior
     var shareBoxBGEmpty = drawShareBoxPrototypeUsingImage.call(this, myself, 'images/sharebox_prototype.png');
     this.shareBox.add(shareBoxBGEmpty);
-
     this.shareBox.reactToDropOf = function (droppedMorph) {
         if (droppedMorph instanceof BlockMorph) {
             new DialogBoxMorph(
@@ -1722,7 +1721,7 @@ IDE_Morph.prototype.createShareBox = function () {
         };
 
         // Executes shareBox prototype functionality. To be modified/deleted thereafter
-        IDE_Morph.shareBoxPrototypeFunctionality.call(this, myself);
+        IDE_Morph.shareBoxPrototypeFunctionality.call(this, myself, false);
     } else if (this.currentShareBoxTab === 'assets') {
         this.shareBox = new ShareBoxAssetsMorph(
             this.shareBoxPlaceholderSprite,
@@ -1992,6 +1991,9 @@ IDE_Morph.prototype.createShareBoxConnect = function () {
             if (!cancelButtonPressed) {
                 myself.addPartnerScreen.show();
                 myself.awaitingReplyScreen.hide();
+                myself.createShareBoxBar();
+                myself.createShareBox();
+                myself.fixLayout();
             }
         } // send back to add partner
     });
@@ -2150,11 +2152,8 @@ IDE_Morph.prototype.createShareBoxConnect = function () {
     };
     this.requestReceivedScreen.add(rejectButton);
 
-
     // hide this screen first
     this.requestReceivedScreen.show();
-
-
 };
 
 /*
