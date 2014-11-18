@@ -1602,7 +1602,6 @@ IDE_Morph.shareBoxPrototypeFunctionality = function (myself) {
     // Override default behavior
     var shareBoxBGEmpty = drawShareBoxPrototypeUsingImage.call(this, myself, 'images/sharebox_prototype.png');
     this.shareBox.add(shareBoxBGEmpty);
-
     this.shareBox.reactToDropOf = function (droppedMorph) {
         if (droppedMorph instanceof BlockMorph) {
             new DialogBoxMorph(
@@ -1992,6 +1991,9 @@ IDE_Morph.prototype.createShareBoxConnect = function () {
             if (!cancelButtonPressed) {
                 myself.addPartnerScreen.show();
                 myself.awaitingReplyScreen.hide();
+                myself.createShareBoxBar();
+                myself.createShareBox();
+                myself.fixLayout();
             }
         } // send back to add partner
     });
@@ -2150,11 +2152,8 @@ IDE_Morph.prototype.createShareBoxConnect = function () {
     };
     this.requestReceivedScreen.add(rejectButton);
 
-
     // hide this screen first
     this.requestReceivedScreen.show();
-
-
 };
 
 /*
@@ -7693,10 +7692,16 @@ ShareBoxAssetsMorph.prototype.updateList = function () {
     this.updateSelection();
 };
 
+// Huan Song: Slightly modified version of the original WardrobeMorph reactToDropOf
 ShareBoxAssetsMorph.prototype.reactToDropOf = function (icon) {
-    icon.slideBackTo(world.hand.grabOrigin, 10);
-    if (!(world.hand.grabOrigin.origin.parent instanceof ShareBoxAssetsMorph)) {
+    // Primarily differs in preventing the costume from being removed from WardrobeMorph on sharing
+    // as well avoiding costume duplication from dragging around inside ShareBoxAssetsMorph as a result
+    // of the aforementioned
 
+    // Returns sprite to the original location regardless of origin
+    icon.slideBackTo(world.hand.grabOrigin, 10);
+    // If sprite isn't from ShareBoxAssetsMorph, add costumes
+    if (!(world.hand.grabOrigin.origin.parent instanceof ShareBoxAssetsMorph)) {
         var idx = 0,
             costume = icon.object,
             top = icon.top();
@@ -7710,6 +7715,7 @@ ShareBoxAssetsMorph.prototype.reactToDropOf = function (icon) {
         this.updateList();
         icon.mouseClickLeft(); // select
     } else {
+        // Restore dragged costume
         this.sprite.costumes.add(icon.object);
         this.updateList();
         icon.mouseClickLeft();
