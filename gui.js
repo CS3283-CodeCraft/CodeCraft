@@ -1605,44 +1605,11 @@ IDE_Morph.shareBoxPrototypeFunctionality = function (myself) {
     var shareBoxBGEmpty = drawShareBoxPrototypeUsingImage.call(this, myself, 'images/sharebox_prototype.png');
     this.shareBox.add(shareBoxBGEmpty);
     var serializer = this.serializer;
+    var sharer = new ShareBoxItemSharer(serializer);
     // Final function will serialize the object into XML and call Yiwen's API to write it to a file
     this.shareBox.reactToDropOf = function (droppedMorph) {
-        if (droppedMorph instanceof BlockMorph) {
-            // It's a script!
-            // Serialize it to XML
-            var xml = droppedMorph.toXML(serializer);
-            /*
-            new DialogBoxMorph(
-                myself,
-                function () {
-                    myself.scriptListScreen.show();
-                    myself.shareBox.hide();
-                },
-                myself
-            ).prompt(
-                'Enter a name for the script',
-                null,
-                myself.world()
-            );
-            this.add(droppedMorph);
-            */
-            // Then write to server
-            // Refresh list
-        } else if (droppedMorph instanceof CostumeIconMorph) {
-            // It's a costume!
-            // Serialize it to XML
-            var xml = droppedMorph.object.copy().toXML(serializer);
-            // Then write to server
-            // Refresh list
-        } else if (droppedMorph instanceof SoundIconMorph) {
-            // It's a sound!
-            // Serialize it to XML
-            var xml = droppedMorph.object.copy().toXML(serializer);
-            // Then write to server
-            // Refresh list
-        } else {
-            droppedMorph.destroy();
-        }
+        sharer.shareObject(droppedMorph);
+        droppedMorph.destroy();
     };
 
     // Most of the following code will likely be scrapped
