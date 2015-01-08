@@ -1597,13 +1597,21 @@ function buildInvisibleButton(action, point, left, top) {
     return button;
 }
 
+// Tang Huan Song: I'll be Morphing this prototype function slowly into the fully-functional function (puns intended)
+
 IDE_Morph.shareBoxPrototypeFunctionality = function (myself) {
     // First Screen: Script drag behavior to load the next screen for naming.
     // Override default behavior
     var shareBoxBGEmpty = drawShareBoxPrototypeUsingImage.call(this, myself, 'images/sharebox_prototype.png');
     this.shareBox.add(shareBoxBGEmpty);
+    var serializer = this.serializer;
+    // Final function will serialize the object into XML and call Yiwen's API to write it to a file
     this.shareBox.reactToDropOf = function (droppedMorph) {
         if (droppedMorph instanceof BlockMorph) {
+            // It's a script!
+            // Serialize it to XML
+            var xml = droppedMorph.toXML(serializer);
+            /*
             new DialogBoxMorph(
                 myself,
                 function () {
@@ -1617,10 +1625,27 @@ IDE_Morph.shareBoxPrototypeFunctionality = function (myself) {
                 myself.world()
             );
             this.add(droppedMorph);
+            */
+            // Then write to server
+            // Refresh list
+        } else if (droppedMorph instanceof CostumeIconMorph) {
+            // It's a costume!
+            // Serialize it to XML
+            var xml = droppedMorph.object.copy().toXML(serializer);
+            // Then write to server
+            // Refresh list
+        } else if (droppedMorph instanceof SoundIconMorph) {
+            // It's a sound!
+            // Serialize it to XML
+            var xml = droppedMorph.object.copy().toXML(serializer);
+            // Then write to server
+            // Refresh list
         } else {
             droppedMorph.destroy();
         }
     };
+
+    // Most of the following code will likely be scrapped
 
     // Second Screen: Static screen with text box and button requesting script name.
     // init screen
