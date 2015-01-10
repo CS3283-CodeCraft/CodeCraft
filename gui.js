@@ -1610,10 +1610,10 @@ IDE_Morph.shareBoxPrototypeFunctionality = function (myself) {
     // Final function will serialize the object into XML and call Yiwen's API to write it to a file
     this.shareBox.reactToDropOf = function (droppedMorph) {
         // Currently this is a function to demonstrate both dropping and dragging.
-
+        var shareName = 'shareName';
         // After the drop, sharer is to call shareObject only. shareObject will communicate with the server API and
         // handle everything else
-        sharer.shareObject(droppedMorph);
+        sharer.shareObject(droppedMorph, shareName);
 
         // Following is a demonstration of some of the functions used by the sharer. They are meant to be private access
         // and will be hidden later on
