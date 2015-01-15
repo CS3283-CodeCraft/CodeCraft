@@ -84,6 +84,8 @@ var ToggleElementMorph;
 var DialogBoxMorph;
 var AlignmentMorph;
 var InputFieldMorph;
+var typefilter = false;
+var locationfilter = false;
 
 // PushButtonMorph /////////////////////////////////////////////////////
 
@@ -1068,7 +1070,8 @@ function ToggleMorph(
     hint,
     template,
     element, // optional Morph or Canvas to display
-    builder // method which constructs the element (only for Morphs)
+    builder	// method which constructs the element (only for Morphs)
+	
 ) {
     this.init(
         style,
@@ -1363,7 +1366,7 @@ ToggleElementMorph.prototype.init = function (
 
     // override inherited properties:
     this.color = element.color;
-    this.createLabel();
+	this.createLabel();
 };
 
 // ToggleElementMorph drawing:
@@ -1577,6 +1580,166 @@ DialogBoxMorph.prototype.inform = function (
 		this.popUp(world);
 	}
 };
+
+DialogBoxMorph.prototype.createCheckBox = function (
+	librarylength,
+	libraryheight){
+		
+	this.labelString = 'Sprite Library';
+	this.createLabel();
+	
+	var text = new TextMorph("Category");
+	//this.fontSize = 10;
+	text.setPosition(new Point(screen.width*0.02,screen.height*0.05));	
+	this.add(text);
+	
+	var peoplebox = new ToggleMorph(
+        'checkbox',
+        null,
+        function () {
+            this.typefilter = !this.typefilter;
+        },
+        localize('People'),
+        function () {
+            return this.typefilter;
+        }
+    );
+	
+	peoplebox.setPosition(new Point(screen.width*0.02,screen.height*0.07));	
+	this.add(peoplebox);
+	
+	var animalbox = new ToggleMorph(
+        'checkbox',
+        null,
+        function () {
+            this.typefilter = !this.typefilter;
+        },
+        localize('Animal'),
+        function () {
+            return this.typefilter;
+        }
+    );
+	
+	animalbox.setPosition(new Point(screen.width*0.02,screen.height*0.095));	
+	this.add(animalbox);
+	
+	var objectbox = new ToggleMorph(
+        'checkbox',
+        null,
+        function () {
+            this.typefilter = !this.typefilter;
+        },
+        localize('Object'),
+        function () {
+            return this.typefilter;
+        }
+    );
+	
+	objectbox.setPosition(new Point(screen.width*0.02,screen.height*0.12));	
+	this.add(objectbox);
+	
+	var text2 = new TextMorph("Location");
+	//this.fontSize = 10;
+	text2.setPosition(new Point(screen.width*0.02,screen.height*0.18));	
+	this.add(text2);
+	
+	var singaporebox = new ToggleMorph(
+        'checkbox',
+        null,
+        function () {
+            this.locationfilter = !this.locationfilter;
+        },
+        localize('Singapore'),
+        function () {
+            return this.locationfilter;
+        }
+    );
+	
+	singaporebox.setPosition(new Point(screen.width*0.02,screen.height*0.205));	
+	this.add(singaporebox);
+	
+	var malaysiabox = new ToggleMorph(
+        'checkbox',
+        null,
+        function () {
+            this.locationfilter = !this.locationfilter;
+        },
+        localize('Malaysia'),
+        function () {
+            return this.locationfilter;
+        }
+    );
+	
+	malaysiabox.setPosition(new Point(screen.width*0.02,screen.height*0.23));	
+	this.add(malaysiabox);
+	
+	var chinabox = new ToggleMorph(
+        'checkbox',
+        null,
+        function () {
+            this.locationfilter = !this.locationfilter;
+        },
+        localize('China'),
+        function () {
+            return this.locationfilter;
+        }
+    );
+	
+	chinabox.setPosition(new Point(screen.width*0.02,screen.height*0.255));	
+	this.add(chinabox);
+	
+	var indiabox = new ToggleMorph(
+        'checkbox',
+        null,
+        function () {
+            this.locationfilter = !this.locationfilter;
+        },
+        localize('India'),
+        function () {
+            return this.locationfilter;
+        }
+    );
+	
+	indiabox.setPosition(new Point(screen.width*0.02,screen.height*0.28));	
+	this.add(indiabox);
+	
+	var thailandbox = new ToggleMorph(
+        'checkbox',
+        null,
+        function () {
+            this.locationfilter = !this.locationfilter;
+        },
+        localize('Thailand'),
+        function () {
+            return this.locationfilter;
+        }
+    );
+	
+	thailandbox.setPosition(new Point(screen.width*0.02,screen.height*0.305));	
+	this.add(thailandbox);
+	/*
+    peoplebox.label.isBold = false;
+	//peoplebox.label.setColor(this.buttonLabelColor);
+    //peoplebox.color = tabColors[2];
+    //peoplebox.highlightColor = tabColors[0];
+    //peoplebox.pressColor = tabColors[1];
+
+    //peoplebox.tick.shadowOffset = MorphicPreferences.isFlat ?
+    //    new Point() : new Point(-1, -1);
+    peoplebox.tick.shadowColor = new Color(); // black
+    //peoplebox.tick.color = this.buttonLabelColor;
+    peoplebox.tick.isBold = false;
+    peoplebox.tick.drawNew();
+
+    //peoplebox.setPosition(nameField.bottomLeft().add(2));
+    peoplebox.drawNew();
+    this.add(peoplebox);
+	*/
+	this.addButton('cancel', 'Close');
+	this.drawNew();
+	this.fixLayout();
+	this.popUp(world);
+}
 
 DialogBoxMorph.prototype.askYesNo = function (
     title,
