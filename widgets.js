@@ -27,8 +27,8 @@
 
     prerequisites:
     --------------
-    needs blocks.js and objects.js
-
+    //needs blocks.js and objects.js
+    //does not need blocks, according to dependency chain
 
     I. hierarchy
     -------------

@@ -1604,8 +1604,8 @@ IDE_Morph.shareBoxPrototypeFunctionality = function (myself) {
     // Override default behavior
     var shareBoxBGEmpty = drawShareBoxPrototypeUsingImage.call(this, myself, 'images/sharebox_prototype.png');
     this.shareBox.add(shareBoxBGEmpty);
-    var serializer = this.serializer;
-    var ide = this;
+    var serializer = this.serializer,
+        ide = this;
     var sharer = new ShareBoxItemSharer(serializer, ide);
     // Final function will serialize the object into XML and call Yiwen's API to write it to a file
     this.shareBox.reactToDropOf = function (droppedMorph) {
