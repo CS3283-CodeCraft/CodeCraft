@@ -32,6 +32,32 @@ function ShareBoxItemSharer(serializer, ide) {
 ShareBoxItemSharer.prototype.shareObject = function (socket, shareItem, shareName) {
     // Saving is relatively simple, and requires one serialization step, as opposed to deserialization
     var xml = this.serializeItem(shareItem);
+
+    // var data = getAllShareboxItems();
+
+    // {
+    //     sharebox: "name-of-the-share-box",
+    //     items: [
+    //         {
+    //             name: "",
+    //             type: "",
+    //             xml: "",
+    //             status: 1 - no update, 2 - delete, 0 - new
+    //         },
+    //         {
+
+    //         }
+    //     ]
+    // }
+
+    // data.items.append({
+    //     name: shareName,
+    //     type: ..,
+    //     xml: xml,
+    //     status: 
+    // })
+
+
     if (xml === null || xml === undefined) {
         // ERROR HANDLING
         throw "Null XML";
