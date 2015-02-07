@@ -84,6 +84,8 @@ var JukeboxMorph;
 
 var ShareBoxAssetsMorph;
 
+var currentPage = 1;
+
 // IDE_Morph ///////////////////////////////////////////////////////////
 
 // I am SNAP's top-level frame, the Editor window
@@ -2938,6 +2940,50 @@ IDE_Morph.prototype.openLibrary = function () {
     var db = new DialogBoxMorph();
     //var button;
     var nextscenebutton;
+	//var txt;
+	var myself = this,
+        world = this.world();
+	/*
+	txt = new TextMorph(
+        localize('click or drag crosshairs to move the rotation center'),
+        dialog.fontSize,
+        dialog.fontStyle,
+        true,
+        false,
+        'center',
+        null,
+        null,
+        new Point(1, 1),
+        new Color(255, 255, 255)
+    );
+	*/
+	//db.createLabel();
+	//db.addBody(txt);
+	//db.addButton('ok', 'Ok');
+    //db.addButton('cancel', 'Cancel');
+    //db.fixLayout();
+    //db.drawNew();
+	//this.add(db);
+	db.setWidth(screen.width*0.7);
+	db.setHeight(screen.height*0.7);
+	//db.fontSize = 40;
+	db.createCheckBox(db.length,db.height);
+	
+	db.createImage(screen.width * 0.3, screen.height * 0.15);
+	
+	/*
+	db.setWidth(800);
+	db.setHeight(800);
+	
+	db.inform(
+        'Import Resource',
+        'I have a gigantic unicorn',
+        this.world(),
+        null,
+        'library window'
+    );
+	*/
+	/*
     var pic = newCanvas(new Point(
         //434, 294
         900, 550
@@ -2957,16 +3003,16 @@ IDE_Morph.prototype.openLibrary = function () {
         ctx.fillStyle = ptrn;
         ctx.fillRect(0, 0, pic.width, pic.height); // context.fillRect(x, y, width, height);
     };
-
+	
 
     db.inform(
         'Import Resource',
         'I have a gigantic unicorn',
         this.world(),
-        pic,
+        null,
         'library window'
     );
-
+	*/
 
     //db.addButton('close', 'Close');
     //db.fixLayout();
@@ -2986,6 +3032,7 @@ IDE_Morph.prototype.openLibrary = function () {
     //db.addButton();
 
     // stopButton
+	/*
     var button;
     button = new PushButtonMorph(
         this,
@@ -3005,6 +3052,7 @@ IDE_Morph.prototype.openLibrary = function () {
     //button.color = new Color(255,255,255,0);
     //button.drawBackgrounds(img);
     db.add(button);
+	*/
     //db.fixLayout();
     //db.drawNew();
     //db.setDimension(new Point (800, 800));

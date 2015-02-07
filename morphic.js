@@ -3283,6 +3283,22 @@ Morph.prototype.prompt = function (
     entryField.text.edit();
 };
 
+Morph.prototype.createCategory = function (){	
+  for (var i = 0; i < 10; i++) {
+               var label = document.createElement('label');
+               var br = document.createElement('br');
+               //var alabel = document.getElementById("<%=Label3.ClientID %>");
+			   var alabel = document.getElementById('div1');
+               var last = alabel[alabel.length - 1];
+               label.htmlFor = "lbl"+i;
+               label.appendChild(Createcheckbox('test' + i));
+               label.appendChild(document.createTextNode('kings' + i));
+               label.appendChild(br);
+               //document.getElementById("<%=Label3.ClientID %>").appendChild(label);
+			   document.getElementById('div1').appendChild(label);
+  }
+}
+
 Morph.prototype.pickColor = function (
     msg,
     callback,
