@@ -16,9 +16,11 @@
  * @classdesc ShareBoxItemSharer serves as an interface between the GUI and the server for operations in the ShareBox.
  * It provides basic CRUD operations on the ShareBox, and informs CodeCraft of the changes.
  */
-function ShareBoxItemSharer(serializer, ide) {
+function ShareBoxItemSharer(serializer, ide, socket) {
     this.serializer = serializer || [];
     this.ide = ide || [];
+    this.data = {sharebox: "sharebox1", items: []};
+    this.socket = socket;
 }
 
 /**
@@ -32,17 +34,32 @@ function ShareBoxItemSharer(serializer, ide) {
 ShareBoxItemSharer.prototype.shareObject = function (socket, shareItem, shareName) {
     // Saving is relatively simple, and requires one serialization step, as opposed to deserialization
     var xml = this.serializeItem(shareItem);
+
+    //var deserializedItem = sharer.deserializeItem(xml);
+    // Further conversion is needed to make the object grabbable
+    //var grabbableItem = sharer.returnGrabbableDeserializedItem(deserializedItem);
+
+    // Thereafter, we put the item into the cursor's hand, and let the cursor carry it around.
+    //grabbableItem.setPosition(world.hand.position());
+    //world.hand.grab(grabbableItem);
+
     if (xml === null || xml === undefined) {
         // ERROR HANDLING
         throw "Null XML";
     } else {
-        socket.emit('share item', xml);
-        console.log("send:" + xml);
+        // Share the item
+        // Build array object to update list
+        var objectData = {
+            name: shareName,
+            xml: xml,
+            status: 0
+        };
+        var string = JSON.stringify(objectData);
+        socket.emit('share item', string);
+        console.log("send:" + string);
         // Save object, passing the XML, object type and name to save it as
         // Call Yiwen's storage API here
         // Overwriting should be an option here.
-
-        nop();
     }
 };
 

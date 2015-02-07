@@ -1607,22 +1607,12 @@ IDE_Morph.shareBoxPrototypeFunctionality = function (myself) {
     var shareBoxBGEmpty = drawShareBoxPrototypeUsingImage.call(this, myself, 'images/sharebox_prototype.png');
     this.shareBox.add(shareBoxBGEmpty);
     var serializer = this.serializer,
-        ide = this;
-    var sharer = new ShareBoxItemSharer(serializer, ide);
+        ide = this,
+        socket = io();
 
-    var socket = io();
+    var sharer = new ShareBoxItemSharer(serializer, ide, socket);
 
-    socket.on('share item', function(xml){
-        console.log("received:" + xml);
-        var deserializedItem = sharer.deserializeItem(xml);
 
-        // Further conversion is needed to make the object grabbable
-        var grabbableItem = sharer.returnGrabbableDeserializedItem(deserializedItem);
-
-        // Thereafter, we put the item into the cursor's hand, and let the cursor carry it around.
-        grabbableItem.setPosition(world.hand.position());
-        world.hand.grab(grabbableItem);
-    })
 
     // Final function will serialize the object into XML and call Yiwen's API to write it to a file
     this.shareBox.reactToDropOf = function (droppedMorph) {

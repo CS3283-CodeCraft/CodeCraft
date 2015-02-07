@@ -1607,22 +1607,21 @@ IDE_Morph.shareBoxPrototypeFunctionality = function (myself) {
     var shareBoxBGEmpty = drawShareBoxPrototypeUsingImage.call(this, myself, 'images/sharebox_prototype.png');
     this.shareBox.add(shareBoxBGEmpty);
     var serializer = this.serializer,
-        ide = this;
-    var sharer = new ShareBoxItemSharer(serializer, ide);
+        ide = this,
+        socket = io();
 
-    var socket = io();
+    var sharer = new ShareBoxItemSharer(serializer, ide, socket);
 
-    socket.on('share item', function(xml){
-        console.log("received:" + xml);
-        var deserializedItem = sharer.deserializeItem(xml);
+    // When I receive data, I parse objectData and add it to my data list
+    sharer.socket.on('share item', function (objectData) {
+        console.log("received:" + objectData);
+        // Build array object to update list
+        var arrayItem = JSON.parse(objectData);
+        // Update local list
+        this.data.items.push(arrayItem);
+        console.log(JSON.stringify(this.data.items, null, '\t'));
+    }.bind(sharer));
 
-        // Further conversion is needed to make the object grabbable
-        var grabbableItem = sharer.returnGrabbableDeserializedItem(deserializedItem);
-
-        // Thereafter, we put the item into the cursor's hand, and let the cursor carry it around.
-        // grabbableItem.setPosition(world.hand.position());
-        // world.hand.grab(grabbableItem);
-    })
 
     // Final function will serialize the object into XML and call Yiwen's API to write it to a file
     this.shareBox.reactToDropOf = function (droppedMorph) {
@@ -1642,7 +1641,7 @@ IDE_Morph.shareBoxPrototypeFunctionality = function (myself) {
         // Gets a deserialized object back, which is not in a one-to-one correspondence the original dragged object,
         // so...
 
-    
+
 
         // ~~Fin~~
     };
@@ -2949,79 +2948,79 @@ IDE_Morph.prototype.openLibrary = function () {
     var db = new DialogBoxMorph();
     //var button;
     var nextscenebutton;
-	//var txt;
-	var myself = this,
+    //var txt;
+    var myself = this,
         world = this.world();
-	/*
-	txt = new TextMorph(
-        localize('click or drag crosshairs to move the rotation center'),
-        dialog.fontSize,
-        dialog.fontStyle,
-        true,
-        false,
-        'center',
-        null,
-        null,
-        new Point(1, 1),
-        new Color(255, 255, 255)
-    );
-	*/
-	//db.createLabel();
-	//db.addBody(txt);
-	//db.addButton('ok', 'Ok');
+    /*
+     txt = new TextMorph(
+     localize('click or drag crosshairs to move the rotation center'),
+     dialog.fontSize,
+     dialog.fontStyle,
+     true,
+     false,
+     'center',
+     null,
+     null,
+     new Point(1, 1),
+     new Color(255, 255, 255)
+     );
+     */
+    //db.createLabel();
+    //db.addBody(txt);
+    //db.addButton('ok', 'Ok');
     //db.addButton('cancel', 'Cancel');
     //db.fixLayout();
     //db.drawNew();
-	//this.add(db);
-	db.setWidth(screen.width*0.7);
-	db.setHeight(screen.height*0.7);
-	//db.fontSize = 40;
-	db.createCheckBox(db.length,db.height);
-	
-	db.createImage(screen.width * 0.3, screen.height * 0.15);
-	
-	/*
-	db.setWidth(800);
-	db.setHeight(800);
-	
-	db.inform(
-        'Import Resource',
-        'I have a gigantic unicorn',
-        this.world(),
-        null,
-        'library window'
-    );
-	*/
-	/*
-    var pic = newCanvas(new Point(
-        //434, 294
-        900, 550
-    ));
+    //this.add(db);
+    db.setWidth(screen.width*0.7);
+    db.setHeight(screen.height*0.7);
+    //db.fontSize = 40;
+    db.createCheckBox(db.length,db.height);
 
-    //this.openLibrary = new Morph();
-    //this.openLibrary.color = this.frameColor;
-    //this.openLibrary.setHeight(this.logo.height()); // height is fixed
-    //this.add(this.openLibrary);
+    db.createImage(screen.width * 0.3, screen.height * 0.15);
 
-    ctx = pic.getContext("2d");
-    img = new Image();
-    img.src = 'library1.jpg';
-    img.onload = function () {
-        // create pattern
-        var ptrn = ctx.createPattern(img, 'repeat'); // Create a pattern with this image, and set it to "repeat".
-        ctx.fillStyle = ptrn;
-        ctx.fillRect(0, 0, pic.width, pic.height); // context.fillRect(x, y, width, height);
-    };
-	
+    /*
+     db.setWidth(800);
+     db.setHeight(800);
 
-    db.inform(
-        'Import Resource',
-        'I have a gigantic unicorn',
-        this.world(),
-        null,
-        'library window'
-    );
-	*/
+     db.inform(
+     'Import Resource',
+     'I have a gigantic unicorn',
+     this.world(),
+     null,
+     'library window'
+     );
+     */
+    /*
+     var pic = newCanvas(new Point(
+     //434, 294
+     900, 550
+     ));
+
+     //this.openLibrary = new Morph();
+     //this.openLibrary.color = this.frameColor;
+     //this.openLibrary.setHeight(this.logo.height()); // height is fixed
+     //this.add(this.openLibrary);
+
+     ctx = pic.getContext("2d");
+     img = new Image();
+     img.src = 'library1.jpg';
+     img.onload = function () {
+     // create pattern
+     var ptrn = ctx.createPattern(img, 'repeat'); // Create a pattern with this image, and set it to "repeat".
+     ctx.fillStyle = ptrn;
+     ctx.fillRect(0, 0, pic.width, pic.height); // context.fillRect(x, y, width, height);
+     };
+
+
+     db.inform(
+     'Import Resource',
+     'I have a gigantic unicorn',
+     this.world(),
+     null,
+     'library window'
+     );
+     */
 
     //db.addButton('close', 'Close');
     //db.fixLayout();
@@ -3041,27 +3040,27 @@ IDE_Morph.prototype.openLibrary = function () {
     //db.addButton();
 
     // stopButton
-	/*
-    var button;
-    button = new PushButtonMorph(
-        this,
-        'nextScene',
-        new SymbolMorph('', 0),
-        null,
-        null,
-        null,
-        'fuck you, morph'
-    );
-    //this.add(button);
-    button.setWidth(150);
-    button.setHeight(25);
-    //button.setPosition(new Point(765,250));
-    button.setPosition(new Point(520, 450));
+    /*
+     var button;
+     button = new PushButtonMorph(
+     this,
+     'nextScene',
+     new SymbolMorph('', 0),
+     null,
+     null,
+     null,
+     'fuck you, morph'
+     );
+     //this.add(button);
+     button.setWidth(150);
+     button.setHeight(25);
+     //button.setPosition(new Point(765,250));
+     button.setPosition(new Point(520, 450));
 
-    //button.color = new Color(255,255,255,0);
-    //button.drawBackgrounds(img);
-    db.add(button);
-	*/
+     //button.color = new Color(255,255,255,0);
+     //button.drawBackgrounds(img);
+     db.add(button);
+     */
     //db.fixLayout();
     //db.drawNew();
     //db.setDimension(new Point (800, 800));
@@ -7703,45 +7702,45 @@ ShareBoxAssetsMorph.prototype.updateList = function () {
     this.addBack(this.contents);
 
     /*
-    icon = new TurtleIconMorph(this.sprite);
-    icon.setPosition(new Point(x, y));
-    myself.addContents(icon);
-    y = icon.bottom() + padding;
+     icon = new TurtleIconMorph(this.sprite);
+     icon.setPosition(new Point(x, y));
+     myself.addContents(icon);
+     y = icon.bottom() + padding;
 
-    paintbutton = new PushButtonMorph(
-        this,
-        "paintNew",
-        new SymbolMorph("brush", 15)
-    );
-    paintbutton.padding = 0;
-    paintbutton.corner = 12;
-    paintbutton.color = IDE_Morph.prototype.groupColor;
-    paintbutton.highlightColor = IDE_Morph.prototype.frameColor.darker(50);
-    paintbutton.pressColor = paintbutton.highlightColor;
-    paintbutton.labelMinExtent = new Point(36, 18);
-    paintbutton.labelShadowOffset = new Point(-1, -1);
-    paintbutton.labelShadowColor = paintbutton.highlightColor;
-    paintbutton.labelColor = TurtleIconMorph.prototype.labelColor;
-    paintbutton.contrast = this.buttonContrast;
-    paintbutton.drawNew();
-    paintbutton.hint = "Paint a new costume";
-    paintbutton.setPosition(new Point(x, y));
-    paintbutton.fixLayout();
-    paintbutton.setCenter(icon.center());
-    paintbutton.setLeft(icon.right() + padding * 4);
+     paintbutton = new PushButtonMorph(
+     this,
+     "paintNew",
+     new SymbolMorph("brush", 15)
+     );
+     paintbutton.padding = 0;
+     paintbutton.corner = 12;
+     paintbutton.color = IDE_Morph.prototype.groupColor;
+     paintbutton.highlightColor = IDE_Morph.prototype.frameColor.darker(50);
+     paintbutton.pressColor = paintbutton.highlightColor;
+     paintbutton.labelMinExtent = new Point(36, 18);
+     paintbutton.labelShadowOffset = new Point(-1, -1);
+     paintbutton.labelShadowColor = paintbutton.highlightColor;
+     paintbutton.labelColor = TurtleIconMorph.prototype.labelColor;
+     paintbutton.contrast = this.buttonContrast;
+     paintbutton.drawNew();
+     paintbutton.hint = "Paint a new costume";
+     paintbutton.setPosition(new Point(x, y));
+     paintbutton.fixLayout();
+     paintbutton.setCenter(icon.center());
+     paintbutton.setLeft(icon.right() + padding * 4);
 
 
-    this.addContents(paintbutton);
-    txt = new TextMorph(localize(
-        "costumes tab help" // look up long string in translator
-    ));
-    txt.fontSize = 9;
-    txt.setColor(SpriteMorph.prototype.paletteTextColor);
+     this.addContents(paintbutton);
+     txt = new TextMorph(localize(
+     "costumes tab help" // look up long string in translator
+     ));
+     txt.fontSize = 9;
+     txt.setColor(SpriteMorph.prototype.paletteTextColor);
 
-    txt.setPosition(new Point(x, y));
-    this.addContents(txt);
-    y = txt.bottom() + padding;
-    */
+     txt.setPosition(new Point(x, y));
+     this.addContents(txt);
+     y = txt.bottom() + padding;
+     */
     var numCostumes = 0;
     this.sprite.costumes.asArray().forEach(function (costume) {
         template = icon = new CostumeIconMorph(costume, template);
