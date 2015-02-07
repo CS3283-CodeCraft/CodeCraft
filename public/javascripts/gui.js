@@ -1617,6 +1617,7 @@ IDE_Morph.shareBoxPrototypeFunctionality = function (myself) {
         console.log("received:" + objectData);
         // Build array object to update list
         var arrayItem = JSON.parse(objectData);
+        arrayItem.xml = _.unescape(arrayItem.xml);
         // Update local list
         this.data.items.push(arrayItem);
         console.log(JSON.stringify(this.data.items, null, '\t'));
