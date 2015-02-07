@@ -2159,9 +2159,15 @@ IDE_Morph.prototype.createShareBoxConnect = function () {
     acceptButton.label.setCenter(acceptButton.center());
     acceptButton.action = function () {
         console.log("Accept button pressed. Launch Sharebox.");
-        myself.createShareBoxBar();
-        myself.createShareBox();
-        myself.fixLayout();
+        SnapCloud.createSharebox(tempIdentifier, function(data){
+            console.log(data);
+            
+            myself.addPartnerScreen.show();
+            myself.awaitingReplyScreen.hide();
+            myself.createShareBoxBar();
+            myself.createShareBox();
+            myself.fixLayout();
+        })
     };
     this.requestReceivedScreen.add(acceptButton);
 

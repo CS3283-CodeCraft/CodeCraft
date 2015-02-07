@@ -67,20 +67,18 @@ Cloud.prototype.createSharebox = function(
     creatorId,
     callBack
 ) {
+    console.log(this.url)
     var shareWith = eval("[" + prompt("Who you want to share with", "1, 2, 3") + "]");
     var data = {
-        creator_id: 23,
+        creator_id: creatorId,
         share_with: shareWith
     }
     var success = function(data){
         callBack.call(null, data);
     }
-    $.post({
-        url: (this.hasProtocol() ? '' : 'http://') + this.url + 'sharebox',
-        data: data,
-        success: success,
-        dataType: 'json'
-    })
+    var url = this.url + 'sharebox'
+    console.log(url)
+    $.post(url, data, success, 'json')
 }
 
 Cloud.prototype.signup = function (

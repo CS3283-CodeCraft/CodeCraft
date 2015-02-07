@@ -25,6 +25,7 @@ html
 		script(type='text/javascript', src='javascripts/store.js')
 		script(src="http://underscorejs.org/underscore-min.js")
 		script(type='text/javascript').
+			var tempIdentifier = prompt("what's your id?")
 			var world;
 			window.onload = function () {
 			world = new WorldMorph(document.getElementById('world'));
