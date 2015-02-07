@@ -153,7 +153,6 @@ ShareBoxItemSharer.prototype.returnGrabbableDeserializedItem = function(deserial
  */
 ShareBoxItemSharer.prototype.deserializeItem = function(xml) {
     var model = this.serializer.parse(xml);
-    console.log(model);
     if (model.tag === 'script') {
         return this.serializer.loadScript(model);
     }
