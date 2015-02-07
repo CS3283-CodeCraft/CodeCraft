@@ -1613,7 +1613,7 @@ IDE_Morph.shareBoxPrototypeFunctionality = function (myself) {
     var sharer = new ShareBoxItemSharer(serializer, ide, socket);
 
     // When I receive data, I parse objectData and add it to my data list
-    sharer.socket.on('share item', function (objectData) {
+    sharer.socket.on('public', function (objectData) {
         console.log("received:" + objectData);
         // Build array object to update list
         var arrayItem = JSON.parse(objectData);
@@ -2161,7 +2161,7 @@ IDE_Morph.prototype.createShareBoxConnect = function () {
         console.log("Accept button pressed. Launch Sharebox.");
         SnapCloud.createSharebox(tempIdentifier, function(data){
             console.log(data);
-            
+
             myself.addPartnerScreen.show();
             myself.awaitingReplyScreen.hide();
             myself.createShareBoxBar();

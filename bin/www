@@ -33,7 +33,7 @@ server.on('listening', onListening);
 var io = require('socket.io')(server);
 
 io.on('connection', function(socket){
-    socket.on('share item', function(msg){
+    socket.on('public', function(msg){
         io.emit('share item', msg);
     });
 });
