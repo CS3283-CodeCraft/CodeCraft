@@ -1648,7 +1648,7 @@ IDE_Morph.shareBoxPrototypeFunctionality = function (myself) {
     };
 
     // Most of the following code will likely be scrapped
-
+    /*
     // Second Screen: Static screen with text box and button requesting script name.
     // init screen
     if (this.addScriptScreen) {
@@ -1711,6 +1711,7 @@ IDE_Morph.shareBoxPrototypeFunctionality = function (myself) {
     this.scriptListScreen.add(shareBoxBG);
     this.scriptListScreen.add(hiddenButton);
     this.scriptListScreen.hide();
+    */
 }
 
 IDE_Morph.prototype.createShareBox = function () {
@@ -2163,10 +2164,18 @@ IDE_Morph.prototype.createShareBoxConnect = function () {
         SnapCloud.createSharebox(tempIdentifier, function(data){
             console.log(data);
 
+            var txt = new TextMorph(data.data[0].id.toString());
+            txt.fontSize = 18;
+            txt.fontName = "verdana";
+            txt.setColor(SpriteMorph.prototype.paletteTextColor);
+            txt.setPosition(new Point(5, 5));
+
             myself.addPartnerScreen.show();
             myself.awaitingReplyScreen.hide();
             myself.createShareBoxBar();
             myself.createShareBox();
+            txt.show();
+            myself.shareBox.add(txt);
             myself.fixLayout();
         })
     };
