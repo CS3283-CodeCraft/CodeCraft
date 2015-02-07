@@ -1,0 +1,39 @@
+doctype html
+html
+	head
+		meta(http-equiv='Content-Type', content='text/html; charset=UTF-8')
+		title Snap! Build Your Own Blocks. Beta
+		link(rel='shortcut icon', href='http://snap.berkeley.edu/fav3.gif', type='image/gif')
+		script(type='text/javascript', src='http://code.jquery.com/jquery-1.11.1.js')
+		script(src="https://cdn.socket.io/socket.io-1.2.0.js")
+		script(type='text/javascript', src='javascripts/morphic.js')
+		script(type='text/javascript', src='javascripts/widgets.js')
+		script(type='text/javascript', src='javascripts/blocks.js')
+		script(type='text/javascript', src='javascripts/threads.js')
+		script(type='text/javascript', src='javascripts/objects.js')
+		script(type='text/javascript', src='javascripts/sharebox.js')
+		script(type='text/javascript', src='javascripts/gui.js')
+		script(type='text/javascript', src='javascripts/paint.js')
+		script(type='text/javascript', src='javascripts/library.js')
+		script(type='text/javascript', src='javascripts/lists.js')
+		script(type='text/javascript', src='javascripts/byob.js')
+		script(type='text/javascript', src='javascripts/xml.js')
+		script(type='text/javascript', src='javascripts/store.js')
+		script(type='text/javascript', src='javascripts/locale.js')
+		script(type='text/javascript', src='javascripts/cloud.js')
+		script(type='text/javascript', src='javascripts/sha512.js')
+		script(type='text/javascript', src='javascripts/store.js')
+		script(type='text/javascript').
+			var world;
+			window.onload = function () {
+			world = new WorldMorph(document.getElementById('world'));
+			world.worldCanvas.focus();
+			new IDE_Morph().openIn(world);
+			setInterval(loop, 1);
+			};
+			function loop() {
+			world.doOneCycle();
+			}
+	body(style='margin: 0;')
+		block content
+		
