@@ -1504,6 +1504,9 @@ DialogBoxMorph.prototype.buttonOutlineColor
     = PushButtonMorph.prototype.color;
 DialogBoxMorph.prototype.buttonOutlineGradient = true;
 
+DialogBoxMorph.prototype.currentpage = 1;
+DialogBoxMorph.prototype.maxpage = 1;
+
 DialogBoxMorph.prototype.instances = {}; // prevent multiple instances
 
 // DialogBoxMorph instance creation:
@@ -1580,6 +1583,97 @@ DialogBoxMorph.prototype.inform = function (
 		this.popUp(world);
 	}
 };
+
+DialogBoxMorph.prototype.createImage = function (
+	spacelength,
+	spaceheight){
+	
+	//var sprite = new SpriteMorph(new Image()),
+		//cos = new Costume(newCanvas(new Point(100, 100));
+        //myself = this;
+	var picsize = 40;
+	this.maxpage = Math.ceil(picsize / 15);
+	
+	var sprite = new SpriteMorph(new Image());
+
+	for(i = 0; i < 15; i++){
+		sprite = new SpriteMorph(new Image());	
+		
+		//sprite.setCenter(this.stage.center());
+		sprite.setWidth(100);
+		sprite.setHeight(100);
+		
+		sprite.setPosition(new Point(spacelength + (i%5)*150, spaceheight + Math.floor(i/5) * 180));
+		sprite.isDraggable = false;
+		
+		this.add(sprite);
+	}
+	
+	var button;		//next button
+    button = new PushButtonMorph(
+        this,
+        'goNextPage',
+        "Next",
+        null,
+        null,
+        null
+    );
+
+    button.setWidth(50);
+    button.setHeight(20);
+
+    button.setPosition(new Point(screen.width * 0.52, screen.height * 0.75));
+
+    this.add(button);
+	
+	var button2;		//next button
+    button2 = new PushButtonMorph(
+        this,
+        'goPrevPage',
+        "Prev",
+        null,
+        null,
+        null
+    );
+
+    button2.setWidth(50);
+    button2.setHeight(20);
+
+    button2.setPosition(new Point(screen.width * 0.44, screen.height * 0.75));
+
+    this.add(button2);
+	
+	var text = new TextMorph(this.currentpage.toString() + " / " + this.maxpage.toString());
+	//this.fontSize = 10;
+	text.setPosition(new Point(screen.width*0.49,screen.height*0.755));	
+	this.add(text);
+	
+    //this.stage.add(sprite);
+
+    //this.sprites.add(sprite);
+    //this.corral.addSprite(sprite);
+    //this.selectSprite(sprite);
+	
+}
+
+DialogBoxMorph.prototype.goNextPage = function (){
+	
+	this.currentpage++;
+	if(this.currentpage > this.maxpage){
+		this.currentpage -= this.maxpage;
+	}
+	//this.createImage(screen.width * 0.3, screen.height * 0.15);
+}
+
+DialogBoxMorph.prototype.goPrevPage = function (){
+	
+	this.currentpage--;
+	if(this.currentpage <= 0){
+		this.currentpage = this.maxpage;
+	}
+	//this.createImage(screen.width * 0.3, screen.height * 0.15);
+	
+}
 
 DialogBoxMorph.prototype.createCheckBox = function (
 	librarylength,

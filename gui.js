@@ -84,6 +84,8 @@ var JukeboxMorph;
 
 var ShareBoxAssetsMorph;
 
+var currentPage = 1;
+
 // IDE_Morph ///////////////////////////////////////////////////////////
 
 // I am SNAP's top-level frame, the Editor window
@@ -2966,6 +2968,9 @@ IDE_Morph.prototype.openLibrary = function () {
 	db.setHeight(screen.height*0.7);
 	//db.fontSize = 40;
 	db.createCheckBox(db.length,db.height);
+	
+	db.createImage(screen.width * 0.3, screen.height * 0.15);
+	
 	/*
 	db.setWidth(800);
 	db.setHeight(800);
