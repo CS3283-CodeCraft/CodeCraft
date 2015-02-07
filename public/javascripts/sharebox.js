@@ -51,7 +51,7 @@ ShareBoxItemSharer.prototype.shareObject = function (socket, shareItem, shareNam
         // Build array object to update list
         var objectData = {
             name: shareName,
-            xml: xml,
+            xml: _.escape(xml),
             status: 0
         };
         var string = JSON.stringify(objectData);
