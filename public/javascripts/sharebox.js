@@ -31,7 +31,7 @@ function ShareBoxItemSharer(serializer, ide, socket) {
  * @param {string} shareName - the name to share the object as
  * @throws {Null XML} The object shareItem could not be serialized.
  */
-ShareBoxItemSharer.prototype.shareObject = function (socket, shareItem, shareName) {
+ShareBoxItemSharer.prototype.shareObject = function (room, socket, shareItem, shareName) {
     // Saving is relatively simple, and requires one serialization step, as opposed to deserialization
     var xml = this.serializeItem(shareItem);
 
@@ -54,8 +54,8 @@ ShareBoxItemSharer.prototype.shareObject = function (socket, shareItem, shareNam
             xml: _.escape(xml),
             status: 0
         };
-        var string = JSON.stringify(objectData);
-        socket.emit('share item', string);
+        var string = { room: room, data: objectData };
+        socket.emit('send', string);
         console.log("send:" + string);
         // Save object, passing the XML, object type and name to save it as
         // Call Yiwen's storage API here

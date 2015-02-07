@@ -1601,19 +1601,23 @@ function buildInvisibleButton(action, point, left, top) {
 
 // Tang Huan Song: I'll be Morphing this prototype function slowly into the fully-functional function (puns intended)
 
-IDE_Morph.shareBoxPrototypeFunctionality = function (myself) {
+IDE_Morph.shareBoxPrototypeFunctionality = function (myself, shareboxId) {
     // First Screen: Script drag behavior to load the next screen for naming.
     // Override default behavior
     var shareBoxBGEmpty = drawShareBoxPrototypeUsingImage.call(this, myself, 'images/sharebox_prototype.png');
     this.shareBox.add(shareBoxBGEmpty);
     var serializer = this.serializer,
         ide = this,
+        room = shareboxId.toString(), 
         socket = io();
 
     var sharer = new ShareBoxItemSharer(serializer, ide, socket);
 
+    sharer.socket.emit('join', {id: tempIdentifier, room: room });
+    console.log("join room " + room)
+
     // When I receive data, I parse objectData and add it to my data list
-    sharer.socket.on('public', function (objectData) {
+    sharer.socket.on('message', function (objectData) {
         console.log("received:" + objectData);
         // Build array object to update list
         var arrayItem = JSON.parse(objectData);
@@ -1630,7 +1634,7 @@ IDE_Morph.shareBoxPrototypeFunctionality = function (myself) {
         var shareName = 'shareName';
         // After the drop, sharer is to call shareObject only. shareObject will communicate with the server API and
         // handle everything else
-        sharer.shareObject(socket, droppedMorph, shareName);
+        sharer.shareObject(room, socket, droppedMorph, shareName);
 
         // Following is a demonstration of some of the functions used by the sharer. They are meant to be private access
         // and will be hidden later on
@@ -1713,10 +1717,12 @@ IDE_Morph.shareBoxPrototypeFunctionality = function (myself) {
     this.scriptListScreen.hide();
 }
 
-IDE_Morph.prototype.createShareBox = function () {
+IDE_Morph.prototype.createShareBox = function (shareboxId) {
     // Initialization of Sharebox and its default behavior
     var scripts = this.shareBoxPlaceholderSprite.scripts,
         myself = this;
+
+    shareboxId = typeof shareboxId !== 'undefined' ? shareboxId : 42;
 
     // Destroy if sharebox exists
     if (this.shareBox) {
@@ -1748,7 +1754,7 @@ IDE_Morph.prototype.createShareBox = function () {
         };
 
         // Executes shareBox prototype functionality. To be modified/deleted thereafter
-        IDE_Morph.shareBoxPrototypeFunctionality.call(this, myself);
+        IDE_Morph.shareBoxPrototypeFunctionality.call(this, myself, shareboxId);
     } else if (this.currentShareBoxTab === 'assets') {
         this.shareBox = new ShareBoxAssetsMorph(
             this.shareBoxPlaceholderSprite,
@@ -1777,6 +1783,8 @@ IDE_Morph.prototype.createShareBox = function () {
         };
         this.add(this.shareBox);
     }
+
+    console.log("sharebox created with id " + shareboxId)
 
 };
 
@@ -2162,11 +2170,11 @@ IDE_Morph.prototype.createShareBoxConnect = function () {
         console.log("Accept button pressed. Launch Sharebox.");
         SnapCloud.createSharebox(tempIdentifier, function(data){
             console.log(data);
-
+            var shareboxId = prompt("sharebox id?", data.data[0].id)
             myself.addPartnerScreen.show();
             myself.awaitingReplyScreen.hide();
             myself.createShareBoxBar();
-            myself.createShareBox();
+            myself.createShareBox(shareboxId);
             myself.fixLayout();
         })
     };
