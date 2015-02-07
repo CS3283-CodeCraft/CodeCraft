@@ -2804,11 +2804,6 @@ IDE_Morph.prototype.nextScene = function () {
         900, 550
     ));
 
-    //this.openLibrary = new Morph();
-    //this.openLibrary.color = this.frameColor;
-    //this.openLibrary.setHeight(this.logo.height()); // height is fixed
-    //this.add(this.openLibrary);
-
     ctx = pic.getContext("2d");
     img = new Image();
     img.src = 'library2.jpg';
