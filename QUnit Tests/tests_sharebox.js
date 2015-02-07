@@ -19,12 +19,24 @@ QUnit.test("Serialize empty costume given fresh IDE", function(assert) {
 
 QUnit.test("Serialize empty sound given fresh IDE", function(assert) {
     var sharer = new ShareBoxItemSharer(new SnapSerializer(), this.ide);
+    var sound = new Sound(
+        makeSound('C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\QUnit Tests\\Loopo_a.wav')
+    );
+    var soundXML = sound.toDataURL();
     assert.equal(sharer.serializeItem(
             new SoundIconMorph(
-                new Sound(
-                    makeSound('C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\QUnit Tests\\Loopo_a.wav')
-                )
+                sound
             )
         ),
-        "<costume name=\"\" center-x=\"0\" center-y=\"0\" image=\"data:,\" id=\"1\"/>", "Passed!" );
+        "<sound name=\"Sound\" sound=\"file:///C:/Users/Tang/Source/Repos/CodeCraft/QUnit%20Tests/Loopo_a.wav\" id=\"1\"/>", "Passed!" );
+});
+
+QUnit.test("Serialize empty costume given fresh IDE", function(assert) {
+    var sharer = new ShareBoxItemSharer(new SnapSerializer(), this.ide);
+    var makecost = makeCostume('C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\QUnit Tests\\img.bmp');
+    var costume = new SVG_Costume(makecost);
+    var costumeMorph = new CostumeIconMorph(costume);
+    assert.equal(costumeMorph.toDataURL('image/png')
+        ,
+        "<sound name=\"Sound\" sound=\"file:///C:/Users/Tang/Source/Repos/CodeCraft/QUnit%20Tests/Loopo_a.wav\" id=\"1\"/>", "Passed!" );
 });
