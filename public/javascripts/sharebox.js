@@ -54,8 +54,9 @@ ShareBoxItemSharer.prototype.shareObject = function (socket, shareItem, shareNam
             xml: xml,
             status: 0
         };
-        socket.emit('share item', objectData);
-        console.log("send:" + objectData);
+        var string = JSON.stringify(objectData);
+        socket.emit('share item', string);
+        console.log("send:" + string);
         // Save object, passing the XML, object type and name to save it as
         // Call Yiwen's storage API here
         // Overwriting should be an option here.

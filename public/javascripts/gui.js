@@ -1611,14 +1611,12 @@ IDE_Morph.shareBoxPrototypeFunctionality = function (myself) {
         socket = io();
 
     var sharer = new ShareBoxItemSharer(serializer, ide, socket);
+
+    // When I receive data, I parse objectData and add it to my data list
     sharer.socket.on('share item', function (objectData) {
         console.log("received:" + objectData);
         // Build array object to update list
-        var arrayItem = {
-            name: objectData.name,
-            xml: objectData.xml,
-            status: 0
-        };
+        var arrayItem = JSON.parse(objectData);
         // Update local list
         this.data.items.push(arrayItem);
         console.log(JSON.stringify(this.data.items, null, '\t'));
