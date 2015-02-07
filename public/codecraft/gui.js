@@ -1715,6 +1715,8 @@ IDE_Morph.shareBoxPrototypeFunctionality = function (myself) {
 
 IDE_Morph.prototype.createShareBox = function () {
     // Initialization of Sharebox and its default behavior
+
+
     var scripts = this.shareBoxPlaceholderSprite.scripts,
         myself = this;
 

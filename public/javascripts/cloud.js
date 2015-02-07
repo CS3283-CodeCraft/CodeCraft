@@ -37,7 +37,7 @@ modules.cloud = '2014-May-26';
 var Cloud;
 
 var SnapCloud = new Cloud(
-    'https://snapcloud.miosoft.com/miocon/app/login?_app=SnapCloud'
+    'http://localhost:4000/'
 );
 
 // Cloud /////////////////////////////////////////////////////////////
@@ -62,6 +62,26 @@ Cloud.prototype.hasProtocol = function () {
 };
 
 // Cloud: Snap! API
+
+Cloud.prototype.createSharebox = function(
+    creatorId,
+    callBack
+) {
+    var shareWith = eval("[" + prompt("Who you want to share with", "1, 2, 3") + "]");
+    var data = {
+        creator_id: 23,
+        share_with: shareWith
+    }
+    var success = function(data){
+        callBack.call(null, data);
+    }
+    $.post({
+        url: (this.hasProtocol() ? '' : 'http://') + this.url + 'sharebox',
+        data: data,
+        success: success,
+        dataType: 'json'
+    })
+}
 
 Cloud.prototype.signup = function (
     username,
