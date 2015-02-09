@@ -167,6 +167,8 @@ PushButtonMorph.prototype.init = function (
 
     // override inherited properites:
     this.color = PushButtonMorph.prototype.color;
+
+    // Delete "fuck you" and "show green" if not needed.
 	if(demo === "fuck you, morph"){
 		var col = new Color(255,255,255,0.01);
 		
@@ -193,6 +195,38 @@ PushButtonMorph.prototype.init = function (
 		this.corner = 35;
 		this.fontSize = 40;
 	}
+
+    // xinni: using demo to style buttons. rename demo to 'style' at a later time
+    if (demo === "green") {
+        var greenColor = new Color(60, 158, 0);
+        var lightGreenColor = new Color(80, 209, 0);
+        var white = new Color(255, 255, 255);
+
+        this.color = greenColor;
+        this.highlightColor = lightGreenColor;
+        this.pressColor = lightGreenColor;
+        this.labelColor = white;
+
+        this.fontSize = 15;
+        this.label.setCenter(this.center());
+        this.padding = 7;
+    }
+
+    if (demo === "red") {
+        var redColor = new Color(204, 0, 0);
+        var lightRedColor = new Color(255, 51, 51);
+        var white = new Color(255, 255, 255);
+
+        this.color = redColor;
+        this.highlightColor = lightRedColor;
+        this.pressColor = lightRedColor;
+        this.labelColor = white;
+
+        this.fontSize = 15;
+        this.label.setCenter(this.center());
+        this.padding = 7;
+    }
+
     this.drawNew();
     this.fixLayout();
 };

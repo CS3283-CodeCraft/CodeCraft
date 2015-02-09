@@ -219,6 +219,7 @@ IDE_Morph.prototype.init = function (isAutoFill) {
     this.shareBoxBar = null;
     this.shareBox = null;
     this.shareAssetsBox = null;
+    this.shareBoxTitleBar = null;
     this.shareBoxConnectBar = null;
     this.shareBoxConnect = null;
 
@@ -410,6 +411,7 @@ IDE_Morph.prototype.buildPanes = function () {
     this.createSpriteEditor();
     this.createCorralBar();
     this.createCorral();
+    this.createShareBoxTitleBar();
     this.createShareBoxBar();
     this.createShareBox();
     this.createShareAssetsBox();
@@ -1432,6 +1434,21 @@ IDE_Morph.prototype.createCorral = function () {
 
 };
 
+// ****************************
+// ~ SHAREBOX ~
+// ****************************
+
+// xinni: "settings" and "add member" buttons on the title bar.
+IDE_Morph.prototype.createShareBoxTitleBarButtons = function () {
+
+}
+
+// xinni: title bar that says 'SHAREBOX'
+IDE_Morph.prototype.createShareBoxTitleBar = function () {
+
+}
+
+// xinni: the 'scripts' and 'assets' tabs.
 IDE_Morph.prototype.createShareBoxBar = function () {
     var
         tabCorner = 15,
@@ -1718,6 +1735,93 @@ IDE_Morph.shareBoxPrototypeFunctionality = function (myself, shareboxId) {
     */
 }
 
+// xinni: Creates the request received screen.
+// i.e. "You have a group invite" message. Show this to the user who is requested!!
+IDE_Morph.prototype.showRequestReceivedMessage = function () {
+    // *****************************
+    // screen 3: Request received
+    // *****************************
+
+    // init screen
+    if (this.requestReceivedScreen) {
+        this.requestReceivedScreen.destroy();
+    }
+    this.requestReceivedScreen = new FrameMorph();
+    this.requestReceivedScreen.color = this.shareBoxConnect.color;
+    this.shareBoxConnect.addContents(this.requestReceivedScreen);
+
+    // screen 3: Awaiting reply logo
+    if (this.requestReceivedLogo) {
+        this.requestReceivedLogo.destroy();
+    }
+
+    var requestReceivedLogo = new Morph();
+    requestReceivedLogo.texture = 'images/notification.png';
+    requestReceivedLogo.drawNew = function () {
+        this.image = newCanvas(this.extent());
+        var context = this.image.getContext('2d');
+        var picBgColor = myself.shareBoxConnect.color;
+        context.fillStyle = picBgColor.toString();
+        context.fillRect(0, 0, this.width(), this.height());
+        if (this.texture) {
+            this.drawTexture(this.texture);
+        }
+    };
+    requestReceivedLogo.setExtent(new Point(129, 123));
+    requestReceivedLogo.setLeft(this.stage.width() / 2 - requestReceivedLogo.width() / 2);
+    requestReceivedLogo.setTop(this.stage.width() / 8);
+    this.requestReceivedScreen.add(requestReceivedLogo);
+
+    // screen 3: Awaiting reply text
+    txt = new TextMorph("'marylim' would like to invite you to their collaboration group.");
+
+    txt.setColor(SpriteMorph.prototype.paletteTextColor);
+    txt.setPosition(new Point(this.stage.width() / 2 - txt.width() / 2, requestReceivedLogo.bottom() + padding));
+    this.requestReceivedScreen.add(txt);
+
+    // screen 3: Accept button -> launch sharebox.
+    acceptButton = new PushButtonMorph(null, null, "Accept", null, null, null, "green");
+    acceptButton.setPosition(new Point(myself.stage.width() / 2 - acceptButton.width() - padding, txt.bottom() + padding));
+    acceptButton.action = function () {
+        console.log("Accept button pressed. Launch Sharebox.");
+        this.showEntireShareBoxComponent();
+    };
+    this.requestReceivedScreen.add(acceptButton);
+
+    // screen 3: Reject button -> go back to create group screen.
+    rejectButton = new PushButtonMorph(null, null, "Reject", null, null, null, "red");
+    rejectButton.setPosition(new Point(myself.stage.width() / 2 + padding, txt.bottom() + padding));
+    rejectButton.action = function () {
+        console.log("Reject button pressed. Back to Create group screen.");
+        myself.newGroupScreen.show();
+        myself.requestReceivedScreen.hide();
+    };
+    this.requestReceivedScreen.add(rejectButton);
+
+    // hide this screen first
+    this.requestReceivedScreen.show();
+
+};
+
+// xinni: shows the whole share box and hide the connection screens
+// Once someone enters a collaboration session!
+// that is, they create a new group or
+// they accept an invitation to join a group.
+
+IDE_Morph.prototype.showEntireShareBoxComponent = function() {
+
+    // destroy initialization screens.
+    if (this.newGroupScreen) {
+        this.newGroupScreen.destroy();
+    }
+
+    console.log("show entire share box");
+    this.createShareBoxBar();
+    this.createShareBox();
+    this.createShareBoxTitleBarButtons();
+    this.fixLayout();
+};
+
 IDE_Morph.prototype.createShareBox = function (shareboxId) {
     // Initialization of Sharebox and its default behavior
     var scripts = this.shareBoxPlaceholderSprite.scripts,
@@ -1820,7 +1924,7 @@ IDE_Morph.prototype.createShareAssetsBox = function () {
     // IDE_Morph.shareBoxPrototypeFunctionality.call(this, myself);
 };
 
-// xinni: ShareBox connection tab
+// xinni: ShareBox connection tab bar that just says "Create group"
 IDE_Morph.prototype.createShareBoxConnectBar = function () {
     if (this.shareBoxConnectBar) {
         this.shareBoxConnectBar.destroy();
@@ -1866,7 +1970,7 @@ IDE_Morph.prototype.createShareBoxConnectBar = function () {
         function () {
             tabBar.tabTo('connect');
         },
-        localize('Connect to a Partner'), // label
+        localize('Create New Group'), // label
         function () {  // query
             return myself.currentShareBoxConnectTab === 'connect';
         }
@@ -1898,7 +2002,7 @@ IDE_Morph.prototype.createShareBoxConnectBar = function () {
     };
 };
 
-// xinni: countdown object
+/* xinni: countdown object
 function Countdown(options) {
     var timer,
         instance = this,
@@ -1929,16 +2033,14 @@ function Countdown(options) {
         clearInterval(timer);
     };
 
-}
-
+}*/
 // xinni: ShareBox connection morph
 IDE_Morph.prototype.createShareBoxConnect = function () {
 
     // init variables
     var myself = this;
     var padding = 10;
-    var cancelButtonPressed = false;
-    this.addPartnerScreen = new FrameMorph();
+    this.newGroupScreen = new FrameMorph();
     this.awaitingReplyScreen = new FrameMorph();
 
     // hide sharebox if haven't connected
@@ -1960,25 +2062,25 @@ IDE_Morph.prototype.createShareBoxConnect = function () {
     this.add(this.shareBoxConnect);
 
     // *****************************
-    // screen 1: ADD A PARTNER
+    // screen 1: CREATE A NEW GROUP
     // *****************************
 
     // init screen
-    if (this.addPartnerScreen) {
-        this.addPartnerScreen.destroy();
+    if (this.newGroupScreen) {
+        this.newGroupScreen.destroy();
     }
 
-    this.addPartnerScreen = new FrameMorph();
-    this.addPartnerScreen.color = this.shareBoxConnect.color;
-    this.shareBoxConnect.addContents(this.addPartnerScreen);
+    this.newGroupScreen = new FrameMorph();
+    this.newGroupScreen.color = this.shareBoxConnect.color;
+    this.shareBoxConnect.addContents(this.newGroupScreen);
 
-    // screen 1: ADD A PARTNER logo
-    if (this.addPartnerLogo) {
-        this.addPartnerLogo.destroy();
+    // screen 1: NEW GROUP logo
+    if (this.newGroupLogo) {
+        this.newGroupLogo.destroy();
     }
-    addPartnerLogo = new Morph();
-    addPartnerLogo.texture = 'images/share.png';
-    addPartnerLogo.drawNew = function () {
+    newGroupLogo = new Morph();
+    newGroupLogo.texture = 'images/share.png';
+    newGroupLogo.drawNew = function () {
         this.image = newCanvas(this.extent());
         var context = this.image.getContext('2d');
         var picBgColor = myself.shareBoxConnect.color;
@@ -1989,226 +2091,145 @@ IDE_Morph.prototype.createShareBoxConnect = function () {
         }
     };
 
-    addPartnerLogo.setExtent(new Point(181, 123));
-    addPartnerLogo.setLeft(this.stage.width() / 2 - addPartnerLogo.width() / 2);
-    addPartnerLogo.setTop(this.stage.height() / 8);
-    this.addPartnerScreen.add(addPartnerLogo);
+    newGroupLogo.setExtent(new Point(181, 123));
+    newGroupLogo.setLeft(this.stage.width() / 2 - newGroupLogo.width() / 2);
+    newGroupLogo.setTop(this.stage.height() / 8);
+    this.newGroupScreen.add(newGroupLogo);
 
-    // screen 1: ADD A PARTNER text
+    // screen 1: NEW SESSION text
     txt = new TextMorph("Start a collaboration session");
-    txt.fontSize = 13;
-    txt.fontName = "verdana";
     txt.setColor(SpriteMorph.prototype.paletteTextColor);
-    //txt.setExtent(new Point(addPartnerLogo.width()*2, addPartnerLogo.height()/1.5));
-    txt.setPosition(new Point(this.stage.width() / 2 - txt.width() / 2, addPartnerLogo.bottom() + padding));
-    this.addPartnerScreen.add(txt);
+    txt.setPosition(new Point(this.stage.width() / 2 - txt.width() / 2, newGroupLogo.bottom() + padding));
+    this.newGroupScreen.add(txt);
 
-    // screen 1: ADD A PARTNER input username
-    inputUser = new InputFieldMorph("Username");
-    //inputUser.setExtent(new Point(addPartnerLogo.width()/5 * 4, txt.height()));
-    inputUser.setPosition(new Point(this.stage.width() / 2 - inputUser.width() / 2 - addPartnerLogo.width() / 5 + padding * 2, txt.bottom() + padding));
-    this.addPartnerScreen.add(inputUser);
+    // screen 1: ADD A PARTNER input username - DEPRECIATED
+    /*inputUser = new InputFieldMorph("Username");
+     //inputUser.setExtent(new Point(newGroupLogo.width()/5 * 4, txt.height()));
+     inputUser.setPosition(new Point(this.stage.width() / 2 - inputUser.width() / 2 - newGroupLogo.width() / 5 + padding * 2, txt.bottom() + padding));
+     this.newGroupScreen.add(inputUser);*/
 
-    // screen 1: INITIALIZE Counter
+    // screen 1: INITIALIZE Countdown - DEPRECIATED
+    /*
+     var replyCounter = new Countdown({
+     seconds: 4,  // number of seconds to count down
+     onUpdateStatus: function (sec) {
+     if (!cancelButtonPressed) {
+     // console.log(sec);
+     countdownTxt.updateText("Time out in " + sec + " seconds");
 
-    var replyCounter = new Countdown({
-        seconds: 4,  // number of seconds to count down
-        onUpdateStatus: function (sec) {
-            if (!cancelButtonPressed) {
-                // console.log(sec);
-                countdownTxt.updateText("Time out in " + sec + " seconds");
+     } else {
+     console.log("Cancelled, stopping timer.");
+     this.stop();
+     }
+     }, // callback for each second
+     onCounterEnd: function () {
+     if (!cancelButtonPressed) {
+     myself.newGroupScreen.show();
+     myself.awaitingReplyScreen.hide();
+     myself.createShareBoxBar();
+     myself.createShareBox();
+     myself.fixLayout();
+     }
+     } // send back to add partner
+     });
+     */
 
-            } else {
-                console.log("Cancelled, stopping timer.");
-                this.stop();
-            }
-        }, // callback for each second
-        onCounterEnd: function () {
-            if (!cancelButtonPressed) {
-                myself.addPartnerScreen.show();
-                myself.awaitingReplyScreen.hide();
-                myself.createShareBoxBar();
-                myself.createShareBox();
-                myself.fixLayout();
-            }
-        } // send back to add partner
-    });
+    // screen 1: ADD A PARTNER Go button - DEPRECIATED
+    /*var goButton = new PushButtonMorph(null, null, "Go", null, null, null);
+     goButton.color = new Color(60, 158, 0);
+     goButton.setExtent(new Point(newGroupLogo.width() / 5 - padding, inputUser.height()));
+     goButton.setPosition(new Point(inputUser.left() + inputUser.width() + padding, txt.bottom() + padding));
+     goButton.label.setCenter(goButton.center());
+     goButton.action = function () {
+     myself.newGroupScreen.hide();
+     myself.awaitingReplyScreen.show();
+     countdownTxt.updateText("Time out in" + " 5 " + "seconds");        // initialize displayed countdown value
+     // start the expire timer
+     replyCounter.start();
+     console.log("Starting counter, resetting cancelled back to false.")
+     cancelButtonPressed = false;
+     };
+     this.newGroupScreen.add(goButton);*/
 
-    // screen 1: ADD A PARTNER Go button
-    goButton = new PushButtonMorph(null, null, "Go", null, null, null);
-    goButton.color = new Color(60, 158, 0);
-    goButton.setExtent(new Point(addPartnerLogo.width() / 5 - padding, inputUser.height()));
-    goButton.setPosition(new Point(inputUser.left() + inputUser.width() + padding, txt.bottom() + padding));
-    goButton.label.setCenter(goButton.center());
-    goButton.action = function () {
-        myself.addPartnerScreen.hide();
-        myself.awaitingReplyScreen.show();
-        countdownTxt.updateText("Time out in" + " 5 " + "seconds");        // initialize displayed countdown value
-        // start the expire timer
-        replyCounter.start();
-        console.log("Starting counter, resetting cancelled back to false.")
-        cancelButtonPressed = false;
-    };
-    this.addPartnerScreen.add(goButton);
-
-
-    // *****************************
-    // screen 2: Awaiting reply
-    // *****************************
-
-    // init screen
-    if (this.awaitingReplyScreen) {
-        this.awaitingReplyScreen.destroy();
+    // screen 1: CREATE NEW GROUP button
+    var groupButton = new PushButtonMorph(null, null, "Create a Group", null, null, null, "green");
+    groupButton.setPosition(new Point(this.stage.width() / 2 - groupButton.width() / 2, txt.bottom() + padding));
+    groupButton.action = function() {
+        myself.newGroupScreen.hide();
+        myself.showEntireShareBoxComponent();
     }
-    this.awaitingReplyScreen = new FrameMorph();
-    this.awaitingReplyScreen.color = this.shareBoxConnect.color;
-    this.shareBoxConnect.addContents(this.awaitingReplyScreen);
+    this.newGroupScreen.add(groupButton);
 
-    // screen 2: Awaiting reply logo
-    if (this.awaitingReplyLogo) {
-        this.awaitingReplyLogo.destroy();
-    }
-    awaitingReplyLogo = new Morph();
-    awaitingReplyLogo.texture = 'images/pending.png';
-    awaitingReplyLogo.drawNew = function () {
-        this.image = newCanvas(this.extent());
-        var context = this.image.getContext('2d');
-        var picBgColor = myself.shareBoxConnect.color;
-        context.fillStyle = picBgColor.toString();
-        context.fillRect(0, 0, this.width(), this.height());
-        if (this.texture) {
-            this.drawTexture(this.texture);
-        }
-    };
-    awaitingReplyLogo.setExtent(new Point(200, 200));
-    awaitingReplyLogo.setLeft(this.stage.width() / 2 - awaitingReplyLogo.width() / 2);
-    awaitingReplyLogo.setTop(0);
-    this.awaitingReplyScreen.add(awaitingReplyLogo);
+    /*
+     // *****************************
+     // screen 2: Awaiting reply - depreciated
+     // *****************************
 
-    // screen 2: Awaiting reply text
-    txt = new TextMorph("Request sent to 'johntan' \n       Awaiting reply... ");
-    txt.fontSize = 13;
-    txt.fontName = "verdana";
-    txt.setColor(SpriteMorph.prototype.paletteTextColor);
-    txt.setPosition(new Point(this.stage.width() / 2 - txt.width() / 2, awaitingReplyLogo.bottom() + padding));
-    this.awaitingReplyScreen.add(txt);
+     // init screen
+     if (this.awaitingReplyScreen) {
+     this.awaitingReplyScreen.destroy();
+     }
+     this.awaitingReplyScreen = new FrameMorph();
+     this.awaitingReplyScreen.color = this.shareBoxConnect.color;
+     this.shareBoxConnect.addContents(this.awaitingReplyScreen);
 
-    // screen 2: Countdown timer text
-    countdownTxt = new TextMorph("Time out in" + " 5 " + "seconds");
-    countdownTxt.fontSize = 10;
-    countdownTxt.isBold = true;
-    countdownTxt.fontName = "verdana";
-    countdownTxt.setColor(new Color(155, 0, 51));
-    countdownTxt.setPosition(new Point(this.stage.width() / 2 - countdownTxt.width() / 2, txt.bottom() + padding));
-    this.awaitingReplyScreen.add(countdownTxt);
+     // screen 2: Awaiting reply logo
+     if (this.awaitingReplyLogo) {
+     this.awaitingReplyLogo.destroy();
+     }
+     awaitingReplyLogo = new Morph();
+     awaitingReplyLogo.texture = 'images/pending.png';
+     awaitingReplyLogo.drawNew = function () {
+     this.image = newCanvas(this.extent());
+     var context = this.image.getContext('2d');
+     var picBgColor = myself.shareBoxConnect.color;
+     context.fillStyle = picBgColor.toString();
+     context.fillRect(0, 0, this.width(), this.height());
+     if (this.texture) {
+     this.drawTexture(this.texture);
+     }
+     };
+     awaitingReplyLogo.setExtent(new Point(200, 200));
+     awaitingReplyLogo.setLeft(this.stage.width() / 2 - awaitingReplyLogo.width() / 2);
+     awaitingReplyLogo.setTop(0);
+     this.awaitingReplyScreen.add(awaitingReplyLogo);
 
-    // screen 2: Cancel button
-    cancelButton = new PushButtonMorph(null, null, "Cancel", null, null, null);
-    cancelButton.color = new Color(200, 0, 100);
-    cancelButton.setExtent(new Point(100, 30));
-    cancelButton.setPosition(new Point(myself.stage.width() / 2 - 50, countdownTxt.bottom() + padding));
-    cancelButton.label.setCenter(cancelButton.center());
-    cancelButton.action = function () {
-        console.log("Cancel button pressed.");
-        cancelButtonPressed = true;
-        replyCounter.stop();
-        myself.addPartnerScreen.show();
-        myself.awaitingReplyScreen.hide();
-    };
-    this.awaitingReplyScreen.add(cancelButton);
+     // screen 2: Awaiting reply text
+     txt = new TextMorph("Request sent to 'johntan' \n       Awaiting reply... ");
+     txt.fontSize = 13;
+     txt.fontName = "verdana";
+     txt.setColor(SpriteMorph.prototype.paletteTextColor);
+     txt.setPosition(new Point(this.stage.width() / 2 - txt.width() / 2, awaitingReplyLogo.bottom() + padding));
+     this.awaitingReplyScreen.add(txt);
 
-    // hide this screen first
-    this.awaitingReplyScreen.hide();
+     // screen 2: Countdown timer text
+     countdownTxt = new TextMorph("Time out in" + " 5 " + "seconds");
+     countdownTxt.fontSize = 10;
+     countdownTxt.isBold = true;
+     countdownTxt.fontName = "verdana";
+     countdownTxt.setColor(new Color(155, 0, 51));
+     countdownTxt.setPosition(new Point(this.stage.width() / 2 - countdownTxt.width() / 2, txt.bottom() + padding));
+     this.awaitingReplyScreen.add(countdownTxt);
 
-    // *****************************
-    // screen 3: Request received
-    // *****************************
+     // screen 2: Cancel button
+     cancelButton = new PushButtonMorph(null, null, "Cancel", null, null, null);
+     cancelButton.color = new Color(200, 0, 100);
+     cancelButton.setExtent(new Point(100, 30));
+     cancelButton.setPosition(new Point(myself.stage.width() / 2 - 50, countdownTxt.bottom() + padding));
+     cancelButton.label.setCenter(cancelButton.center());
+     cancelButton.action = function () {
+     console.log("Cancel button pressed.");
+     cancelButtonPressed = true;
+     replyCounter.stop();
+     myself.newGroupScreen.show();
+     myself.awaitingReplyScreen.hide();
+     };
+     this.awaitingReplyScreen.add(cancelButton);
 
-    // init screen
-    if (this.requestReceivedScreen) {
-        this.requestReceivedScreen.destroy();
-    }
-    this.requestReceivedScreen = new FrameMorph();
-    this.requestReceivedScreen.color = this.shareBoxConnect.color;
-    this.shareBoxConnect.addContents(this.requestReceivedScreen);
+     // hide this screen first
+     this.awaitingReplyScreen.hide();
+     */
 
-    // screen 3: Awaiting reply logo
-    if (this.requestReceivedLogo) {
-        this.requestReceivedLogo.destroy();
-    }
-    requestReceivedLogo = new Morph();
-    requestReceivedLogo.texture = 'images/notification.png';
-    requestReceivedLogo.drawNew = function () {
-        this.image = newCanvas(this.extent());
-        var context = this.image.getContext('2d');
-        var picBgColor = myself.shareBoxConnect.color;
-        context.fillStyle = picBgColor.toString();
-        context.fillRect(0, 0, this.width(), this.height());
-        if (this.texture) {
-            this.drawTexture(this.texture);
-        }
-    };
-    requestReceivedLogo.setExtent(new Point(129, 123));
-    requestReceivedLogo.setLeft(this.stage.width() / 2 - requestReceivedLogo.width() / 2);
-    requestReceivedLogo.setTop(this.stage.width() / 8);
-    this.requestReceivedScreen.add(requestReceivedLogo);
-
-    // screen 3: Awaiting reply text
-    txt = new TextMorph("'marylim' has just sent you a request for collaboration.");
-    txt.fontSize = 13;
-    txt.fontName = "verdana";
-    txt.setColor(SpriteMorph.prototype.paletteTextColor);
-    txt.setPosition(new Point(this.stage.width() / 2 - txt.width() / 2, requestReceivedLogo.bottom() + padding));
-    this.requestReceivedScreen.add(txt);
-
-    // screen 3: Accept button
-    acceptButton = new PushButtonMorph(null, null, "Accept", null, null, null);
-    acceptButton.color = new Color(60, 158, 0);
-    acceptButton.setExtent(new Point(100, 30));
-    acceptButton.setPosition(new Point(myself.stage.width() / 2 - acceptButton.width() - padding, txt.bottom() + padding));
-    acceptButton.label.setCenter(acceptButton.center());
-    acceptButton.action = function () {
-        console.log("Accept button pressed. Launch Sharebox.");
-        SnapCloud.createSharebox(tempIdentifier, function(data){
-            console.log(data);
-            var shareboxId = prompt("sharebox id?", data.data[0].id)
-            myself.addPartnerScreen.show();
-            myself.awaitingReplyScreen.hide();
-            myself.createShareBoxBar();
-            myself.createShareBox(shareboxId);
-
-            var txt = new TextMorph(data.data[0].id.toString());
-            txt.fontSize = 18;
-            txt.fontName = "verdana";
-            txt.setColor(SpriteMorph.prototype.paletteTextColor);
-            txt.setPosition(new Point(5, 5));
-
-            myself.addPartnerScreen.show();
-            myself.awaitingReplyScreen.hide();
-            myself.createShareBoxBar();
-            myself.createShareBox();
-            txt.show();
-            myself.shareBox.add(txt);
-            myself.fixLayout();
-        })
-    };
-    this.requestReceivedScreen.add(acceptButton);
-
-    // screen 3: Reject button
-    rejectButton = new PushButtonMorph(null, null, "Reject", null, null, null);
-    rejectButton.color = new Color(200, 0, 100);
-    rejectButton.setExtent(new Point(100, 30));
-    rejectButton.setPosition(new Point(myself.stage.width() / 2 + padding, txt.bottom() + padding));
-    rejectButton.label.setCenter(rejectButton.center());
-    rejectButton.action = function () {
-        console.log("Reject button pressed. Back to add partner screen.");
-        myself.addPartnerScreen.show();
-        myself.requestReceivedScreen.hide();
-    };
-    this.requestReceivedScreen.add(rejectButton);
-
-    // hide this screen first
-    this.requestReceivedScreen.show();
 };
 
 /*
@@ -2394,14 +2415,18 @@ IDE_Morph.prototype.fixLayout = function (situation) {
             this.shareBoxConnectBar.fixLayout();
         }
 
+
         // Share Box Connect
         if (this.shareBoxConnect) {
             this.shareBoxConnect.setTop(this.shareBox.top());
             this.shareBoxConnect.setLeft(this.shareBox.left());
             this.shareBoxConnect.setWidth(this.stage.width());
             this.shareBoxConnect.setHeight(this.bottom() - this.stage.bottom() + 35);
-            this.addPartnerScreen.setExtent(new Point(this.shareBoxConnect.width(), this.shareBoxConnect.height()));
-            this.awaitingReplyScreen.setExtent(new Point(this.shareBoxConnect.width(), this.shareBoxConnect.height()));
+            this.newGroupScreen.setExtent(new Point(this.shareBoxConnect.width(), this.shareBoxConnect.height()));
+        }
+
+        // ShareBox Group Request Received
+        if (this.requestReceivedScreen) {
             this.requestReceivedScreen.setExtent(new Point(this.shareBoxConnect.width(), this.shareBoxConnect.height()));
         }
 
