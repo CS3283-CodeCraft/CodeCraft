@@ -1798,29 +1798,15 @@ IDE_Morph.prototype.showRequestReceivedMessage = function () {
     };
     this.requestReceivedScreen.add(rejectButton);
 
-    // hide this screen first
+    // show the screen.
     this.requestReceivedScreen.show();
 
 };
 
-// xinni: shows the whole share box and hide the connection screens
+// xinni: shows the whole share box and hide the connection screens and tabs
 // Once someone enters a collaboration session!
-// that is, they create a new group or
-// they accept an invitation to join a group.
+// that is, they create a new group or they accept an invitation to join a group.
 
-IDE_Morph.prototype.showEntireShareBoxComponent = function() {
-
-    // destroy initialization screens.
-    if (this.newGroupScreen) {
-        this.newGroupScreen.destroy();
-    }
-
-    console.log("show entire share box");
-    this.createShareBoxBar();
-    this.createShareBox();
-    this.createShareBoxTitleBarButtons();
-    this.fixLayout();
-};
 
 IDE_Morph.prototype.createShareBox = function (shareboxId) {
     // Initialization of Sharebox and its default behavior
@@ -2155,7 +2141,7 @@ IDE_Morph.prototype.createShareBoxConnect = function () {
     var groupButton = new PushButtonMorph(null, null, "Create a Group", null, null, null, "green");
     groupButton.setPosition(new Point(this.stage.width() / 2 - groupButton.width() / 2, txt.bottom() + padding));
     groupButton.action = function() {
-        myself.newGroupScreen.hide();
+        console.log("Creating a new group and initializing a new session.");
         myself.showEntireShareBoxComponent();
     }
     this.newGroupScreen.add(groupButton);
@@ -2300,6 +2286,68 @@ IDE_Morph.prototype.createShareBoxConnect = function () {
  msgBox.drawNew();
  };
  */
+
+IDE_Morph.prototype.showEntireShareBoxComponent = function() {
+
+    myself = this;
+
+    console.log("showEntireShareBoxComponent triggered.");
+
+    // destroy screens and morphs shown before this.
+    if (this.newGroupScreen) {
+        this.newGroupScreen.destroy();
+    }
+    if (this.requestReceivedScreen) {
+        this.requestReceivedScreen.destroy();
+    }
+    if (this.shareBoxConnect) {
+        this.shareBoxConnect.destroy();
+    }
+    if(this.shareBoxConnectBar) {
+        this.shareBoxConnectBar.destroy();
+    }
+
+    console.log("sharebox about to be created. previous screens destroyed.");
+
+    SnapCloud.createSharebox(tempIdentifier, function(data) {
+        console.log(data);
+        var shareboxId = prompt("sharebox id?", data.data[0].id);
+
+
+        console.log("show entire share box");
+        console.log(this);
+        myself.createShareBoxBar();
+        myself.createShareBox(shareboxId);
+        myself.fixLayout();
+
+        var txt = new TextMorph(data.data[0].id.toString());
+        txt.setColor(SpriteMorph.prototype.paletteTextColor);
+        txt.setPosition(new Point(5, 5));
+        txt.show();
+        myself.shareBox.add(txt);
+    });
+
+    /*SnapCloud.createSharebox(tempIdentifier, function(data){
+     console.log(data);
+     myself = this;
+     var shareboxId = prompt("sharebox id?", data.data[0].id)
+     myself.createShareBoxBar();
+     myself.createShareBox(shareboxId);
+
+     var txt = new TextMorph(data.data[0].id.toString());
+     txt.fontSize = 18;
+     txt.fontName = "verdana";
+     txt.setColor(SpriteMorph.prototype.paletteTextColor);
+     txt.setPosition(new Point(5, 5));
+
+     txt.show();
+     myself.shareBox.add(txt);
+     myself.fixLayout();
+     })*/
+
+
+
+};
 
 // IDE_Morph layout
 
