@@ -2226,7 +2226,7 @@ IDE_Morph.prototype.fixLayout = function (situation) {
     var shareBoxInternalLeftPadding = 6;
 
     // heights and widths
-    var shareBoxTitleBarButtonsWidth = 95;
+    var shareBoxTitleBarButtonsWidth = 90;
     var shareBoxTitleBarHeight = 30;
     var corralBarHeight = 90;
 
