@@ -2088,55 +2088,6 @@ IDE_Morph.prototype.createShareBoxConnect = function () {
     txt.setPosition(new Point(this.stage.width() / 2 - txt.width() / 2, newGroupLogo.bottom() + padding));
     this.newGroupScreen.add(txt);
 
-    // screen 1: ADD A PARTNER input username - DEPRECIATED
-    /*inputUser = new InputFieldMorph("Username");
-     //inputUser.setExtent(new Point(newGroupLogo.width()/5 * 4, txt.height()));
-     inputUser.setPosition(new Point(this.stage.width() / 2 - inputUser.width() / 2 - newGroupLogo.width() / 5 + padding * 2, txt.bottom() + padding));
-     this.newGroupScreen.add(inputUser);*/
-
-    // screen 1: INITIALIZE Countdown - DEPRECIATED
-    /*
-     var replyCounter = new Countdown({
-     seconds: 4,  // number of seconds to count down
-     onUpdateStatus: function (sec) {
-     if (!cancelButtonPressed) {
-     // console.log(sec);
-     countdownTxt.updateText("Time out in " + sec + " seconds");
-
-     } else {
-     console.log("Cancelled, stopping timer.");
-     this.stop();
-     }
-     }, // callback for each second
-     onCounterEnd: function () {
-     if (!cancelButtonPressed) {
-     myself.newGroupScreen.show();
-     myself.awaitingReplyScreen.hide();
-     myself.createShareBoxBar();
-     myself.createShareBox();
-     myself.fixLayout();
-     }
-     } // send back to add partner
-     });
-     */
-
-    // screen 1: ADD A PARTNER Go button - DEPRECIATED
-    /*var goButton = new PushButtonMorph(null, null, "Go", null, null, null);
-     goButton.color = new Color(60, 158, 0);
-     goButton.setExtent(new Point(newGroupLogo.width() / 5 - padding, inputUser.height()));
-     goButton.setPosition(new Point(inputUser.left() + inputUser.width() + padding, txt.bottom() + padding));
-     goButton.label.setCenter(goButton.center());
-     goButton.action = function () {
-     myself.newGroupScreen.hide();
-     myself.awaitingReplyScreen.show();
-     countdownTxt.updateText("Time out in" + " 5 " + "seconds");        // initialize displayed countdown value
-     // start the expire timer
-     replyCounter.start();
-     console.log("Starting counter, resetting cancelled back to false.")
-     cancelButtonPressed = false;
-     };
-     this.newGroupScreen.add(goButton);*/
-
     // screen 1: CREATE NEW GROUP button
     var groupButton = new PushButtonMorph(null, null, "Create a Group", null, null, null, "green");
     groupButton.setPosition(new Point(this.stage.width() / 2 - groupButton.width() / 2, txt.bottom() + padding));
@@ -2146,146 +2097,8 @@ IDE_Morph.prototype.createShareBoxConnect = function () {
     }
     this.newGroupScreen.add(groupButton);
 
-    /*
-     // *****************************
-     // screen 2: Awaiting reply - depreciated
-     // *****************************
-
-     // init screen
-     if (this.awaitingReplyScreen) {
-     this.awaitingReplyScreen.destroy();
-     }
-     this.awaitingReplyScreen = new FrameMorph();
-     this.awaitingReplyScreen.color = this.shareBoxConnect.color;
-     this.shareBoxConnect.addContents(this.awaitingReplyScreen);
-
-     // screen 2: Awaiting reply logo
-     if (this.awaitingReplyLogo) {
-     this.awaitingReplyLogo.destroy();
-     }
-     awaitingReplyLogo = new Morph();
-     awaitingReplyLogo.texture = 'images/pending.png';
-     awaitingReplyLogo.drawNew = function () {
-     this.image = newCanvas(this.extent());
-     var context = this.image.getContext('2d');
-     var picBgColor = myself.shareBoxConnect.color;
-     context.fillStyle = picBgColor.toString();
-     context.fillRect(0, 0, this.width(), this.height());
-     if (this.texture) {
-     this.drawTexture(this.texture);
-     }
-     };
-     awaitingReplyLogo.setExtent(new Point(200, 200));
-     awaitingReplyLogo.setLeft(this.stage.width() / 2 - awaitingReplyLogo.width() / 2);
-     awaitingReplyLogo.setTop(0);
-     this.awaitingReplyScreen.add(awaitingReplyLogo);
-
-     // screen 2: Awaiting reply text
-     txt = new TextMorph("Request sent to 'johntan' \n       Awaiting reply... ");
-     txt.fontSize = 13;
-     txt.fontName = "verdana";
-     txt.setColor(SpriteMorph.prototype.paletteTextColor);
-     txt.setPosition(new Point(this.stage.width() / 2 - txt.width() / 2, awaitingReplyLogo.bottom() + padding));
-     this.awaitingReplyScreen.add(txt);
-
-     // screen 2: Countdown timer text
-     countdownTxt = new TextMorph("Time out in" + " 5 " + "seconds");
-     countdownTxt.fontSize = 10;
-     countdownTxt.isBold = true;
-     countdownTxt.fontName = "verdana";
-     countdownTxt.setColor(new Color(155, 0, 51));
-     countdownTxt.setPosition(new Point(this.stage.width() / 2 - countdownTxt.width() / 2, txt.bottom() + padding));
-     this.awaitingReplyScreen.add(countdownTxt);
-
-     // screen 2: Cancel button
-     cancelButton = new PushButtonMorph(null, null, "Cancel", null, null, null);
-     cancelButton.color = new Color(200, 0, 100);
-     cancelButton.setExtent(new Point(100, 30));
-     cancelButton.setPosition(new Point(myself.stage.width() / 2 - 50, countdownTxt.bottom() + padding));
-     cancelButton.label.setCenter(cancelButton.center());
-     cancelButton.action = function () {
-     console.log("Cancel button pressed.");
-     cancelButtonPressed = true;
-     replyCounter.stop();
-     myself.newGroupScreen.show();
-     myself.awaitingReplyScreen.hide();
-     };
-     this.awaitingReplyScreen.add(cancelButton);
-
-     // hide this screen first
-     this.awaitingReplyScreen.hide();
-     */
-
 };
 
-/*
- // xinni: displays messages to initialize collaborations
- IDE_Morph.prototype.displayShareBoxMsg = function() {
- var msgBox,
- usernameField,
- noPartner, awaitingReply, receivedReq,
- goBtn, cancelBtn, acceptBtn, rejectBtn,
- world = this.world();
-
- // Username entered here.
- usernameField = new InputFieldMorph("Enter username here");
- usernameField.setWidth(300); // fixed dimensions
- usernameField.contrast = 90;
- usernameField.setPosition(this.shareBoxBar.bottomLeft().add(new Point(10, 3)));
- msgBox.add(usernameField);
- usernameField.drawNew();
- usernameField.accept = function () {
- var newName = usernameField.getValue();
- myself.currentSprite.setName(
- myself.newSpriteName(newName, myself.currentSprite)
- );
- usernameField.setContents(myself.currentSprite.name);
- };
- //this.spriteBar.reactToEdit = usernameField.accept;
-
- noPartner = 'ShareBox'
- + '\n\n Start a collaboration session with a partner by entering their username below:';
-
- awaitingReply = localize('Request Sent')
- + '\n\n'
- + 'Awaiting johntan\'s reply. \n'
- + '\nTimeout in x seconds.';
-
- receivedReq = localize('New Request')
- + '\n\n'
- + 'marylim would like to collaborate with you.'
- + '\nTimeout in x seconds.';
-
-
- msgBox = new TextMorph();
- msgBox.inform('ShareBox', aboutTxt, world);
- //btn1 = msgBox.buttons.children[0]; // xinni: ok button
-
- cancelBtn = msgBox.addButton(
- function () {
- msgBox.body.text = noPartner;
- msgBox.body.drawNew();
- msgBox.fixLayout();
- msgBox.drawNew();
- msgBox.setCenter(world.center());
- },
- 'Cancel Request'
- );
- goBtn = msgBox.addButton(
- function () {
- msgBox.body.text = noticeTxt;
- msgBox.body.drawNew();
- msgBox.fixLayout();
- msgBox.drawNew();
- msgBox.setCenter(world.center());
- },
- 'Go!'
- );
-
- msgBox.fixLayout();
- msgBox.drawNew();
- };
- */
 
 IDE_Morph.prototype.showEntireShareBoxComponent = function() {
 
@@ -2326,27 +2139,7 @@ IDE_Morph.prototype.showEntireShareBoxComponent = function() {
         txt.show();
         myself.shareBox.add(txt);
     });
-
-    /*SnapCloud.createSharebox(tempIdentifier, function(data){
-     console.log(data);
-     myself = this;
-     var shareboxId = prompt("sharebox id?", data.data[0].id)
-     myself.createShareBoxBar();
-     myself.createShareBox(shareboxId);
-
-     var txt = new TextMorph(data.data[0].id.toString());
-     txt.fontSize = 18;
-     txt.fontName = "verdana";
-     txt.setColor(SpriteMorph.prototype.paletteTextColor);
-     txt.setPosition(new Point(5, 5));
-
-     txt.show();
-     myself.shareBox.add(txt);
-     myself.fixLayout();
-     })*/
-
-
-
+    
 };
 
 // IDE_Morph layout
@@ -2442,7 +2235,7 @@ IDE_Morph.prototype.fixLayout = function (situation) {
             this.corral.setHeight(corralBarHeight);
             this.corral.fixLayout();
         }
-/*
+
         // Share Box Title Bar
         if (this.shareBoxTitleBar) {
             this.shareBoxTitleBar.setTop(this.stage.bottom() - shareBoxTitleBarPadding);
@@ -2450,25 +2243,25 @@ IDE_Morph.prototype.fixLayout = function (situation) {
             this.shareBoxTitleBar.setWidth(this.stage.width());
             this.shareBoxTitleBar.setHeight(shareBoxTitleBarHeight);
         }
-*/
+
         // Share Box Tab Bar
         if (this.shareBoxBar) {
-            this.shareBoxBar.setTop(this.stage.bottom() - shareBoxTitleBarPadding);
+            this.shareBoxBar.setTop(this.stage.bottom() - shareBoxTitleBarPadding + shareBoxTitleBarHeight);
             this.shareBoxBar.setLeft(this.categories.width() + this.spriteBar.width() + 2 * padding + this.stage.width() / 1.5);
             this.shareBoxBar.fixLayout(); // xinni: position the tabs
         }
 
         // Share Box
         if (this.shareBox) {
-            this.shareBox.setTop(this.stage.bottom() + shareBoxInternalTopPadding);
-            this.shareBox.setLeft(this.categories.width() + this.spriteBar.width() + shareBoxInternalLeftPadding); // xinni: +6 aligns sharebox with stage.
+            this.shareBox.setTop(this.stage.bottom() + shareBoxInternalTopPadding + shareBoxTitleBarHeight);
+            this.shareBox.setLeft(this.categories.width() + this.spriteBar.width() + shareBoxInternalLeftPadding);
             this.shareBox.setWidth(this.stage.width());
             this.shareBox.setHeight(this.bottom() - this.shareBox.top());
         }
 
         // Share Box
         if (this.shareAssetsBox) {
-            this.shareAssetsBox.setTop(this.stage.bottom() + shareBoxInternalTopPadding);
+            this.shareAssetsBox.setTop(this.stage.bottom() + shareBoxInternalTopPadding + shareBoxTitleBarHeight);
             this.shareAssetsBox.setLeft(this.categories.width() + this.spriteBar.width() + shareBoxInternalLeftPadding);
             this.shareAssetsBox.setWidth(this.stage.width());
             this.shareAssetsBox.setHeight(this.bottom() - this.shareAssetsBox.top());
@@ -2476,7 +2269,7 @@ IDE_Morph.prototype.fixLayout = function (situation) {
 
         // Share Box Connect Tab Bar
         if (this.shareBoxConnectBar) {
-            this.shareBoxConnectBar.setTop(this.stage.bottom() - shareBoxTitleBarPadding);
+            this.shareBoxConnectBar.setTop(this.stage.bottom() - shareBoxTitleBarPadding + shareBoxTitleBarHeight);
             this.shareBoxConnectBar.setLeft(this.categories.width() + this.spriteBar.width() + 2 * padding);
             this.shareBoxConnectBar.fixLayout();
         }
