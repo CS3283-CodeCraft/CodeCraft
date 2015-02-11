@@ -2354,7 +2354,21 @@ IDE_Morph.prototype.showEntireShareBoxComponent = function() {
 IDE_Morph.prototype.fixLayout = function (situation) {
     // situation is a string, i.e.
     // 'selectSprite' or 'refreshPalette' or 'tabEditor'
+
+    // paddings
     var padding = this.padding;
+    var corralBarPadding = 5;
+    var shareBoxTitleBarPadding = 40;
+    var shareBoxInternalTopPadding = 35;
+    var shareBoxInternalLeftPadding = 6;
+
+    // heights
+    var shareBoxTitleBarHeight = 30;
+    var corralBarHeight = 90;
+
+    // position points
+    var spriteBarPosition = new Point(205, 145);
+    var corralPosition = new Point(260, 50);
 
     Morph.prototype.trackChanges = false;
 
@@ -2383,7 +2397,7 @@ IDE_Morph.prototype.fixLayout = function (situation) {
                     (this.width() - padding * 2) / this.stage.dimensions.x,
                     (this.height() - this.controlBar.height() * 2 - padding * 2)
                     / this.stage.dimensions.y
-            ) * 10) / 10);
+                      ) * 10) / 10);
             this.stage.setCenter(this.center());
         } else {
 //            this.stage.setScale(this.isSmallStage ? 0.5 : 1);
@@ -2394,7 +2408,7 @@ IDE_Morph.prototype.fixLayout = function (situation) {
 
         // spriteBar
         this.spriteBar.setPosition(this.logo.bottomRight().add(padding));
-        this.spriteBar.setPosition(new Point(205, 145));
+        this.spriteBar.setPosition(spriteBarPosition);
         this.spriteBar.setExtent(new Point(
             Math.max(0, this.stage.left() - padding - this.spriteBar.left()),
                 this.categories.bottom() - this.spriteBar.top() - padding
@@ -2414,51 +2428,55 @@ IDE_Morph.prototype.fixLayout = function (situation) {
         // corralBar
         //this.corralBar.setLeft(this.stage.left());
         this.corralBar.setLeft(this.stage.left());
-        this.corralBar.setPosition(this.logo.bottomRight().add(5)); // xinni: +5 aligns corralbar
-        //this.corralBar.setTop(this.stage.bottom() + padding);
-        //this.corralBar.setWidth(this.stage.width());
-        this.corralBar.setHeight(90);
+        this.corralBar.setPosition(this.logo.bottomRight().add(corralBarPadding));
+        this.corralBar.setHeight(corralBarHeight);
 
         // corral
         if (!contains(['selectSprite', 'tabEditor'], situation)) {
-            this.corral.setPosition(new Point(260, 50));
-            this.corral.setTop(this.logo.bottom() + 5);
+            this.corral.setPosition(corralPosition);
+            this.corral.setTop(this.logo.bottom() + corralBarPadding);
             //this.corral.setLeft(240);
             //this.corral.setWidth(this.stage.width());
             this.corral.setWidth(this.spriteBar.width() - 60);
             //this.corral.setHeight(this.bottom() - this.corral.top());
-            this.corral.setHeight(90);
+            this.corral.setHeight(corralBarHeight);
             this.corral.fixLayout();
         }
-
-        // Share Box Bar
+/*
+        // Share Box Title Bar
+        if (this.shareBoxTitleBar) {
+            this.shareBoxTitleBar.setTop(this.stage.bottom() - shareBoxTitleBarPadding);
+            this.shareBoxTitleBar.setLeft(this.categories.width() + this.spriteBar.width() + 2 * padding + this.stage.width() / 1.5);
+            this.shareBoxTitleBar.setWidth(this.stage.width());
+            this.shareBoxTitleBar.setHeight(shareBoxTitleBarHeight);
+        }
+*/
+        // Share Box Tab Bar
         if (this.shareBoxBar) {
-            this.shareBoxBar.setTop(this.stage.bottom() - 40);
+            this.shareBoxBar.setTop(this.stage.bottom() - shareBoxTitleBarPadding);
             this.shareBoxBar.setLeft(this.categories.width() + this.spriteBar.width() + 2 * padding + this.stage.width() / 1.5);
             this.shareBoxBar.fixLayout(); // xinni: position the tabs
-            //this.shareBoxBar.setWidth(this.stage.width());
-            //this.shareBoxBar.setHeight(1000);
         }
 
         // Share Box
         if (this.shareBox) {
-            this.shareBox.setTop(this.stage.bottom() + 35);
-            this.shareBox.setLeft(this.categories.width() + this.spriteBar.width() + 6); // xinni: +6 aligns sharebox with stage.
+            this.shareBox.setTop(this.stage.bottom() + shareBoxInternalTopPadding);
+            this.shareBox.setLeft(this.categories.width() + this.spriteBar.width() + shareBoxInternalLeftPadding); // xinni: +6 aligns sharebox with stage.
             this.shareBox.setWidth(this.stage.width());
             this.shareBox.setHeight(this.bottom() - this.shareBox.top());
         }
 
         // Share Box
         if (this.shareAssetsBox) {
-            this.shareAssetsBox.setTop(this.stage.bottom() + 35);
-            this.shareAssetsBox.setLeft(this.categories.width() + this.spriteBar.width() + 6);
+            this.shareAssetsBox.setTop(this.stage.bottom() + shareBoxInternalTopPadding);
+            this.shareAssetsBox.setLeft(this.categories.width() + this.spriteBar.width() + shareBoxInternalLeftPadding);
             this.shareAssetsBox.setWidth(this.stage.width());
             this.shareAssetsBox.setHeight(this.bottom() - this.shareAssetsBox.top());
         }
 
-        // Share Box Connect Bar
+        // Share Box Connect Tab Bar
         if (this.shareBoxConnectBar) {
-            this.shareBoxConnectBar.setTop(this.stage.bottom() - 40);
+            this.shareBoxConnectBar.setTop(this.stage.bottom() - shareBoxTitleBarPadding);
             this.shareBoxConnectBar.setLeft(this.categories.width() + this.spriteBar.width() + 2 * padding);
             this.shareBoxConnectBar.fixLayout();
         }
@@ -2469,7 +2487,7 @@ IDE_Morph.prototype.fixLayout = function (situation) {
             this.shareBoxConnect.setTop(this.shareBox.top());
             this.shareBoxConnect.setLeft(this.shareBox.left());
             this.shareBoxConnect.setWidth(this.stage.width());
-            this.shareBoxConnect.setHeight(this.bottom() - this.stage.bottom() + 35);
+            this.shareBoxConnect.setHeight(this.bottom() - this.stage.bottom() + shareBoxInternalTopPadding);
             this.newGroupScreen.setExtent(new Point(this.shareBoxConnect.width(), this.shareBoxConnect.height()));
         }
 
@@ -2479,15 +2497,15 @@ IDE_Morph.prototype.fixLayout = function (situation) {
         }
 
         if (this.addScriptScreen) {
-            this.addScriptScreen.setTop(this.stage.bottom() + 35);
-            this.addScriptScreen.setLeft(this.categories.width() + this.spriteBar.width() + 6);
+            this.addScriptScreen.setTop(this.stage.bottom() + shareBoxInternalTopPadding);
+            this.addScriptScreen.setLeft(this.categories.width() + this.spriteBar.width() + shareBoxInternalLeftPadding);
             this.addScriptScreen.setWidth(this.stage.width());
             this.addScriptScreen.setHeight(this.bottom() - this.shareBox.top());
         }
 
         if (this.scriptListScreen) {
-            this.scriptListScreen.setTop(this.stage.bottom() + 35);
-            this.scriptListScreen.setLeft(this.categories.width() + this.spriteBar.width() + 6);
+            this.scriptListScreen.setTop(this.stage.bottom() + shareBoxInternalTopPadding);
+            this.scriptListScreen.setLeft(this.categories.width() + this.spriteBar.width() + shareBoxInternalLeftPadding);
             this.scriptListScreen.setWidth(this.stage.width());
             this.scriptListScreen.setHeight(this.bottom() - this.shareBox.top());
         }
