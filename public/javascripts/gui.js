@@ -1445,10 +1445,15 @@ IDE_Morph.prototype.createShareBoxTitleBarButtons = function () {
     if (this.shareBoxTitleBarButtons) {
         this.shareBoxTitleBarButtons.destroy();
     }
-    // initialize frame
-    this.shareBoxTitleBarButtons = new FrameMorph();
 
-    // share box title settings button
+    // initialize frame holder for buttons.
+    this.shareBoxTitleBarButtons = new FrameMorph();
+    this.shareBoxTitleBarButtons.setColor(this.groupColor.darker(20));
+    this.add(this.shareBoxTitleBarButtons);
+
+    console.log("Create sharebox buttons");
+
+    // settings button
     button = new PushButtonMorph(
         this,
         'shareBoxSettingsMenu',
@@ -1459,16 +1464,14 @@ IDE_Morph.prototype.createShareBoxTitleBarButtons = function () {
         "symbolButton"
     );
     button.drawNew();
-    button.hint = 'ShareBox Settings';
     button.fixLayout();
     shareBoxSettingsButton = button;
-
 
 
     // add member button
     button = new PushButtonMorph(
         this,
-        'shareBoxSettingsMenu',
+        null,
         new SymbolMorph('crosshairs', 14),
         null,
         null,
@@ -1482,13 +1485,28 @@ IDE_Morph.prototype.createShareBoxTitleBarButtons = function () {
 
 
     // add to title bar
-    this.shareBoxTitleBar.add(shareBoxSettingsButton);
-    this.shareBoxTitleBar.shareBoxAddMemberButton = shareBoxSettingsButton;
-    this.shareBoxTitleBar.add(shareBoxAddMemberButton);
-    this.shareBoxTitleBar.shareBoxAddMemberButton = shareBoxAddMemberButton;
+    this.shareBoxTitleBarButtons.add(shareBoxSettingsButton);
+    this.shareBoxTitleBarButtons.shareBoxSettingsButton = shareBoxSettingsButton;
+    this.shareBoxTitleBarButtons.add(shareBoxAddMemberButton);
+    this.shareBoxTitleBarButtons.shareBoxAddMemberButton = shareBoxAddMemberButton;
+
+    // position buttons
+    if (this.shareBoxTitleBarButtons) {
+        // position add new member button
+        this.shareBoxTitleBarButtons.shareBoxAddMemberButton.setLeft(this.shareBoxTitleBarButtons.left());
+        this.shareBoxTitleBarButtons.shareBoxAddMemberButton.setTop(this.shareBoxTitleBarButtons.top() + 2);
+
+        // position settings button
+        this.shareBoxTitleBarButtons.shareBoxSettingsButton.setTop(this.shareBoxTitleBarButtons.top() + 2);
+        this.shareBoxTitleBarButtons.shareBoxSettingsButton.setLeft(this.shareBoxTitleBarButtons.shareBoxAddMemberButton.right());
+    }
+
+    this.fixLayout();
+    this.shareBoxTitleBarButtons.fixLayout = function () {    };
+
 }
 
-// xinni: title bar that says 'SHAREBOX'. Contains buttons for settings and add member.
+// xinni: title bar that says 'SHAREBOX'.
 IDE_Morph.prototype.createShareBoxTitleBar = function () {
     // destroy if already exists
     if (this.shareBoxTitleBar) {
@@ -1497,14 +1515,31 @@ IDE_Morph.prototype.createShareBoxTitleBar = function () {
 
     // initialize frame
     this.shareBoxTitleBar = new FrameMorph();
-    this.shareBoxTitleBar.setColor(this.groupColor);
+    this.shareBoxTitleBar.setColor(this.groupColor.darker(20));
 
-    // initialize title
-    this.shareBoxTitle = new TextMorph("ShareBox", 15, null, false, false, null, null, null, null, null);
+    // initialize title "ShareBox"
+    this.shareBoxTitle = new StringMorph(
+        "ShareBox",
+        14,
+        'sans-serif',
+        true,
+        false,
+        false,
+        null,
+        this.frameColor.darker(this.buttonContrast)
+    );
+
+    this.shareBoxTitle.setLeft(this.shareBoxTitleBar.left() + 5);
+    this.shareBoxTitle.setTop(this.shareBoxTitleBar.top() + 5);
+    this.shareBoxTitle.setWidth(200);
+    this.shareBoxTitle.drawNew();
     this.shareBoxTitleBar.add(this.shareBoxTitle);
 
     // add to myself
     this.add(this.shareBoxTitleBar);
+
+    this.shareBoxTitle.fixLayout = function() {
+    };
 }
 
 // xinni: the 'scripts' and 'assets' tabs.
@@ -2039,12 +2074,14 @@ IDE_Morph.prototype.createShareBoxConnectBar = function () {
 
     this.shareBoxConnectBar.fixLayout = function () {
         this.setExtent(new Point(
-                this.right() - this.left(),
+            this.right() - this.left(),
             this.height()
         ));
         this.tabBar.setLeft(this.left());
         this.tabBar.setBottom(this.bottom() + 75);
     };
+
+
 };
 
 // xinni: ShareBox connection morph
@@ -2123,6 +2160,7 @@ IDE_Morph.prototype.createShareBoxConnect = function () {
     }
     this.newGroupScreen.add(groupButton);
 
+
 };
 
 
@@ -2182,11 +2220,13 @@ IDE_Morph.prototype.fixLayout = function (situation) {
     // paddings
     var padding = this.padding;
     var corralBarPadding = 5;
-    var shareBoxTitleBarPadding = 40;
+    var shareBoxTitleTopPadding = 5;
+    var shareBoxTitleLeftPadding = 40;
     var shareBoxInternalTopPadding = 35;
     var shareBoxInternalLeftPadding = 6;
 
-    // heights
+    // heights and widths
+    var shareBoxTitleBarButtonsWidth = 95;
     var shareBoxTitleBarHeight = 30;
     var corralBarHeight = 90;
 
@@ -2269,24 +2309,24 @@ IDE_Morph.prototype.fixLayout = function (situation) {
 
         // Share Box Title Bar
         if (this.shareBoxTitleBar) {
-            this.shareBoxTitleBar.setTop(this.stage.bottom() + shareBoxTitleBarPadding);
+            this.shareBoxTitleBar.setTop(this.stage.bottom() + shareBoxTitleTopPadding);
             this.shareBoxTitleBar.setLeft(this.stage.left());
             this.shareBoxTitleBar.setWidth(this.stage.width());
             this.shareBoxTitleBar.setHeight(shareBoxTitleBarHeight);
-           // this.shareBoxTitleBar.fixLayout();
+            //this.shareBoxTitleBar.fixLayout();
         }
 
         // Share Box Title Buttons
         if (this.shareBoxTitleBarButtons) {
-            this.shareBoxTitleBarButtons.setTop(this.stage.bottom() + shareBoxTitleBarPadding);
+            this.shareBoxTitleBarButtons.setTop(this.stage.bottom() + shareBoxTitleTopPadding);
             this.shareBoxTitleBarButtons.setRight(this.stage.right());
-            this.shareBoxTitleBarButtons.setWidth(this.stage.width()/2);
+            this.shareBoxTitleBarButtons.setWidth(shareBoxTitleBarButtonsWidth);
             this.shareBoxTitleBarButtons.setHeight(shareBoxTitleBarHeight);
-           // this.shareBoxTitleBarButtons.fixLayout();
+            //this.shareBoxTitleBarButtons.fixLayout();
         }
         // Share Box Tab Bar
         if (this.shareBoxBar) {
-            this.shareBoxBar.setTop(this.stage.bottom() - shareBoxTitleBarPadding + shareBoxTitleBarHeight);
+            this.shareBoxBar.setTop(this.stage.bottom() - shareBoxTitleLeftPadding + shareBoxTitleBarHeight);
             this.shareBoxBar.setLeft(this.categories.width() + this.spriteBar.width() + 2 * padding + this.stage.width() / 1.5);
             this.shareBoxBar.fixLayout(); // xinni: position the tabs
         }
@@ -2309,7 +2349,7 @@ IDE_Morph.prototype.fixLayout = function (situation) {
 
         // Share Box Connect Tab Bar
         if (this.shareBoxConnectBar) {
-            this.shareBoxConnectBar.setTop(this.stage.bottom() - shareBoxTitleBarPadding + shareBoxTitleBarHeight);
+            this.shareBoxConnectBar.setTop(this.stage.bottom() - shareBoxTitleLeftPadding + shareBoxTitleBarHeight);
             this.shareBoxConnectBar.setLeft(this.categories.width() + this.spriteBar.width() + 2 * padding);
             this.shareBoxConnectBar.fixLayout();
         }
@@ -3756,11 +3796,14 @@ IDE_Morph.prototype.getCostumesList = function (dirname) {
 };
 
 
-    // sharebox menu buttons
+    // xinni: sharebox menu buttons
 IDE_Morph.prototype.shareBoxSettingsMenu = function() {
+
+    console.log("Settings for sharebox triggered");
+
     var menu,
         world = this.world(),
-        pos = this.shareBoxSettingsButton.bottomLeft();
+        pos = this.shareBoxTitleBarButtons.shareBoxSettingsButton.bottomLeft();
 
     menu = new MenuMorph(this);
     menu.addItem(
