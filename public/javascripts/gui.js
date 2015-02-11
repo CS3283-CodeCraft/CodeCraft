@@ -1440,12 +1440,72 @@ IDE_Morph.prototype.createCorral = function () {
 
 // xinni: "settings" and "add member" buttons on the title bar.
 IDE_Morph.prototype.createShareBoxTitleBarButtons = function () {
+    var colors = [
+        this.groupColor.darker(3),
+        this.frameColor.darker(40),
+        this.frameColor.darker(40)
+    ];
 
+    // destroy if already exists
+    if (this.shareBoxTitleBarButtons) {
+        this.shareBoxTitleBarButtons.destroy();
+    }
+    // initialize frame
+    this.shareBoxTitleBarButtons = new FrameMorph();
+
+    // share box title settings button
+    button = new PushButtonMorph(
+        this,
+        'shareBoxSettingsMenu',
+        new SymbolMorph('gears', 14)
+        //'\u2699'
+    );
+
+    button.corner = 12;
+    button.color = colors[0];
+    button.highlightColor = colors[1];
+    button.pressColor = colors[2];
+    button.labelMinExtent = new Point(36, 18);
+    button.padding = 0;
+    button.labelShadowOffset = new Point(-1, -1);
+    button.labelShadowColor = colors[1];
+    button.labelColor = this.buttonLabelColor;
+    button.contrast = this.buttonContrast;
+    button.drawNew();
+    button.hint = 'ShareBox Settings';
+    button.fixLayout();
+
+    shareBoxSettingsButton = button;
+    this.shareBoxTitleBar.add(shareBoxSettingsButton);
+    this.shareBoxTitleBar.settingsButton = shareBoxSettingsButton; // for menu positioning
+
+
+    // add member button
+    shareBoxAddMemberButton = new PushButtonMorph();
+    this.shareBoxTitleBar.add(shareBoxAddMemberButton);
+
+    // add to title bar
+    this.shareBoxTitleBar.add(this.shareBoxTitleBarButtons);
 }
 
-// xinni: title bar that says 'SHAREBOX'
+// xinni: title bar that says 'SHAREBOX'. Contains buttons for settings and add member.
 IDE_Morph.prototype.createShareBoxTitleBar = function () {
+    // destroy if already exists
+    if (this.shareBoxTitleBar) {
+        this.shareBoxTitleBar.destroy();
+    }
 
+    // initialize frame
+    this.shareBoxTitleBar = new FrameMorph();
+    this.shareBoxTitleBar.setColor(this.groupColor);
+
+    // initialize title
+    this.shareBoxTitle = new TextMorph("ShareBox", 18, null, true, false, null, null, null, null, null);
+    this.shareBoxTitleBar.add(this.shareBoxTitle);
+
+
+    // add to myself
+    this.add(this.shareBoxTitleBar);
 }
 
 // xinni: the 'scripts' and 'assets' tabs.
@@ -1988,38 +2048,6 @@ IDE_Morph.prototype.createShareBoxConnectBar = function () {
     };
 };
 
-/* xinni: countdown object
-function Countdown(options) {
-    var timer,
-        instance = this,
-        seconds = options.seconds || 10,
-        updateStatus = options.onUpdateStatus || function () {
-        },
-        counterEnd = options.onCounterEnd || function () {
-        };
-
-    function decrementCounter() {
-        updateStatus(seconds);
-        if (seconds === 0) {
-            counterEnd();
-            instance.stop();
-        }
-        seconds--;
-    }
-
-    this.start = function () {
-        clearInterval(timer);
-        timer = 0;
-        seconds = options.seconds;
-        timer = setInterval(decrementCounter, 1000);
-    };
-
-    this.stop = function () {
-        seconds = options.seconds;
-        clearInterval(timer);
-    };
-
-}*/
 // xinni: ShareBox connection morph
 IDE_Morph.prototype.createShareBoxConnect = function () {
 
@@ -2027,7 +2055,6 @@ IDE_Morph.prototype.createShareBoxConnect = function () {
     var myself = this;
     var padding = 10;
     this.newGroupScreen = new FrameMorph();
-    this.awaitingReplyScreen = new FrameMorph();
 
     // hide sharebox if haven't connected
     if (this.shareBox) {
@@ -2102,8 +2129,6 @@ IDE_Morph.prototype.createShareBoxConnect = function () {
 
 IDE_Morph.prototype.showEntireShareBoxComponent = function() {
 
-    myself = this;
-
     console.log("showEntireShareBoxComponent triggered.");
 
     // destroy screens and morphs shown before this.
@@ -2116,12 +2141,19 @@ IDE_Morph.prototype.showEntireShareBoxComponent = function() {
     if (this.shareBoxConnect) {
         this.shareBoxConnect.destroy();
     }
-    if(this.shareBoxConnectBar) {
+    if (this.shareBoxConnectBar) {
         this.shareBoxConnectBar.destroy();
     }
 
     console.log("sharebox about to be created. previous screens destroyed.");
 
+    // create title bar buttons
+    if (!this.shareBoxTitleBarButtons) {
+        this.createShareBoxTitleBarButtons();
+    }
+
+    // create share box
+    myself = this;
     SnapCloud.createSharebox(tempIdentifier, function(data) {
         console.log(data);
         var shareboxId = prompt("sharebox id?", data.data[0].id);
@@ -2139,7 +2171,7 @@ IDE_Morph.prototype.showEntireShareBoxComponent = function() {
         txt.show();
         myself.shareBox.add(txt);
     });
-    
+
 };
 
 // IDE_Morph layout
@@ -3713,6 +3745,36 @@ IDE_Morph.prototype.getCostumesList = function (dirname) {
         return x < y ? -1 : 1;
     });
     return costumes;
+};
+
+
+    // sharebox menu buttons
+IDE_Morph.prototype.shareBoxSettingsMenu = function() {
+    var menu,
+        world = this.world(),
+        pos = this.shareBoxSettingsButton.bottomLeft();
+
+    menu = new MenuMorph(this);
+    menu.addItem(
+        'View/Edit Members',
+        'initializeCloud'
+    );
+    menu.addLine();
+    menu.addItem(
+        'Add Members',
+        'createCloudAccount'
+    );
+    menu.addLine();
+    menu.addItem(
+        'Leave group',
+        'resetCloudPassword'
+    );
+    menu.popup(world, pos);
+
+};
+
+IDE_Morph.prototype.shareBoxAddMemberMenu = function() {
+
 };
 
 // IDE_Morph menu actions
