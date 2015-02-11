@@ -1440,11 +1440,6 @@ IDE_Morph.prototype.createCorral = function () {
 
 // xinni: "settings" and "add member" buttons on the title bar.
 IDE_Morph.prototype.createShareBoxTitleBarButtons = function () {
-    var colors = [
-        this.groupColor.darker(3),
-        this.frameColor.darker(40),
-        this.frameColor.darker(40)
-    ];
 
     // destroy if already exists
     if (this.shareBoxTitleBarButtons) {
@@ -1457,35 +1452,40 @@ IDE_Morph.prototype.createShareBoxTitleBarButtons = function () {
     button = new PushButtonMorph(
         this,
         'shareBoxSettingsMenu',
-        new SymbolMorph('gears', 14)
-        //'\u2699'
+        new SymbolMorph('gears', 14),
+        null,
+        null,
+        null,
+        "symbolButton"
     );
-
-    button.corner = 12;
-    button.color = colors[0];
-    button.highlightColor = colors[1];
-    button.pressColor = colors[2];
-    button.labelMinExtent = new Point(36, 18);
-    button.padding = 0;
-    button.labelShadowOffset = new Point(-1, -1);
-    button.labelShadowColor = colors[1];
-    button.labelColor = this.buttonLabelColor;
-    button.contrast = this.buttonContrast;
     button.drawNew();
     button.hint = 'ShareBox Settings';
     button.fixLayout();
-
     shareBoxSettingsButton = button;
-    this.shareBoxTitleBar.add(shareBoxSettingsButton);
-    this.shareBoxTitleBar.settingsButton = shareBoxSettingsButton; // for menu positioning
+
 
 
     // add member button
-    shareBoxAddMemberButton = new PushButtonMorph();
-    this.shareBoxTitleBar.add(shareBoxAddMemberButton);
+    button = new PushButtonMorph(
+        this,
+        'shareBoxSettingsMenu',
+        new SymbolMorph('crosshairs', 14),
+        null,
+        null,
+        null,
+        "symbolButton"
+    );
+    button.drawNew();
+    button.hint = 'New Member';
+    button.fixLayout();
+    shareBoxAddMemberButton = button;
+
 
     // add to title bar
-    this.shareBoxTitleBar.add(this.shareBoxTitleBarButtons);
+    this.shareBoxTitleBar.add(shareBoxSettingsButton);
+    this.shareBoxTitleBar.shareBoxAddMemberButton = shareBoxSettingsButton;
+    this.shareBoxTitleBar.add(shareBoxAddMemberButton);
+    this.shareBoxTitleBar.shareBoxAddMemberButton = shareBoxAddMemberButton;
 }
 
 // xinni: title bar that says 'SHAREBOX'. Contains buttons for settings and add member.
@@ -1500,9 +1500,8 @@ IDE_Morph.prototype.createShareBoxTitleBar = function () {
     this.shareBoxTitleBar.setColor(this.groupColor);
 
     // initialize title
-    this.shareBoxTitle = new TextMorph("ShareBox", 18, null, true, false, null, null, null, null, null);
+    this.shareBoxTitle = new TextMorph("ShareBox", 15, null, false, false, null, null, null, null, null);
     this.shareBoxTitleBar.add(this.shareBoxTitle);
-
 
     // add to myself
     this.add(this.shareBoxTitleBar);
@@ -2270,12 +2269,21 @@ IDE_Morph.prototype.fixLayout = function (situation) {
 
         // Share Box Title Bar
         if (this.shareBoxTitleBar) {
-            this.shareBoxTitleBar.setTop(this.stage.bottom() - shareBoxTitleBarPadding);
-            this.shareBoxTitleBar.setLeft(this.categories.width() + this.spriteBar.width() + 2 * padding + this.stage.width() / 1.5);
+            this.shareBoxTitleBar.setTop(this.stage.bottom() + shareBoxTitleBarPadding);
+            this.shareBoxTitleBar.setLeft(this.stage.left());
             this.shareBoxTitleBar.setWidth(this.stage.width());
             this.shareBoxTitleBar.setHeight(shareBoxTitleBarHeight);
+           // this.shareBoxTitleBar.fixLayout();
         }
 
+        // Share Box Title Buttons
+        if (this.shareBoxTitleBarButtons) {
+            this.shareBoxTitleBarButtons.setTop(this.stage.bottom() + shareBoxTitleBarPadding);
+            this.shareBoxTitleBarButtons.setRight(this.stage.right());
+            this.shareBoxTitleBarButtons.setWidth(this.stage.width()/2);
+            this.shareBoxTitleBarButtons.setHeight(shareBoxTitleBarHeight);
+           // this.shareBoxTitleBarButtons.fixLayout();
+        }
         // Share Box Tab Bar
         if (this.shareBoxBar) {
             this.shareBoxBar.setTop(this.stage.bottom() - shareBoxTitleBarPadding + shareBoxTitleBarHeight);

@@ -227,6 +227,26 @@ PushButtonMorph.prototype.init = function (
         this.padding = 7;
     }
 
+    if (demo === "symbolButton") {
+        var colors = [
+            (new Color(230, 230, 230)).darker(3),
+            (new Color(255, 255, 255)).darker(40),
+            (new Color(255, 255, 255)).darker(40),
+            new Color(70, 70, 70)
+        ];
+
+        this.corner = 12;
+        this.color = colors[0];
+        this.highlightColor = colors[1];
+        this.pressColor = colors[2];
+        this.labelMinExtent = new Point(36, 18);
+        this.padding = 0;
+        this.labelShadowOffset = new Point(-1, -1);
+        this.labelShadowColor = colors[1];
+        this.labelColor = colors[3];
+        this.contrast = 30;
+    }
+
     this.drawNew();
     this.fixLayout();
 };
