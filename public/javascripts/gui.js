@@ -1725,17 +1725,17 @@ IDE_Morph.shareBoxPrototypeFunctionality = function (myself, shareboxId) {
     var sharer = new ShareBoxItemSharer(serializer, ide, socket);
 
     sharer.socket.emit('join', {id: tempIdentifier, room: room });
-    console.log("join room " + room)
+    console.log(tempIdentifier +": join room " + room)
 
     // When I receive data, I parse objectData and add it to my data list
     sharer.socket.on('message', function (objectData) {
-        console.log("received:" + objectData);
+        alert("received:" + objectData);
         // Build array object to update list
         var arrayItem = objectData;
         arrayItem.xml = _.unescape(arrayItem.xml);
         // Update local list
         this.data.items.push(arrayItem);
-        console.log(JSON.stringify(this.data.items, null, '\t'));
+        console.log("draw following code in sharebox: \n" + JSON.stringify(this.data.items, null, '\t'));
     }.bind(sharer));
 
 
