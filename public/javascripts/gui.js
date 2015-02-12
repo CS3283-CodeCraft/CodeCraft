@@ -1731,7 +1731,7 @@ IDE_Morph.shareBoxPrototypeFunctionality = function (myself, shareboxId) {
     sharer.socket.on('message', function (objectData) {
         console.log("received:" + objectData);
         // Build array object to update list
-        var arrayItem = JSON.parse(objectData);
+        var arrayItem = objectData;
         arrayItem.xml = _.unescape(arrayItem.xml);
         // Update local list
         this.data.items.push(arrayItem);
