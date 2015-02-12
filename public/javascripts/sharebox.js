@@ -54,8 +54,9 @@ ShareBoxItemSharer.prototype.shareObject = function (room, socket, shareItem, sh
             xml: _.escape(xml),
             status: 0
         };
+        console.log(room)
         var string = { room: room, data: objectData };
-        socket.to(room).emit('send', string);
+        socket.to(string.room).emit('send', string);
         console.log("send:" + string);
         // Save object, passing the XML, object type and name to save it as
         // Call Yiwen's storage API here
