@@ -1725,17 +1725,17 @@ IDE_Morph.shareBoxPrototypeFunctionality = function (myself, shareboxId) {
     var sharer = new ShareBoxItemSharer(serializer, ide, socket);
 
     sharer.socket.emit('join', {id: tempIdentifier, room: room });
-    console.log("join room " + room)
+    console.log(tempIdentifier +": join room " + room)
 
     // When I receive data, I parse objectData and add it to my data list
     sharer.socket.on('message', function (objectData) {
-        console.log("received:" + objectData);
+        alert("received:" + objectData);
         // Build array object to update list
-        var arrayItem = JSON.parse(objectData);
+        var arrayItem = objectData;
         arrayItem.xml = _.unescape(arrayItem.xml);
         // Update local list
         this.data.items.push(arrayItem);
-        console.log(JSON.stringify(this.data.items, null, '\t'));
+        console.log("draw following code in sharebox: \n" + JSON.stringify(this.data.items, null, '\t'));
     }.bind(sharer));
 
 
@@ -2804,11 +2804,6 @@ IDE_Morph.prototype.nextScene = function () {
         900, 550
     ));
 
-    //this.openLibrary = new Morph();
-    //this.openLibrary.color = this.frameColor;
-    //this.openLibrary.setHeight(this.logo.height()); // height is fixed
-    //this.add(this.openLibrary);
-
     ctx = pic.getContext("2d");
     img = new Image();
     img.src = 'library2.jpg';
@@ -2944,164 +2939,20 @@ IDE_Morph.prototype.openLibrary = function () {
     //var txt;
     var myself = this,
         world = this.world();
-    /*
-     txt = new TextMorph(
-     localize('click or drag crosshairs to move the rotation center'),
-     dialog.fontSize,
-     dialog.fontStyle,
-     true,
-     false,
-     'center',
-     null,
-     null,
-     new Point(1, 1),
-     new Color(255, 255, 255)
-     );
-     */
-    //db.createLabel();
-    //db.addBody(txt);
-    //db.addButton('ok', 'Ok');
+
+	//db.createLabel();
+	//db.addBody(txt);
+	//db.addButton('ok', 'Ok');
     //db.addButton('cancel', 'Cancel');
     //db.fixLayout();
     //db.drawNew();
-    //this.add(db);
-    db.setWidth(screen.width*0.7);
-    db.setHeight(screen.height*0.7);
-    //db.fontSize = 40;
-    db.createCheckBox(db.length,db.height);
-
-    db.createImage(screen.width * 0.3, screen.height * 0.15);
-
-    /*
-     db.setWidth(800);
-     db.setHeight(800);
-
-     db.inform(
-     'Import Resource',
-     'I have a gigantic unicorn',
-     this.world(),
-     null,
-     'library window'
-     );
-     */
-    /*
-     var pic = newCanvas(new Point(
-     //434, 294
-     900, 550
-     ));
-
-     //this.openLibrary = new Morph();
-     //this.openLibrary.color = this.frameColor;
-     //this.openLibrary.setHeight(this.logo.height()); // height is fixed
-     //this.add(this.openLibrary);
-
-     ctx = pic.getContext("2d");
-     img = new Image();
-     img.src = 'library1.jpg';
-     img.onload = function () {
-     // create pattern
-     var ptrn = ctx.createPattern(img, 'repeat'); // Create a pattern with this image, and set it to "repeat".
-     ctx.fillStyle = ptrn;
-     ctx.fillRect(0, 0, pic.width, pic.height); // context.fillRect(x, y, width, height);
-     };
-
-
-     db.inform(
-     'Import Resource',
-     'I have a gigantic unicorn',
-     this.world(),
-     null,
-     'library window'
-     );
-     */
-
-    //db.addButton('close', 'Close');
-    //db.fixLayout();
-    //db.drawNew();
-
-    //button.setDimension(new Point(800,800));
-
-    //db.add(dummy);
-
-    //db.addButton('ok', 'OK™');
-    //db.addButton('cancel', 'Cancel');
-    //db.fixLayout();
-    //db.drawNew();
-    //db.setDimension(new Point (800, 800));
-    //db.popUp(world);
-    //db.setCenter(world.center());
-    //db.addButton();
-
-    // stopButton
-    /*
-     var button;
-     button = new PushButtonMorph(
-     this,
-     'nextScene',
-     new SymbolMorph('', 0),
-     null,
-     null,
-     null,
-     'fuck you, morph'
-     );
-     //this.add(button);
-     button.setWidth(150);
-     button.setHeight(25);
-     //button.setPosition(new Point(765,250));
-     button.setPosition(new Point(520, 450));
-
-     //button.color = new Color(255,255,255,0);
-     //button.drawBackgrounds(img);
-     db.add(button);
-     */
-    //db.fixLayout();
-    //db.drawNew();
-    //db.setDimension(new Point (800, 800));
-    //db.popUp(world);
-    //db.setCenter(world.center());
-    //db.addButton();
-
-    /*
-     button.corner = 12;
-     button.color = colors[0];
-     button.highlightColor = colors[1];
-     button.pressColor = colors[2];
-     button.labelMinExtent = new Point(36, 18);
-     button.padding = 0;
-     button.labelShadowOffset = new Point(-1, -1);
-     button.labelShadowColor = colors[1];
-     button.labelColor = new Color(200, 0, 0);
-     button.contrast = this.buttonContrast;
-     //button.drawNew();
-     // button.hint = 'stop\nevery-\nthing';
-     //button.fixLayout();
-     button.setPosition(new Point(400, 400));
-     button.setDimension(new Point(800, 800));
-     */
-    //button.setDimension(new Point(800,800));
-    //nextscenebutton = button;
-    //this.add(nextscenebutton);
-    //this.add(button);
-    //this.openLibrary.add(button);
-    /*
-     button.corner = 12;
-     button.color = colors[0];
-     button.highlightColor = colors[1];
-     button.pressColor = colors[2];
-     button.labelMinExtent = new Point(36, 18);
-     button.padding = 0;
-     button.labelShadowOffset = new Point(-1, -1);
-     button.labelShadowColor = colors[1];
-     button.labelColor = new Color(200, 0, 0);
-     button.contrast = this.buttonContrast;
-     button.drawNew();
-     // button.hint = 'stop\nevery-\nthing';
-     button.fixLayout();
-     button.setPosition(new Point(400, 400));
-     //button.setDimension(new Point(800, 800));
-     nextscenebutton = button;
-     this.openLibrary.add(nextscenebutton);
-     */
+	//this.add(db);
+	db.setWidth(screen.width*0.7);
+	db.setHeight(screen.height*0.7);
+	//db.fontSize = 40;
+	db.createCheckBox(db.length,db.height);
+	
+	db.createImage(screen.width * 0.3, screen.height * 0.15);
 };
 
 IDE_Morph.prototype.duplicateSprite = function (sprite) {

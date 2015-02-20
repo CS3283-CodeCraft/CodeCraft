@@ -37,7 +37,8 @@ modules.cloud = '2014-May-26';
 var Cloud;
 
 var SnapCloud = new Cloud(
-    'http://localhost:4000/'
+    // 'http://localhost:4000/'
+    'http://codecraft-api.herokuapp.com/'
 );
 
 // Cloud /////////////////////////////////////////////////////////////
