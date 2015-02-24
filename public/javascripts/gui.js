@@ -1438,6 +1438,7 @@ IDE_Morph.prototype.createCorral = function () {
 // ~ SHAREBOX ~
 // ****************************
 
+
 // xinni: "settings" and "add member" buttons on the title bar.
 IDE_Morph.prototype.createShareBoxTitleBarButtons = function () {
 
@@ -1829,12 +1830,19 @@ IDE_Morph.shareBoxPrototypeFunctionality = function (myself, shareboxId) {
     */
 }
 
+// *******************************************************
+//   SHAREBOX screens to show on events
+// *******************************************************
+
+
 // xinni: Creates the request received screen.
 // i.e. "You have a group invite" message. Show this to the user who is requested!!
 IDE_Morph.prototype.showRequestReceivedMessage = function () {
     // *****************************
     // screen 3: Request received
     // *****************************
+
+    var padding = 10;
 
     // init screen
     if (this.requestReceivedScreen) {
@@ -1897,6 +1905,53 @@ IDE_Morph.prototype.showRequestReceivedMessage = function () {
 
 };
 
+// xinni: Show this window in place of sharebox when not connected to server (this.showShareBoxDisconnectedWindow();)
+// basic message is to say "We can't establish a server connection, and will display the sharebox once its back up."
+// so when the user DCs, the sharebox cannot be seen and operations disabled.
+// hide this window once connections is back up
+IDE_Morph.prototype.showShareBoxDisconnectedWindow = function () {
+    var padding = 10;
+
+    if (this.shareBoxDisconnectedWindow) {
+        this.shareBoxDisconnectedWindow.destroy();
+    }
+
+    // disconnected window morph
+    this.shareBoxDisconnectedWindow = new ScrollFrameMorph();
+    this.shareBoxDisconnectedWindow.color = this.groupColor;
+    this.shareBoxDisconnectedWindow.acceptsDrops = false;
+    myself = this;
+    this.add(this.shareBoxDisconnectedWindow);
+
+    // disconnected logo
+    if (this.disconnectedLogo) {
+        this.disconnectedLogo.destroy();
+    }
+    disconnectedLogo = new Morph();
+    disconnectedLogo.texture = 'images/error.png';
+    disconnectedLogo.drawNew = function () {
+        this.image = newCanvas(this.extent());
+        var context = this.image.getContext('2d');
+        var picBgColor = myself.groupColor;
+        context.fillStyle = picBgColor.toString();
+        context.fillRect(0, 0, this.width(), this.height());
+        if (this.texture) {
+            this.drawTexture(this.texture);
+        }
+    };
+    disconnectedLogo.setExtent(new Point(128, 128));
+    disconnectedLogo.setLeft(this.stage.width() / 2 - disconnectedLogo.width() / 2);
+    disconnectedLogo.setTop(this.stage.height() / 8);
+    this.shareBoxDisconnectedWindow.add(disconnectedLogo);
+
+    // disconnected text
+    disconnectedTxt = new TextMorph("Unable to connect to server.");
+    disconnectedTxt.setColor(SpriteMorph.prototype.paletteTextColor);
+    disconnectedTxt.setPosition(new Point(this.stage.width() / 2 - disconnectedTxt.width() / 2, disconnectedLogo.bottom() + padding));
+    this.shareBoxDisconnectedWindow.add(disconnectedTxt);
+
+
+};
 // xinni: shows the whole share box and hide the connection screens and tabs
 // Once someone enters a collaboration session!
 // that is, they create a new group or they accept an invitation to join a group.
@@ -2213,6 +2268,7 @@ IDE_Morph.prototype.showEntireShareBoxComponent = function() {
 
 // IDE_Morph layout
 
+// xinni: decide width, height, position of frames here.
 IDE_Morph.prototype.fixLayout = function (situation) {
     // situation is a string, i.e.
     // 'selectSprite' or 'refreshPalette' or 'tabEditor'
@@ -2324,6 +2380,7 @@ IDE_Morph.prototype.fixLayout = function (situation) {
             this.shareBoxTitleBarButtons.setHeight(shareBoxTitleBarHeight);
             //this.shareBoxTitleBarButtons.fixLayout();
         }
+
         // Share Box Tab Bar
         if (this.shareBoxBar) {
             this.shareBoxBar.setTop(this.stage.bottom() - shareBoxTitleLeftPadding + shareBoxTitleBarHeight);
@@ -2347,13 +2404,20 @@ IDE_Morph.prototype.fixLayout = function (situation) {
             this.shareAssetsBox.setHeight(this.bottom() - this.shareAssetsBox.top());
         }
 
+        // Share Box Disconnected Window
+        if (this.shareBoxDisconnectedWindow) {
+            this.shareBoxDisconnectedWindow.setTop(this.stage.bottom() + shareBoxTitleTopPadding);
+            this.shareBoxDisconnectedWindow.setLeft(this.stage.left());
+            this.shareBoxDisconnectedWindow.setWidth(this.stage.width());
+            this.shareBoxDisconnectedWindow.setHeight(this.height() - this.stage.height());
+        }
+
         // Share Box Connect Tab Bar
         if (this.shareBoxConnectBar) {
             this.shareBoxConnectBar.setTop(this.stage.bottom() - shareBoxTitleLeftPadding + shareBoxTitleBarHeight);
             this.shareBoxConnectBar.setLeft(this.categories.width() + this.spriteBar.width() + 2 * padding);
             this.shareBoxConnectBar.fixLayout();
         }
-
 
         // Share Box Connect
         if (this.shareBoxConnect) {
