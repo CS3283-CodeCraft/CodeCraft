@@ -415,7 +415,6 @@ IDE_Morph.prototype.buildPanes = function () {
     this.createShareBoxBar();
     this.createShareBox();
     this.createShareAssetsBox();
-    // xinni: Swap the bottom two lines with the above two lines to see the ShareBox.
     this.createShareBoxConnectBar();
     this.createShareBoxConnect();
 };
@@ -1435,7 +1434,7 @@ IDE_Morph.prototype.createCorral = function () {
 };
 
 // ****************************
-// ~ SHAREBOX ~
+// SHAREBOX
 // ****************************
 
 
@@ -1515,7 +1514,7 @@ IDE_Morph.prototype.createShareBoxTitleBar = function () {
     }
 
     // initialize frame
-    this.shareBoxTitleBar = new FrameMorph();
+    this.shareBoxTitleBar = new l();
     this.shareBoxTitleBar.setColor(this.groupColor.darker(20));
 
     // initialize title "ShareBox"
@@ -1905,10 +1904,7 @@ IDE_Morph.prototype.showRequestReceivedMessage = function () {
 
 };
 
-// xinni: Show this window in place of sharebox when not connected to server (this.showShareBoxDisconnectedWindow();)
-// basic message is to say "We can't establish a server connection, and will display the sharebox once its back up."
-// so when the user DCs, the sharebox cannot be seen and operations disabled.
-// hide this window once connections is back up
+// xinni: Show this window when not connected to server (this.showShareBoxDisconnectedWindow();)
 IDE_Morph.prototype.showShareBoxDisconnectedWindow = function () {
     var padding = 10;
 
@@ -1952,11 +1948,10 @@ IDE_Morph.prototype.showShareBoxDisconnectedWindow = function () {
 
 
 };
-// xinni: shows the whole share box and hide the connection screens and tabs
+
+// / xinni: shows the whole share box and hide the connection screens and tabs
 // Once someone enters a collaboration session!
 // that is, they create a new group or they accept an invitation to join a group.
-
-
 IDE_Morph.prototype.createShareBox = function (shareboxId) {
     // Initialization of Sharebox and its default behavior
     var scripts = this.shareBoxPlaceholderSprite.scripts,

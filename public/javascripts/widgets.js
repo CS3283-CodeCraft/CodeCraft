@@ -148,7 +148,7 @@ PushButtonMorph.prototype.init = function (
     environment,
     hint,
     template,
-	demo
+    style
 ) {
     // additional properties:
     this.is3D = false; // for "flat" design exceptions
@@ -169,7 +169,7 @@ PushButtonMorph.prototype.init = function (
     this.color = PushButtonMorph.prototype.color;
 
     // Delete "fuck you" and "show green" if not needed.
-	if(demo === "fuck you, morph"){
+	if(style === "fuck you, morph"){
 		var col = new Color(255,255,255,0.01);
 		
 		this.color = col;
@@ -181,7 +181,7 @@ PushButtonMorph.prototype.init = function (
 		this.padding = 0;
 		this.corner = 0;
 	}
-	if(demo === "show green button"){
+	if(style === "show green button"){
 		var col = new Color(255,255,255,0.01);
 		
 		this.color = col;
@@ -197,7 +197,7 @@ PushButtonMorph.prototype.init = function (
 	}
 
     // xinni: using demo to style buttons. rename demo to 'style' at a later time
-    if (demo === "green") {
+    if (style === "green") {
         var greenColor = new Color(60, 158, 0);
         var lightGreenColor = new Color(80, 209, 0);
         var white = new Color(255, 255, 255);
@@ -212,7 +212,7 @@ PushButtonMorph.prototype.init = function (
         this.padding = 7;
     }
 
-    if (demo === "red") {
+    if (style === "red") {
         var redColor = new Color(204, 0, 0);
         var lightRedColor = new Color(255, 51, 51);
         var white = new Color(255, 255, 255);
@@ -227,7 +227,7 @@ PushButtonMorph.prototype.init = function (
         this.padding = 7;
     }
 
-    if (demo === "symbolButton") {
+    if (style === "symbolButton") {
         var colors = [
             (new Color(230, 230, 230)).darker(3),
             (new Color(255, 255, 255)).darker(40),
