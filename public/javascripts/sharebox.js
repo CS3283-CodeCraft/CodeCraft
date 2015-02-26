@@ -34,15 +34,6 @@ function ShareBoxItemSharer(serializer, ide, socket) {
 ShareBoxItemSharer.prototype.shareObject = function (room, socket, shareItem, shareName) {
     // Saving is relatively simple, and requires one serialization step, as opposed to deserialization
     var xml = this.serializeItem(shareItem);
-
-    //var deserializedItem = sharer.deserializeItem(xml);
-    // Further conversion is needed to make the object grabbable
-    //var grabbableItem = sharer.returnGrabbableDeserializedItem(deserializedItem);
-
-    // Thereafter, we put the item into the cursor's hand, and let the cursor carry it around.
-    //grabbableItem.setPosition(world.hand.position());
-    //world.hand.grab(grabbableItem);
-
     if (xml === null || xml === undefined) {
         // ERROR HANDLING
         throw "Null XML";
@@ -58,9 +49,6 @@ ShareBoxItemSharer.prototype.shareObject = function (room, socket, shareItem, sh
         var string = { room: room, data: objectData };
         socket.to(string.room).emit('send', string);
         console.log("send:" + string);
-        // Save object, passing the XML, object type and name to save it as
-        // Call Yiwen's storage API here
-        // Overwriting should be an option here.
     }
 };
 
@@ -88,7 +76,7 @@ ShareBoxItemSharer.prototype.getObject = function (shareName, objectType) {
  * @param {string} objectType - either 'script', 'costume' or 'sound'
  */
 ShareBoxItemSharer.prototype.deleteObject = function (shareName, objectType) {
-    nop(); // Just call Yiwen's delete API
+    nop();
 };
 
 
@@ -102,21 +90,6 @@ ShareBoxItemSharer.prototype.serializeItem = function(shareItem) {
     var xml = null;
     if (shareItem instanceof BlockMorph) {
         xml = this.serializer.serialize(shareItem);
-        /*
-         new DialogBoxMorph(
-         myself,
-         function () {
-         myself.scriptListScreen.show();
-         myself.shareBox.hide();
-         },
-         myself
-         ).prompt(
-         'Enter a name for the script',
-         null,
-         myself.world()
-         );
-         this.add(droppedMorph);
-         */
     } else if (shareItem instanceof CostumeIconMorph) {
         xml = this.serializer.serialize(shareItem.object.copy());
     } else if (shareItem instanceof SoundIconMorph) {
