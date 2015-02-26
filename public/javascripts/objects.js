@@ -1422,7 +1422,8 @@ SpriteMorph.prototype.drawNew = function () {
         corner,
         costumeExtent,
         ctx,
-        handle;
+        handle,
+        rect;
 
     if (this.isWarped) {
         this.wantsRedraw = true;
@@ -1452,7 +1453,8 @@ SpriteMorph.prototype.drawNew = function () {
             origin = origin.min(point);
             corner = corner.max(point);
         });
-        costumeExtent = origin.corner(corner)
+        rect = new Rectangle(0,0,0,0);
+        costumeExtent = origin.corner(rect, corner)
             .extent().multiplyBy(this.scale * stageScale);
 
         // determine the new relative origin of the rotated shape
@@ -3155,7 +3157,8 @@ SpriteMorph.prototype.drawLine = function (start, dest) {
         to = dest.subtract(stagePos).divideBy(stageScale),
         damagedFrom = from.multiplyBy(stageScale).add(stagePos),
         damagedTo = to.multiplyBy(stageScale).add(stagePos),
-        damaged = damagedFrom.rectangle(damagedTo).expandBy(
+        rect = new Rectangle(0, 0, 0, 0),
+        damaged = damagedFrom.rectangle(rect, damagedTo).expandBy(
             Math.max(this.size * stageScale / 2, 1)
         ).intersect(this.parent.visibleBounds()).spread();
 

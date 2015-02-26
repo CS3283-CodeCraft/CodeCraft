@@ -47,7 +47,7 @@ ShareBoxItemSharer.prototype.shareObject = function (room, socket, shareItem, sh
         };
         console.log(room)
         var string = { room: room, data: objectData };
-        socket.to(string.room).emit('send', string);
+        socket.emit('send', string);
         console.log("send:" + string);
     }
 };
