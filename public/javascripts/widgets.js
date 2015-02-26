@@ -150,6 +150,8 @@ PushButtonMorph.prototype.init = function (
     template,
     style
 ) {
+    console.log(labelString);
+    //console.log(labelString);
     // additional properties:
     this.is3D = false; // for "flat" design exceptions
     this.target = target || null;
@@ -163,10 +165,19 @@ PushButtonMorph.prototype.init = function (
     // if a template is specified, its background images are used as cache
 
     // initialize inherited properties:
+    // BUG? TYPO?
     TriggerMorph.uber.init.call(this);
+
+    // console.log(this.labelString);
+
+    // PushButtonMorph.uber.init.call(this);
+
+    // console.log(this.labelString);
 
     // override inherited properites:
     this.color = PushButtonMorph.prototype.color;
+
+
 
     // Delete "fuck you" and "show green" if not needed.
 	if(style === "fuck you, morph"){
@@ -246,6 +257,8 @@ PushButtonMorph.prototype.init = function (
         this.labelColor = colors[3];
         this.contrast = 30;
     }
+
+    console.log(this.labelString)
 
     this.drawNew();
     this.fixLayout();
@@ -1167,6 +1180,8 @@ ToggleMorph.prototype.init = function (
     this.builder = builder || null;
     this.toggleElement = null;
 
+    console.log(style === 'checkbox' ? '\u2713' : '\u25CF');
+
     // initialize inherited properties:
     ToggleMorph.uber.init.call(
         this,
@@ -1177,8 +1192,11 @@ ToggleMorph.prototype.init = function (
         hint,
         template
     );
+
     this.refresh();
     this.drawNew();
+    this.createLabel();
+    
 };
 
 // ToggleMorph layout:
@@ -1416,7 +1434,9 @@ ToggleElementMorph.prototype.init = function (
     this.state = false;
 
     // initialize inherited properties:
+    // BUG? TYPO?
     TriggerMorph.uber.init.call(this);
+
 
     // override inherited properties:
     this.color = element.color;
