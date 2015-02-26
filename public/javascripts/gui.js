@@ -69,7 +69,7 @@
 
 // Global stuff ////////////////////////////////////////////////////////
 
-modules.gui = '2014-July-30';
+modules.gui = '2014-July-31';
 
 // Declarations
 
