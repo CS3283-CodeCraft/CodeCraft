@@ -37,9 +37,11 @@ modules.cloud = '2014-May-26';
 var Cloud;
 
 var SnapCloud = new Cloud(
-    // 'http://localhost:4000/'
-    'http://codecraft-api.herokuapp.com/'
+    'http://localhost:4000/'
+    //'http://codecraft-api.herokuapp.com/'
 );
+
+$ = jQuery;
 
 // Cloud /////////////////////////////////////////////////////////////
 
@@ -79,7 +81,16 @@ Cloud.prototype.createSharebox = function(
     }
     var url = this.url + 'sharebox'
     console.log(url)
-    $.post(url, data, success, 'json')
+    console.log(data)
+    console.log(success)
+    console.log($.post)
+    $.ajax({
+        type: "POST",
+        url: url,
+        data: data,
+        success: success,
+        dataType: 'json'
+    });
 }
 
 Cloud.prototype.signup = function (

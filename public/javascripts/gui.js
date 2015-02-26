@@ -69,7 +69,8 @@
 
 // Global stuff ////////////////////////////////////////////////////////
 
-modules.gui = '2014-July-31';
+modules.gui = '2014-July-30';
+
 
 // Declarations
 
@@ -1514,7 +1515,7 @@ IDE_Morph.prototype.createShareBoxTitleBar = function () {
     }
 
     // initialize frame
-    this.shareBoxTitleBar = new l();
+    this.shareBoxTitleBar = new FrameMorph();
     this.shareBoxTitleBar.setColor(this.groupColor.darker(20));
 
     // initialize title "ShareBox"
