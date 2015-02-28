@@ -84,6 +84,7 @@ var PaintColorPickerMorph;
 PaintEditorMorph.prototype = new DialogBoxMorph();
 PaintEditorMorph.prototype.constructor = PaintEditorMorph;
 PaintEditorMorph.uber = DialogBoxMorph.prototype;
+PaintEditorMorph.className = 'PaintEditorMorph';
 
 PaintEditorMorph.prototype.padding = 10;
 
@@ -479,6 +480,7 @@ PaintEditorMorph.prototype.getUserColor = function () {
 PaintColorPickerMorph.prototype = new Morph();
 PaintColorPickerMorph.prototype.constructor = PaintColorPickerMorph;
 PaintColorPickerMorph.uber = Morph.prototype;
+PaintColorPickerMorph.className = 'PaintColorPickerMorph';
 
 function PaintColorPickerMorph(extent, action) {
     this.init(extent, action);
@@ -555,6 +557,7 @@ PaintColorPickerMorph.prototype.mouseMove =
 PaintCanvasMorph.prototype = new Morph();
 PaintCanvasMorph.prototype.constructor = PaintCanvasMorph;
 PaintCanvasMorph.uber = Morph.prototype;
+PaintCanvasMorph.className = 'PaintCanvasMorph';
 
 function PaintCanvasMorph(shift) {
     this.init(shift);

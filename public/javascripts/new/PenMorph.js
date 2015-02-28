@@ -10,7 +10,6 @@ var PenMorph = Class.create(Morph, {
     
     initialize: function(){
         this.init();
-        this.className = 'PenMorph';
     },
 
     init: function ($super) {
@@ -33,7 +32,7 @@ var PenMorph = Class.create(Morph, {
     changed: function () {
         if (this.isWarped === false) {
             var w = this.root();
-            if (w.className == 'WorldMorph') {
+            if (w.instanceOf('WorldMorph')) {
                 w.broken.push(this.visibleBounds().spread());
             }
             if (this.parent) {
@@ -229,6 +228,7 @@ var PenMorph = Class.create(Morph, {
 })
 
 PenMorph.uber = Morph.prototype;
+PenMorph.className = 'PenMorph';
 
 module.exports = PenMorph;
 

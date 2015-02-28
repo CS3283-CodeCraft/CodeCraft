@@ -10,7 +10,6 @@ var ColorPickerMorph = Class.create(Morph, {
 	
 	initialize: function(defaultColor){
 	    this.init(defaultColor || new Color(255, 255, 255));
-	    this.className = 'ColorPickerMorph';
 	},
 
 	init: function ($super, defaultColor) {
@@ -67,6 +66,7 @@ var ColorPickerMorph = Class.create(Morph, {
 })
 
 ColorPickerMorph.uber = Morph.prototype;
+ColorPickerMorph.className = 'ColorPickerMorph';
 
 module.exports = ColorPickerMorph;
 

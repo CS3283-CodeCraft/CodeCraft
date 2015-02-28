@@ -9,7 +9,6 @@ var BlinkerMorph = Class.create(Morph, {
 
 	initialize: function(rate){
 		this.init(rate);
-		this.className = 'BlinkerMorph';
 	},
 
 	init: function ($super) {
@@ -26,6 +25,7 @@ var BlinkerMorph = Class.create(Morph, {
 })
 
 BlinkerMorph.uber = Morph.prototype;
+BlinkerMorph.className = 'BlinkerMorph';
 
 module.exports = BlinkerMorph;
 

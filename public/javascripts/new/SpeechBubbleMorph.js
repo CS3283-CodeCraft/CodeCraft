@@ -23,7 +23,6 @@ var SpeechBubbleMorph = Class.create(BoxMorph, {
         isThought
     ) {
         this.init(contents, color, edge, border, borderColor, padding, isThought);
-        this.className = 'SpeechBubbleMorph';
     },
 
     init: function (
@@ -305,6 +304,7 @@ var SpeechBubbleMorph = Class.create(BoxMorph, {
 })
 
 SpeechBubbleMorph.uber = BoxMorph.prototype;
+SpeechBubbleMorph.className = 'SpeechBubbleMorph';
 
 module.exports = SpeechBubbleMorph;
 

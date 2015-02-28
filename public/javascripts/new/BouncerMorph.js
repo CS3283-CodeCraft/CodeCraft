@@ -7,7 +7,6 @@ var BouncerMorph = Class.create(Morph, {
 	
 	initialize: function(){
 		this.init();
-		this.className = 'BouncerMorph';
 	},
 
 	init: function ($super, type, speed) {
@@ -80,6 +79,9 @@ var BouncerMorph = Class.create(Morph, {
 	},
 
 })
+
+BouncerMorph.uber = Morph.prototype;
+BouncerMorph.className = 'BouncerMorph';
 
 module.exports = BouncerMorph;
 

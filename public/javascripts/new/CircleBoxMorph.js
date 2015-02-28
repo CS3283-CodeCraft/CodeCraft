@@ -10,7 +10,6 @@ var CircleBoxMorph = Class.create(Morph, {
 	
 	initialize: function(orientation) {
 	    this.init(orientation || 'vertical');
-	    this.className = 'CircleBoxMorph';
 	},
 
 
@@ -128,6 +127,7 @@ var CircleBoxMorph = Class.create(Morph, {
 })
 
 CircleBoxMorph.uber = Morph.prototype;
+CircleBoxMorph.className = 'CircleBoxMorph';
 
 module.exports = CircleBoxMorph;
 

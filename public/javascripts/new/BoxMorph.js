@@ -9,7 +9,6 @@ var BoxMorph = Class.create(Morph, {
     
     initialize: function(edge, border, borderColor) {
         this.init(edge, border, borderColor);
-        this.className = 'BoxMorph';
     },
 
     init: function ($super, edge, border, borderColor) {
@@ -199,6 +198,7 @@ var BoxMorph = Class.create(Morph, {
 })
 
 BoxMorph.uber = Morph.prototype;
+BoxMorph.className = 'BoxMorph';
 
 module.exports = BoxMorph;
 

@@ -35,7 +35,6 @@ var MenuItemMorph = Class.create(TriggerMorph, {
 	        italic,
 	        doubleClickAction
 	    );
-	    this.className = 'MenuItemMorph';
 	},
 
 	createLabel: function () {
@@ -164,6 +163,7 @@ var MenuItemMorph = Class.create(TriggerMorph, {
 })
 
 MenuItemMorph.uber = TriggerMorph.prototype;
+MenuItemMorph.className = 'MenuItemMorph';
 
 module.exports = MenuItemMorph;
 

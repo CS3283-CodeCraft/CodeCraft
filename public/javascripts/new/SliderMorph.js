@@ -16,7 +16,6 @@ var SliderMorph = Class.create(CircleBoxMorph, {
 	        orientation || 'vertical',
 	        color
 	    );
-	    this.className = 'SliderMorph';
 	},
 
 	init: function (
@@ -367,5 +366,6 @@ var SliderMorph = Class.create(CircleBoxMorph, {
 })
 
 SliderMorph.uber = CircleBoxMorph.prototype;
+SliderMorph.className = 'SliderMorph';
 
 module.exports = SliderMorph;

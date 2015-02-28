@@ -37,7 +37,6 @@ var TriggerMorph = Class.create(Morph, {
             labelItalic,
             doubleClickAction
         );
-        this.className = 'TriggerMorph';
     },
 
     init: function (
@@ -266,6 +265,7 @@ var TriggerMorph = Class.create(Morph, {
 })
 
 TriggerMorph.uber = Morph.prototype;
+TriggerMorph.className = 'TriggerMorph';
 
 module.exports = TriggerMorph;
 

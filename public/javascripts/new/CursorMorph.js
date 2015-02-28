@@ -12,7 +12,6 @@ var CursorMorph = Class.create(BlinkerMorph, {
 
     initialize: function(aStringOrTextMorph){
         this.init(aStringOrTextMorph);
-        this.className = 'CursorMorph';
     },
 
     init: function (aStringOrTextMorph) {
@@ -424,6 +423,7 @@ var CursorMorph = Class.create(BlinkerMorph, {
 })
 
 CursorMorph.uber = BlinkerMorph.prototype;
+CursorMorph.className = 'CursorMorph';
 
 module.exports = CursorMorph;
 

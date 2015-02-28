@@ -8,7 +8,6 @@ var ScrollFrameMorph = Class.create(FrameMorph, {
 	
 	initialize: function(scroller, size, sliderColor) {
 	    this.init(scroller, size, sliderColor);
-	    this.className = 'ScrollFrameMorph';
 	},
 
 	init: function ($super, scroller, size, sliderColor) {
@@ -380,6 +379,7 @@ var ScrollFrameMorph = Class.create(FrameMorph, {
 })
 
 ScrollFrameMorph.uber = FrameMorph.prototype;
+ScrollFrameMorph.className = 'ScrollFrameMorph';
 
 module.exports = ScrollFrameMorph;
 

@@ -36,7 +36,6 @@ var Morph = Class.create(Node, {
 
 	initialize: function(){
 		this.init();
-		this.className = 'Morph';
 	},
 
 	init: function($super){
@@ -217,7 +216,7 @@ var Morph = Class.create(Node, {
 	    var result;
 	    result = this.bounds;
 	    this.children.forEach(function (child) {
-	        if (!(child.className == 'ShadowMorph') && (child.isVisible)) {
+	        if (!(child.instanceOf('ShadowMorph')) && (child.isVisible)) {
 	            result = result.merge(child.fullBounds());
 	        }
 	    });
@@ -228,7 +227,7 @@ var Morph = Class.create(Node, {
 	    // answer which part of me is not clipped by a Frame
 	    var visible = this.bounds,
 	        frames = this.allParents().filter(function (p) {
-	            return p.className == 'FrameMorph';
+	            return p.instanceOf('FrameMorph');
 	        });
 	    frames.forEach(function (f) {
 	        visible = visible.intersect(f.bounds);
@@ -679,7 +678,7 @@ var Morph = Class.create(Node, {
 	    var shadows;
 	    shadows = this.children.slice(0).reverse().filter(
 	        function (child) {
-	            return child.className == 'ShadowMorph';
+	            return child.instanceOf('ShadowMorph');
 	        }
 	    );
 	    if (shadows.length !== 0) {
@@ -708,7 +707,7 @@ var Morph = Class.create(Node, {
 	changed: function () {
 	    if (this.trackChanges) {
 	        var w = this.root();
-	        if (w.className == 'WorldMorph') {
+	        if (w.instanceOf('WorldMorph')) {
 	            w.broken.push(this.visibleBounds().spread());
 	        }
 	    }
@@ -720,7 +719,7 @@ var Morph = Class.create(Node, {
 	fullChanged: function () {
 	    if (this.trackChanges) {
 	        var w = this.root();
-	        if (w.className == 'WorldMorph') {
+	        if (w.instanceOf('WorldMorph')) {
 	            w.broken.push(this.fullBounds().spread());
 	        }
 	    }
@@ -739,10 +738,10 @@ var Morph = Class.create(Node, {
 
 	world: function () {
 	    var root = this.root();
-	    if (root.className == 'WorldMorph') {
+	    if (root.instanceOf('WorldMorph')) {
 	        return root;
 	    }
-	    if (root.className == 'HandMorph') {
+	    if (root.instanceOf('HandMorph')) {
 	        return root.world;
 	    }
 	    return null;
@@ -920,15 +919,15 @@ var Morph = Class.create(Node, {
 	// Morph dragging and dropping:
 
 	rootForGrab: function () {
-	    if (this.className == 'ShadowMorph') {
+	    if (this.instanceOf('ShadowMorph')) {
 	        return this.parent.rootForGrab();
 	    }
-	    if (this.parent.className == 'ScrollFrameMorph') {
+	    if (this.parent.instanceOf('ScrollFrameMorph')) {
 	        return this.parent;
 	    }
 	    if (this.parent === null ||
-	            this.parent.className == 'WorldMorph' ||
-	            this.parent.className == 'FrameMorph' ||
+	            this.parent.instanceOf('WorldMorph') ||
+	            this.parent.instanceOf('FrameMorph') ||
 	            this.isDraggable === true) {
 	        return this;
 	    }
@@ -937,9 +936,9 @@ var Morph = Class.create(Node, {
 
 	wantsDropOf: function (aMorph) {
 	    // default is to answer the general flag - change for my heirs
-	    if ((aMorph.className == 'HandleMorph') ||
-	            (aMorph.className == 'MenuMorph') ||
-	            (aMorph.className == 'InspectorMorph')) {
+	    if ((aMorph.instanceOf('HandleMorph')) ||
+	            (aMorph.instanceOf('MenuMorph')) ||
+	            (aMorph.instanceOf('InspectorMorph'))) {
 	        return false;
 	    }
 	    return this.acceptsDrops;
@@ -956,7 +955,7 @@ var Morph = Class.create(Node, {
 	},
 
 	isPickedUp: function () {
-	    return this.parentThatIsA(HandMorph) !== null;
+	    return this.parentThatIsA('HandMorph') !== null;
 	},
 
 	situation: function () {
@@ -1318,7 +1317,7 @@ var Morph = Class.create(Node, {
 	    }
 	    menu.addItem("hide", 'hide');
 	    menu.addItem("delete", 'destroy');
-	    if (!(this.className == 'WorldMorph')) {
+	    if (!(this.instanceOf('WorldMorph'))) {
 	        menu.addLine();
 	        menu.addItem(
 	            "World...",
@@ -1395,8 +1394,8 @@ var Morph = Class.create(Node, {
 	allEntryFields: function () {
 	    return this.allChildren().filter(function (each) {
 	        return each.isEditable &&
-	            (each.className == 'StringMorph' ||
-	                each.className == 'TextMorph');
+	            (each.instanceOf('StringMorph') ||
+	                each.instanceOf('TextMorph'));
 	    });
 	},
 
@@ -1539,6 +1538,7 @@ var Morph = Class.create(Node, {
 })
 
 Morph.uber = Node.prototype;
+Morph.className = 'Morph';
 
 
 module.exports = Morph;

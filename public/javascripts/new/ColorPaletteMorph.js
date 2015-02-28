@@ -11,7 +11,6 @@ var ColorPaletteMorph = Class.create(Morph, {
 	        target || null,
 	        sizePoint || new Point(80, 50)
     	);
-    	this.className = 'ColorPaletteMorph';
 	},
 
 	// ColorPaletteMorph inherits from Morph:
@@ -134,6 +133,7 @@ var ColorPaletteMorph = Class.create(Morph, {
 })
 
 ColorPaletteMorph.uber = Morph.prototype;
+ColorPaletteMorph.className = 'ColorPaletteMorph';
 
 module.exports = ColorPaletteMorph;
 

@@ -15,7 +15,6 @@ var MenuMorph = Class.create(BoxMorph, {
 	
 	initialize: function(target, title, environment, fontSize) {
 	    this.init(target, title, environment, fontSize);
-	    this.className = 'MenuMorph';
 
 	    /*
 	    if target is a function, use it as callback:
@@ -304,6 +303,7 @@ var MenuMorph = Class.create(BoxMorph, {
 })
 
 MenuMorph.uber = BoxMorph.prototype;
+MenuMorph.className = 'MenuMorph';
 
 module.exports = MenuMorph;
 

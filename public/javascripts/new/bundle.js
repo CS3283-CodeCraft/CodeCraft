@@ -10,7 +10,6 @@ var BlinkerMorph = Class.create(Morph, {
 
 	initialize: function(rate){
 		this.init(rate);
-		this.className = 'BlinkerMorph';
 	},
 
 	init: function ($super) {
@@ -27,11 +26,12 @@ var BlinkerMorph = Class.create(Morph, {
 })
 
 BlinkerMorph.uber = Morph.prototype;
+BlinkerMorph.className = 'BlinkerMorph';
 
 module.exports = BlinkerMorph;
 
 
-},{"./Color":5,"./Morph":16}],2:[function(require,module,exports){
+},{"./Color":6,"./Morph":18}],2:[function(require,module,exports){
 var Morph = require('./Morph');
 var Point = require('./Point');
 
@@ -41,7 +41,6 @@ var BouncerMorph = Class.create(Morph, {
 	
 	initialize: function(){
 		this.init();
-		this.className = 'BouncerMorph';
 	},
 
 	init: function ($super, type, speed) {
@@ -115,10 +114,13 @@ var BouncerMorph = Class.create(Morph, {
 
 })
 
+BouncerMorph.uber = Morph.prototype;
+BouncerMorph.className = 'BouncerMorph';
+
 module.exports = BouncerMorph;
 
 
-},{"./Morph":16,"./Point":20}],3:[function(require,module,exports){
+},{"./Morph":18,"./Point":22}],3:[function(require,module,exports){
 var Morph = require('./Morph');
 var Color = require('./Color');
 
@@ -130,7 +132,6 @@ var BoxMorph = Class.create(Morph, {
     
     initialize: function(edge, border, borderColor) {
         this.init(edge, border, borderColor);
-        this.className = 'BoxMorph';
     },
 
     init: function ($super, edge, border, borderColor) {
@@ -320,12 +321,13 @@ var BoxMorph = Class.create(Morph, {
 })
 
 BoxMorph.uber = Morph.prototype;
+BoxMorph.className = 'BoxMorph';
 
 module.exports = BoxMorph;
 
 
     
-},{"./Color":5,"./Morph":16}],4:[function(require,module,exports){
+},{"./Color":6,"./Morph":18}],4:[function(require,module,exports){
 var Morph = require('./Morph');
 var Point = require('./Point');
 var Rectangle = require('./Rectangle');
@@ -338,7 +340,6 @@ var CircleBoxMorph = Class.create(Morph, {
 	
 	initialize: function(orientation) {
 	    this.init(orientation || 'vertical');
-	    this.className = 'CircleBoxMorph';
 	},
 
 
@@ -456,16 +457,650 @@ var CircleBoxMorph = Class.create(Morph, {
 })
 
 CircleBoxMorph.uber = Morph.prototype;
+CircleBoxMorph.className = 'CircleBoxMorph';
 
 module.exports = CircleBoxMorph;
 
 
 
-},{"./Morph":16,"./Point":20,"./Rectangle":21}],5:[function(require,module,exports){
+},{"./Morph":18,"./Point":22,"./Rectangle":23}],5:[function(require,module,exports){
+var Cloud = Class.create({
+
+	// Cloud /////////////////////////////////////////////////////////////
+
+	initialize: function(url){
+		this.username = null;
+	    this.password = null; // hex_sha512 hashed
+	    this.url = url;
+	    this.session = null;
+	    this.api = {};
+	},
+
+	clear: function () {
+	    this.username = null;
+	    this.password = null;
+	    this.session = null;
+	    this.api = {};
+	},
+
+	hasProtocol: function () {
+	    return this.url.toLowerCase().indexOf('http') === 0;
+	},
+
+	// Cloud: Snap! API
+
+	createSharebox: function(
+	    creatorId,
+	    callBack
+	) {
+	    console.log(this.url)
+	    var shareWith = eval("[" + prompt("Who you want to share with", "1, 2, 3") + "]");
+	    var data = {
+	        creator_id: creatorId,
+	        share_with: shareWith
+	    }
+	    var success = function(data){
+	        callBack.call(null, data);
+	    }
+	    var url = this.url + 'sharebox'
+	    console.log(url)
+	    console.log(data)
+	    console.log(success)
+	    console.log($.post)
+	    $.ajax({
+	        type: "POST",
+	        url: url,
+	        data: data,
+	        success: success,
+	        dataType: 'json'
+	    });
+	},
+
+	signup: function (
+	    username,
+	    email,
+	    callBack,
+	    errorCall
+	) {
+	    // both callBack and errorCall are two-argument functions
+	    var request = new XMLHttpRequest(),
+	        myself = this;
+	    try {
+	        request.open(
+	            "GET",
+	            (this.hasProtocol() ? '' : 'http://')
+	                + this.url + 'SignUp'
+	                + '&Username='
+	                + encodeURIComponent(username)
+	                + '&Email='
+	                + encodeURIComponent(email),
+	            true
+	        );
+	        request.setRequestHeader(
+	            "Content-Type",
+	            "application/x-www-form-urlencoded"
+	        );
+	        request.withCredentials = true;
+	        request.onreadystatechange = function () {
+	            if (request.readyState === 4) {
+	                if (request.responseText) {
+	                    if (request.responseText.indexOf('ERROR') === 0) {
+	                        errorCall.call(
+	                            this,
+	                            request.responseText,
+	                            'Signup'
+	                        );
+	                    } else {
+	                        callBack.call(
+	                            null,
+	                            request.responseText,
+	                            'Signup'
+	                        );
+	                    }
+	                } else {
+	                    errorCall.call(
+	                        null,
+	                        myself.url + 'SignUp',
+	                        localize('could not connect to:')
+	                    );
+	                }
+	            }
+	        };
+	        request.send(null);
+	    } catch (err) {
+	        errorCall.call(this, err.toString(), 'Snap!Cloud');
+	    }
+	},
+
+	getPublicProject: function (
+	    id,
+	    callBack,
+	    errorCall
+	) {
+	    // id is Username=username&projectName=projectname,
+	    // where the values are url-component encoded
+	    // callBack is a single argument function, errorCall take two args
+	    var request = new XMLHttpRequest(),
+	        responseList,
+	        myself = this;
+	    try {
+	        request.open(
+	            "GET",
+	            (this.hasProtocol() ? '' : 'http://')
+	                + this.url + 'Public'
+	                + '&'
+	                + id,
+	            true
+	        );
+	        request.setRequestHeader(
+	            "Content-Type",
+	            "application/x-www-form-urlencoded"
+	        );
+	        request.withCredentials = true;
+	        request.onreadystatechange = function () {
+	            if (request.readyState === 4) {
+	                if (request.responseText) {
+	                    if (request.responseText.indexOf('ERROR') === 0) {
+	                        errorCall.call(
+	                            this,
+	                            request.responseText
+	                        );
+	                    } else {
+	                        responseList = myself.parseResponse(
+	                            request.responseText
+	                        );
+	                        callBack.call(
+	                            null,
+	                            responseList[0].SourceCode
+	                        );
+	                    }
+	                } else {
+	                    errorCall.call(
+	                        null,
+	                        myself.url + 'Public',
+	                        localize('could not connect to:')
+	                    );
+	                }
+	            }
+	        };
+	        request.send(null);
+	    } catch (err) {
+	        errorCall.call(this, err.toString(), 'Snap!Cloud');
+	    }
+	},
+
+	resetPassword: function (
+	    username,
+	    callBack,
+	    errorCall
+	) {
+	    // both callBack and errorCall are two-argument functions
+	    var request = new XMLHttpRequest(),
+	        myself = this;
+	    try {
+	        request.open(
+	            "GET",
+	            (this.hasProtocol() ? '' : 'http://')
+	                + this.url + 'ResetPW'
+	                + '&Username='
+	                + encodeURIComponent(username),
+	            true
+	        );
+	        request.setRequestHeader(
+	            "Content-Type",
+	            "application/x-www-form-urlencoded"
+	        );
+	        request.withCredentials = true;
+	        request.onreadystatechange = function () {
+	            if (request.readyState === 4) {
+	                if (request.responseText) {
+	                    if (request.responseText.indexOf('ERROR') === 0) {
+	                        errorCall.call(
+	                            this,
+	                            request.responseText,
+	                            'Reset Password'
+	                        );
+	                    } else {
+	                        callBack.call(
+	                            null,
+	                            request.responseText,
+	                            'Reset Password'
+	                        );
+	                    }
+	                } else {
+	                    errorCall.call(
+	                        null,
+	                        myself.url + 'ResetPW',
+	                        localize('could not connect to:')
+	                    );
+	                }
+	            }
+	        };
+	        request.send(null);
+	    } catch (err) {
+	        errorCall.call(this, err.toString(), 'Snap!Cloud');
+	    }
+	},
+
+	connect: function (
+	    callBack,
+	    errorCall
+	) {
+	    // both callBack and errorCall are two-argument functions
+	    var request = new XMLHttpRequest(),
+	        myself = this;
+	    try {
+	        request.open(
+	            "GET",
+	            (this.hasProtocol() ? '' : 'http://') + this.url,
+	            true
+	        );
+	        request.setRequestHeader(
+	            "Content-Type",
+	            "application/x-www-form-urlencoded"
+	        );
+	        request.withCredentials = true;
+	        request.onreadystatechange = function () {
+	            if (request.readyState === 4) {
+	                if (request.responseText) {
+	                    myself.api = myself.parseAPI(request.responseText);
+	                    myself.session = request.getResponseHeader('MioCracker')
+	                        .split(';')[0];
+	                    if (myself.api.login) {
+	                        callBack.call(null, myself.api, 'Snap!Cloud');
+	                    } else {
+	                        errorCall.call(
+	                            null,
+	                            'connection failed'
+	                        );
+	                    }
+	                } else {
+	                    errorCall.call(
+	                        null,
+	                        myself.url,
+	                        localize('could not connect to:')
+	                    );
+	                }
+	            }
+	        };
+	        request.send(null);
+	    } catch (err) {
+	        errorCall.call(this, err.toString(), 'Snap!Cloud');
+	    }
+	},
+
+
+	login: function (
+	    username,
+	    password,
+	    callBack,
+	    errorCall
+	) {
+	    var myself = this;
+	    this.connect(
+	        function () {
+	            myself.rawLogin(username, password, callBack, errorCall);
+	            myself.disconnect();
+	        },
+	        errorCall
+	    );
+	},
+
+	rawLogin: function (
+	    username,
+	    password,
+	    callBack,
+	    errorCall
+	) {
+	    // both callBack and errorCall are two-argument functions
+	    var myself = this,
+	        pwHash = hex_sha512("miosoft%20miocon,"
+	            + this.session.split('=')[1] + ","
+	            + encodeURIComponent(username.toLowerCase()) + ","
+	            + password // alreadey hex_sha512 hashed
+	            );
+	    this.callService(
+	        'login',
+	        function (response, url) {
+	            if (myself.api.logout) {
+	                myself.username = username;
+	                myself.password = password;
+	                callBack.call(null, response, url);
+	            } else {
+	                errorCall.call(
+	                    null,
+	                    'Service catalog is not available,\nplease retry',
+	                    'Connection Error:'
+	                );
+	            }
+	        },
+	        errorCall,
+	        [username, pwHash]
+	    );
+	},
+
+	reconnect: function (
+	    callBack,
+	    errorCall
+	) {
+	    if (!(this.username && this.password)) {
+	        this.message('You are not logged in');
+	        return;
+	    }
+	    this.login(
+	        this.username,
+	        this.password,
+	        callBack,
+	        errorCall
+	    );
+	},
+
+	saveProject: function (ide, callBack, errorCall) {
+	    var myself = this,
+	        pdata,
+	        media;
+
+	    ide.serializer.isCollectingMedia = true;
+	    pdata = ide.serializer.serialize(ide.stage);
+	    media = ide.hasChangedMedia ?
+	            ide.serializer.mediaXML(ide.projectName) : null;
+	    ide.serializer.isCollectingMedia = false;
+	    ide.serializer.flushMedia();
+
+	    // check if serialized data can be parsed back again
+	    try {
+	        ide.serializer.parse(pdata);
+	    } catch (err) {
+	        ide.showMessage('Serialization of program data failed:\n' + err);
+	        throw new Error('Serialization of program data failed:\n' + err);
+	    }
+	    if (media !== null) {
+	        try {
+	            ide.serializer.parse(media);
+	        } catch (err) {
+	            ide.showMessage('Serialization of media failed:\n' + err);
+	            throw new Error('Serialization of media failed:\n' + err);
+	        }
+	    }
+	    ide.serializer.isCollectingMedia = false;
+	    ide.serializer.flushMedia();
+
+	    myself.reconnect(
+	        function () {
+	            myself.callService(
+	                'saveProject',
+	                function (response, url) {
+	                    callBack.call(null, response, url);
+	                    myself.disconnect();
+	                    ide.hasChangedMedia = false;
+	                },
+	                errorCall,
+	                [
+	                    ide.projectName,
+	                    pdata,
+	                    media,
+	                    pdata.length,
+	                    media ? media.length : 0
+	                ]
+	            );
+	        },
+	        errorCall
+	    );
+	},
+
+	getProjectList: function (callBack, errorCall) {
+	    var myself = this;
+	    this.reconnect(
+	        function () {
+	            myself.callService(
+	                'getProjectList',
+	                function (response, url) {
+	                    callBack.call(null, response, url);
+	                    myself.disconnect();
+	                },
+	                errorCall
+	            );
+	        },
+	        errorCall
+	    );
+	},
+
+	changePassword: function (
+	    oldPW,
+	    newPW,
+	    callBack,
+	    errorCall
+	) {
+	    var myself = this;
+	    this.reconnect(
+	        function () {
+	            myself.callService(
+	                'changePassword',
+	                function (response, url) {
+	                    callBack.call(null, response, url);
+	                    myself.disconnect();
+	                },
+	                errorCall,
+	                [oldPW, newPW]
+	            );
+	        },
+	        errorCall
+	    );
+	},
+
+	logout: function (callBack, errorCall) {
+	    this.clear();
+	    this.callService(
+	        'logout',
+	        callBack,
+	        errorCall
+	    );
+	},
+
+	disconnect: function () {
+	    this.callService(
+	        'logout',
+	        nop,
+	        nop
+	    );
+	},
+
+	// Cloud: backend communication
+
+	callURL: function (url, callBack, errorCall) {
+	    // both callBack and errorCall are optional two-argument functions
+	    var request = new XMLHttpRequest(),
+	        myself = this;
+	    try {
+	        request.open('GET', url, true);
+	        request.withCredentials = true;
+	        request.setRequestHeader(
+	            "Content-Type",
+	            "application/x-www-form-urlencoded"
+	        );
+	        request.setRequestHeader('MioCracker', this.session);
+	        request.onreadystatechange = function () {
+	            if (request.readyState === 4) {
+	                if (request.responseText) {
+	                    var responseList = myself.parseResponse(
+	                        request.responseText
+	                    );
+	                    callBack.call(null, responseList, url);
+	                } else {
+	                    errorCall.call(
+	                        null,
+	                        url,
+	                        'no response from:'
+	                    );
+	                }
+	            }
+	        };
+	        request.send(null);
+	    } catch (err) {
+	        errorCall.call(this, err.toString(), url);
+	    }
+	},
+
+	callService: function (
+	    serviceName,
+	    callBack,
+	    errorCall,
+	    args
+	) {
+	    // both callBack and errorCall are optional two-argument functions
+	    var request = new XMLHttpRequest(),
+	        service = this.api[serviceName],
+	        myself = this,
+	        postDict;
+
+	    if (!this.session) {
+	        errorCall.call(null, 'You are not connected', 'Cloud');
+	        return;
+	    }
+	    if (!service) {
+	        errorCall.call(
+	            null,
+	            'service ' + serviceName + ' is not available',
+	            'API'
+	        );
+	        return;
+	    }
+	    if (args && args.length > 0) {
+	        postDict = {};
+	        service.parameters.forEach(function (parm, idx) {
+	            postDict[parm] = args[idx];
+	        });
+	    }
+	    try {
+	        request.open(service.method, service.url, true);
+	        request.withCredentials = true;
+	        request.setRequestHeader(
+	            "Content-Type",
+	            "application/x-www-form-urlencoded"
+	        );
+	        request.setRequestHeader('MioCracker', this.session);
+	        request.onreadystatechange = function () {
+	            if (request.readyState === 4) {
+	                var responseList = [];
+	                if (request.responseText &&
+	                        request.responseText.indexOf('ERROR') === 0) {
+	                    errorCall.call(
+	                        this,
+	                        request.responseText,
+	                        localize('Service:') + ' ' + localize(serviceName)
+	                    );
+	                    return;
+	                }
+	                if (serviceName === 'login') {
+	                    myself.api = myself.parseAPI(request.responseText);
+	                }
+	                responseList = myself.parseResponse(
+	                    request.responseText
+	                );
+	                callBack.call(null, responseList, service.url);
+	            }
+	        };
+	        request.send(this.encodeDict(postDict));
+	    } catch (err) {
+	        errorCall.call(this, err.toString(), service.url);
+	    }
+	},
+
+	// Cloud: payload transformation
+
+	parseAPI: function (src) {
+	    var api = {},
+	        services;
+	    services = src.split(" ");
+	    services.forEach(function (service) {
+	        var entries = service.split("&"),
+	            serviceDescription = {},
+	            parms;
+	        entries.forEach(function (entry) {
+	            var pair = entry.split("="),
+	                key = decodeURIComponent(pair[0]).toLowerCase(),
+	                val = decodeURIComponent(pair[1]);
+	            if (key === "service") {
+	                api[val] = serviceDescription;
+	            } else if (key === "parameters") {
+	                parms = val.split(",");
+	                if (!(parms.length === 1 && !parms[0])) {
+	                    serviceDescription.parameters = parms;
+	                }
+	            } else {
+	                serviceDescription[key] = val;
+	            }
+	        });
+	    });
+	    return api;
+	},
+
+	parseResponse: function (src) {
+	    var ans = [],
+	        lines;
+	    if (!src) {return ans; }
+	    lines = src.split(" ");
+	    lines.forEach(function (service) {
+	        var entries = service.split("&"),
+	            dict = {};
+	        entries.forEach(function (entry) {
+	            var pair = entry.split("="),
+	                key = decodeURIComponent(pair[0]),
+	                val = decodeURIComponent(pair[1]);
+	            dict[key] = val;
+	        });
+	        ans.push(dict);
+	    });
+	    return ans;
+	},
+
+	parseDict: function (src) {
+	    var dict = {};
+	    if (!src) {return dict; }
+	    src.split("&").forEach(function (entry) {
+	        var pair = entry.split("="),
+	            key = decodeURIComponent(pair[0]),
+	            val = decodeURIComponent(pair[1]);
+	        dict[key] = val;
+	    });
+	    return dict;
+	},
+
+	encodeDict: function (dict) {
+	    var str = '',
+	        pair,
+	        key;
+	    if (!dict) {return null; }
+	    for (key in dict) {
+	        if (dict.hasOwnProperty(key)) {
+	            pair = encodeURIComponent(key)
+	                + '='
+	                + encodeURIComponent(dict[key]);
+	            if (str.length > 0) {
+	                str += '&';
+	            }
+	            str += pair;
+	        }
+	    }
+	    return str;
+	},
+
+	// Cloud: user messages (to be overridden)
+
+	message: function (string) {
+	    alert(string);
+	},
+
+})
+
+Cloud.className = 'Cloud';
+
+module.exports = Cloud;
+
+},{}],6:[function(require,module,exports){
 var Color = Class.create({
 	
 	initialize: function(r, g, b, a){
-		this.className = 'Color';
 		this.r = r || 0;
 		this.g = g || 0;
 		this.b = b || 0;
@@ -622,9 +1257,10 @@ var Color = Class.create({
 
 })
 
+Color.className = 'Color';
 
 module.exports = Color;
-},{}],6:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 var Morph = require('./Morph');
 var Point = require('./Point');
 var Color = require('./Color');
@@ -638,7 +1274,6 @@ var ColorPaletteMorph = Class.create(Morph, {
 	        target || null,
 	        sizePoint || new Point(80, 50)
     	);
-    	this.className = 'ColorPaletteMorph';
 	},
 
 	// ColorPaletteMorph inherits from Morph:
@@ -761,6 +1396,7 @@ var ColorPaletteMorph = Class.create(Morph, {
 })
 
 ColorPaletteMorph.uber = Morph.prototype;
+ColorPaletteMorph.className = 'ColorPaletteMorph';
 
 module.exports = ColorPaletteMorph;
 
@@ -768,7 +1404,7 @@ module.exports = ColorPaletteMorph;
 
 
 	
-},{"./Color":5,"./Morph":16,"./Point":20}],7:[function(require,module,exports){
+},{"./Color":6,"./Morph":18,"./Point":22}],8:[function(require,module,exports){
 var Morph = require('./Morph');
 var Color = require('./Color');
 var Point = require('./Point');
@@ -781,7 +1417,6 @@ var ColorPickerMorph = Class.create(Morph, {
 	
 	initialize: function(defaultColor){
 	    this.init(defaultColor || new Color(255, 255, 255));
-	    this.className = 'ColorPickerMorph';
 	},
 
 	init: function ($super, defaultColor) {
@@ -838,11 +1473,12 @@ var ColorPickerMorph = Class.create(Morph, {
 })
 
 ColorPickerMorph.uber = Morph.prototype;
+ColorPickerMorph.className = 'ColorPickerMorph';
 
 module.exports = ColorPickerMorph;
 
 
-},{"./Color":5,"./ColorPaletteMorph":6,"./GrayPaletteMorph":10,"./Morph":16,"./Point":20}],8:[function(require,module,exports){
+},{"./Color":6,"./ColorPaletteMorph":7,"./GrayPaletteMorph":11,"./Morph":18,"./Point":22}],9:[function(require,module,exports){
 
 var BlinkerMorph = require('./BlinkerMorph');
 var InspectorMorph = require('./InspectorMorph');
@@ -857,7 +1493,6 @@ var CursorMorph = Class.create(BlinkerMorph, {
 
     initialize: function(aStringOrTextMorph){
         this.init(aStringOrTextMorph);
-        this.className = 'CursorMorph';
     },
 
     init: function (aStringOrTextMorph) {
@@ -1269,12 +1904,13 @@ var CursorMorph = Class.create(BlinkerMorph, {
 })
 
 CursorMorph.uber = BlinkerMorph.prototype;
+CursorMorph.className = 'CursorMorph';
 
 module.exports = CursorMorph;
 
 
 
-},{"./BlinkerMorph":1,"./InspectorMorph":12,"./Point":20}],9:[function(require,module,exports){
+},{"./BlinkerMorph":1,"./InspectorMorph":14,"./Point":22}],10:[function(require,module,exports){
 var Morph = require('./Morph');
 var Color = require('./Color');
 var Point = require('./Point');
@@ -1287,7 +1923,6 @@ var FrameMorph = Class.create(Morph, {
     
     initialize: function(aScrollFrame) {
         this.init(aScrollFrame);
-        this.className = 'FrameMorph';
     },
 
     init: function ($super, aScrollFrame) {
@@ -1330,7 +1965,7 @@ var FrameMorph = Class.create(Morph, {
         }
         this.drawOn(aCanvas, dirty);
         this.children.forEach(function (child) {
-            if (child.className == 'ShadowMorph') {
+            if (child.instanceOf('ShadowMorph')) {
                 child.fullDrawOn(aCanvas, rectangle);
             } else {
                 child.fullDrawOn(aCanvas, dirty);
@@ -1416,7 +2051,7 @@ var FrameMorph = Class.create(Morph, {
 
         if (this.scrollFrame.isTextLineWrapping) {
             this.children.forEach(function (morph) {
-                if (morph.className == 'TextMorph') {
+                if (morph.instanceOf('TextMorph')) {
                     morph.setWidth(myself.width());
                     myself.setHeight(
                         Math.max(morph.height(), myself.scrollFrame.height())
@@ -1476,11 +2111,12 @@ var FrameMorph = Class.create(Morph, {
 })
 
 FrameMorph.uber = Morph.prototype;
+FrameMorph.className = 'FrameMorph';
 
 module.exports = FrameMorph;
 
     
-},{"./Color":5,"./Morph":16,"./Point":20}],10:[function(require,module,exports){
+},{"./Color":6,"./Morph":18,"./Point":22}],11:[function(require,module,exports){
 var Color = require('./Color');
 var Point = require('./Point');
 var ColorPaletteMorph = require('./ColorPaletteMorph');
@@ -1492,7 +2128,6 @@ var GrayPaletteMorph = Class.create(ColorPaletteMorph, {
         	target || null,
         	sizePoint || new Point(80, 10)
     	);
-		this.className = 'GrayPaletteMorph';
 	},
 
 	drawNew: function () {
@@ -1512,11 +2147,654 @@ var GrayPaletteMorph = Class.create(ColorPaletteMorph, {
 })
 
 GrayPaletteMorph.uber = ColorPaletteMorph.prototype;
+GrayPaletteMorph.className = 'GrayPaletteMorph';
 
 module.exports = GrayPaletteMorph;
 
 
-},{"./Color":5,"./ColorPaletteMorph":6,"./Point":20}],11:[function(require,module,exports){
+},{"./Color":6,"./ColorPaletteMorph":7,"./Point":22}],12:[function(require,module,exports){
+var Morph = require('./Morph');
+var Point = require('./Point');
+var Rectangle = require('./Rectangle');
+
+var HandMorph = Class.create(Morph, {
+	
+	// HandMorph ///////////////////////////////////////////////////////////
+
+	// I represent the Mouse cursor
+
+	initialize: function(aWorld) {
+	    this.init(aWorld);
+	},
+
+	init: function ($super, aWorld) {
+	    $super();
+	    this.bounds = new Rectangle();
+
+	    // additional properties:
+	    this.world = aWorld;
+	    this.mouseButton = null;
+	    this.mouseOverList = [];
+	    this.mouseDownMorph = null;
+	    this.morphToGrab = null;
+	    this.grabOrigin = null;
+	    this.temporaries = [];
+	    this.touchHoldTimeout = null;
+	},
+
+	changed: function () {
+	    var b;
+	    if (this.world !== null) {
+	        b = this.fullBounds();
+	        if (!b.extent().eq(new Point())) {
+	            this.world.broken.push(this.fullBounds().spread());
+	        }
+	    }
+
+	},
+
+	// HandMorph navigation:
+
+	morphAtPointer: function () {
+	    var morphs = this.world.allChildren().slice(0).reverse(),
+	        myself = this,
+	        result = null;
+
+	    morphs.forEach(function (m) {
+	        if (m.visibleBounds().containsPoint(myself.bounds.origin) &&
+	                result === null &&
+	                m.isVisible &&
+	                (m.noticesTransparentClick ||
+	                    (!m.isTransparentAt(myself.bounds.origin))) &&
+	                (!(m.instanceOf('ShadowMorph'))) &&
+	                m.allParents().every(function (each) {
+	                    return each.isVisible;
+	                })) {
+	            result = m;
+	        }
+	    });
+	    if (result !== null) {
+	        return result;
+	    }
+	    return this.world;
+	},
+
+	/*
+	    alternative -  more elegant and possibly more
+	    performant - solution for morphAtPointer.
+	    Has some issues, commented out for now
+
+	morphAtPointer: function () {
+	    var myself = this;
+	    return this.world.topMorphSuchThat(function (m) {
+	        return m.visibleBounds().containsPoint(myself.bounds.origin) &&
+	            m.isVisible &&
+	            (m.noticesTransparentClick ||
+	                (! m.isTransparentAt(myself.bounds.origin))) &&
+	            (! (m instanceof ShadowMorph));
+	    });
+	},
+	*/
+
+	allMorphsAtPointer: function () {
+	    var morphs = this.world.allChildren(),
+	        myself = this;
+	    return morphs.filter(function (m) {
+	        return m.isVisible &&
+	            m.visibleBounds().containsPoint(myself.bounds.origin);
+	    });
+	},
+
+	// HandMorph dragging and dropping:
+	/*
+	    drag 'n' drop events, method(arg) -> receiver:
+
+	        prepareToBeGrabbed(handMorph) -> grabTarget
+	        reactToGrabOf(grabbedMorph) -> oldParent
+	        wantsDropOf(morphToDrop) ->  newParent
+	        justDropped(handMorph) -> droppedMorph
+	        reactToDropOf(droppedMorph, handMorph) -> newParent
+	*/
+
+	dropTargetFor: function (aMorph) {
+	    var target = this.morphAtPointer();
+	    while (!target.wantsDropOf(aMorph)) {
+	        target = target.parent;
+	    }
+	    return target;
+	},
+
+	grab: function (aMorph) {
+	    var oldParent = aMorph.parent;
+	    if (aMorph.instanceOf('WorldMorph')) {
+	        return null;
+	    }
+	    if (this.children.length === 0) {
+	        this.world.stopEditing();
+	        this.grabOrigin = aMorph.situation();
+	        aMorph.addShadow();
+	        if (aMorph.prepareToBeGrabbed) {
+	            aMorph.prepareToBeGrabbed(this);
+	        }
+	        this.add(aMorph);
+	        this.changed();
+	        if (oldParent && oldParent.reactToGrabOf) {
+	            oldParent.reactToGrabOf(aMorph);
+	        }
+	    }
+	},
+
+	drop: function () {
+	    var target, morphToDrop;
+	    if (this.children.length !== 0) {
+	        morphToDrop = this.children[0];
+	        target = this.dropTargetFor(morphToDrop);
+	        this.changed();
+	        target.add(morphToDrop);
+	        morphToDrop.changed();
+	        morphToDrop.removeShadow();
+	        this.children = [];
+	        this.setExtent(new Point());
+	        if (morphToDrop.justDropped) {
+	            morphToDrop.justDropped(this);
+	        }
+	        if (target.reactToDropOf) {
+	            target.reactToDropOf(morphToDrop, this);
+	        }
+	        this.dragOrigin = null;
+	    }
+	},
+
+	// HandMorph event dispatching:
+	/*
+	    mouse events:
+
+	        mouseDownLeft
+	        mouseDownRight
+	        mouseClickLeft
+	        mouseClickRight
+	        mouseDoubleClick
+	        mouseEnter
+	        mouseLeave
+	        mouseEnterDragging
+	        mouseLeaveDragging
+	        mouseMove
+	        mouseScroll
+	*/
+
+	processMouseDown: function (event) {
+	    var morph, expectedClick, actualClick;
+
+	    this.destroyTemporaries();
+	    this.morphToGrab = null;
+	    if (this.children.length !== 0) {
+	        this.drop();
+	        this.mouseButton = null;
+	    } else {
+	        morph = this.morphAtPointer();
+	        if (this.world.activeMenu) {
+	            if (!contains(
+	                    morph.allParents(),
+	                    this.world.activeMenu
+	                )) {
+	                this.world.activeMenu.destroy();
+	            } else {
+	                clearInterval(this.touchHoldTimeout);
+	            }
+	        }
+	        if (this.world.activeHandle) {
+	            if (morph !== this.world.activeHandle) {
+	                this.world.activeHandle.destroy();
+	            }
+	        }
+	        if (this.world.cursor) {
+	            if (morph !== this.world.cursor.target) {
+	                this.world.stopEditing();
+	            }
+	        }
+	        if (!morph.mouseMove) {
+	            this.morphToGrab = morph.rootForGrab();
+	        }
+	        if (event.button === 2 || event.ctrlKey) {
+	            this.mouseButton = 'right';
+	            actualClick = 'mouseDownRight';
+	            expectedClick = 'mouseClickRight';
+	        } else {
+	            this.mouseButton = 'left';
+	            actualClick = 'mouseDownLeft';
+	            expectedClick = 'mouseClickLeft';
+	        }
+	        this.mouseDownMorph = morph;
+	        while (!this.mouseDownMorph[expectedClick]) {
+	            this.mouseDownMorph = this.mouseDownMorph.parent;
+	        }
+	        while (!morph[actualClick]) {
+	            morph = morph.parent;
+	        }
+	        morph[actualClick](this.bounds.origin);
+	    }
+	},
+
+	processTouchStart: function (event) {
+	    var myself = this;
+	    MorphicPreferences.isTouchDevice = true;
+	    clearInterval(this.touchHoldTimeout);
+	    if (event.touches.length === 1) {
+	        this.touchHoldTimeout = setInterval( // simulate mouseRightClick
+	            function () {
+	                myself.processMouseDown({button: 2});
+	                myself.processMouseUp({button: 2});
+	                event.preventDefault();
+	                clearInterval(myself.touchHoldTimeout);
+	            },
+	            400
+	        );
+	        this.processMouseMove(event.touches[0]); // update my position
+	        this.processMouseDown({button: 0});
+	        event.preventDefault();
+	    }
+	},
+
+	processTouchMove: function (event) {
+	    MorphicPreferences.isTouchDevice = true;
+	    if (event.touches.length === 1) {
+	        var touch = event.touches[0];
+	        this.processMouseMove(touch);
+	        clearInterval(this.touchHoldTimeout);
+	    }
+	},
+
+	processTouchEnd: function (event) {
+	    MorphicPreferences.isTouchDevice = true;
+	    clearInterval(this.touchHoldTimeout);
+	    nop(event);
+	    this.processMouseUp({button: 0});
+	},
+
+	processMouseUp: function () {
+	    var morph = this.morphAtPointer(),
+	        context,
+	        contextMenu,
+	        expectedClick;
+
+	    this.destroyTemporaries();
+	    if (this.children.length !== 0) {
+	        this.drop();
+	    } else {
+	        if (this.mouseButton === 'left') {
+	            expectedClick = 'mouseClickLeft';
+	        } else {
+	            expectedClick = 'mouseClickRight';
+	            if (this.mouseButton) {
+	                context = morph;
+	                contextMenu = context.contextMenu();
+	                while ((!contextMenu) &&
+	                        context.parent) {
+	                    context = context.parent;
+	                    contextMenu = context.contextMenu();
+	                }
+	                if (contextMenu) {
+	                    contextMenu.popUpAtHand(this.world);
+	                }
+	            }
+	        }
+	        while (!morph[expectedClick]) {
+	            morph = morph.parent;
+	        }
+	        morph[expectedClick](this.bounds.origin);
+	    }
+	    this.mouseButton = null;
+	},
+
+	processDoubleClick: function () {
+	    var morph = this.morphAtPointer();
+
+	    this.destroyTemporaries();
+	    if (this.children.length !== 0) {
+	        this.drop();
+	    } else {
+	        while (morph && !morph.mouseDoubleClick) {
+	            morph = morph.parent;
+	        }
+	        if (morph) {
+	            morph.mouseDoubleClick(this.bounds.origin);
+	        }
+	    }
+	    this.mouseButton = null;
+	},
+
+	processMouseMove: function (event) {
+	    var pos,
+	        posInDocument = getDocumentPositionOf(this.world.worldCanvas),
+	        mouseOverNew,
+	        myself = this,
+	        morph,
+	        topMorph,
+	        fb;
+
+	    pos = new Point(
+	        event.pageX - posInDocument.x,
+	        event.pageY - posInDocument.y
+	    );
+
+	    this.setPosition(pos);
+
+	    // determine the new mouse-over-list:
+	    // mouseOverNew = this.allMorphsAtPointer();
+	    mouseOverNew = this.morphAtPointer().allParents();
+
+	    if ((this.children.length === 0) &&
+	            (this.mouseButton === 'left')) {
+	        topMorph = this.morphAtPointer();
+	        morph = topMorph.rootForGrab();
+	        if (topMorph.mouseMove) {
+	            topMorph.mouseMove(pos);
+	        }
+
+	        // if a morph is marked for grabbing, just grab it
+	        if (this.morphToGrab) {
+	            if (this.morphToGrab.isDraggable) {
+	                morph = this.morphToGrab;
+	                this.grab(morph);
+	            } else if (this.morphToGrab.isTemplate) {
+	                morph = this.morphToGrab.fullCopy();
+	                morph.isTemplate = false;
+	                morph.isDraggable = true;
+	                this.grab(morph);
+	                this.grabOrigin = this.morphToGrab.situation();
+	            }
+	            if (morph) {
+	                // if the mouse has left its fullBounds, center it
+	                fb = morph.fullBounds();
+	                if (!fb.containsPoint(pos)) {
+	                    this.bounds.origin = fb.center();
+	                    this.grab(morph);
+	                    this.setPosition(pos);
+	                }
+	            }
+	        }
+
+	/*
+	    original, more cautious code for grabbing Morphs,
+	    retained in case of needing to fall back:
+
+	        if (morph === this.morphToGrab) {
+	            if (morph.isDraggable) {
+	                this.grab(morph);
+	            } else if (morph.isTemplate) {
+	                morph = morph.fullCopy();
+	                morph.isTemplate = false;
+	                morph.isDraggable = true;
+	                this.grab(morph);
+	            }
+	        }
+	*/
+
+	    }
+
+	    this.mouseOverList.forEach(function (old) {
+	        if (!contains(mouseOverNew, old)) {
+	            if (old.mouseLeave) {
+	                old.mouseLeave();
+	            }
+	            if (old.mouseLeaveDragging && myself.mouseButton) {
+	                old.mouseLeaveDragging();
+	            }
+	        }
+	    });
+	    mouseOverNew.forEach(function (newMorph) {
+	        if (!contains(myself.mouseOverList, newMorph)) {
+	            if (newMorph.mouseEnter) {
+	                newMorph.mouseEnter();
+	            }
+	            if (newMorph.mouseEnterDragging && myself.mouseButton) {
+	                newMorph.mouseEnterDragging();
+	            }
+	        }
+
+	        // autoScrolling support:
+	        if (myself.children.length > 0) {
+	            if (newMorph.instanceOf('ScrollFrameMorph')) {
+	                if (!newMorph.bounds.insetBy(
+	                        MorphicPreferences.scrollBarSize * 3
+	                    ).containsPoint(myself.bounds.origin)) {
+	                    newMorph.startAutoScrolling();
+	                }
+	            }
+	        }
+	    });
+	    this.mouseOverList = mouseOverNew;
+	},
+
+	processMouseScroll: function (event) {
+	    var morph = this.morphAtPointer();
+	    while (morph && !morph.mouseScroll) {
+	        morph = morph.parent;
+	    }
+	    if (morph) {
+	        morph.mouseScroll(
+	            (event.detail / -3) || (
+	                Object.prototype.hasOwnProperty.call(
+	                    event,
+	                    'wheelDeltaY'
+	                ) ?
+	                        event.wheelDeltaY / 120 :
+	                        event.wheelDelta / 120
+	            ),
+	            event.wheelDeltaX / 120 || 0
+	        );
+	    }
+	},
+
+	/*
+	    drop event:
+
+	        droppedImage
+	        droppedSVG
+	        droppedAudio
+	        droppedText
+	*/
+
+	processDrop: function (event) {
+	/*
+	    find out whether an external image or audio file was dropped
+	    onto the world canvas, turn it into an offscreen canvas or audio
+	    element and dispatch the
+
+	        droppedImage(canvas, name)
+	        droppedSVG(image, name)
+	        droppedAudio(audio, name)
+
+	    events to interested Morphs at the mouse pointer
+	*/
+	    var files = event instanceof FileList ? event
+	                : event.target.files || event.dataTransfer.files,
+	        file,
+	        url = event.dataTransfer ?
+	                event.dataTransfer.getData('URL') : null,
+	        txt = event.dataTransfer ?
+	                event.dataTransfer.getData('Text/HTML') : null,
+	        src,
+	        target = this.morphAtPointer(),
+	        img = new Image(),
+	        canvas,
+	        i;
+
+	    function readSVG(aFile) {
+	        var pic = new Image(),
+	            frd = new FileReader();
+	        while (!target.droppedSVG) {
+	            target = target.parent;
+	        }
+	        pic.onload = function () {
+	            target.droppedSVG(pic, aFile.name);
+	        };
+	        frd = new FileReader();
+	        frd.onloadend = function (e) {
+	            pic.src = e.target.result;
+	        };
+	        frd.readAsDataURL(aFile);
+	    }
+
+	    function readImage(aFile) {
+	        var pic = new Image(),
+	            frd = new FileReader();
+	        while (!target.droppedImage) {
+	            target = target.parent;
+	        }
+	        pic.onload = function () {
+	            canvas = newCanvas(new Point(pic.width, pic.height));
+	            canvas.getContext('2d').drawImage(pic, 0, 0);
+	            target.droppedImage(canvas, aFile.name);
+	        };
+	        frd = new FileReader();
+	        frd.onloadend = function (e) {
+	            pic.src = e.target.result;
+	        };
+	        frd.readAsDataURL(aFile);
+	    }
+
+	    function readAudio(aFile) {
+	        var snd = new Audio(),
+	            frd = new FileReader();
+	        while (!target.droppedAudio) {
+	            target = target.parent;
+	        }
+	        frd.onloadend = function (e) {
+	            snd.src = e.target.result;
+	            target.droppedAudio(snd, aFile.name);
+	        };
+	        frd.readAsDataURL(aFile);
+	    }
+
+	    function readText(aFile) {
+	        var frd = new FileReader();
+	        while (!target.droppedText) {
+	            target = target.parent;
+	        }
+	        frd.onloadend = function (e) {
+	            target.droppedText(e.target.result, aFile.name);
+	        };
+	        frd.readAsText(aFile);
+	    }
+
+	    function readBinary(aFile) {
+	        var frd = new FileReader();
+	        while (!target.droppedBinary) {
+	            target = target.parent;
+	        }
+	        frd.onloadend = function (e) {
+	            target.droppedBinary(e.target.result, aFile.name);
+	        };
+	        frd.readAsArrayBuffer(aFile);
+	    }
+
+	    function parseImgURL(html) {
+	        var iurl = '',
+	            idx,
+	            c,
+	            start = html.indexOf('<img src="');
+	        if (start === -1) {return null; }
+	        start += 10;
+	        for (idx = start; idx < html.length; idx += 1) {
+	            c = html[idx];
+	            if (c === '"') {
+	                return iurl;
+	            }
+	            iurl = iurl.concat(c);
+	        }
+	        return null;
+	    }
+
+	    if (files.length > 0) {
+	        for (i = 0; i < files.length; i += 1) {
+	            file = files[i];
+	            if (file.type.indexOf("svg") !== -1
+	                    && !MorphicPreferences.rasterizeSVGs) {
+	                readSVG(file);
+	            } else if (file.type.indexOf("image") === 0) {
+	                readImage(file);
+	            } else if (file.type.indexOf("audio") === 0) {
+	                readAudio(file);
+	            } else if (file.type.indexOf("text") === 0) {
+	                readText(file);
+	            } else { // assume it's meant to be binary
+	                readBinary(file);
+	            }
+	        }
+	    } else if (url) {
+	        if (
+	            contains(
+	                ['gif', 'png', 'jpg', 'jpeg', 'bmp'],
+	                url.slice(url.lastIndexOf('.') + 1).toLowerCase()
+	            )
+	        ) {
+	            while (!target.droppedImage) {
+	                target = target.parent;
+	            }
+	            img = new Image();
+	            img.onload = function () {
+	                canvas = newCanvas(new Point(img.width, img.height));
+	                canvas.getContext('2d').drawImage(img, 0, 0);
+	                target.droppedImage(canvas);
+	            };
+	            img.src = url;
+	        }
+	    } else if (txt) {
+	        while (!target.droppedImage) {
+	            target = target.parent;
+	        }
+	        img = new Image();
+	        img.onload = function () {
+	            canvas = newCanvas(new Point(img.width, img.height));
+	            canvas.getContext('2d').drawImage(img, 0, 0);
+	            target.droppedImage(canvas);
+	        };
+	        src = parseImgURL(txt);
+	        if (src) {img.src = src; }
+	    }
+	},
+
+	// HandMorph tools
+
+	destroyTemporaries: function () {
+	/*
+	    temporaries are just an array of morphs which will be deleted upon
+	    the next mouse click, or whenever another temporary Morph decides
+	    that it needs to remove them. The primary purpose of temporaries is
+	    to display tools tips of speech bubble help.
+	*/
+	    var myself = this;
+	    this.temporaries.forEach(function (morph) {
+	        if (!(morph.isClickable
+	                && morph.bounds.containsPoint(myself.position()))) {
+	            morph.destroy();
+	            myself.temporaries.splice(myself.temporaries.indexOf(morph), 1);
+	        }
+	    });
+	},
+
+	// HandMorph dragging optimization
+
+	moveBy: function ($super, delta) {
+	    Morph.prototype.trackChanges = false;
+	    $super(delta);
+	    Morph.prototype.trackChanges = true;
+	    this.fullChanged();
+	},
+
+})
+
+HandMorph.uber = Morph.prototype;
+HandMorph.className = 'HandMorph';
+
+module.exports = HandMorph;
+
+
+
+
+
+},{"./Morph":18,"./Point":22,"./Rectangle":23}],13:[function(require,module,exports){
 var Morph = require('./Morph');
 var Point = require('./Point');
 var Color = require('./Color');
@@ -1529,7 +2807,6 @@ var HandleMorph = Class.create(Morph, {
 
 	initialize: function(target, minX, minY, insetX, insetY, type){
 		this.init(target, minX, minY, insetX, insetY, type);
-		this.className = 'HandleMorph';
 	},
 
 	init: function($super, target, minX, minY, insetX, insetY, type){
@@ -1762,12 +3039,13 @@ var HandleMorph = Class.create(Morph, {
 })
 
 HandleMorph.uber = Morph.prototype;
+HandleMorph.className = 'HandleMorph';
 
 module.exports = HandleMorph;
 
 
 	
-},{"./Color":5,"./Morph":16,"./Point":20}],12:[function(require,module,exports){
+},{"./Color":6,"./Morph":18,"./Point":22}],14:[function(require,module,exports){
 var BoxMorph = require('./BoxMorph');
 var Point = require('./Point');
 var Color = require('./Color');
@@ -1779,14 +3057,12 @@ var ScrollFrameMorph = require('./ScrollFrameMorph');
 var TriggerMorph = require('./TriggerMorph');
 var HandleMorph = require('./HandleMorph');
 var Morph = require('./Morph');
-var Morph = require('./Morph');
 
 var InspectorMorph = Class.create(BoxMorph, {
     // InspectorMorph //////////////////////////////////////////////////////
 
     initialize: function(target) {
         this.init(target);
-        this.className = 'InspectorMorph';
     },
 
     init: function (target) {
@@ -2270,10 +3546,11 @@ var InspectorMorph = Class.create(BoxMorph, {
 })
 
 InspectorMorph.uber = BoxMorph.prototype;
+InspectorMorph.className = 'InspectorMorph';
 
 module.exports = InspectorMorph;
 
-},{"./BoxMorph":3,"./Color":5,"./CursorMorph":8,"./HandleMorph":11,"./ListMorph":13,"./MenuMorph":15,"./Morph":16,"./Point":20,"./ScrollFrameMorph":22,"./TextMorph":29,"./TriggerMorph":30}],13:[function(require,module,exports){
+},{"./BoxMorph":3,"./Color":6,"./CursorMorph":9,"./HandleMorph":13,"./ListMorph":15,"./MenuMorph":17,"./Morph":18,"./Point":22,"./ScrollFrameMorph":24,"./TextMorph":31,"./TriggerMorph":32}],15:[function(require,module,exports){
 var ScrollFrameMorph = require('./ScrollFrameMorph');
 var Color = require('./Color');
 var MenuMorph = require('./MenuMorph');
@@ -2317,7 +3594,6 @@ var ListMorph = Class.create(ScrollFrameMorph, {
             format || [],
             doubleClickAction // optional callback
         );
-        this.className = 'ListMorph';
     },
 
     init: function (
@@ -2420,6 +3696,7 @@ var ListMorph = Class.create(ScrollFrameMorph, {
 })
 
 ListMorph.uber = ScrollFrameMorph.prototype;
+ListMorph.className = 'ListMorph';
 
 module.exports = ListMorph;
 
@@ -2427,7 +3704,7 @@ module.exports = ListMorph;
 
 
     
-},{"./Color":5,"./MenuMorph":15,"./ScrollFrameMorph":22}],14:[function(require,module,exports){
+},{"./Color":6,"./MenuMorph":17,"./ScrollFrameMorph":24}],16:[function(require,module,exports){
 var Morph = require('./Morph');
 var TriggerMorph = require('./TriggerMorph');
 var TextMorph = require('./TextMorph');
@@ -2465,7 +3742,6 @@ var MenuItemMorph = Class.create(TriggerMorph, {
 	        italic,
 	        doubleClickAction
 	    );
-	    this.className = 'MenuItemMorph';
 	},
 
 	createLabel: function () {
@@ -2594,12 +3870,13 @@ var MenuItemMorph = Class.create(TriggerMorph, {
 })
 
 MenuItemMorph.uber = TriggerMorph.prototype;
+MenuItemMorph.className = 'MenuItemMorph';
 
 module.exports = MenuItemMorph;
 
 
 
-},{"./Morph":16,"./Point":20,"./Rectangle":21,"./TextMorph":29,"./TriggerMorph":30}],15:[function(require,module,exports){
+},{"./Morph":18,"./Point":22,"./Rectangle":23,"./TextMorph":31,"./TriggerMorph":32}],17:[function(require,module,exports){
 var BoxMorph = require('./BoxMorph');
 var MenuItemMorph = require('./MenuItemMorph');
 var FrameMorph = require('./FrameMorph');
@@ -2617,7 +3894,6 @@ var MenuMorph = Class.create(BoxMorph, {
 	
 	initialize: function(target, title, environment, fontSize) {
 	    this.init(target, title, environment, fontSize);
-	    this.className = 'MenuMorph';
 
 	    /*
 	    if target is a function, use it as callback:
@@ -2906,11 +4182,12 @@ var MenuMorph = Class.create(BoxMorph, {
 })
 
 MenuMorph.uber = BoxMorph.prototype;
+MenuMorph.className = 'MenuMorph';
 
 module.exports = MenuMorph;
 
 
-},{"./BoxMorph":3,"./Color":5,"./ColorPickerMorph":7,"./FrameMorph":9,"./MenuItemMorph":14,"./Point":20,"./ScrollFrameMorph":22,"./SliderMorph":25,"./StringFieldMorph":27,"./TextMorph":29}],16:[function(require,module,exports){
+},{"./BoxMorph":3,"./Color":6,"./ColorPickerMorph":8,"./FrameMorph":10,"./MenuItemMorph":16,"./Point":22,"./ScrollFrameMorph":24,"./SliderMorph":27,"./StringFieldMorph":29,"./TextMorph":31}],18:[function(require,module,exports){
 var Node = require('./Node');
 var Rectangle = require('./Rectangle');
 var Color = require('./Color');
@@ -2949,7 +4226,6 @@ var Morph = Class.create(Node, {
 
 	initialize: function(){
 		this.init();
-		this.className = 'Morph';
 	},
 
 	init: function($super){
@@ -3130,7 +4406,7 @@ var Morph = Class.create(Node, {
 	    var result;
 	    result = this.bounds;
 	    this.children.forEach(function (child) {
-	        if (!(child.className == 'ShadowMorph') && (child.isVisible)) {
+	        if (!(child.instanceOf('ShadowMorph')) && (child.isVisible)) {
 	            result = result.merge(child.fullBounds());
 	        }
 	    });
@@ -3141,7 +4417,7 @@ var Morph = Class.create(Node, {
 	    // answer which part of me is not clipped by a Frame
 	    var visible = this.bounds,
 	        frames = this.allParents().filter(function (p) {
-	            return p.className == 'FrameMorph';
+	            return p.instanceOf('FrameMorph');
 	        });
 	    frames.forEach(function (f) {
 	        visible = visible.intersect(f.bounds);
@@ -3592,7 +4868,7 @@ var Morph = Class.create(Node, {
 	    var shadows;
 	    shadows = this.children.slice(0).reverse().filter(
 	        function (child) {
-	            return child.className == 'ShadowMorph';
+	            return child.instanceOf('ShadowMorph');
 	        }
 	    );
 	    if (shadows.length !== 0) {
@@ -3621,7 +4897,7 @@ var Morph = Class.create(Node, {
 	changed: function () {
 	    if (this.trackChanges) {
 	        var w = this.root();
-	        if (w.className == 'WorldMorph') {
+	        if (w.instanceOf('WorldMorph')) {
 	            w.broken.push(this.visibleBounds().spread());
 	        }
 	    }
@@ -3633,7 +4909,7 @@ var Morph = Class.create(Node, {
 	fullChanged: function () {
 	    if (this.trackChanges) {
 	        var w = this.root();
-	        if (w.className == 'WorldMorph') {
+	        if (w.instanceOf('WorldMorph')) {
 	            w.broken.push(this.fullBounds().spread());
 	        }
 	    }
@@ -3652,10 +4928,10 @@ var Morph = Class.create(Node, {
 
 	world: function () {
 	    var root = this.root();
-	    if (root.className == 'WorldMorph') {
+	    if (root.instanceOf('WorldMorph')) {
 	        return root;
 	    }
-	    if (root.className == 'HandMorph') {
+	    if (root.instanceOf('HandMorph')) {
 	        return root.world;
 	    }
 	    return null;
@@ -3833,15 +5109,15 @@ var Morph = Class.create(Node, {
 	// Morph dragging and dropping:
 
 	rootForGrab: function () {
-	    if (this.className == 'ShadowMorph') {
+	    if (this.instanceOf('ShadowMorph')) {
 	        return this.parent.rootForGrab();
 	    }
-	    if (this.parent.className == 'ScrollFrameMorph') {
+	    if (this.parent.instanceOf('ScrollFrameMorph')) {
 	        return this.parent;
 	    }
 	    if (this.parent === null ||
-	            this.parent.className == 'WorldMorph' ||
-	            this.parent.className == 'FrameMorph' ||
+	            this.parent.instanceOf('WorldMorph') ||
+	            this.parent.instanceOf('FrameMorph') ||
 	            this.isDraggable === true) {
 	        return this;
 	    }
@@ -3850,9 +5126,9 @@ var Morph = Class.create(Node, {
 
 	wantsDropOf: function (aMorph) {
 	    // default is to answer the general flag - change for my heirs
-	    if ((aMorph.className == 'HandleMorph') ||
-	            (aMorph.className == 'MenuMorph') ||
-	            (aMorph.className == 'InspectorMorph')) {
+	    if ((aMorph.instanceOf('HandleMorph')) ||
+	            (aMorph.instanceOf('MenuMorph')) ||
+	            (aMorph.instanceOf('InspectorMorph'))) {
 	        return false;
 	    }
 	    return this.acceptsDrops;
@@ -3869,7 +5145,7 @@ var Morph = Class.create(Node, {
 	},
 
 	isPickedUp: function () {
-	    return this.parentThatIsA(HandMorph) !== null;
+	    return this.parentThatIsA('HandMorph') !== null;
 	},
 
 	situation: function () {
@@ -4231,7 +5507,7 @@ var Morph = Class.create(Node, {
 	    }
 	    menu.addItem("hide", 'hide');
 	    menu.addItem("delete", 'destroy');
-	    if (!(this.className == 'WorldMorph')) {
+	    if (!(this.instanceOf('WorldMorph'))) {
 	        menu.addLine();
 	        menu.addItem(
 	            "World...",
@@ -4308,8 +5584,8 @@ var Morph = Class.create(Node, {
 	allEntryFields: function () {
 	    return this.allChildren().filter(function (each) {
 	        return each.isEditable &&
-	            (each.className == 'StringMorph' ||
-	                each.className == 'TextMorph');
+	            (each.instanceOf('StringMorph') ||
+	                each.instanceOf('TextMorph'));
 	    });
 	},
 
@@ -4452,10 +5728,11 @@ var Morph = Class.create(Node, {
 })
 
 Morph.uber = Node.prototype;
+Morph.className = 'Morph';
 
 
 module.exports = Morph;
-},{"./Color":5,"./Node":18,"./Rectangle":21}],17:[function(require,module,exports){
+},{"./Color":6,"./Node":20,"./Rectangle":23}],19:[function(require,module,exports){
 var BoxMorph = require('./BoxMorph');
 var Color = require('./Color');
 
@@ -4463,7 +5740,6 @@ var MouseSensorMorph = Class.create(BoxMorph, {
 	
 	initialize: function(edge, border, borderColor) {
 	    this.init(edge, border, borderColor);
-	    this.className = 'MouseSensorMorph';
 	},
 
 	init: function ($super, edge, border, borderColor) {
@@ -4525,18 +5801,18 @@ var MouseSensorMorph = Class.create(BoxMorph, {
 })
 
 MouseSensorMorph.uber = BoxMorph.prototype;
+MouseSensorMorph.className = 'MouseSensorMorph';
 
 module.exports = MouseSensorMorph;
 
 
-},{"./BoxMorph":3,"./Color":5}],18:[function(require,module,exports){
+},{"./BoxMorph":3,"./Color":6}],20:[function(require,module,exports){
 // Nodes ///////////////////////////////////////////////////////////////
 
 var Node = Class.create({
 
     initialize: function(parent, childrenArray){
         this.init(parent || null, childrenArray || []);
-        this.className = 'Node';
     },
 
     init: function (parent, childrenArray) {
@@ -4632,23 +5908,24 @@ var Node = Class.create({
 	    });
 	},
 
-	parentThatIsA: function (constructor) {
+	parentThatIsA: function (constructorName) {
 	    // including myself
-	    if (this instanceof constructor) {
+	    if (this.instanceOf(constructorName)) {
 	        return this;
 	    }
-	    if (!this.parent) {
-	        return null;
+
+	    if (!this.parent){
+	    	return null;
 	    }
-	    return this.parent.parentThatIsA(constructor);
+		return this.parent.parentThatIsA(constructorName);
 	},
 
-	parentThatIsAnyOf: function (constructors) {
+	parentThatIsAnyOf: function (constructorNames) {
 	    // including myself
 	    var yup = false,
 	        myself = this;
-	    constructors.forEach(function (each) {
-	        if (myself.constructor === each) {
+	    constructorNames.forEach(function (each) {
+	        if (myself.instanceOf(each)) {
 	            yup = true;
 	            return;
 	        }
@@ -4657,15 +5934,18 @@ var Node = Class.create({
 	        return this;
 	    }
 	    if (!this.parent) {
-	        return null;
+	    	return null;
 	    }
-	    return this.parent.parentThatIsAnyOf(constructors);
+	    return this.parent.parentThatIsAnyOf(constructorNames);
 	}
 
 });
 
+Node.className = 'Node';
+
 module.exports = Node;
-},{}],19:[function(require,module,exports){
+
+},{}],21:[function(require,module,exports){
 var Point = require('./Point');
 var Morph = require('./Morph');
 var Rectangle = require('./Rectangle');
@@ -4678,7 +5958,6 @@ var PenMorph = Class.create(Morph, {
     
     initialize: function(){
         this.init();
-        this.className = 'PenMorph';
     },
 
     init: function ($super) {
@@ -4701,7 +5980,7 @@ var PenMorph = Class.create(Morph, {
     changed: function () {
         if (this.isWarped === false) {
             var w = this.root();
-            if (w.className == 'WorldMorph') {
+            if (w.instanceOf('WorldMorph')) {
                 w.broken.push(this.visibleBounds().spread());
             }
             if (this.parent) {
@@ -4897,18 +6176,18 @@ var PenMorph = Class.create(Morph, {
 })
 
 PenMorph.uber = Morph.prototype;
+PenMorph.className = 'PenMorph';
 
 module.exports = PenMorph;
 
 
     
-},{"./Morph":16,"./Point":20,"./Rectangle":21}],20:[function(require,module,exports){
+},{"./Morph":18,"./Point":22,"./Rectangle":23}],22:[function(require,module,exports){
 // Points //////////////////////////////////////////////////////////////
 
 var Point = Class.create({
     
     initialize: function(x, y){
-        this.className = 'Point';
         this.x = x || 0;
         this.y = y || 0;
     },
@@ -5164,7 +6443,7 @@ var Point = Class.create({
 
     corner: function (rectangle, cornerPoint) {
     // answer a new Rectangle
-        if(rectangle.className == "Rectangle"){
+        if(rectangle.instanceOf("Rectangle")){
             rectangle.setTo(this.x, this.y, cornerPoint.x, cornerPoint.y);
             return rectangle;
         } else {
@@ -5174,7 +6453,7 @@ var Point = Class.create({
 
     rectangle: function (rectangle, aPoint) {
         // answer a new Rectangle
-        if(rectangle.className == "Rectangle"){
+        if(rectangle.instanceOf("Rectangle")){
             var org, crn;
             org = this.min(aPoint);
             crn = this.max(aPoint);
@@ -5187,7 +6466,7 @@ var Point = Class.create({
 
     extent: function (rectangle, aPoint) {
         //answer a new Rectangle
-        if(rectangle.className == "Rectangle"){
+        if(rectangle.instanceOf("Rectangle")){
             var crn = this.add(aPoint);
             rectangle.setTo(this.x, this.y, crn.x, crn.y);
             return rectangle;
@@ -5198,9 +6477,10 @@ var Point = Class.create({
 
 })
 
+Point.className = 'Point';
 
 module.exports = Point;
-},{}],21:[function(require,module,exports){
+},{}],23:[function(require,module,exports){
 Point = require('./Point');
 
 // Rectangles //////////////////////////////////////////////////////////
@@ -5210,14 +6490,13 @@ Point = require('./Point');
 var Rectangle = Class.create({
 
     initialize: function(left, top, right, bottom) {
-        this.className = 'Rectangle';
         this.init(new Point((left || 0), (top || 0)),
         new Point((right || 0), (bottom || 0)));
     },
 
     init: function (originPoint, cornerPoint) {
-    this.origin = originPoint;
-    this.corner = cornerPoint;
+        this.origin = originPoint;
+        this.corner = cornerPoint;
     },
 
     // Rectangle string representation: e.g. '[0@0 | 160@80]'
@@ -5499,9 +6778,10 @@ var Rectangle = Class.create({
 
 })
 
+Rectangle.className = 'Rectangle';
 
 module.exports = Rectangle;
-},{"./Point":20}],22:[function(require,module,exports){
+},{"./Point":22}],24:[function(require,module,exports){
 var FrameMorph = require('./FrameMorph');
 var SliderMorph = require('./SliderMorph');
 var Point = require('./Point');
@@ -5512,7 +6792,6 @@ var ScrollFrameMorph = Class.create(FrameMorph, {
 	
 	initialize: function(scroller, size, sliderColor) {
 	    this.init(scroller, size, sliderColor);
-	    this.className = 'ScrollFrameMorph';
 	},
 
 	init: function ($super, scroller, size, sliderColor) {
@@ -5884,29 +7163,30 @@ var ScrollFrameMorph = Class.create(FrameMorph, {
 })
 
 ScrollFrameMorph.uber = FrameMorph.prototype;
+ScrollFrameMorph.className = 'ScrollFrameMorph';
 
 module.exports = ScrollFrameMorph;
 
 
 
 	
-},{"./FrameMorph":9,"./Point":20,"./SliderMorph":25}],23:[function(require,module,exports){
+},{"./FrameMorph":10,"./Point":22,"./SliderMorph":27}],25:[function(require,module,exports){
 var Morph = require('./Morph');
 
 var ShadowMorph = Class.create(Morph, {
 	
 	initialize: function(){
 		this.init();
-		this.className = 'ShadowMorph';
 	}
 
 })
 
 ShadowMorph.uber = Morph.prototype;
+ShadowMorph.className = 'ShadowMorph';
 
 module.exports = ShadowMorph;
 
-},{"./Morph":16}],24:[function(require,module,exports){
+},{"./Morph":18}],26:[function(require,module,exports){
 var CircleBoxMorph = require('./CircleBoxMorph');
 var Color = require('./Color');
 
@@ -5916,7 +7196,6 @@ var SliderButtonMorph = Class.create(CircleBoxMorph, {
 	
 	initialize: function(orientation){
 		this.init(orientation);
-		this.className = 'SliderButtonMorph';
 	},
 
 
@@ -6123,11 +7402,12 @@ var SliderButtonMorph = Class.create(CircleBoxMorph, {
 })
 
 SliderButtonMorph.uber = CircleBoxMorph.prototype;
+SliderButtonMorph.className = 'SliderButtonMorph';
 
 module.exports = SliderButtonMorph;
 
 
-},{"./CircleBoxMorph":4,"./Color":5}],25:[function(require,module,exports){
+},{"./CircleBoxMorph":4,"./Color":6}],27:[function(require,module,exports){
 var CircleBoxMorph = require('./CircleBoxMorph');
 var Color = require('./Color');
 var SliderButtonMorph = require('./SliderButtonMorph');
@@ -6146,7 +7426,6 @@ var SliderMorph = Class.create(CircleBoxMorph, {
 	        orientation || 'vertical',
 	        color
 	    );
-	    this.className = 'SliderMorph';
 	},
 
 	init: function (
@@ -6497,10 +7776,11 @@ var SliderMorph = Class.create(CircleBoxMorph, {
 })
 
 SliderMorph.uber = CircleBoxMorph.prototype;
+SliderMorph.className = 'SliderMorph';
 
 module.exports = SliderMorph;
 
-},{"./CircleBoxMorph":4,"./Color":5,"./Point":20,"./SliderButtonMorph":24}],26:[function(require,module,exports){
+},{"./CircleBoxMorph":4,"./Color":6,"./Point":22,"./SliderButtonMorph":26}],28:[function(require,module,exports){
 var BoxMorph = require('./BoxMorph');
 var Morph = require('./Morph');
 var Point = require('./Point');
@@ -6526,7 +7806,6 @@ var SpeechBubbleMorph = Class.create(BoxMorph, {
         isThought
     ) {
         this.init(contents, color, edge, border, borderColor, padding, isThought);
-        this.className = 'SpeechBubbleMorph';
     },
 
     init: function (
@@ -6808,6 +8087,7 @@ var SpeechBubbleMorph = Class.create(BoxMorph, {
 })
 
 SpeechBubbleMorph.uber = BoxMorph.prototype;
+SpeechBubbleMorph.className = 'SpeechBubbleMorph';
 
 module.exports = SpeechBubbleMorph;
 
@@ -6815,7 +8095,7 @@ module.exports = SpeechBubbleMorph;
 
 
     
-},{"./BoxMorph":3,"./Color":5,"./Morph":16,"./Point":20,"./TextMorph":29}],27:[function(require,module,exports){
+},{"./BoxMorph":3,"./Color":6,"./Morph":18,"./Point":22,"./TextMorph":31}],29:[function(require,module,exports){
 var FrameMorph = require('./FrameMorph');
 var Point = require('./Point');
 var StringMorph = require('./StringMorph');
@@ -6840,7 +8120,6 @@ var StringFieldMorph = Class.create(FrameMorph, {
 	        italic || false,
 	        isNumeric
 	    );
-	    this.className = 'StringFieldMorph';
 	},
 
 	init: function (
@@ -6927,11 +8206,12 @@ var StringFieldMorph = Class.create(FrameMorph, {
 })
 
 StringFieldMorph.uber = FrameMorph.prototype;
+StringFieldMorph.className = 'StringFieldMorph';
 
 module.exports = StringFieldMorph;
 
 	
-},{"./FrameMorph":9,"./Point":20,"./StringMorph":28}],28:[function(require,module,exports){
+},{"./FrameMorph":10,"./Point":22,"./StringMorph":30}],30:[function(require,module,exports){
 var Morph = require('./Morph');
 var Color = require('./Color');
 var Point = require('./Point');
@@ -6966,7 +8246,6 @@ var StringMorph = Class.create(Morph, {
 	        color,
 	        fontName
 	    );
-	    this.className = 'StringMorph';
 	},
 
 
@@ -7483,11 +8762,12 @@ var StringMorph = Class.create(Morph, {
 })
 
 StringMorph.uber = Morph.prototype;
+StringMorph.className = 'StringMorph';
 
 module.exports = StringMorph;
 
 
-},{"./Color":5,"./Morph":16,"./Point":20}],29:[function(require,module,exports){
+},{"./Color":6,"./Morph":18,"./Point":22}],31:[function(require,module,exports){
 var Morph = require('./Morph');
 var Color = require('./Color');
 var Point = require('./Point');
@@ -7521,7 +8801,6 @@ var TextMorph = Class.create(Morph, {
 	        fontName,
 	        shadowOffset,
 	        shadowColor);
-	    this.className = 'TextMorph';
 	},
 
 
@@ -8026,11 +9305,12 @@ var TextMorph = Class.create(Morph, {
 })
 
 TextMorph.uber = Morph.prototype;
+TextMorph.className = 'TextMorph';
 
 module.exports = TextMorph;
 
 
-},{"./Color":5,"./Morph":16,"./Point":20,"./StringMorph":28}],30:[function(require,module,exports){
+},{"./Color":6,"./Morph":18,"./Point":22,"./StringMorph":30}],32:[function(require,module,exports){
 
 var Morph = require('./Morph');
 var Color = require('./Color');
@@ -8070,7 +9350,6 @@ var TriggerMorph = Class.create(Morph, {
             labelItalic,
             doubleClickAction
         );
-        this.className = 'TriggerMorph';
     },
 
     init: function (
@@ -8299,13 +9578,994 @@ var TriggerMorph = Class.create(Morph, {
 })
 
 TriggerMorph.uber = Morph.prototype;
+TriggerMorph.className = 'TriggerMorph';
 
 module.exports = TriggerMorph;
 
     
 
-},{"./Color":5,"./Morph":16,"./Point":20,"./SpeechBubbleMorph":26,"./StringMorph":28}],31:[function(require,module,exports){
+},{"./Color":6,"./Morph":18,"./Point":22,"./SpeechBubbleMorph":28,"./StringMorph":30}],33:[function(require,module,exports){
+var Morph = require('./Morph');
+var FrameMorph = require('./FrameMorph');
+var Color = require('./Color');
+var Point = require('./Point');
+var HandMorph = require('./HandMorph');
+var Rectangle = require('./Rectangle');
+var MenuMorph = require('./MenuMorph');
+var BoxMorph = require('./BoxMorph');
+var CircleBoxMorph = require('./CircleBoxMorph');
+var SliderMorph = require('./SliderMorph');
+var ScrollFrameMorph = require('./ScrollFrameMorph');
+var HandleMorph = require('./HandleMorph');
+var StringMorph = require('./StringMorph');
+var TextMorph = require('./TextMorph');
+var SpeechBubbleMorph = require('./SpeechBubbleMorph');
+var GrayPaletteMorph = require('./GrayPaletteMorph');
+var ColorPaletteMorph = require('./ColorPaletteMorph');
+var ColorPickerMorph = require('./ColorPickerMorph');
+var MouseSensorMorph = require('./MouseSensorMorph');
+var BouncerMorph = require('./BouncerMorph');
+var PenMorph = require('./PenMorph');
+var SliderMorph = require('./SliderMorph');
+
+
+var WorldMorph = Class.create(FrameMorph, {
+	
+	// WorldMorph //////////////////////////////////////////////////////////
+
+	// I represent the <canvas> element
+	
+	initialize: function(aCanvas, fillPage) {
+	    this.init(aCanvas, fillPage);
+	},
+
+	// WorldMorph initialization:
+
+	init: function ($super, aCanvas, fillPage) {
+	    $super();
+	    this.color = new Color(205, 205, 205); // (130, 130, 130)
+	    this.alpha = 1;
+	    this.bounds = new Rectangle(0, 0, aCanvas.width, aCanvas.height);
+	    this.drawNew();
+	    this.isVisible = true;
+	    this.isDraggable = false;
+	    this.currentKey = null; // currently pressed key code
+	    this.worldCanvas = aCanvas;
+
+	    // additional properties:
+	    this.stamp = Date.now(); // reference in multi-world setups
+	    while (this.stamp === Date.now()) {nop(); }
+	    this.stamp = Date.now();
+
+	    this.useFillPage = fillPage;
+	    if (this.useFillPage === undefined) {
+	        this.useFillPage = true;
+	    }
+	    this.isDevMode = false;
+	    this.broken = [];
+	    this.hand = new HandMorph(this);
+	    this.keyboardReceiver = null;
+	    this.lastEditedText = null;
+	    this.cursor = null;
+	    this.activeMenu = null;
+	    this.activeHandle = null;
+	    this.virtualKeyboard = null;
+
+	    this.initEventListeners();
+	},
+
+	// World Morph display:
+
+	brokenFor: function (aMorph) {
+	    // private
+	    var fb = aMorph.fullBounds();
+	    return this.broken.filter(function (rect) {
+	        return rect.intersects(fb);
+	    });
+	},
+
+	fullDrawOn: function ($super, aCanvas, aRect) {
+	    $super(aCanvas, aRect);
+	    this.hand.fullDrawOn(aCanvas, aRect);
+	},
+
+	updateBroken: function () {
+	    var myself = this;
+	    this.condenseDamages();
+	    this.broken.forEach(function (rect) {
+	        if (rect.extent().gt(new Point(0, 0))) {
+	            myself.fullDrawOn(myself.worldCanvas, rect);
+	        }
+	    });
+	    this.broken = [];
+	},
+
+	condenseDamages: function () {
+	    // collapse clustered damaged rectangles into their unions,
+	    // thereby reducing the array of brokens to a manageable size
+
+	    function condense(src) {
+	        var trgt = [], hit;
+	        src.forEach(function (rect) {
+	            hit = detect(
+	                trgt,
+	                function (each) {return each.isNearTo(rect, 20); }
+	            );
+	            if (hit) {
+	                hit.mergeWith(rect);
+	            } else {
+	                trgt.push(rect);
+	            }
+	        });
+	        return trgt;
+	    }
+
+	    var again = true, size = this.broken.length;
+	    while (again) {
+	        this.broken = condense(this.broken);
+	        again = (this.broken.length < size);
+	        size = this.broken.length;
+	    }
+	},
+
+	doOneCycle: function () {
+	    this.stepFrame();
+	    this.updateBroken();
+	},
+
+	fillPage: function () {
+	    var pos = getDocumentPositionOf(this.worldCanvas),
+	        clientHeight = window.innerHeight,
+	        clientWidth = window.innerWidth,
+	        myself = this;
+
+
+	    if (pos.x > 0) {
+	        this.worldCanvas.style.position = "absolute";
+	        this.worldCanvas.style.left = "0px";
+	        pos.x = 0;
+	    }
+	    if (pos.y > 0) {
+	        this.worldCanvas.style.position = "absolute";
+	        this.worldCanvas.style.top = "0px";
+	        pos.y = 0;
+	    }
+	    if (document.documentElement.scrollTop) {
+	        // scrolled down b/c of viewport scaling
+	        clientHeight = document.documentElement.clientHeight;
+	    }
+	    if (document.documentElement.scrollLeft) {
+	        // scrolled left b/c of viewport scaling
+	        clientWidth = document.documentElement.clientWidth;
+	    }
+	    if (this.worldCanvas.width !== clientWidth) {
+	        this.worldCanvas.width = clientWidth;
+	        this.setWidth(clientWidth);
+	    }
+	    if (this.worldCanvas.height !== clientHeight) {
+	        this.worldCanvas.height = clientHeight;
+	        this.setHeight(clientHeight);
+	    }
+	    this.children.forEach(function (child) {
+	        if (child.reactToWorldResize) {
+	            child.reactToWorldResize(myself.bounds.copy());
+	        }
+	    });
+	},
+
+	// WorldMorph global pixel access:
+
+	getGlobalPixelColor: function (point) {
+	/*
+	    answer the color at the given point.
+
+	    Note: for some strange reason this method works fine if the page is
+	    opened via HTTP, but *not*, if it is opened from a local uri
+	    (e.g. from a directory), in which case it's always null.
+
+	    This behavior is consistent throughout several browsers. I have no
+	    clue what's behind this, apparently the imageData attribute of
+	    canvas context only gets filled with meaningful data if transferred
+	    via HTTP ???
+
+	    This is somewhat of a showstopper for color detection in a planned
+	    offline version of Snap.
+
+	    The issue has also been discussed at: (join lines before pasting)
+	    http://stackoverflow.com/questions/4069400/
+	    canvas-getimagedata-doesnt-work-when-running-locally-on-windows-
+	    security-excep
+
+	    The suggestion solution appears to work, since the settings are
+	    applied globally.
+	*/
+	    var dta = this.worldCanvas.getContext('2d').getImageData(
+	        point.x,
+	        point.y,
+	        1,
+	        1
+	    ).data;
+	    return new Color(dta[0], dta[1], dta[2]);
+	},
+
+	// WorldMorph events:
+
+	initVirtualKeyboard: function () {
+	    var myself = this;
+
+	    if (this.virtualKeyboard) {
+	        document.body.removeChild(this.virtualKeyboard);
+	        this.virtualKeyboard = null;
+	    }
+	    if (!MorphicPreferences.isTouchDevice
+	            || !MorphicPreferences.useVirtualKeyboard) {
+	        return;
+	    }
+	    this.virtualKeyboard = document.createElement("input");
+	    this.virtualKeyboard.type = "text";
+	    this.virtualKeyboard.style.color = "transparent";
+	    this.virtualKeyboard.style.backgroundColor = "transparent";
+	    this.virtualKeyboard.style.border = "none";
+	    this.virtualKeyboard.style.outline = "none";
+	    this.virtualKeyboard.style.position = "absolute";
+	    this.virtualKeyboard.style.top = "0px";
+	    this.virtualKeyboard.style.left = "0px";
+	    this.virtualKeyboard.style.width = "0px";
+	    this.virtualKeyboard.style.height = "0px";
+	    this.virtualKeyboard.autocapitalize = "none"; // iOS specific
+	    document.body.appendChild(this.virtualKeyboard);
+
+	    this.virtualKeyboard.addEventListener(
+	        "keydown",
+	        function (event) {
+	            // remember the keyCode in the world's currentKey property
+	            myself.currentKey = event.keyCode;
+	            if (myself.keyboardReceiver) {
+	                myself.keyboardReceiver.processKeyDown(event);
+	            }
+	            // supress backspace override
+	            if (event.keyIdentifier === 'U+0008' ||
+	                    event.keyIdentifier === 'Backspace') {
+	                event.preventDefault();
+	            }
+	            // supress tab override and make sure tab gets
+	            // received by all browsers
+	            if (event.keyIdentifier === 'U+0009' ||
+	                    event.keyIdentifier === 'Tab') {
+	                if (myself.keyboardReceiver) {
+	                    myself.keyboardReceiver.processKeyPress(event);
+	                }
+	                event.preventDefault();
+	            }
+	        },
+	        false
+	    );
+
+	    this.virtualKeyboard.addEventListener(
+	        "keyup",
+	        function (event) {
+	            // flush the world's currentKey property
+	            myself.currentKey = null;
+	            // dispatch to keyboard receiver
+	            if (myself.keyboardReceiver) {
+	                if (myself.keyboardReceiver.processKeyUp) {
+	                    myself.keyboardReceiver.processKeyUp(event);
+	                }
+	            }
+	            event.preventDefault();
+	        },
+	        false
+	    );
+
+	    this.virtualKeyboard.addEventListener(
+	        "keypress",
+	        function (event) {
+	            if (myself.keyboardReceiver) {
+	                myself.keyboardReceiver.processKeyPress(event);
+	            }
+	            event.preventDefault();
+	        },
+	        false
+	    );
+	},
+
+	initEventListeners: function () {
+	    var canvas = this.worldCanvas, myself = this;
+
+	    if (myself.useFillPage) {
+	        myself.fillPage();
+	    } else {
+	        this.changed();
+	    }
+
+	    canvas.addEventListener(
+	        "mousedown",
+	        function (event) {
+	            event.preventDefault();
+	            canvas.focus();
+	            myself.hand.processMouseDown(event);
+	        },
+	        false
+	    );
+
+	    canvas.addEventListener(
+	        "touchstart",
+	        function (event) {
+	            myself.hand.processTouchStart(event);
+	        },
+	        false
+	    );
+
+	    canvas.addEventListener(
+	        "mouseup",
+	        function (event) {
+	            event.preventDefault();
+	            myself.hand.processMouseUp(event);
+	        },
+	        false
+	    );
+
+	    canvas.addEventListener(
+	        "dblclick",
+	        function (event) {
+	            event.preventDefault();
+	            myself.hand.processDoubleClick(event);
+	        },
+	        false
+	    );
+
+	    canvas.addEventListener(
+	        "touchend",
+	        function (event) {
+	            myself.hand.processTouchEnd(event);
+	        },
+	        false
+	    );
+
+	    canvas.addEventListener(
+	        "mousemove",
+	        function (event) {
+	            myself.hand.processMouseMove(event);
+	        },
+	        false
+	    );
+
+	    canvas.addEventListener(
+	        "touchmove",
+	        function (event) {
+	            myself.hand.processTouchMove(event);
+	        },
+	        false
+	    );
+
+	    canvas.addEventListener(
+	        "contextmenu",
+	        function (event) {
+	            // suppress context menu for Mac-Firefox
+	            event.preventDefault();
+	        },
+	        false
+	    );
+
+	    canvas.addEventListener(
+	        "keydown",
+	        function (event) {
+	            // remember the keyCode in the world's currentKey property
+	            myself.currentKey = event.keyCode;
+	            if (myself.keyboardReceiver) {
+	                myself.keyboardReceiver.processKeyDown(event);
+	            }
+	            // supress backspace override
+	            if (event.keyIdentifier === 'U+0008' ||
+	                    event.keyIdentifier === 'Backspace') {
+	                event.preventDefault();
+	            }
+	            // supress tab override and make sure tab gets
+	            // received by all browsers
+	            if (event.keyIdentifier === 'U+0009' ||
+	                    event.keyIdentifier === 'Tab') {
+	                if (myself.keyboardReceiver) {
+	                    myself.keyboardReceiver.processKeyPress(event);
+	                }
+	                event.preventDefault();
+	            }
+	            if ((event.ctrlKey || event.metaKey) &&
+	                    (event.keyIdentifier !== 'U+0056')) { // allow pasting-in
+	                event.preventDefault();
+	            }
+	        },
+	        false
+	    );
+
+	    canvas.addEventListener(
+	        "keyup",
+	        function (event) {
+	            // flush the world's currentKey property
+	            myself.currentKey = null;
+	            // dispatch to keyboard receiver
+	            if (myself.keyboardReceiver) {
+	                if (myself.keyboardReceiver.processKeyUp) {
+	                    myself.keyboardReceiver.processKeyUp(event);
+	                }
+	            }
+	            event.preventDefault();
+	        },
+	        false
+	    );
+
+	    canvas.addEventListener(
+	        "keypress",
+	        function (event) {
+	            if (myself.keyboardReceiver) {
+	                myself.keyboardReceiver.processKeyPress(event);
+	            }
+	            event.preventDefault();
+	        },
+	        false
+	    );
+
+	    canvas.addEventListener( // Safari, Chrome
+	        "mousewheel",
+	        function (event) {
+	            myself.hand.processMouseScroll(event);
+	            event.preventDefault();
+	        },
+	        false
+	    );
+	    canvas.addEventListener( // Firefox
+	        "DOMMouseScroll",
+	        function (event) {
+	            myself.hand.processMouseScroll(event);
+	            event.preventDefault();
+	        },
+	        false
+	    );
+
+	    document.body.addEventListener(
+	        "paste",
+	        function (event) {
+	            var txt = event.clipboardData.getData("Text");
+	            if (txt && myself.cursor) {
+	                myself.cursor.insert(txt);
+	            }
+	        },
+	        false
+	    );
+
+	    window.addEventListener(
+	        "dragover",
+	        function (event) {
+	            event.preventDefault();
+	        },
+	        false
+	    );
+	    window.addEventListener(
+	        "drop",
+	        function (event) {
+	            myself.hand.processDrop(event);
+	            event.preventDefault();
+	        },
+	        false
+	    );
+
+	    window.addEventListener(
+	        "resize",
+	        function () {
+	            if (myself.useFillPage) {
+	                myself.fillPage();
+	            }
+	        },
+	        false
+	    );
+
+	    window.onbeforeunload = function (evt) {
+	        var e = evt || window.event,
+	            msg = "Are you sure you want to leave?";
+	        // For IE and Firefox
+	        if (e) {
+	            e.returnValue = msg;
+	        }
+	        // For Safari / chrome
+	        return msg;
+	    };
+	},
+
+	mouseDownLeft: function () {
+	    nop();
+	},
+
+	mouseClickLeft: function () {
+	    nop();
+	},
+
+	mouseDownRight: function () {
+	    nop();
+	},
+
+	mouseClickRight: function () {
+	    nop();
+	},
+
+	wantsDropOf: function () {
+	    // allow handle drops if any drops are allowed
+	    return this.acceptsDrops;
+	},
+
+	droppedImage: function () {
+	    return null;
+	},
+
+	droppedSVG: function () {
+	    return null;
+	},
+
+	// WorldMorph text field tabbing:
+
+	nextTab: function (editField) {
+	    var next = this.nextEntryField(editField);
+	    if (next) {
+	        editField.clearSelection();
+	        next.selectAll();
+	        next.edit();
+	    }
+	},
+
+	previousTab: function (editField) {
+	    var prev = this.previousEntryField(editField);
+	    if (prev) {
+	        editField.clearSelection();
+	        prev.selectAll();
+	        prev.edit();
+	    }
+	},
+
+	// WorldMorph menu:
+
+	contextMenu: function () {
+	    var menu;
+
+	    if (this.isDevMode) {
+	        menu = new MenuMorph(this, this.constructor.name ||
+	            this.constructor.toString().split(' ')[1].split('(')[0]);
+	    } else {
+	        menu = new MenuMorph(this, 'Morphic');
+	    }
+	    if (this.isDevMode) {
+	        menu.addItem("demo...", 'userCreateMorph', 'sample morphs');
+	        menu.addLine();
+	        menu.addItem("hide all...", 'hideAll');
+	        menu.addItem("show all...", 'showAllHiddens');
+	        menu.addItem(
+	            "move all inside...",
+	            'keepAllSubmorphsWithin',
+	            'keep all submorphs\nwithin and visible'
+	        );
+	        menu.addItem(
+	            "inspect...",
+	            'inspect',
+	            'open a window on\nall properties'
+	        );
+	        menu.addLine();
+	        menu.addItem(
+	            "restore display",
+	            'changed',
+	            'redraw the\nscreen once'
+	        );
+	        menu.addItem(
+	            "fill page...",
+	            'fillPage',
+	            'let the World automatically\nadjust to browser resizings'
+	        );
+	        if (useBlurredShadows) {
+	            menu.addItem(
+	                "sharp shadows...",
+	                'toggleBlurredShadows',
+	                'sharp drop shadows\nuse for old browsers'
+	            );
+	        } else {
+	            menu.addItem(
+	                "blurred shadows...",
+	                'toggleBlurredShadows',
+	                'blurry shades,\n use for new browsers'
+	            );
+	        }
+	        menu.addItem(
+	            "color...",
+	            function () {
+	                this.pickColor(
+	                    menu.title + '\ncolor:',
+	                    this.setColor,
+	                    this,
+	                    this.color
+	                );
+	            },
+	            'choose the World\'s\nbackground color'
+	        );
+	        if (MorphicPreferences === standardSettings) {
+	            menu.addItem(
+	                "touch screen settings",
+	                'togglePreferences',
+	                'bigger menu fonts\nand sliders'
+	            );
+	        } else {
+	            menu.addItem(
+	                "standard settings",
+	                'togglePreferences',
+	                'smaller menu fonts\nand sliders'
+	            );
+	        }
+	        menu.addLine();
+	    }
+	    if (this.isDevMode) {
+	        menu.addItem(
+	            "user mode...",
+	            'toggleDevMode',
+	            'disable developers\'\ncontext menus'
+	        );
+	    } else {
+	        menu.addItem("development mode...", 'toggleDevMode');
+	    }
+	    menu.addItem("about morphic.js...", 'about');
+	    return menu;
+	},
+
+	userCreateMorph: function () {
+	    var myself = this, menu, newMorph;
+
+	    function create(aMorph) {
+	        aMorph.isDraggable = true;
+	        aMorph.pickUp(myself);
+	    }
+
+	    menu = new MenuMorph(this, 'make a morph');
+	    menu.addItem('rectangle', function () {
+	        create(new Morph());
+	    });
+	    menu.addItem('box', function () {
+	        create(new BoxMorph());
+	    });
+	    menu.addItem('circle box', function () {
+	        create(new CircleBoxMorph());
+	    });
+	    menu.addLine();
+	    menu.addItem('slider', function () {
+	        create(new SliderMorph());
+	    });
+	    menu.addItem('frame', function () {
+	        newMorph = new FrameMorph();
+	        newMorph.setExtent(new Point(350, 250));
+	        create(newMorph);
+	    });
+	    menu.addItem('scroll frame', function () {
+	        newMorph = new ScrollFrameMorph();
+	        newMorph.contents.acceptsDrops = true;
+	        newMorph.contents.adjustBounds();
+	        newMorph.setExtent(new Point(350, 250));
+	        create(newMorph);
+	    });
+	    menu.addItem('handle', function () {
+	        create(new HandleMorph());
+	    });
+	    menu.addLine();
+	    menu.addItem('string', function () {
+	        newMorph = new StringMorph('Hello, World!');
+	        newMorph.isEditable = true;
+	        create(newMorph);
+	    });
+	    menu.addItem('text', function () {
+	        newMorph = new TextMorph(
+	            "Ich wei\u00DF nicht, was soll es bedeuten, dass ich so " +
+	                "traurig bin, ein M\u00E4rchen aus uralten Zeiten, das " +
+	                "kommt mir nicht aus dem Sinn. Die Luft ist k\u00FChl " +
+	                "und es dunkelt, und ruhig flie\u00DFt der Rhein; der " +
+	                "Gipfel des Berges funkelt im Abendsonnenschein. " +
+	                "Die sch\u00F6nste Jungfrau sitzet dort oben wunderbar, " +
+	                "ihr gold'nes Geschmeide blitzet, sie k\u00E4mmt ihr " +
+	                "goldenes Haar, sie k\u00E4mmt es mit goldenem Kamme, " +
+	                "und singt ein Lied dabei; das hat eine wundersame, " +
+	                "gewalt'ge Melodei. Den Schiffer im kleinen " +
+	                "Schiffe, ergreift es mit wildem Weh; er schaut " +
+	                "nicht die Felsenriffe, er schaut nur hinauf in " +
+	                "die H\u00F6h'. Ich glaube, die Wellen verschlingen " +
+	                "am Ende Schiffer und Kahn, und das hat mit ihrem " +
+	                "Singen, die Loreley getan."
+	        );
+	        newMorph.isEditable = true;
+	        newMorph.maxWidth = 300;
+	        newMorph.drawNew();
+	        create(newMorph);
+	    });
+	    menu.addItem('speech bubble', function () {
+	        newMorph = new SpeechBubbleMorph('Hello, World!');
+	        create(newMorph);
+	    });
+	    menu.addLine();
+	    menu.addItem('gray scale palette', function () {
+	        create(new GrayPaletteMorph());
+	    });
+	    menu.addItem('color palette', function () {
+	        create(new ColorPaletteMorph());
+	    });
+	    menu.addItem('color picker', function () {
+	        create(new ColorPickerMorph());
+	    });
+	    menu.addLine();
+	    menu.addItem('sensor demo', function () {
+	        newMorph = new MouseSensorMorph();
+	        newMorph.setColor(new Color(230, 200, 100));
+	        newMorph.edge = 35;
+	        newMorph.border = 15;
+	        newMorph.borderColor = new Color(200, 100, 50);
+	        newMorph.alpha = 0.2;
+	        newMorph.setExtent(new Point(100, 100));
+	        create(newMorph);
+	    });
+	    menu.addItem('animation demo', function () {
+	        var foo, bar, baz, garply, fred;
+
+	        foo = new BouncerMorph();
+	        foo.setPosition(new Point(50, 20));
+	        foo.setExtent(new Point(300, 200));
+	        foo.alpha = 0.9;
+	        foo.speed = 3;
+
+	        bar = new BouncerMorph();
+	        bar.setColor(new Color(50, 50, 50));
+	        bar.setPosition(new Point(80, 80));
+	        bar.setExtent(new Point(80, 250));
+	        bar.type = 'horizontal';
+	        bar.direction = 'right';
+	        bar.alpha = 0.9;
+	        bar.speed = 5;
+
+	        baz = new BouncerMorph();
+	        baz.setColor(new Color(20, 20, 20));
+	        baz.setPosition(new Point(90, 140));
+	        baz.setExtent(new Point(40, 30));
+	        baz.type = 'horizontal';
+	        baz.direction = 'right';
+	        baz.speed = 3;
+
+	        garply = new BouncerMorph();
+	        garply.setColor(new Color(200, 20, 20));
+	        garply.setPosition(new Point(90, 140));
+	        garply.setExtent(new Point(20, 20));
+	        garply.type = 'vertical';
+	        garply.direction = 'up';
+	        garply.speed = 8;
+
+	        fred = new BouncerMorph();
+	        fred.setColor(new Color(20, 200, 20));
+	        fred.setPosition(new Point(120, 140));
+	        fred.setExtent(new Point(20, 20));
+	        fred.type = 'vertical';
+	        fred.direction = 'down';
+	        fred.speed = 4;
+
+	        bar.add(garply);
+	        bar.add(baz);
+	        foo.add(fred);
+	        foo.add(bar);
+
+	        create(foo);
+	    });
+	    menu.addItem('pen', function () {
+	        create(new PenMorph());
+	    });
+	    if (myself.customMorphs) {
+	        menu.addLine();
+	        myself.customMorphs().forEach(function (morph) {
+	            menu.addItem(morph.toString(), function () {
+	                create(morph);
+	            });
+	        });
+	    }
+	    menu.popUpAtHand(this);
+	},
+
+	toggleDevMode: function () {
+	    this.isDevMode = !this.isDevMode;
+	},
+
+	hideAll: function () {
+	    this.children.forEach(function (child) {
+	        child.hide();
+	    });
+	},
+
+	showAllHiddens: function () {
+	    this.forAllChildren(function (child) {
+	        if (!child.isVisible) {
+	            child.show();
+	        }
+	    });
+	},
+
+	about: function () {
+	    var versions = '', module;
+
+	    for (module in modules) {
+	        if (Object.prototype.hasOwnProperty.call(modules, module)) {
+	            versions += ('\n' + module + ' (' + modules[module] + ')');
+	        }
+	    }
+	    if (versions !== '') {
+	        versions = '\n\nmodules:\n\n' +
+	            'morphic (' + morphicVersion + ')' +
+	            versions;
+	    }
+
+	    this.inform(
+	        'morphic.js\n\n' +
+	            'a lively Web GUI\ninspired by Squeak\n' +
+	            morphicVersion +
+	            '\n\nwritten by Jens M\u00F6nig\njens@moenig.org' +
+	            versions
+	    );
+	},
+
+	edit: function (aStringOrTextMorph) {
+	    var pos = getDocumentPositionOf(this.worldCanvas);
+
+	    if (!aStringOrTextMorph.isEditable) {
+	        return null;
+	    }
+	    if (this.cursor) {
+	        this.cursor.destroy();
+	    }
+	    if (this.lastEditedText) {
+	        this.lastEditedText.clearSelection();
+	    }
+	    this.cursor = new CursorMorph(aStringOrTextMorph);
+	    aStringOrTextMorph.parent.add(this.cursor);
+	    this.keyboardReceiver = this.cursor;
+
+	    this.initVirtualKeyboard();
+	    if (MorphicPreferences.isTouchDevice
+	            && MorphicPreferences.useVirtualKeyboard) {
+	        this.virtualKeyboard.style.top = this.cursor.top() + pos.y + "px";
+	        this.virtualKeyboard.style.left = this.cursor.left() + pos.x + "px";
+	        this.virtualKeyboard.focus();
+	    }
+
+	    if (MorphicPreferences.useSliderForInput) {
+	        if (!aStringOrTextMorph.parentThatIsA('MenuMorph')) {
+	            this.slide(aStringOrTextMorph);
+	        }
+	    }
+	},
+
+	slide: function (aStringOrTextMorph) {
+	    // display a slider for numeric text entries
+	    var val = parseFloat(aStringOrTextMorph.text),
+	        menu,
+	        slider;
+
+	    if (isNaN(val)) {
+	        val = 0;
+	    }
+	    menu = new MenuMorph();
+	    slider = new SliderMorph(
+	        val - 25,
+	        val + 25,
+	        val,
+	        10,
+	        'horizontal'
+	    );
+	    slider.alpha = 1;
+	    slider.color = new Color(225, 225, 225);
+	    slider.button.color = menu.borderColor;
+	    slider.button.highlightColor = slider.button.color.copy();
+	    slider.button.highlightColor.b += 100;
+	    slider.button.pressColor = slider.button.color.copy();
+	    slider.button.pressColor.b += 150;
+	    slider.silentSetHeight(MorphicPreferences.scrollBarSize);
+	    slider.silentSetWidth(MorphicPreferences.menuFontSize * 10);
+	    slider.drawNew();
+	    slider.action = function (num) {
+	        aStringOrTextMorph.changed();
+	        aStringOrTextMorph.text = Math.round(num).toString();
+	        aStringOrTextMorph.drawNew();
+	        aStringOrTextMorph.changed();
+	        aStringOrTextMorph.escalateEvent(
+	            'reactToSliderEdit',
+	            aStringOrTextMorph
+	        );
+	    };
+	    menu.items.push(slider);
+	    menu.popup(this, aStringOrTextMorph.bottomLeft().add(new Point(0, 5)));
+	},
+
+	stopEditing: function () {
+	    if (this.cursor) {
+	        this.lastEditedText = this.cursor.target;
+	        this.cursor.destroy();
+	        this.cursor = null;
+	        this.lastEditedText.escalateEvent('reactToEdit', this.lastEditedText);
+	    }
+	    this.keyboardReceiver = null;
+	    if (this.virtualKeyboard) {
+	        this.virtualKeyboard.blur();
+	        document.body.removeChild(this.virtualKeyboard);
+	        this.virtualKeyboard = null;
+	    }
+	    this.worldCanvas.focus();
+	},
+
+	toggleBlurredShadows: function () {
+	    useBlurredShadows = !useBlurredShadows;
+	},
+
+	togglePreferences: function () {
+	    if (MorphicPreferences === standardSettings) {
+	        MorphicPreferences = touchScreenSettings;
+	    } else {
+	        MorphicPreferences = standardSettings;
+	    }
+	},
+
+	customMorphs: function () {
+	    // add examples to the world's demo menu
+
+	    return [];
+
+		/*
+		    return [
+		        new SymbolMorph(
+		            'pipette',
+		            50,
+		            new Color(250, 250, 250),
+		            new Point(-1, -1),
+		            new Color(20, 20, 20)
+		        )
+		    ];
+		*/
+		/*
+		    var sm = new ScriptsMorph();
+		    sm.setExtent(new Point(800, 600));
+
+		    return [
+		        new SymbolMorph(),
+		        new HatBlockMorph(),
+		        new CommandBlockMorph(),
+		        sm,
+		        new CommandSlotMorph(),
+		        new CSlotMorph(),
+		        new InputSlotMorph(),
+		        new InputSlotMorph(null, true),
+		        new BooleanSlotMorph(),
+		        new ColorSlotMorph(),
+		        new TemplateSlotMorph('foo'),
+		        new ReporterBlockMorph(),
+		        new ReporterBlockMorph(true),
+		        new ArrowMorph(),
+		        new MultiArgMorph(),
+		        new FunctionSlotMorph(),
+		        new ReporterSlotMorph(),
+		        new ReporterSlotMorph(true),
+		//        new DialogBoxMorph('Dialog Box'),
+		//        new InputFieldMorph('Input Field')
+		        new RingMorph(),
+		        new RingCommandSlotMorph(),
+		        new RingReporterSlotMorph(),
+		        new RingReporterSlotMorph(true)
+		    ];
+		*/
+	},
+
+})
+
+WorldMorph.uber = FrameMorph.prototype;
+WorldMorph.className = 'WorldMorph';
+
+module.exports = WorldMorph;
+
+
+
+},{"./BouncerMorph":2,"./BoxMorph":3,"./CircleBoxMorph":4,"./Color":6,"./ColorPaletteMorph":7,"./ColorPickerMorph":8,"./FrameMorph":10,"./GrayPaletteMorph":11,"./HandMorph":12,"./HandleMorph":13,"./MenuMorph":17,"./Morph":18,"./MouseSensorMorph":19,"./PenMorph":21,"./Point":22,"./Rectangle":23,"./ScrollFrameMorph":24,"./SliderMorph":27,"./SpeechBubbleMorph":28,"./StringMorph":30,"./TextMorph":31}],34:[function(require,module,exports){
 (function (global){
+// morphic.js
+
 global.Color = require('./Color');
 global.Point = require('./Point');
 global.Rectangle = require('./Rectangle');
@@ -8334,9 +10594,22 @@ global.FrameMorph = require('./FrameMorph');
 global.SliderMorph = require('./SliderMorph');
 global.SliderButtonMorph = require('./SliderButtonMorph');
 global.ScrollFrameMorph = require('./ScrollFrameMorph');
-global.ListMorph = require('./MenuMorph');
-global.ListMorph = require('./MenuItemMorph');
+global.MenuMorph = require('./MenuMorph');
+global.MenuItemMorph = require('./MenuItemMorph');
+global.HandMorph = require('./HandMorph');
+global.WorldMorph = require('./WorldMorph');
+
+// widgets.js
+
+
+
+// blocks.js
+
+// gui.js
+
+// cloud.js
+global.Cloud = require('./Cloud');
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./BlinkerMorph":1,"./BouncerMorph":2,"./BoxMorph":3,"./CircleBoxMorph":4,"./Color":5,"./ColorPaletteMorph":6,"./ColorPickerMorph":7,"./CursorMorph":8,"./FrameMorph":9,"./GrayPaletteMorph":10,"./HandleMorph":11,"./InspectorMorph":12,"./MenuItemMorph":14,"./MenuMorph":15,"./Morph":16,"./MouseSensorMorph":17,"./Node":18,"./PenMorph":19,"./Point":20,"./Rectangle":21,"./ScrollFrameMorph":22,"./ShadowMorph":23,"./SliderButtonMorph":24,"./SliderMorph":25,"./SpeechBubbleMorph":26,"./StringFieldMorph":27,"./StringMorph":28,"./TextMorph":29,"./TriggerMorph":30}]},{},[31]);
+},{"./BlinkerMorph":1,"./BouncerMorph":2,"./BoxMorph":3,"./CircleBoxMorph":4,"./Cloud":5,"./Color":6,"./ColorPaletteMorph":7,"./ColorPickerMorph":8,"./CursorMorph":9,"./FrameMorph":10,"./GrayPaletteMorph":11,"./HandMorph":12,"./HandleMorph":13,"./InspectorMorph":14,"./MenuItemMorph":16,"./MenuMorph":17,"./Morph":18,"./MouseSensorMorph":19,"./Node":20,"./PenMorph":21,"./Point":22,"./Rectangle":23,"./ScrollFrameMorph":24,"./ShadowMorph":25,"./SliderButtonMorph":26,"./SliderMorph":27,"./SpeechBubbleMorph":28,"./StringFieldMorph":29,"./StringMorph":30,"./TextMorph":31,"./TriggerMorph":32,"./WorldMorph":33}]},{},[34]);

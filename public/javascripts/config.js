@@ -1,3 +1,5 @@
+// morphic.js
+
 var morphicVersion = '2014-September-30';
 var modules = {}; // keep track of additional loaded modules
 var useBlurredShadows = getBlurredShadowSupport(); // check for Chrome-bug
@@ -41,3 +43,10 @@ var touchScreenSettings = {
 };
 
 var MorphicPreferences = standardSettings;
+
+// cloud.js
+
+modules.cloud = '2014-May-26';
+
+$ = jQuery;
+

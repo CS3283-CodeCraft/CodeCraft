@@ -10,7 +10,6 @@ var HandleMorph = Class.create(Morph, {
 
 	initialize: function(target, minX, minY, insetX, insetY, type){
 		this.init(target, minX, minY, insetX, insetY, type);
-		this.className = 'HandleMorph';
 	},
 
 	init: function($super, target, minX, minY, insetX, insetY, type){
@@ -243,6 +242,7 @@ var HandleMorph = Class.create(Morph, {
 })
 
 HandleMorph.uber = Morph.prototype;
+HandleMorph.className = 'HandleMorph';
 
 module.exports = HandleMorph;
 

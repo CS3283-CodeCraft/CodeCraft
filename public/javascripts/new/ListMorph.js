@@ -41,7 +41,6 @@ var ListMorph = Class.create(ScrollFrameMorph, {
             format || [],
             doubleClickAction // optional callback
         );
-        this.className = 'ListMorph';
     },
 
     init: function (
@@ -144,6 +143,7 @@ var ListMorph = Class.create(ScrollFrameMorph, {
 })
 
 ListMorph.uber = ScrollFrameMorph.prototype;
+ListMorph.className = 'ListMorph';
 
 module.exports = ListMorph;
 

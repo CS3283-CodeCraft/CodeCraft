@@ -32,7 +32,6 @@ var StringMorph = Class.create(Morph, {
 	        color,
 	        fontName
 	    );
-	    this.className = 'StringMorph';
 	},
 
 
@@ -549,6 +548,7 @@ var StringMorph = Class.create(Morph, {
 })
 
 StringMorph.uber = Morph.prototype;
+StringMorph.className = 'StringMorph';
 
 module.exports = StringMorph;
 

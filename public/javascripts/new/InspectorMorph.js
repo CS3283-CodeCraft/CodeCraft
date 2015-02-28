@@ -9,14 +9,12 @@ var ScrollFrameMorph = require('./ScrollFrameMorph');
 var TriggerMorph = require('./TriggerMorph');
 var HandleMorph = require('./HandleMorph');
 var Morph = require('./Morph');
-var Morph = require('./Morph');
 
 var InspectorMorph = Class.create(BoxMorph, {
     // InspectorMorph //////////////////////////////////////////////////////
 
     initialize: function(target) {
         this.init(target);
-        this.className = 'InspectorMorph';
     },
 
     init: function (target) {
@@ -500,5 +498,6 @@ var InspectorMorph = Class.create(BoxMorph, {
 })
 
 InspectorMorph.uber = BoxMorph.prototype;
+InspectorMorph.className = 'InspectorMorph';
 
 module.exports = InspectorMorph;

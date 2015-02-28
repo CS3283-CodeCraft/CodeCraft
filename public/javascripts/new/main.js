@@ -1,3 +1,5 @@
+// morphic.js
+
 global.Color = require('./Color');
 global.Point = require('./Point');
 global.Rectangle = require('./Rectangle');
@@ -26,6 +28,19 @@ global.FrameMorph = require('./FrameMorph');
 global.SliderMorph = require('./SliderMorph');
 global.SliderButtonMorph = require('./SliderButtonMorph');
 global.ScrollFrameMorph = require('./ScrollFrameMorph');
-global.ListMorph = require('./MenuMorph');
-global.ListMorph = require('./MenuItemMorph');
+global.MenuMorph = require('./MenuMorph');
+global.MenuItemMorph = require('./MenuItemMorph');
+global.HandMorph = require('./HandMorph');
+global.WorldMorph = require('./WorldMorph');
+
+// widgets.js
+
+
+
+// blocks.js
+
+// gui.js
+
+// cloud.js
+global.Cloud = require('./Cloud');
 

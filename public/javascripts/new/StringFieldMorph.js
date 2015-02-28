@@ -22,7 +22,6 @@ var StringFieldMorph = Class.create(FrameMorph, {
 	        italic || false,
 	        isNumeric
 	    );
-	    this.className = 'StringFieldMorph';
 	},
 
 	init: function (
@@ -109,6 +108,7 @@ var StringFieldMorph = Class.create(FrameMorph, {
 })
 
 StringFieldMorph.uber = FrameMorph.prototype;
+StringFieldMorph.className = 'StringFieldMorph';
 
 module.exports = StringFieldMorph;
 

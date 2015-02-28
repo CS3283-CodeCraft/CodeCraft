@@ -23,6 +23,8 @@ function ShareBoxItemSharer(serializer, ide, socket) {
     this.socket = socket;
 }
 
+ShareBoxItemSharer.className = 'ShareBoxItemSharer';
+
 /**
  * Shares a script, costume or sound dragged to the ShareBox. The 'C'/'U' part of CRUD. Part of the API for GUI.
  * @public

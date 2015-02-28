@@ -111,6 +111,8 @@ function List(array) {
     this.lastChanged = Date.now();
 }
 
+List.className = 'List';
+
 List.prototype.toString = function () {
     return 'a List [' + this.asArray() + ']';
 };
@@ -363,6 +365,7 @@ List.prototype.equalTo = function (other) {
 ListWatcherMorph.prototype = new BoxMorph();
 ListWatcherMorph.prototype.constructor = ListWatcherMorph;
 ListWatcherMorph.uber = BoxMorph.prototype;
+ListWatcherMorph.className = 'ListWatcherMorph';
 
 // ListWatcherMorph default settings
 

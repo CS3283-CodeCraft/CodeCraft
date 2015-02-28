@@ -31,7 +31,6 @@ var TextMorph = Class.create(Morph, {
 	        fontName,
 	        shadowOffset,
 	        shadowColor);
-	    this.className = 'TextMorph';
 	},
 
 
@@ -536,6 +535,7 @@ var TextMorph = Class.create(Morph, {
 })
 
 TextMorph.uber = Morph.prototype;
+TextMorph.className = 'TextMorph';
 
 module.exports = TextMorph;
 

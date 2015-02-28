@@ -5,7 +5,6 @@ var MouseSensorMorph = Class.create(BoxMorph, {
 	
 	initialize: function(edge, border, borderColor) {
 	    this.init(edge, border, borderColor);
-	    this.className = 'MouseSensorMorph';
 	},
 
 	init: function ($super, edge, border, borderColor) {
@@ -67,6 +66,7 @@ var MouseSensorMorph = Class.create(BoxMorph, {
 })
 
 MouseSensorMorph.uber = BoxMorph.prototype;
+MouseSensorMorph.className = 'MouseSensorMorph';
 
 module.exports = MouseSensorMorph;
 

@@ -4,11 +4,11 @@ var ShadowMorph = Class.create(Morph, {
 	
 	initialize: function(){
 		this.init();
-		this.className = 'ShadowMorph';
 	}
 
 })
 
 ShadowMorph.uber = Morph.prototype;
+ShadowMorph.className = 'ShadowMorph';
 
 module.exports = ShadowMorph;

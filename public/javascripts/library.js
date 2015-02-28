@@ -21,6 +21,7 @@ var SelectionDialogBoxMorph;
 LibraryMorph.prototype = new DialogBoxMorph();
 LibraryMorph.prototype.constructor = LibraryMorph;
 LibraryMorph.uber = DialogBoxMorph.prototype;
+LibraryMorph.className = 'LibraryMorph';
 
 LibraryMorph.prototype.padding = 10;
 

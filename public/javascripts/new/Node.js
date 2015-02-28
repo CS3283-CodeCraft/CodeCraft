@@ -4,7 +4,6 @@ var Node = Class.create({
 
     initialize: function(parent, childrenArray){
         this.init(parent || null, childrenArray || []);
-        this.className = 'Node';
     },
 
     init: function (parent, childrenArray) {
@@ -100,23 +99,24 @@ var Node = Class.create({
 	    });
 	},
 
-	parentThatIsA: function (constructor) {
+	parentThatIsA: function (constructorName) {
 	    // including myself
-	    if (this instanceof constructor) {
+	    if (this.instanceOf(constructorName)) {
 	        return this;
 	    }
-	    if (!this.parent) {
-	        return null;
+
+	    if (!this.parent){
+	    	return null;
 	    }
-	    return this.parent.parentThatIsA(constructor);
+		return this.parent.parentThatIsA(constructorName);
 	},
 
-	parentThatIsAnyOf: function (constructors) {
+	parentThatIsAnyOf: function (constructorNames) {
 	    // including myself
 	    var yup = false,
 	        myself = this;
-	    constructors.forEach(function (each) {
-	        if (myself.constructor === each) {
+	    constructorNames.forEach(function (each) {
+	        if (myself.instanceOf(each)) {
 	            yup = true;
 	            return;
 	        }
@@ -125,11 +125,13 @@ var Node = Class.create({
 	        return this;
 	    }
 	    if (!this.parent) {
-	        return null;
+	    	return null;
 	    }
-	    return this.parent.parentThatIsAnyOf(constructors);
+	    return this.parent.parentThatIsAnyOf(constructorNames);
 	}
 
 });
+
+Node.className = 'Node';
 
 module.exports = Node;

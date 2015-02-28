@@ -9,7 +9,6 @@ var GrayPaletteMorph = Class.create(ColorPaletteMorph, {
         	target || null,
         	sizePoint || new Point(80, 10)
     	);
-		this.className = 'GrayPaletteMorph';
 	},
 
 	drawNew: function () {
@@ -29,6 +28,7 @@ var GrayPaletteMorph = Class.create(ColorPaletteMorph, {
 })
 
 GrayPaletteMorph.uber = ColorPaletteMorph.prototype;
+GrayPaletteMorph.className = 'GrayPaletteMorph';
 
 module.exports = GrayPaletteMorph;
 

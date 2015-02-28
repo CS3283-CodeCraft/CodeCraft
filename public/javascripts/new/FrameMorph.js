@@ -10,7 +10,6 @@ var FrameMorph = Class.create(Morph, {
     
     initialize: function(aScrollFrame) {
         this.init(aScrollFrame);
-        this.className = 'FrameMorph';
     },
 
     init: function ($super, aScrollFrame) {
@@ -53,7 +52,7 @@ var FrameMorph = Class.create(Morph, {
         }
         this.drawOn(aCanvas, dirty);
         this.children.forEach(function (child) {
-            if (child.className == 'ShadowMorph') {
+            if (child.instanceOf('ShadowMorph')) {
                 child.fullDrawOn(aCanvas, rectangle);
             } else {
                 child.fullDrawOn(aCanvas, dirty);
@@ -139,7 +138,7 @@ var FrameMorph = Class.create(Morph, {
 
         if (this.scrollFrame.isTextLineWrapping) {
             this.children.forEach(function (morph) {
-                if (morph.className == 'TextMorph') {
+                if (morph.instanceOf('TextMorph')) {
                     morph.setWidth(myself.width());
                     myself.setHeight(
                         Math.max(morph.height(), myself.scrollFrame.height())
@@ -199,6 +198,7 @@ var FrameMorph = Class.create(Morph, {
 })
 
 FrameMorph.uber = Morph.prototype;
+FrameMorph.className = 'FrameMorph';
 
 module.exports = FrameMorph;
 
