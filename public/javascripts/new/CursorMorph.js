@@ -28,7 +28,7 @@ var CursorMorph = Class.create(BlinkerMorph, {
         this.setExtent(new Point(Math.max(Math.floor(ls / 20), 1), ls));
         this.drawNew();
         this.image.getContext('2d').font = this.target.font();
-        if (this.target.className == 'TextMorph' &&
+        if (this.target.instanceOf('TextMorph') &&
                 (this.target.alignment !== 'left')) {
             this.target.setAlignmentToLeft();
         }
@@ -129,7 +129,7 @@ var CursorMorph = Class.create(BlinkerMorph, {
             this.keyDownEventUsed = true;
             break;
         case 13:
-            if (this.target.className == 'StringMorph') {
+            if (this.target.instanceOf('StringMorph')) {
                 this.accept();
             } else {
                 this.insert('\n');
@@ -186,7 +186,7 @@ var CursorMorph = Class.create(BlinkerMorph, {
         this.show();
         this.setPosition(pos);
         if (this.parent
-                && this.parent.parent.className == 'ScrollFrameMorph'
+                && this.parent.parent.instanceOf('ScrollFrameMorph')
                 && this.target.isScrollable) {
             this.parent.parent.scrollCursorIntoView(this);
         }
