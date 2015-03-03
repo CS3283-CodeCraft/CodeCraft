@@ -54,11 +54,13 @@ function localize(string) {
 }
 
 // Localizer /////////////////////////////////////////////////////////////
-
+BlockMorph.className = 'BlockMorph';
 function Localizer(language, dict) {
     this.language = language || 'en';
     this.dict = dict || {};
 }
+
+Localizer.className = 'Localizer';
 
 Localizer.prototype.translate = function (string) {
     return Object.prototype.hasOwnProperty.call(

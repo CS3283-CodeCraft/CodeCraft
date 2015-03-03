@@ -150,7 +150,7 @@ var SpriteHighlightMorph;
 SpriteMorph.prototype = new PenMorph();
 SpriteMorph.prototype.constructor = SpriteMorph;
 SpriteMorph.uber = PenMorph.prototype;
-
+SpriteMorph.className = 'SpriteMorph';
 // SpriteMorph settings
 
 SpriteMorph.prototype.categories =
@@ -1975,7 +1975,7 @@ SpriteMorph.prototype.blockTemplates = function (category) {
                             myself.toggleVariableWatcher(pair[0], pair[1]);
                             myself.blocksCache[cat] = null;
                             myself.paletteCache[cat] = null;
-                            myself.parentThatIsA(IDE_Morph).refreshPalette();
+                            myself.parentThatIsA('IDE_Morph').refreshPalette();
                         }
                     },
                     myself
@@ -2077,8 +2077,8 @@ SpriteMorph.prototype.blockTemplates = function (category) {
         button = new PushButtonMorph(
             null,
             function () {
-                var ide = myself.parentThatIsA(IDE_Morph),
-                    stage = myself.parentThatIsA(StageMorph);
+                var ide = myself.parentThatIsA('IDE_Morph'),
+                    stage = myself.parentThatIsA('StageMorph');
                 new BlockDialogMorph(
                     null,
                     function (definition) {
@@ -2126,7 +2126,7 @@ SpriteMorph.prototype.freshPalette = function (category) {
         blocks,
         hideNextSpace = false,
         myself = this,
-        stage = this.parentThatIsA(StageMorph),
+        stage = this.parentThatIsA('StageMorph'),
         oldFlag = Morph.prototype.trackChanges;
 
     Morph.prototype.trackChanges = false;
@@ -2140,7 +2140,7 @@ SpriteMorph.prototype.freshPalette = function (category) {
 
     palette.userMenu = function () {
         var menu = new MenuMorph(),
-            ide = this.parentThatIsA(IDE_Morph),
+            ide = this.parentThatIsA('IDE_Morph'),
             more = {
                 operators:
                     ['reifyScript', 'reifyReporter', 'reifyPredicate'],
@@ -2326,7 +2326,7 @@ SpriteMorph.prototype.blocksMatching = function (searchString, strictly) {
         blocksDict,
         myself = this,
         search = searchString.toLowerCase(),
-        stage = this.parentThatIsA(StageMorph);
+        stage = this.parentThatIsA('StageMorph');
 
     function labelOf(aBlockSpec) {
         var words = (BlockMorph.prototype.parseSpec(aBlockSpec)),
@@ -2391,7 +2391,7 @@ SpriteMorph.prototype.blocksMatching = function (searchString, strictly) {
 SpriteMorph.prototype.searchBlocks = function () {
     var myself = this,
         unit = SyntaxElementMorph.prototype.fontSize,
-        ide = this.parentThatIsA(IDE_Morph),
+        ide = this.parentThatIsA('IDE_Morph'),
         oldSearch = '',
         searchBar = new InputFieldMorph(''),
         searchPane = ide.createPalette('forSearch');
@@ -2451,7 +2451,7 @@ SpriteMorph.prototype.searchBlocks = function () {
 // SpriteMorph variable management
 
 SpriteMorph.prototype.addVariable = function (name, isGlobal) {
-    var ide = this.parentThatIsA(IDE_Morph);
+    var ide = this.parentThatIsA('IDE_Morph');
     if (isGlobal) {
         this.variables.parentFrame.addVar(name);
         if (ide) {
@@ -2464,7 +2464,7 @@ SpriteMorph.prototype.addVariable = function (name, isGlobal) {
 };
 
 SpriteMorph.prototype.deleteVariable = function (varName) {
-    var ide = this.parentThatIsA(IDE_Morph);
+    var ide = this.parentThatIsA('IDE_Morph');
     this.deleteVariableWatcher(varName);
     this.variables.deleteVar(varName);
     if (ide) {
@@ -2586,7 +2586,7 @@ SpriteMorph.prototype.addSound = function (audio, name) {
 };
 
 SpriteMorph.prototype.playSound = function (name) {
-    var stage = this.parentThatIsA(StageMorph),
+    var stage = this.parentThatIsA('StageMorph'),
         sound = detect(
             this.sounds.asArray(),
             function (s) {return s.name === name; }
@@ -2611,7 +2611,7 @@ SpriteMorph.prototype.reportSounds = function () {
 // SpriteMorph user menu
 
 SpriteMorph.prototype.userMenu = function () {
-    var ide = this.parentThatIsA(IDE_Morph),
+    var ide = this.parentThatIsA('IDE_Morph'),
         menu = new MenuMorph(this);
 
     if (ide && ide.isAppMode) {
@@ -2637,21 +2637,21 @@ SpriteMorph.prototype.userMenu = function () {
 };
 
 SpriteMorph.prototype.exportSprite = function () {
-    var ide = this.parentThatIsA(IDE_Morph);
+    var ide = this.parentThatIsA('IDE_Morph');
     if (ide) {
         ide.exportSprite(this);
     }
 };
 
 SpriteMorph.prototype.edit = function () {
-    var ide = this.parentThatIsA(IDE_Morph);
+    var ide = this.parentThatIsA('IDE_Morph');
     if (ide && !ide.isAppMode) {
         ide.selectSprite(this);
     }
 };
 
 SpriteMorph.prototype.showOnStage = function () {
-    var stage = this.parentThatIsA(StageMorph);
+    var stage = this.parentThatIsA('StageMorph');
     if (stage) {
         this.keepWithin(stage);
         stage.add(this);
@@ -2660,14 +2660,14 @@ SpriteMorph.prototype.showOnStage = function () {
 };
 
 SpriteMorph.prototype.duplicate = function () {
-    var ide = this.parentThatIsA(IDE_Morph);
+    var ide = this.parentThatIsA('IDE_Morph');
     if (ide) {
         ide.duplicateSprite(this);
     }
 };
 
 SpriteMorph.prototype.remove = function () {
-    var ide = this.parentThatIsA(IDE_Morph);
+    var ide = this.parentThatIsA('IDE_Morph');
     if (ide) {
         ide.removeSprite(this);
     }
@@ -2676,7 +2676,7 @@ SpriteMorph.prototype.remove = function () {
 // SpriteMorph cloning (experimental)
 
 SpriteMorph.prototype.createClone = function () {
-    var stage = this.parentThatIsA(StageMorph);
+    var stage = this.parentThatIsA('StageMorph');
     if (stage && stage.cloneCount <= 300) {
         this.fullCopy().clonify(stage);
     }
@@ -3082,7 +3082,7 @@ SpriteMorph.prototype.doThink = function (data) {
 
 SpriteMorph.prototype.bubble = function (data, isThought, isQuestion) {
     var bubble,
-        stage = this.parentThatIsA(StageMorph);
+        stage = this.parentThatIsA('StageMorph');
 
     this.stopTalking();
     if (data === '' || isNil(data)) {return; }
@@ -3104,7 +3104,7 @@ SpriteMorph.prototype.talkBubble = function () {
 };
 
 SpriteMorph.prototype.positionTalkBubble = function () {
-    var stage = this.parentThatIsA(StageMorph),
+    var stage = this.parentThatIsA('StageMorph'),
         stageScale = stage ? stage.scale : 1,
         bubble = this.talkBubble(),
         middle = this.center().y;
@@ -3315,7 +3315,7 @@ SpriteMorph.prototype.turnLeft = function (degrees) {
 };
 
 SpriteMorph.prototype.xPosition = function () {
-    var stage = this.parentThatIsA(StageMorph);
+    var stage = this.parentThatIsA('StageMorph');
 
     if (!stage && this.parent.grabOrigin) { // I'm currently being dragged
         stage = this.parent.grabOrigin.origin;
@@ -3327,7 +3327,7 @@ SpriteMorph.prototype.xPosition = function () {
 };
 
 SpriteMorph.prototype.yPosition = function () {
-    var stage = this.parentThatIsA(StageMorph);
+    var stage = this.parentThatIsA('StageMorph');
 
     if (!stage && this.parent.grabOrigin) { // I'm currently being dragged
         stage = this.parent.grabOrigin.origin;
@@ -3347,7 +3347,7 @@ SpriteMorph.prototype.penSize = function () {
 };
 
 SpriteMorph.prototype.gotoXY = function (x, y, justMe) {
-    var stage = this.parentThatIsA(StageMorph),
+    var stage = this.parentThatIsA('StageMorph'),
         newX,
         newY,
         dest;
@@ -3405,7 +3405,7 @@ SpriteMorph.prototype.glide = function (
 
 SpriteMorph.prototype.bounceOffEdge = function () {
     // taking nested parts into account
-    var stage = this.parentThatIsA(StageMorph),
+    var stage = this.parentThatIsA('StageMorph'),
         fb = this.nestingBounds(),
         dirX,
         dirY;
@@ -3496,7 +3496,7 @@ SpriteMorph.prototype.allHatBlocksForKey = function (key) {
 // SpriteMorph events
 
 SpriteMorph.prototype.mouseClickLeft = function () {
-    var stage = this.parentThatIsA(StageMorph),
+    var stage = this.parentThatIsA('StageMorph'),
         hats = this.allHatBlocksFor('__click__'),
         procs = [];
 
@@ -3513,7 +3513,7 @@ SpriteMorph.prototype.mouseDoubleClick = function () {
 // SpriteMorph timer
 
 SpriteMorph.prototype.getTimer = function () {
-    var stage = this.parentThatIsA(StageMorph);
+    var stage = this.parentThatIsA('StageMorph');
     if (stage) {
         return stage.getTimer();
     }
@@ -3523,7 +3523,7 @@ SpriteMorph.prototype.getTimer = function () {
 // SpriteMorph tempo
 
 SpriteMorph.prototype.getTempo = function () {
-    var stage = this.parentThatIsA(StageMorph);
+    var stage = this.parentThatIsA('StageMorph');
     if (stage) {
         return stage.getTempo();
     }
@@ -3533,7 +3533,7 @@ SpriteMorph.prototype.getTempo = function () {
 // SpriteMorph last message
 
 SpriteMorph.prototype.getLastMessage = function () {
-    var stage = this.parentThatIsA(StageMorph);
+    var stage = this.parentThatIsA('StageMorph');
     if (stage) {
         return stage.getLastMessage();
     }
@@ -3543,13 +3543,13 @@ SpriteMorph.prototype.getLastMessage = function () {
 // SpriteMorph user prompting
 
 SpriteMorph.prototype.getLastAnswer = function () {
-    return this.parentThatIsA(StageMorph).lastAnswer;
+    return this.parentThatIsA('StageMorph').lastAnswer;
 };
 
 // SpriteMorph mouse coordinates
 
 SpriteMorph.prototype.reportMouseX = function () {
-    var stage = this.parentThatIsA(StageMorph);
+    var stage = this.parentThatIsA('StageMorph');
     if (stage) {
         return stage.reportMouseX();
     }
@@ -3557,7 +3557,7 @@ SpriteMorph.prototype.reportMouseX = function () {
 };
 
 SpriteMorph.prototype.reportMouseY = function () {
-    var stage = this.parentThatIsA(StageMorph);
+    var stage = this.parentThatIsA('StageMorph');
     if (stage) {
         return stage.reportMouseY();
     }
@@ -3567,7 +3567,7 @@ SpriteMorph.prototype.reportMouseY = function () {
 // SpriteMorph variable watchers (for palette checkbox toggling)
 
 SpriteMorph.prototype.findVariableWatcher = function (varName) {
-    var stage = this.parentThatIsA(StageMorph),
+    var stage = this.parentThatIsA('StageMorph'),
         myself = this;
     if (stage === null) {
         return null;
@@ -3584,7 +3584,7 @@ SpriteMorph.prototype.findVariableWatcher = function (varName) {
 };
 
 SpriteMorph.prototype.toggleVariableWatcher = function (varName, isGlobal) {
-    var stage = this.parentThatIsA(StageMorph),
+    var stage = this.parentThatIsA('StageMorph'),
         watcher,
         others;
     if (stage === null) {
@@ -3623,7 +3623,7 @@ SpriteMorph.prototype.toggleVariableWatcher = function (varName, isGlobal) {
 };
 
 SpriteMorph.prototype.showingVariableWatcher = function (varName) {
-    var stage = this.parentThatIsA(StageMorph),
+    var stage = this.parentThatIsA('StageMorph'),
         watcher;
     if (stage === null) {
         return false;
@@ -3636,7 +3636,7 @@ SpriteMorph.prototype.showingVariableWatcher = function (varName) {
 };
 
 SpriteMorph.prototype.deleteVariableWatcher = function (varName) {
-    var stage = this.parentThatIsA(StageMorph),
+    var stage = this.parentThatIsA('StageMorph'),
         watcher;
     if (stage === null) {
         return null;
@@ -3650,7 +3650,7 @@ SpriteMorph.prototype.deleteVariableWatcher = function (varName) {
 // SpriteMorph non-variable watchers
 
 SpriteMorph.prototype.toggleWatcher = function (selector, label, color) {
-    var stage = this.parentThatIsA(StageMorph),
+    var stage = this.parentThatIsA('StageMorph'),
         watcher,
         others;
     if (!stage) { return; }
@@ -3684,7 +3684,7 @@ SpriteMorph.prototype.toggleWatcher = function (selector, label, color) {
 };
 
 SpriteMorph.prototype.showingWatcher = function (selector) {
-    var stage = this.parentThatIsA(StageMorph),
+    var stage = this.parentThatIsA('StageMorph'),
         watcher;
     if (stage === null) {
         return false;
@@ -3721,7 +3721,7 @@ SpriteMorph.prototype.deleteAllBlockInstances = function (definition) {
 SpriteMorph.prototype.allBlockInstances = function (definition) {
     var stage, objects, blocks = [], inDefinitions;
     if (definition.isGlobal) {
-        stage = this.parentThatIsA(StageMorph);
+        stage = this.parentThatIsA('StageMorph');
         objects = stage.children.filter(function (morph) {
             return morph instanceof SpriteMorph;
         });
@@ -3794,7 +3794,7 @@ SpriteMorph.prototype.allEditorBlockInstances = function (definition) {
 
 
 SpriteMorph.prototype.paletteBlockInstance = function (definition) {
-    var ide = this.parentThatIsA(IDE_Morph);
+    var ide = this.parentThatIsA('IDE_Morph');
     if (!ide) {return null; }
     return detect(
         ide.palette.contents.children,
@@ -3835,7 +3835,7 @@ SpriteMorph.prototype.doubleDefinitionsFor = function (definition) {
         stage;
 
     if (definition.isGlobal) {
-        stage = this.parentThatIsA(StageMorph);
+        stage = this.parentThatIsA('StageMorph');
         if (!stage) {return []; }
         blockList = stage.globalBlocks;
     } else {
@@ -3860,7 +3860,7 @@ SpriteMorph.prototype.replaceDoubleDefinitionsFor = function (definition) {
         });
     });
     if (definition.isGlobal) {
-        stage = this.parentThatIsA(StageMorph);
+        stage = this.parentThatIsA('StageMorph');
         stage.globalBlocks = stage.globalBlocks.filter(function (def) {
             return !contains(doubles, def);
         });
@@ -3869,7 +3869,7 @@ SpriteMorph.prototype.replaceDoubleDefinitionsFor = function (definition) {
             return !contains(doubles, def);
         });
     }
-    ide = this.parentThatIsA(IDE_Morph);
+    ide = this.parentThatIsA('IDE_Morph');
     if (ide) {
         ide.flushPaletteCache();
         ide.refreshPalette();
@@ -4166,7 +4166,7 @@ SpriteMorph.prototype.newCostumeName = function (name, ignoredCostume) {
 
 SpriteMorph.prototype.doScreenshot = function (imgSource, data) {
     var canvas,
-        stage = this.parentThatIsA(StageMorph),
+        stage = this.parentThatIsA('StageMorph'),
         costume;
     data = this.newCostumeName(data);
     if (imgSource[0] === undefined) {
@@ -4189,6 +4189,7 @@ SpriteMorph.prototype.doScreenshot = function (imgSource, data) {
 SpriteHighlightMorph.prototype = new Morph();
 SpriteHighlightMorph.prototype.constructor = SpriteHighlightMorph;
 SpriteHighlightMorph.uber = Morph.prototype;
+SpriteHighlightMorph.className = 'SpriteHighlightMorph';
 
 // SpriteHighlightMorph instance creation:
 
@@ -4207,7 +4208,7 @@ function SpriteHighlightMorph() {
 StageMorph.prototype = new FrameMorph();
 StageMorph.prototype.constructor = StageMorph;
 StageMorph.uber = FrameMorph.prototype;
-
+StageMorph.className = 'StageMorph';
 // StageMorph preferences settings
 
 StageMorph.prototype.dimensions = new Point(480, 360); // unscaled extent
@@ -4682,7 +4683,7 @@ StageMorph.prototype.fireKeyEvent = function (key) {
     var evt = key.toLowerCase(),
         hats = [],
         procs = [],
-        ide = this.parentThatIsA(IDE_Morph),
+        ide = this.parentThatIsA('IDE_Morph'),
         myself = this;
 
     this.keysPressed[evt] = true;
@@ -4737,7 +4738,7 @@ StageMorph.prototype.inspectKeyEvent
 StageMorph.prototype.fireGreenFlagEvent = function () {
     var procs = [],
         hats = [],
-        ide = this.parentThatIsA(IDE_Morph),
+        ide = this.parentThatIsA('IDE_Morph'),
         myself = this;
 
     this.children.concat(this).forEach(function (morph) {
@@ -4758,7 +4759,7 @@ StageMorph.prototype.fireGreenFlagEvent = function () {
 };
 
 StageMorph.prototype.fireStopAllEvent = function () {
-    var ide = this.parentThatIsA(IDE_Morph);
+    var ide = this.parentThatIsA('IDE_Morph');
     this.threads.resumeAll(this.stage);
     this.keysPressed = {};
     this.threads.stopAll();
@@ -5096,7 +5097,7 @@ StageMorph.prototype.blockTemplates = function (category) {
                             myself.toggleVariableWatcher(pair[0], pair[1]);
                             myself.blocksCache[cat] = null;
                             myself.paletteCache[cat] = null;
-                            myself.parentThatIsA(IDE_Morph).refreshPalette();
+                            myself.parentThatIsA('IDE_Morph').refreshPalette();
                         }
                     },
                     myself
@@ -5192,7 +5193,7 @@ StageMorph.prototype.blockTemplates = function (category) {
         button = new PushButtonMorph(
             null,
             function () {
-                var ide = myself.parentThatIsA(IDE_Morph);
+                var ide = myself.parentThatIsA('IDE_Morph');
                 new BlockDialogMorph(
                     null,
                     function (definition) {
@@ -5230,7 +5231,7 @@ StageMorph.prototype.clear = function () {
 // StageMorph user menu
 
 StageMorph.prototype.userMenu = function () {
-    var ide = this.parentThatIsA(IDE_Morph),
+    var ide = this.parentThatIsA('IDE_Morph'),
         menu = new MenuMorph(this),
         shiftClicked = this.world().currentKey === 16,
         myself = this;
@@ -5528,7 +5529,7 @@ StageMorph.prototype.replaceDoubleDefinitionsFor
 SpriteBubbleMorph.prototype = new SpeechBubbleMorph();
 SpriteBubbleMorph.prototype.constructor = SpriteBubbleMorph;
 SpriteBubbleMorph.uber = SpeechBubbleMorph.prototype;
-
+SpriteBubbleMorph.className = 'SpriteBubbleMorph';
 // SpriteBubbleMorph instance creation:
 
 function SpriteBubbleMorph(data, scale, isThought, isQuestion) {
@@ -6027,7 +6028,7 @@ Costume.prototype.isTainted = function () {
 SVG_Costume.prototype = new Costume();
 SVG_Costume.prototype.constructor = SVG_Costume;
 SVG_Costume.uber = Costume.prototype;
-
+SVG_Costume.className = 'SVG_Costume';
 // SVG_Costume instance creation
 
 function SVG_Costume(svgImage, name, rotationCenter) {
@@ -6078,7 +6079,7 @@ SVG_Costume.prototype.shrinkToFit = function (extentPoint) {
 CostumeEditorMorph.prototype = new Morph();
 CostumeEditorMorph.prototype.constructor = CostumeEditorMorph;
 CostumeEditorMorph.uber = Morph.prototype;
-
+CostumeEditorMorph.className = 'CostumeEditorMorph';
 // CostumeEditorMorph preferences settings:
 CostumeEditorMorph.prototype.size = Costume.prototype.maxExtent();
 
@@ -6313,7 +6314,7 @@ Note.prototype.stop = function () {
 CellMorph.prototype = new BoxMorph();
 CellMorph.prototype.constructor = CellMorph;
 CellMorph.uber = BoxMorph.prototype;
-
+CellMorph.className = 'CellMorph';
 // CellMorph instance creation:
 
 function CellMorph(contents, color, idx, parentCell) {
@@ -6375,7 +6376,7 @@ CellMorph.prototype.fixLayout = function () {
     if (this.parent && this.parent.fixLayout) { // variable watcher
         this.parent.fixLayout();
     } else {
-        listwatcher = this.parentThatIsA(ListWatcherMorph);
+        listwatcher = this.parentThatIsA('ListWatcherMorph');
         if (listwatcher) {
             listwatcher.fixLayout();
         }
@@ -6565,7 +6566,7 @@ CellMorph.prototype.drawShadow = function (context, radius, inset) {
 CellMorph.prototype.layoutChanged = function () {
     var context,
         fontSize = SyntaxElementMorph.prototype.fontSize,
-        listWatcher = this.parentThatIsA(ListWatcherMorph);
+        listWatcher = this.parentThatIsA('ListWatcherMorph');
 
     if (this.isBig) {
         fontSize = fontSize * 1.5;
@@ -6624,7 +6625,7 @@ CellMorph.prototype.layoutChanged = function () {
 CellMorph.prototype.reactToEdit = function (textMorph) {
     var listWatcher;
     if (!isNil(this.idx)) {
-        listWatcher = this.parentThatIsA(ListWatcherMorph);
+        listWatcher = this.parentThatIsA('ListWatcherMorph');
         if (listWatcher) {
             listWatcher.list.put(textMorph.text, this.idx);
         }
@@ -6653,7 +6654,7 @@ CellMorph.prototype.mouseClickLeft = function (pos) {
 WatcherMorph.prototype = new BoxMorph();
 WatcherMorph.prototype.constructor = WatcherMorph;
 WatcherMorph.uber = BoxMorph.prototype;
-
+WatcherMorph.className = 'WatcherMorph';
 // WatcherMorph instance creation:
 
 function WatcherMorph(label, color, target, getter, isHidden) {
@@ -6701,7 +6702,7 @@ WatcherMorph.prototype.init = function (
 // WatcherMorph accessing:
 
 WatcherMorph.prototype.isTemporary = function () {
-    var stage = this.parentThatIsA(StageMorph);
+    var stage = this.parentThatIsA('StageMorph');
     if (this.target instanceof VariableFrame) {
         if (stage) {
             if (this.target === stage.variables.parentFrame) {
@@ -6964,7 +6965,7 @@ WatcherMorph.prototype.userMenu = function () {
             'import...',
             function () {
                 var inp = document.createElement('input'),
-                    ide = myself.parentThatIsA(IDE_Morph);
+                    ide = myself.parentThatIsA('IDE_Morph');
                 if (ide.filePicker) {
                     document.body.removeChild(ide.filePicker);
                     ide.filePicker = null;
@@ -7140,7 +7141,7 @@ WatcherMorph.prototype.drawNew = function () {
 StagePrompterMorph.prototype = new BoxMorph();
 StagePrompterMorph.prototype.constructor = StagePrompterMorph;
 StagePrompterMorph.uber = BoxMorph.prototype;
-
+StagePrompterMorph.className = 'StagePrompterMorph';
 // StagePrompterMorph instance creation:
 
 function StagePrompterMorph(question) {

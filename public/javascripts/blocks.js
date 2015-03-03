@@ -184,54 +184,7 @@ var CommentMorph;
 var ArgLabelMorph;
 var TextSlotMorph;
 
-WorldMorph.prototype.customMorphs = function () {
-    // add examples to the world's demo menu
 
-    return [];
-
-/*
-    return [
-        new SymbolMorph(
-            'pipette',
-            50,
-            new Color(250, 250, 250),
-            new Point(-1, -1),
-            new Color(20, 20, 20)
-        )
-    ];
-*/
-/*
-    var sm = new ScriptsMorph();
-    sm.setExtent(new Point(800, 600));
-
-    return [
-        new SymbolMorph(),
-        new HatBlockMorph(),
-        new CommandBlockMorph(),
-        sm,
-        new CommandSlotMorph(),
-        new CSlotMorph(),
-        new InputSlotMorph(),
-        new InputSlotMorph(null, true),
-        new BooleanSlotMorph(),
-        new ColorSlotMorph(),
-        new TemplateSlotMorph('foo'),
-        new ReporterBlockMorph(),
-        new ReporterBlockMorph(true),
-        new ArrowMorph(),
-        new MultiArgMorph(),
-        new FunctionSlotMorph(),
-        new ReporterSlotMorph(),
-        new ReporterSlotMorph(true),
-//        new DialogBoxMorph('Dialog Box'),
-//        new InputFieldMorph('Input Field')
-        new RingMorph(),
-        new RingCommandSlotMorph(),
-        new RingReporterSlotMorph(),
-        new RingReporterSlotMorph(true)
-    ];
-*/
-};
 
 
 // SyntaxElementMorph //////////////////////////////////////////////////
@@ -243,7 +196,7 @@ WorldMorph.prototype.customMorphs = function () {
 SyntaxElementMorph.prototype = new Morph();
 SyntaxElementMorph.prototype.constructor = SyntaxElementMorph;
 SyntaxElementMorph.uber = Morph.prototype;
-
+SyntaxElementMorph.className = 'SyntaxElementMorph';
 // SyntaxElementMorph preferences settings:
 
 /*
@@ -413,7 +366,7 @@ SyntaxElementMorph.prototype.allEmptySlots = function () {
 };
 
 SyntaxElementMorph.prototype.replaceInput = function (oldArg, newArg) {
-    var scripts = this.parentThatIsA(ScriptsMorph),
+    var scripts = this.parentThatIsA('ScriptsMorph'),
         replacement = newArg,
         idx = this.children.indexOf(oldArg),
         i = 0,
@@ -573,7 +526,7 @@ SyntaxElementMorph.prototype.reactToGrabOf = function (grabbedMorph) {
     var topBlock = this.topBlock(),
         affected;
     if (grabbedMorph instanceof CommandBlockMorph) {
-        affected = this.parentThatIsA(CommandSlotMorph);
+        affected = this.parentThatIsA('CommandSlotMorph');
         if (affected) {
             this.startLayout();
             affected.fixLayout();
@@ -1583,14 +1536,14 @@ SyntaxElementMorph.prototype.fixLayout = function () {
     // find out if one of my parents needs to be fixed
     if (this instanceof CommandBlockMorph) {
         if (this.height() !== initialExtent.y) {
-            affected = this.parentThatIsA(CommandSlotMorph);
+            affected = this.parentThatIsA('CommandSlotMorph');
             if (affected) {
                 affected.fixLayout();
             }
         }
         if (this.width() !== initialExtent.x) {
             affected = this.parentThatIsAnyOf(
-                [ReporterBlockMorph, CommandSlotMorph, RingCommandSlotMorph]
+                ['ReporterBlockMorph', 'CommandSlotMorph', 'RingCommandSlotMorph']
             );
             if (affected) {
                 affected.fixLayout();
@@ -1637,7 +1590,7 @@ SyntaxElementMorph.prototype.showBubble = function (value, exportPic) {
         img,
         morphToShow,
         isClickable = false,
-        sf = this.parentThatIsA(ScrollFrameMorph),
+        sf = this.parentThatIsA('ScrollFrameMorph'),
         wrrld = this.world();
 
     if ((value === undefined) || !wrrld) {
@@ -1897,6 +1850,8 @@ function BlockMorph() {
     this.init();
 }
 
+BlockMorph.className = 'BlockMorph';
+
 BlockMorph.prototype.init = function () {
     this.selector = null; // name of method to be triggered
     this.blockSpec = ''; // formal description of label and arguments
@@ -2141,7 +2096,7 @@ BlockMorph.prototype.userMenu = function () {
         "duplicate",
         function () {
             var dup = myself.fullCopy(),
-                ide = myself.parentThatIsA(IDE_Morph);
+                ide = myself.parentThatIsA('IDE_Morph');
             dup.pickUp(world);
             if (ide) {
                 world.hand.grabOrigin = {
@@ -2158,7 +2113,7 @@ BlockMorph.prototype.userMenu = function () {
             function () {
                 var cpy = this.fullCopy(),
                     nb = cpy.nextBlock(),
-                    ide = myself.parentThatIsA(IDE_Morph);
+                    ide = myself.parentThatIsA('IDE_Morph');
                 if (nb) {nb.destroy(); }
                 cpy.pickUp(world);
                 if (ide) {
@@ -2182,7 +2137,7 @@ BlockMorph.prototype.userMenu = function () {
         },
         'open a new window\nwith a picture of this script'
     );
-    if (this.parentThatIsA(RingMorph)) {
+    if (this.parentThatIsA('RingMorph')) {
         menu.addLine();
         menu.addItem("unringify", 'unringify');
         menu.addItem("ringify", 'ringify');
@@ -2231,7 +2186,7 @@ BlockMorph.prototype.developersMenu = function () {
 };
 
 BlockMorph.prototype.hidePrimitive = function () {
-    var ide = this.parentThatIsA(IDE_Morph),
+    var ide = this.parentThatIsA('IDE_Morph'),
         dict,
         cat;
     if (!ide) {return; }
@@ -2251,7 +2206,7 @@ BlockMorph.prototype.hidePrimitive = function () {
 
 BlockMorph.prototype.deleteBlock = function () {
     // delete just this one block, keep inputs and next block around
-    var scripts = this.parentThatIsA(ScriptsMorph),
+    var scripts = this.parentThatIsA('ScriptsMorph'),
         nb = this.nextBlock ? this.nextBlock() : null,
         tobefixed,
         isindef;
@@ -2272,7 +2227,7 @@ BlockMorph.prototype.deleteBlock = function () {
     } else { // CommandBlockMorph
         if (this.parent) {
             if (this.parent.fixLayout) {
-                tobefixed = this.parentThatIsA(ArgMorph);
+                tobefixed = this.parentThatIsA('ArgMorph');
             }
         } else { // must be in a custom block definition
             isindef = true;
@@ -2318,8 +2273,8 @@ BlockMorph.prototype.ringify = function () {
 
 BlockMorph.prototype.unringify = function () {
     // remove a Ring around me, if any
-    var ring = this.parentThatIsA(RingMorph),
-        scripts = this.parentThatIsA(ScriptsMorph),
+    var ring = this.parentThatIsA('RingMorph'),
+        scripts = this.parentThatIsA('ScriptsMorph'),
         block,
         center;
 
@@ -2890,11 +2845,11 @@ BlockMorph.prototype.fixBlockColor = function (nearestBlock, isForced) {
             if (this.isPrototype) {
                 nearest = null; // this.parent; // the PrototypeHatBlockMorph
             } else if (this instanceof ReporterBlockMorph) {
-                nearest = this.parent.parentThatIsA(BlockMorph);
+                nearest = this.parent.parentThatIsA('BlockMorph');
             } else { // command
-                cslot = this.parentThatIsA(CommandSlotMorph);
+                cslot = this.parentThatIsA('CommandSlotMorph');
                 if (cslot) {
-                    nearest = cslot.parentThatIsA(BlockMorph);
+                    nearest = cslot.parentThatIsA('BlockMorph');
                 }
             }
         }
@@ -3013,7 +2968,7 @@ BlockMorph.prototype.mouseClickLeft = function () {
         return top.mouseClickLeft();
     }
     if (receiver) {
-        stage = receiver.parentThatIsA(StageMorph);
+        stage = receiver.parentThatIsA('StageMorph');
         if (stage) {
             stage.threads.toggleProcess(top);
         }
@@ -3099,7 +3054,7 @@ BlockMorph.prototype.reactToDropOf = function (droppedMorph) {
 BlockMorph.prototype.situation = function () {
     // answer a dictionary specifying where I am right now, so
     // I can slide back to it if I'm dropped somewhere else
-    var scripts = this.parentThatIsA(ScriptsMorph);
+    var scripts = this.parentThatIsA('ScriptsMorph');
     if (scripts) {
         return {
             origin: scripts,
@@ -3186,6 +3141,9 @@ function CommandBlockMorph() {
     this.init();
 }
 
+CommandBlockMorph.className = 'CommandBlockMorph';
+
+
 CommandBlockMorph.prototype.init = function () {
     CommandBlockMorph.uber.init.call(this);
     this.setExtent(new Point(200, 100));
@@ -3214,7 +3172,7 @@ CommandBlockMorph.prototype.nextBlock = function (block) {
     // set / get the block attached to my bottom
     if (block) {
         var nb = this.nextBlock(),
-            affected = this.parentThatIsA(CommandSlotMorph);
+            affected = this.parentThatIsA('CommandSlotMorph');
         this.add(block);
         if (nb) {
             block.bottomBlock().nextBlock(nb);
@@ -3353,7 +3311,7 @@ CommandBlockMorph.prototype.closestAttachTarget = function (newParent) {
 
 CommandBlockMorph.prototype.snap = function () {
     var target = this.closestAttachTarget(),
-        scripts = this.parentThatIsA(ScriptsMorph),
+        scripts = this.parentThatIsA('ScriptsMorph'),
         next,
         offsetY,
         affected;
@@ -3386,7 +3344,7 @@ CommandBlockMorph.prototype.snap = function () {
             if (next) {
                 scripts.add(next);
                 next.moveBy(this.extent().floorDivideBy(2));
-                affected = this.parentThatIsA(CommandSlotMorph);
+                affected = this.parentThatIsA('CommandSlotMorph');
                 if (affected) {
                     affected.fixLayout();
                 }
@@ -3426,7 +3384,7 @@ CommandBlockMorph.prototype.userDestroy = function () {
         this.userDestroyJustThis();
         return;
     }
-    var cslot = this.parentThatIsA(CSlotMorph);
+    var cslot = this.parentThatIsA('CSlotMorph');
     this.destroy();
     if (cslot) {
         cslot.fixLayout();
@@ -3435,15 +3393,15 @@ CommandBlockMorph.prototype.userDestroy = function () {
 
 CommandBlockMorph.prototype.userDestroyJustThis = function () {
     // delete just this one block, reattach next block to the previous one,
-    var scripts = this.parentThatIsA(ScriptsMorph),
-        cs = this.parentThatIsA(CommandSlotMorph),
+    var scripts = this.parentThatIsA('ScriptsMorph'),
+        cs = this.parentThatIsA('CommandSlotMorph'),
         pb,
         nb = this.nextBlock(),
         above,
-        cslot = this.parentThatIsA(CSlotMorph);
+        cslot = this.parentThatIsA('CSlotMorph');
 
     if (this.parent) {
-        pb = this.parent.parentThatIsA(CommandBlockMorph);
+        pb = this.parent.parentThatIsA('CommandBlockMorph');
     }
     if (pb && (pb.nextBlock() === this)) {
         above = pb;
@@ -3857,12 +3815,15 @@ CommandBlockMorph.prototype.drawBottomRightEdge = function (context) {
 HatBlockMorph.prototype = new CommandBlockMorph();
 HatBlockMorph.prototype.constructor = HatBlockMorph;
 HatBlockMorph.uber = CommandBlockMorph.prototype;
+HatBlockMorph.className = 'HatBlockMorph';
 
 // HatBlockMorph instance creation:
 
 function HatBlockMorph() {
     this.init();
 }
+
+
 
 HatBlockMorph.prototype.init = function () {
     HatBlockMorph.uber.init.call(this);
@@ -4035,6 +3996,7 @@ HatBlockMorph.prototype.drawTopLeftEdge = function (context) {
 ReporterBlockMorph.prototype = new BlockMorph();
 ReporterBlockMorph.prototype.constructor = ReporterBlockMorph;
 ReporterBlockMorph.uber = BlockMorph.prototype;
+ReporterBlockMorph.className = 'ReporterBlockMorph';
 
 // ReporterBlockMorph instance creation:
 
@@ -4173,7 +4135,7 @@ ReporterBlockMorph.prototype.ExportResultPic = function () {
         stage;
     if (top !== this) {return; }
     if (receiver) {
-        stage = receiver.parentThatIsA(StageMorph);
+        stage = receiver.parentThatIsA('StageMorph');
         if (stage) {
             stage.threads.stopProcess(top);
             stage.threads.startProcess(top, false, true);
@@ -4559,7 +4521,7 @@ ReporterBlockMorph.prototype.drawDiamond = function (context) {
 RingMorph.prototype = new ReporterBlockMorph();
 RingMorph.prototype.constructor = RingMorph;
 RingMorph.uber = ReporterBlockMorph.prototype;
-
+RingMorph.className = 'RingMorph';
 // RingMorph preferences settings:
 
 // RingMorph.prototype.edge = 2;
@@ -4695,6 +4657,7 @@ RingMorph.prototype.fixBlockColor = function (nearest, isForced) {
 ScriptsMorph.prototype = new FrameMorph();
 ScriptsMorph.prototype.constructor = ScriptsMorph;
 ScriptsMorph.uber = FrameMorph.prototype;
+ScriptsMorph.className = 'ScriptsMorph';
 
 // ScriptsMorph preference settings
 
@@ -5016,16 +4979,16 @@ ScriptsMorph.prototype.closestBlock = function (comment, hand) {
 
 ScriptsMorph.prototype.userMenu = function () {
     var menu = new MenuMorph(this),
-        ide = this.parentThatIsA(IDE_Morph),
+        ide = this.parentThatIsA('IDE_Morph'),
         blockEditor,
         myself = this,
         obj = this.owner,
-        stage = obj.parentThatIsA(StageMorph);
+        stage = obj.parentThatIsA('StageMorph');
 
     if (!ide) {
-        blockEditor = this.parentThatIsA(BlockEditorMorph);
+        blockEditor = this.parentThatIsA('BlockEditorMorph');
         if (blockEditor) {
-            ide = blockEditor.target.parentThatIsA(IDE_Morph);
+            ide = blockEditor.target.parentThatIsA('IDE_Morph');
         }
     }
     menu.addItem('clean up', 'cleanUp', 'arrange scripts\nvertically');
@@ -5235,7 +5198,7 @@ ScriptsMorph.prototype.reactToDropOf = function (droppedMorph, hand) {
 ArgMorph.prototype = new SyntaxElementMorph();
 ArgMorph.prototype.constructor = ArgMorph;
 ArgMorph.uber = SyntaxElementMorph.prototype;
-
+ArgMorph.className = 'ArgMorph';
 // ArgMorph instance creation:
 
 function ArgMorph(type) {
@@ -5348,7 +5311,7 @@ ArgMorph.prototype.isEmptySlot = function () {
 CommandSlotMorph.prototype = new ArgMorph();
 CommandSlotMorph.prototype.constructor = CommandSlotMorph;
 CommandSlotMorph.uber = ArgMorph.prototype;
-
+CommandSlotMorph.className = 'CommandSlotMorph';
 // CommandSlotMorph instance creation:
 
 function CommandSlotMorph() {
@@ -5798,7 +5761,7 @@ CommandSlotMorph.prototype.drawEdges = function (context) {
 RingCommandSlotMorph.prototype = new CommandSlotMorph();
 RingCommandSlotMorph.prototype.constructor = RingCommandSlotMorph;
 RingCommandSlotMorph.uber = CommandSlotMorph.prototype;
-
+RingCommandSlotMorph.className = 'RingCommandSlotMorph';
 // RingCommandSlotMorph preferences settings
 
 RingCommandSlotMorph.prototype.rfBorder = 0;
@@ -5954,7 +5917,7 @@ RingCommandSlotMorph.prototype.drawFlat = function (context) {
 CSlotMorph.prototype = new CommandSlotMorph();
 CSlotMorph.prototype.constructor = CSlotMorph;
 CSlotMorph.uber = CommandSlotMorph.prototype;
-
+CSlotMorph.className = 'CSlotMorph';
 // CSlotMorph instance creation:
 
 function CSlotMorph() {
@@ -6377,7 +6340,7 @@ CSlotMorph.prototype.drawBottomEdge = function (context) {
 InputSlotMorph.prototype = new ArgMorph();
 InputSlotMorph.prototype.constructor = InputSlotMorph;
 InputSlotMorph.uber = ArgMorph.prototype;
-
+InputSlotMorph.className = 'InputSlotMorph';
 // InputSlotMorph preferences settings:
 
 InputSlotMorph.prototype.executeOnSliderEdit = false;
@@ -6521,8 +6484,8 @@ InputSlotMorph.prototype.dropDownMenu = function () {
 
 InputSlotMorph.prototype.messagesMenu = function () {
     var dict = {},
-        rcvr = this.parentThatIsA(BlockMorph).receiver(),
-        stage = rcvr.parentThatIsA(StageMorph),
+        rcvr = this.parentThatIsA('BlockMorph').receiver(),
+        stage = rcvr.parentThatIsA('StageMorph'),
         myself = this,
         allNames = [];
 
@@ -6555,8 +6518,8 @@ InputSlotMorph.prototype.messagesMenu = function () {
 
 InputSlotMorph.prototype.messagesReceivedMenu = function () {
     var dict = {'any message': ['any message']},
-        rcvr = this.parentThatIsA(BlockMorph).receiver(),
-        stage = rcvr.parentThatIsA(StageMorph),
+        rcvr = this.parentThatIsA('BlockMorph').receiver(),
+        stage = rcvr.parentThatIsA('StageMorph'),
         myself = this,
         allNames = [];
 
@@ -6591,8 +6554,8 @@ InputSlotMorph.prototype.collidablesMenu = function () {
             edge : ['edge'],
             'pen trails' : ['pen trails']
         },
-        rcvr = this.parentThatIsA(BlockMorph).receiver(),
-        stage = rcvr.parentThatIsA(StageMorph),
+        rcvr = this.parentThatIsA('BlockMorph').receiver(),
+        stage = rcvr.parentThatIsA('StageMorph'),
         allNames = [];
 
     stage.children.forEach(function (morph) {
@@ -6615,8 +6578,8 @@ InputSlotMorph.prototype.distancesMenu = function () {
     var dict = {
             'mouse-pointer' : ['mouse-pointer']
         },
-        rcvr = this.parentThatIsA(BlockMorph).receiver(),
-        stage = rcvr.parentThatIsA(StageMorph),
+        rcvr = this.parentThatIsA('BlockMorph').receiver(),
+        stage = rcvr.parentThatIsA('StageMorph'),
         allNames = [];
 
     stage.children.forEach(function (morph) {
@@ -6637,8 +6600,8 @@ InputSlotMorph.prototype.distancesMenu = function () {
 
 InputSlotMorph.prototype.clonablesMenu = function () {
     var dict = {},
-        rcvr = this.parentThatIsA(BlockMorph).receiver(),
-        stage = rcvr.parentThatIsA(StageMorph),
+        rcvr = this.parentThatIsA('BlockMorph').receiver(),
+        stage = rcvr.parentThatIsA('StageMorph'),
         allNames = [];
 
     if (rcvr instanceof SpriteMorph) {
@@ -6659,8 +6622,8 @@ InputSlotMorph.prototype.clonablesMenu = function () {
 };
 
 InputSlotMorph.prototype.objectsMenu = function () {
-    var rcvr = this.parentThatIsA(BlockMorph).receiver(),
-        stage = rcvr.parentThatIsA(StageMorph),
+    var rcvr = this.parentThatIsA('BlockMorph').receiver(),
+        stage = rcvr.parentThatIsA('StageMorph'),
         dict = {},
         allNames = [];
 
@@ -6680,10 +6643,10 @@ InputSlotMorph.prototype.objectsMenu = function () {
 };
 
 InputSlotMorph.prototype.attributesMenu = function () {
-    var block = this.parentThatIsA(BlockMorph),
+    var block = this.parentThatIsA('BlockMorph'),
         objName = block.inputs()[1].evaluate(),
         rcvr = block.receiver(),
-        stage = rcvr.parentThatIsA(StageMorph),
+        stage = rcvr.parentThatIsA('StageMorph'),
         obj,
         dict = {},
         varNames = [];
@@ -6732,7 +6695,7 @@ InputSlotMorph.prototype.attributesMenu = function () {
 };
 
 InputSlotMorph.prototype.costumesMenu = function () {
-    var rcvr = this.parentThatIsA(BlockMorph).receiver(),
+    var rcvr = this.parentThatIsA('BlockMorph').receiver(),
         dict,
         allNames = [];
     if (rcvr instanceof SpriteMorph) {
@@ -6753,7 +6716,7 @@ InputSlotMorph.prototype.costumesMenu = function () {
 };
 
 InputSlotMorph.prototype.soundsMenu = function () {
-    var rcvr = this.parentThatIsA(BlockMorph).receiver(),
+    var rcvr = this.parentThatIsA('BlockMorph').receiver(),
         allNames = [],
         dict = {};
 
@@ -6769,7 +6732,7 @@ InputSlotMorph.prototype.soundsMenu = function () {
 };
 
 InputSlotMorph.prototype.getVarNamesDict = function () {
-    var block = this.parentThatIsA(BlockMorph),
+    var block = this.parentThatIsA('BlockMorph'),
         rcvr,
         tempVars = [],
         dict;
@@ -6937,7 +6900,7 @@ InputSlotMorph.prototype.reactToSliderEdit = function () {
 */
     var block, top, receiver, stage;
     if (!this.executeOnSliderEdit) {return; }
-    block = this.parentThatIsA(BlockMorph);
+    block = this.parentThatIsA('BlockMorph');
     if (block) {
         top = block.topBlock();
         receiver = top.receiver();
@@ -6945,7 +6908,7 @@ InputSlotMorph.prototype.reactToSliderEdit = function () {
             return;
         }
         if (receiver) {
-            stage = receiver.parentThatIsA(StageMorph);
+            stage = receiver.parentThatIsA('StageMorph');
             if (stage && stage.isThreadSafe) {
                 stage.threads.startProcess(top, stage.isThreadSafe);
             } else {
@@ -6994,7 +6957,7 @@ InputSlotMorph.prototype.mapToCode = function () {
 
 InputSlotMorph.prototype.mappedCode = function () {
     var code = StageMorph.prototype.codeMappings.string || '<#1>',
-        block = this.parentThatIsA(BlockMorph),
+        block = this.parentThatIsA('BlockMorph'),
         val = this.evaluate();
 
     if (this.isNumeric) {return val; }
@@ -7304,7 +7267,7 @@ InputSlotMorph.prototype.drawRoundBorder = function (context) {
 TemplateSlotMorph.prototype = new ArgMorph();
 TemplateSlotMorph.prototype.constructor = TemplateSlotMorph;
 TemplateSlotMorph.uber = ArgMorph.prototype;
-
+TemplateSlotMorph.className = 'TemplateSlotMorph';
 // TemplateSlotMorph instance creation:
 
 function TemplateSlotMorph(name) {
@@ -7408,7 +7371,7 @@ TemplateSlotMorph.prototype.drawRounded = ReporterBlockMorph
 BooleanSlotMorph.prototype = new ArgMorph();
 BooleanSlotMorph.prototype.constructor = BooleanSlotMorph;
 BooleanSlotMorph.uber = ArgMorph.prototype;
-
+BooleanSlotMorph.className = 'BooleanSlotMorph';
 // BooleanSlotMorph instance creation:
 
 function BooleanSlotMorph() {
@@ -7565,7 +7528,7 @@ BooleanSlotMorph.prototype.isEmptySlot = function () {
 ArrowMorph.prototype = new Morph();
 ArrowMorph.prototype.constructor = ArrowMorph;
 ArrowMorph.uber = Morph.prototype;
-
+ArrowMorph.className = 'ArrowMorph';
 // ArrowMorph instance creation:
 
 function ArrowMorph(direction, size, padding, color) {
@@ -7635,7 +7598,7 @@ ArrowMorph.prototype.drawNew = function () {
 TextSlotMorph.prototype = new InputSlotMorph();
 TextSlotMorph.prototype.constructor = TextSlotMorph;
 TextSlotMorph.uber = InputSlotMorph.prototype;
-
+TextSlotMorph.className = 'TextSlotMorph';
 // TextSlotMorph instance creation:
 
 function TextSlotMorph(text, isNumeric, choiceDict, isReadOnly) {
@@ -7718,7 +7681,7 @@ TextSlotMorph.prototype.layoutChanged = function () {
 SymbolMorph.prototype = new Morph();
 SymbolMorph.prototype.constructor = SymbolMorph;
 SymbolMorph.uber = Morph.prototype;
-
+SymbolMorph.className = 'SymbolMorph';
 // SymbolMorph available symbols:
 
 SymbolMorph.prototype.names = [
@@ -9021,7 +8984,7 @@ SymbolMorph.prototype.drawSymbolRobot = function (canvas, color) {
 ColorSlotMorph.prototype = new ArgMorph();
 ColorSlotMorph.prototype.constructor = ColorSlotMorph;
 ColorSlotMorph.uber = ArgMorph.prototype;
-
+ColorSlotMorph.className = 'ColorSlotMorph';
 // ColorSlotMorph  instance creation:
 
 function ColorSlotMorph(clr) {
@@ -9129,7 +9092,7 @@ ColorSlotMorph.prototype.drawRectBorder =
 BlockHighlightMorph.prototype = new Morph();
 BlockHighlightMorph.prototype.constructor = BlockHighlightMorph;
 BlockHighlightMorph.uber = Morph.prototype;
-
+BlockHighlightMorph.className = 'BlockHighlightMorph';
 // BlockHighlightMorph instance creation:
 
 function BlockHighlightMorph() {
@@ -9154,7 +9117,7 @@ function BlockHighlightMorph() {
 MultiArgMorph.prototype = new ArgMorph();
 MultiArgMorph.prototype.constructor = MultiArgMorph;
 MultiArgMorph.uber = ArgMorph.prototype;
-
+MultiArgMorph.className = 'MultiArgMorph';
 // MultiArgMorph instance creation:
 
 function MultiArgMorph(
@@ -9406,7 +9369,7 @@ MultiArgMorph.prototype.removeInput = function () {
         oldPart = this.children[this.children.length - 2];
         this.removeChild(oldPart);
         if (oldPart instanceof BlockMorph) {
-            scripts = this.parentThatIsA(ScriptsMorph);
+            scripts = this.parentThatIsA('ScriptsMorph');
             if (scripts) {
                 scripts.add(oldPart);
             }
@@ -9448,7 +9411,7 @@ MultiArgMorph.prototype.mouseClickLeft = function (pos) {
 
 MultiArgMorph.prototype.userMenu = function () {
     var menu = new MenuMorph(this),
-        block = this.parentThatIsA(BlockMorph),
+        block = this.parentThatIsA('BlockMorph'),
         key = '',
         myself = this;
     if (!StageMorph.prototype.enableCodeMapping) {
@@ -9512,7 +9475,7 @@ MultiArgMorph.prototype.mapToCode = function (key, label) {
 };
 
 MultiArgMorph.prototype.mappedCode = function (definitions) {
-    var block = this.parentThatIsA(BlockMorph),
+    var block = this.parentThatIsA('BlockMorph'),
         key = '',
         code,
         items = '',
@@ -9584,7 +9547,7 @@ MultiArgMorph.prototype.isEmptySlot = function () {
 ArgLabelMorph.prototype = new ArgMorph();
 ArgLabelMorph.prototype.constructor = ArgLabelMorph;
 ArgLabelMorph.uber = ArgMorph.prototype;
-
+ArgLabelMorph.className = 'ArgLabelMorph';
 // MultiArgMorph instance creation:
 
 function ArgLabelMorph(argMorph, labelTxt) {
@@ -9714,7 +9677,7 @@ ArgLabelMorph.prototype.isEmptySlot = function () {
 FunctionSlotMorph.prototype = new ArgMorph();
 FunctionSlotMorph.prototype.constructor = FunctionSlotMorph;
 FunctionSlotMorph.uber = ArgMorph.prototype;
-
+FunctionSlotMorph.className = 'FunctionSlotMorph';
 // FunctionSlotMorph instance creation:
 
 function FunctionSlotMorph(isPredicate) {
@@ -10095,7 +10058,7 @@ FunctionSlotMorph.prototype.drawDiamond = function (context) {
 ReporterSlotMorph.prototype = new FunctionSlotMorph();
 ReporterSlotMorph.prototype.constructor = ReporterSlotMorph;
 ReporterSlotMorph.uber = FunctionSlotMorph.prototype;
-
+ReporterSlotMorph.className = 'ReporterSlotMorph';
 // ReporterSlotMorph instance creation:
 
 function ReporterSlotMorph(isPredicate) {
@@ -10178,7 +10141,7 @@ ReporterSlotMorph.prototype.fixLayout = function () {
 RingReporterSlotMorph.prototype = new ReporterSlotMorph();
 RingReporterSlotMorph.prototype.constructor = RingReporterSlotMorph;
 RingReporterSlotMorph.uber = ReporterSlotMorph.prototype;
-
+RingReporterSlotMorph.className = 'RingReporterSlotMorph';
 // ReporterSlotMorph preferences settings:
 
 RingReporterSlotMorph.prototype.rfBorder
@@ -10566,7 +10529,7 @@ RingReporterSlotMorph.prototype.drawDiamond = function (context) {
 CommentMorph.prototype = new BoxMorph();
 CommentMorph.prototype.constructor = CommentMorph;
 CommentMorph.uber = BoxMorph.prototype;
-
+CommentMorph.className = 'CommentMorph';
 // CommentMorph preferences settings (pseudo-inherited from SyntaxElement):
 
 CommentMorph.prototype.refreshScale = function () {
@@ -10827,7 +10790,7 @@ CommentMorph.prototype.align = function (topBlock, ignoreLayer) {
             tp,
             bottom,
             rightMost,
-            scripts = top.parentThatIsA(ScriptsMorph);
+            scripts = top.parentThatIsA('ScriptsMorph');
         this.setTop(this.block.top() + this.block.corner);
         tp = this.top();
         bottom = this.bottom();

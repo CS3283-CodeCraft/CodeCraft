@@ -1,78 +1,4 @@
-/*
 
-    widgets.js
-
-    additional GUI elements for morphic.js
-
-    written by Jens Mönig
-    jens@moenig.org
-
-    Copyright (C) 2014 by Jens Mönig
-
-    This file is part of Snap!.
-
-    Snap! is free software: you can redistribute it and/or modify
-    it under the terms of the GNU Affero General Public License as
-    published by the Free Software Foundation, either version 3 of
-    the License, or (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU Affero General Public License for more details.
-
-    You should have received a copy of the GNU Affero General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-
-    prerequisites:
-    --------------
-    //needs blocks.js and objects.js
-    //does not need blocks, according to dependency chain
-
-    I. hierarchy
-    -------------
-    the following tree lists all constructors hierarchically,
-    indentation indicating inheritance. Refer to this list to get a
-    contextual overview:
-
-    Morph*
-        AlignmentMorph
-        DialogBoxMorph
-        InputFieldMorph
-    TriggerMorph*
-        PushButtonMorph
-            ToggleButtonMorph
-                TabMorph
-            ToggleMorph
-        ToggleElementMorph
-
-    * from Morphic.js
-
-
-    II. toc
-    -------
-    the following list shows the order in which all constructors are
-    defined. Use this list to locate code in this document:
-
-    PushButtonMorph
-    ToggleButtonMorph
-    TabMorph
-    ToggleMorph
-    ToggleElementMorph
-    DialogBoxMorph
-    AlignmentMorph
-    InputFieldMorph
-
-*/
-
-// Global settings /////////////////////////////////////////////////////
-
-/*global TriggerMorph, modules, Color, Point, BoxMorph, radians,
-newCanvas, StringMorph, Morph, TextMorph, nop, detect, StringFieldMorph,
-HTMLCanvasElement, fontHeight, SymbolMorph, localize, SpeechBubbleMorph,
-ArrowMorph, MenuMorph, isString, isNil, SliderMorph, MorphicPreferences,
-ScrollFrameMorph*/
 
 modules.widgets = '2014-February-13';
 
@@ -96,6 +22,7 @@ var locationfilter = false;
 PushButtonMorph.prototype = new TriggerMorph();
 PushButtonMorph.prototype.constructor = PushButtonMorph;
 PushButtonMorph.uber = TriggerMorph.prototype;
+PushButtonMorph.className = 'PushButtonMorph';
 
 // PushButtonMorph preferences settings:
 
@@ -163,10 +90,13 @@ PushButtonMorph.prototype.init = function (
     // if a template is specified, its background images are used as cache
 
     // initialize inherited properties:
+    // BUG? TYPO?
     TriggerMorph.uber.init.call(this);
 
     // override inherited properites:
     this.color = PushButtonMorph.prototype.color;
+
+
 
     // Delete "fuck you" and "show green" if not needed.
 	if(style === "fuck you, morph"){
@@ -565,7 +495,7 @@ PushButtonMorph.prototype.createLabel = function () {
 ToggleButtonMorph.prototype = new PushButtonMorph();
 ToggleButtonMorph.prototype.constructor = ToggleButtonMorph;
 ToggleButtonMorph.uber = PushButtonMorph.prototype;
-
+ToggleButtonMorph.className = 'ToggleButtonMorph';
 // ToggleButton settings
 
 ToggleButtonMorph.prototype.contrast = 30;
@@ -989,7 +919,7 @@ ToggleButtonMorph.prototype.show = function () {
 TabMorph.prototype = new ToggleButtonMorph();
 TabMorph.prototype.constructor = TabMorph;
 TabMorph.uber = ToggleButtonMorph.prototype;
-
+TabMorph.className = 'TabMorph';
 // TabMorph instance creation:
 
 function TabMorph(
@@ -1111,7 +1041,7 @@ TabMorph.prototype.drawEdges = function (
 ToggleMorph.prototype = new PushButtonMorph();
 ToggleMorph.prototype.constructor = ToggleMorph;
 ToggleMorph.uber = PushButtonMorph.prototype;
-
+ToggleMorph.className = 'ToggleMorph';
 // ToggleMorph instance creation:
 
 function ToggleMorph(
@@ -1177,8 +1107,11 @@ ToggleMorph.prototype.init = function (
         hint,
         template
     );
+
     this.refresh();
     this.drawNew();
+    this.createLabel();
+    
 };
 
 // ToggleMorph layout:
@@ -1360,7 +1293,7 @@ ToggleMorph.prototype.show = ToggleButtonMorph.prototype.show;
 ToggleElementMorph.prototype = new TriggerMorph();
 ToggleElementMorph.prototype.constructor = ToggleElementMorph;
 ToggleElementMorph.uber = TriggerMorph.prototype;
-
+ToggleElementMorph.className = 'ToggleElementMorph';
 // ToggleElementMorph preferences settings
 
 ToggleElementMorph.prototype.contrast = 50;
@@ -1416,7 +1349,9 @@ ToggleElementMorph.prototype.init = function (
     this.state = false;
 
     // initialize inherited properties:
+    // BUG? TYPO?
     TriggerMorph.uber.init.call(this);
+
 
     // override inherited properties:
     this.color = element.color;
@@ -1530,7 +1465,7 @@ ToggleElementMorph.prototype.mouseClickLeft
 DialogBoxMorph.prototype = new Morph();
 DialogBoxMorph.prototype.constructor = DialogBoxMorph;
 DialogBoxMorph.uber = Morph.prototype;
-
+DialogBoxMorph.className = 'DialogBoxMorph';
 // DialogBoxMorph preferences settings:
 
 DialogBoxMorph.prototype.fontSize = 12;
@@ -3219,7 +3154,7 @@ DialogBoxMorph.prototype.outlinePathBody = function (context, radius) {
 AlignmentMorph.prototype = new Morph();
 AlignmentMorph.prototype.constructor = AlignmentMorph;
 AlignmentMorph.uber = Morph.prototype;
-
+AlignmentMorph.className = 'AlignmentMorph';
 // AlignmentMorph instance creation:
 
 function AlignmentMorph(orientation, padding) {
@@ -3293,7 +3228,7 @@ AlignmentMorph.prototype.fixLayout = function () {
 InputFieldMorph.prototype = new Morph();
 InputFieldMorph.prototype.constructor = InputFieldMorph;
 InputFieldMorph.uber = Morph.prototype;
-
+InputFieldMorph.className = 'InputFieldMorph';
 // InputFieldMorph settings
 
 InputFieldMorph.prototype.edge = 2;

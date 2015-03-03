@@ -9,10 +9,12 @@ html
 		script(src="javascripts/lib/underscore-min.js")
 		script(src="javascripts/lib/prototype.js")
 		script(type='text/javascript', src='javascripts/global_functions.js')
+		script(src="javascripts/config.js")
 		script(src="javascripts/new/bundle.js")
-		script(type='text/javascript', src='javascripts/morphic.js')
-		script(type='text/javascript', src='javascripts/widgets.js')
+		//- script(type='text/javascript', src='javascripts/morphic.js')
 		script(type='text/javascript', src='javascripts/blocks.js')
+		script(type='text/javascript', src='javascripts/widgets.js')
+		
 		script(type='text/javascript', src='javascripts/threads.js')
 		script(type='text/javascript', src='javascripts/objects.js')
 		script(type='text/javascript', src='javascripts/sharebox.js')
@@ -24,10 +26,16 @@ html
 		script(type='text/javascript', src='javascripts/xml.js')
 		script(type='text/javascript', src='javascripts/store.js')
 		script(type='text/javascript', src='javascripts/locale.js')
-		script(type='text/javascript', src='javascripts/cloud.js')
+		//- script(type='text/javascript', src='javascripts/cloud.js')
 		script(type='text/javascript', src='javascripts/sha512.js')
 		script(type='text/javascript', src='javascripts/store.js')
 		script(type='text/javascript').
+
+			var SnapCloud = new Cloud(
+			    'http://localhost:4000/'
+			    //'http://codecraft-api.herokuapp.com/'
+			);
+
 			var tempIdentifier = prompt("what's your id?")
 			var world;
 			window.onload = function () {

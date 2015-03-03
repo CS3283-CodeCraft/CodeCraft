@@ -188,3 +188,18 @@ function copy(target) {
     }
     return c;
 }
+
+function instanceOf(a, b) {
+    if (a.className == b) {
+        return true;
+    } else if (a.superclass == null) {
+        return false;
+    } else {
+        return instanceOf(a.superclass, b);
+    }
+}
+
+Object.prototype.instanceOf = function(className){
+    var a = this.constructor;
+    return instanceOf(a, className);
+}

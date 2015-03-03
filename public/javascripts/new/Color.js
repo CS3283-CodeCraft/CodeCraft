@@ -1,7 +1,6 @@
 var Color = Class.create({
 	
 	initialize: function(r, g, b, a){
-		this.className = 'Color';
 		this.r = r || 0;
 		this.g = g || 0;
 		this.b = b || 0;
@@ -158,5 +157,6 @@ var Color = Class.create({
 
 })
 
+Color.className = 'Color';
 
 module.exports = Color;

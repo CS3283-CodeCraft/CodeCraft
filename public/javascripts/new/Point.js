@@ -3,7 +3,6 @@
 var Point = Class.create({
     
     initialize: function(x, y){
-        this.className = 'Point';
         this.x = x || 0;
         this.y = y || 0;
     },
@@ -259,7 +258,7 @@ var Point = Class.create({
 
     corner: function (rectangle, cornerPoint) {
     // answer a new Rectangle
-        if(rectangle.className == "Rectangle"){
+        if(rectangle.instanceOf("Rectangle")){
             rectangle.setTo(this.x, this.y, cornerPoint.x, cornerPoint.y);
             return rectangle;
         } else {
@@ -269,7 +268,7 @@ var Point = Class.create({
 
     rectangle: function (rectangle, aPoint) {
         // answer a new Rectangle
-        if(rectangle.className == "Rectangle"){
+        if(rectangle.instanceOf("Rectangle")){
             var org, crn;
             org = this.min(aPoint);
             crn = this.max(aPoint);
@@ -282,7 +281,7 @@ var Point = Class.create({
 
     extent: function (rectangle, aPoint) {
         //answer a new Rectangle
-        if(rectangle.className == "Rectangle"){
+        if(rectangle.instanceOf("Rectangle")){
             var crn = this.add(aPoint);
             rectangle.setTo(this.x, this.y, crn.x, crn.y);
             return rectangle;
@@ -293,5 +292,6 @@ var Point = Class.create({
 
 })
 
+Point.className = 'Point';
 
 module.exports = Point;

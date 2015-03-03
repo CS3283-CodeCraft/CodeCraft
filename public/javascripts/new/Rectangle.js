@@ -7,14 +7,13 @@ Point = require('./Point');
 var Rectangle = Class.create({
 
     initialize: function(left, top, right, bottom) {
-        this.className = 'Rectangle';
         this.init(new Point((left || 0), (top || 0)),
         new Point((right || 0), (bottom || 0)));
     },
 
     init: function (originPoint, cornerPoint) {
-    this.origin = originPoint;
-    this.corner = cornerPoint;
+        this.origin = originPoint;
+        this.corner = cornerPoint;
     },
 
     // Rectangle string representation: e.g. '[0@0 | 160@80]'
@@ -296,5 +295,6 @@ var Rectangle = Class.create({
 
 })
 
+Rectangle.className = 'Rectangle';
 
 module.exports = Rectangle;

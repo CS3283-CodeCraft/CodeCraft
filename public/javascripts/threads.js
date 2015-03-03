@@ -124,6 +124,8 @@ function ThreadManager() {
     this.processes = [];
 }
 
+ThreadManager.className = 'ThreadManager';
+
 ThreadManager.prototype.toggleProcess = function (block) {
     var active = this.findProcess(block);
     if (active) {
@@ -320,6 +322,7 @@ Process.prototype = {};
 Process.prototype.contructor = Process;
 Process.prototype.timeout = 500; // msecs after which to force yield
 Process.prototype.isCatchingErrors = true;
+Process.className = 'Process';
 
 function Process(topBlock) {
     this.topBlock = topBlock || null;
@@ -876,7 +879,7 @@ Process.prototype.fork = function (context, args) {
         parms = args.asArray(),
         i,
         value,
-        stage = this.homeContext.receiver.parentThatIsA(StageMorph),
+        stage = this.homeContext.receiver.parentThatIsA('StageMorph'),
         proc = new Process();
 
     runnable.isLambda = true;
@@ -1123,7 +1126,7 @@ Process.prototype.doShowVar = function (varName) {
         }
     }
     if (this.homeContext.receiver) {
-        stage = this.homeContext.receiver.parentThatIsA(StageMorph);
+        stage = this.homeContext.receiver.parentThatIsA('StageMorph');
         if (stage) {
             target = varFrame.find(name);
             // first try to find an existing (hidden) watcher
@@ -1185,7 +1188,7 @@ Process.prototype.doHideVar = function (varName) {
         return;
     }
     if (this.homeContext.receiver) {
-        stage = this.homeContext.receiver.parentThatIsA(StageMorph);
+        stage = this.homeContext.receiver.parentThatIsA('StageMorph');
         if (stage) {
             target = varFrame.find(name);
             watcher = detect(
@@ -1210,7 +1213,7 @@ Process.prototype.doHideVar = function (varName) {
 Process.prototype.doRemoveTemporaries = function () {
     var stage;
     if (this.homeContext.receiver) {
-        stage = this.homeContext.receiver.parentThatIsA(StageMorph);
+        stage = this.homeContext.receiver.parentThatIsA('StageMorph');
         if (stage) {
             stage.watchers().forEach(function (watcher) {
                 if (watcher.isTemporary()) {
@@ -1361,7 +1364,7 @@ Process.prototype.doStop = function () {
 Process.prototype.doStopAll = function () {
     var stage, ide;
     if (this.homeContext.receiver) {
-        stage = this.homeContext.receiver.parentThatIsA(StageMorph);
+        stage = this.homeContext.receiver.parentThatIsA('StageMorph');
         if (stage) {
             stage.threads.resumeAll(stage);
             stage.keysPressed = {};
@@ -1374,7 +1377,7 @@ Process.prototype.doStopAll = function () {
             });
             stage.removeAllClones();
         }
-        ide = stage.parentThatIsA(IDE_Morph);
+        ide = stage.parentThatIsA('IDE_Morph');
         if (ide) {ide.controlBar.pauseButton.refresh(); }
     }
 };
@@ -1398,7 +1401,7 @@ Process.prototype.doStopThis = function (choice) {
 Process.prototype.doStopOthers = function (choice) {
     var stage;
     if (this.homeContext.receiver) {
-        stage = this.homeContext.receiver.parentThatIsA(StageMorph);
+        stage = this.homeContext.receiver.parentThatIsA('StageMorph');
         if (stage) {
             switch (this.inputOption(choice)) {
             case 'all but this script':
@@ -1433,7 +1436,7 @@ Process.prototype.doWarp = function (body) {
                 // pen optimization
                 this.homeContext.receiver.startWarp();
             }
-            stage = this.homeContext.receiver.parentThatIsA(StageMorph);
+            stage = this.homeContext.receiver.parentThatIsA('StageMorph');
             if (stage) {
                 stage.fps = 0; // variable frame rate
             }
@@ -1463,7 +1466,7 @@ Process.prototype.doStopWarping = function () {
             // pen optimization
             this.homeContext.receiver.endWarp();
         }
-        stage = this.homeContext.receiver.parentThatIsA(StageMorph);
+        stage = this.homeContext.receiver.parentThatIsA('StageMorph');
         if (stage) {
             stage.fps = stage.frameRate; //  back to fixed frame rate
         }
@@ -1473,7 +1476,7 @@ Process.prototype.doStopWarping = function () {
 Process.prototype.reportIsFastTracking = function () {
     var ide;
     if (this.homeContext.receiver) {
-        ide = this.homeContext.receiver.parentThatIsA(IDE_Morph);
+        ide = this.homeContext.receiver.parentThatIsA('IDE_Morph');
         if (ide) {
             return ide.stage.isFastTracked;
         }
@@ -1487,7 +1490,7 @@ Process.prototype.doSetFastTracking = function (bool) {
         return;
     }
     if (this.homeContext.receiver) {
-        ide = this.homeContext.receiver.parentThatIsA(IDE_Morph);
+        ide = this.homeContext.receiver.parentThatIsA('IDE_Morph');
         if (ide) {
             if (bool) {
                 ide.startFastTracking();
@@ -1505,7 +1508,7 @@ Process.prototype.doPauseAll = function () {
         if (stage) {
             stage.threads.pauseAll(stage);
         }
-        ide = stage.parentThatIsA(IDE_Morph);
+        ide = stage.parentThatIsA('IDE_Morph');
         if (ide) {ide.controlBar.pauseButton.refresh(); }
     }
 };
@@ -1715,7 +1718,7 @@ Process.prototype.doPlaySoundUntilDone = function (name) {
 };
 
 Process.prototype.doStopAllSounds = function () {
-    var stage = this.homeContext.receiver.parentThatIsA(StageMorph);
+    var stage = this.homeContext.receiver.parentThatIsA('StageMorph');
     if (stage) {
         stage.threads.processes.forEach(function (thread) {
             if (thread.context) {
@@ -1732,7 +1735,7 @@ Process.prototype.doStopAllSounds = function () {
 // Process user prompting primitives (interpolated)
 
 Process.prototype.doAsk = function (data) {
-    var stage = this.homeContext.receiver.parentThatIsA(StageMorph),
+    var stage = this.homeContext.receiver.parentThatIsA('StageMorph'),
         isStage = this.blockReceiver() instanceof StageMorph,
         activePrompter;
 
@@ -1772,7 +1775,7 @@ Process.prototype.doAsk = function (data) {
 };
 
 Process.prototype.reportLastAnswer = function () {
-    return this.homeContext.receiver.parentThatIsA(StageMorph).lastAnswer;
+    return this.homeContext.receiver.parentThatIsA('StageMorph').lastAnswer;
 };
 
 // Process URI retrieval (interpolated)
@@ -1795,7 +1798,7 @@ Process.prototype.reportURL = function (url) {
 // Process event messages primitives
 
 Process.prototype.doBroadcast = function (message) {
-    var stage = this.homeContext.receiver.parentThatIsA(StageMorph),
+    var stage = this.homeContext.receiver.parentThatIsA('StageMorph'),
         hats = [],
         procs = [];
 
@@ -1832,7 +1835,7 @@ Process.prototype.doBroadcastAndWait = function (message) {
 Process.prototype.getLastMessage = function () {
     var stage;
     if (this.homeContext.receiver) {
-        stage = this.homeContext.receiver.parentThatIsA(StageMorph);
+        stage = this.homeContext.receiver.parentThatIsA('StageMorph');
         if (stage) {
             return stage.getLastMessage();
         }
@@ -2192,7 +2195,7 @@ Process.prototype.getOtherObject = function (name, thisObj, stageObj) {
     // either onstage or in the World's hand
 
     var stage = isNil(stageObj) ?
-                thisObj.parentThatIsA(StageMorph) : stageObj,
+                thisObj.parentThatIsA('StageMorph') : stageObj,
         thatObj = null;
 
     if (stage) {
@@ -2221,7 +2224,7 @@ Process.prototype.getObjectsNamed = function (name, thisObj, stageObj) {
     // by the given name either onstage or in the World's hand
 
     var stage = isNil(stageObj) ?
-                thisObj.parentThatIsA(StageMorph) : stageObj,
+                thisObj.parentThatIsA('StageMorph') : stageObj,
         those = [];
 
     function check(obj) {
@@ -2325,7 +2328,7 @@ Process.prototype.objectTouchingObject = function (thisObj, name) {
             return true;
         }
     } else {
-        stage = thisObj.parentThatIsA(StageMorph);
+        stage = thisObj.parentThatIsA('StageMorph');
         if (stage) {
             if (this.inputOption(name) === 'edge' &&
                     !stage.bounds.containsRectangle(thisObj.bounds)) {
@@ -2356,7 +2359,7 @@ Process.prototype.reportTouchingColor = function (aColor) {
         stage;
 
     if (thisObj) {
-        stage = thisObj.parentThatIsA(StageMorph);
+        stage = thisObj.parentThatIsA('StageMorph');
         if (stage) {
             if (thisObj.isTouching(stage.colorFiltered(aColor, thisObj))) {
                 return true;
@@ -2377,7 +2380,7 @@ Process.prototype.reportColorIsTouchingColor = function (color1, color2) {
         stage;
 
     if (thisObj) {
-        stage = thisObj.parentThatIsA(StageMorph);
+        stage = thisObj.parentThatIsA('StageMorph');
         if (stage) {
             if (thisObj.colorFiltered(color1).isTouching(
                     stage.colorFiltered(color2, thisObj)
@@ -2409,7 +2412,7 @@ Process.prototype.reportDistanceTo = function (name) {
         if (this.inputOption(name) === 'mouse-pointer') {
             point = thisObj.world().hand.position();
         }
-        stage = thisObj.parentThatIsA(StageMorph);
+        stage = thisObj.parentThatIsA('StageMorph');
         thatObj = this.getOtherObject(name, thisObj, stage);
         if (thatObj) {
             point = thatObj.rotationCenter();
@@ -2425,7 +2428,7 @@ Process.prototype.reportAttributeOf = function (attribute, name) {
         stage;
 
     if (thisObj) {
-        stage = thisObj.parentThatIsA(StageMorph);
+        stage = thisObj.parentThatIsA('StageMorph');
         if (stage.name === name) {
             thatObj = stage;
         } else {
@@ -2474,7 +2477,7 @@ Process.prototype.reportContextFor = function (context, otherObj) {
 Process.prototype.reportMouseX = function () {
     var stage, world;
     if (this.homeContext.receiver) {
-        stage = this.homeContext.receiver.parentThatIsA(StageMorph);
+        stage = this.homeContext.receiver.parentThatIsA('StageMorph');
         if (stage) {
             world = stage.world();
             if (world) {
@@ -2489,7 +2492,7 @@ Process.prototype.reportMouseX = function () {
 Process.prototype.reportMouseY = function () {
     var stage, world;
     if (this.homeContext.receiver) {
-        stage = this.homeContext.receiver.parentThatIsA(StageMorph);
+        stage = this.homeContext.receiver.parentThatIsA('StageMorph');
         if (stage) {
             world = stage.world();
             if (world) {
@@ -2515,7 +2518,7 @@ Process.prototype.reportMouseDown = function () {
 Process.prototype.reportKeyPressed = function (keyString) {
     var stage;
     if (this.homeContext.receiver) {
-        stage = this.homeContext.receiver.parentThatIsA(StageMorph);
+        stage = this.homeContext.receiver.parentThatIsA('StageMorph');
         if (stage) {
             return stage.keysPressed[keyString] !== undefined;
         }
@@ -2526,7 +2529,7 @@ Process.prototype.reportKeyPressed = function (keyString) {
 Process.prototype.doResetTimer = function () {
     var stage;
     if (this.homeContext.receiver) {
-        stage = this.homeContext.receiver.parentThatIsA(StageMorph);
+        stage = this.homeContext.receiver.parentThatIsA('StageMorph');
         if (stage) {
             stage.resetTimer();
         }
@@ -2536,7 +2539,7 @@ Process.prototype.doResetTimer = function () {
 Process.prototype.reportTimer = function () {
     var stage;
     if (this.homeContext.receiver) {
-        stage = this.homeContext.receiver.parentThatIsA(StageMorph);
+        stage = this.homeContext.receiver.parentThatIsA('StageMorph');
         if (stage) {
             return stage.getTimer();
         }
@@ -2650,7 +2653,7 @@ Process.prototype.doRest = function (beats) {
 Process.prototype.reportTempo = function () {
     var stage;
     if (this.homeContext.receiver) {
-        stage = this.homeContext.receiver.parentThatIsA(StageMorph);
+        stage = this.homeContext.receiver.parentThatIsA('StageMorph');
         if (stage) {
             return stage.getTempo();
         }
@@ -2661,7 +2664,7 @@ Process.prototype.reportTempo = function () {
 Process.prototype.doChangeTempo = function (delta) {
     var stage;
     if (this.homeContext.receiver) {
-        stage = this.homeContext.receiver.parentThatIsA(StageMorph);
+        stage = this.homeContext.receiver.parentThatIsA('StageMorph');
         if (stage) {
             stage.changeTempo(delta);
         }
@@ -2671,7 +2674,7 @@ Process.prototype.doChangeTempo = function (delta) {
 Process.prototype.doSetTempo = function (bpm) {
     var stage;
     if (this.homeContext.receiver) {
-        stage = this.homeContext.receiver.parentThatIsA(StageMorph);
+        stage = this.homeContext.receiver.parentThatIsA('StageMorph');
         if (stage) {
             stage.setTempo(bpm);
         }
@@ -2806,6 +2809,8 @@ function Context(
     this.isCustomBlock = false; // marks the end of a custom block's stack
     this.emptySlots = 0; // used for block reification
 }
+
+Context.className = 'Context';
 
 Context.prototype.toString = function () {
     var pref = this.isLambda ? '\u03BB-' : '',
@@ -2969,6 +2974,8 @@ function VariableFrame(parentFrame, owner) {
     this.parentFrame = parentFrame || null;
     this.owner = owner || null;
 }
+
+VariableFrame.className = 'VariableFrame';
 
 VariableFrame.prototype.toString = function () {
     return 'a VariableFrame {' + this.names() + '}';

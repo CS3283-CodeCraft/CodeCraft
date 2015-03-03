@@ -87,6 +87,7 @@ XML_Serializer.prototype.idProperty = 'serializationID';
 XML_Serializer.prototype.mediaIdProperty = 'serializationMediaID';
 XML_Serializer.prototype.mediaDetectionProperty = 'isMedia';
 XML_Serializer.prototype.version = 1; // increment on structural change
+XML_Serializer.className = 'XMLSerializer';
 
 // XML_Serializer accessing:
 
@@ -249,7 +250,7 @@ var SnapSerializer;
 SnapSerializer.prototype = new XML_Serializer();
 SnapSerializer.prototype.constructor = SnapSerializer;
 SnapSerializer.uber = XML_Serializer.prototype;
-
+SnapSerializer.className = 'SnapSerializer';
 // SnapSerializer constants:
 
 SnapSerializer.prototype.app = 'Snap! 4.0, http://snap.berkeley.edu';
@@ -1345,7 +1346,7 @@ Array.prototype.toXML = function (serializer) {
 StageMorph.prototype.toXML = function (serializer) {
     var thumbnail = this.thumbnail(SnapSerializer.prototype.thumbnailSize),
         thumbdata,
-        ide = this.parentThatIsA(IDE_Morph);
+        ide = this.parentThatIsA('IDE_Morph');
 
     // catch cross-origin tainting exception when using SVG costumes
     try {
@@ -1427,8 +1428,8 @@ StageMorph.prototype.toXML = function (serializer) {
 };
 
 SpriteMorph.prototype.toXML = function (serializer) {
-    var stage = this.parentThatIsA(StageMorph),
-        ide = stage ? stage.parentThatIsA(IDE_Morph) : null,
+    var stage = this.parentThatIsA('StageMorph'),
+        ide = stage ? stage.parentThatIsA('IDE_Morph') : null,
         idx = ide ? ide.sprites.asArray().indexOf(this) + 1 : 0;
     return serializer.format(
         '<sprite name="@" idx="@" x="@" y="@"' +

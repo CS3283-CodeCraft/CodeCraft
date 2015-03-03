@@ -147,6 +147,8 @@ function CustomBlockDefinition(spec, receiver) {
     this.receiver = receiver || null; // for serialization only (pointer)
 }
 
+CustomBlockDefinition.className = 'CustomBlockDefinition';
+
 // CustomBlockDefinition instantiating blocks
 
 CustomBlockDefinition.prototype.blockInstance = function () {
@@ -380,7 +382,7 @@ CustomBlockDefinition.prototype.scriptsPicture = function () {
 CustomCommandBlockMorph.prototype = new CommandBlockMorph();
 CustomCommandBlockMorph.prototype.constructor = CustomCommandBlockMorph;
 CustomCommandBlockMorph.uber = CommandBlockMorph.prototype;
-
+CustomCommandBlockMorph.className = 'CustomCommandBlockMorph';
 // CustomCommandBlockMorph instance creation:
 
 function CustomCommandBlockMorph(definition, isProto) {
@@ -484,7 +486,7 @@ CustomCommandBlockMorph.prototype.refreshPrototype = function () {
 
     if (!this.isPrototype) {return null; }
 
-    hat = this.parentThatIsA(PrototypeHatBlockMorph);
+    hat = this.parentThatIsA('PrototypeHatBlockMorph');
 
     // remember the edited fragments
     this.parts().forEach(function (part) {
@@ -657,7 +659,7 @@ CustomCommandBlockMorph.prototype.edit = function () {
     if (this.isPrototype) {
         block = this.definition.blockInstance();
         block.addShadow();
-        hat = this.parentThatIsA(PrototypeHatBlockMorph);
+        hat = this.parentThatIsA('PrototypeHatBlockMorph');
         new BlockDialogMorph(
             null,
             function (definition) {
@@ -771,7 +773,7 @@ CustomCommandBlockMorph.prototype.deleteBlockDefinition = function () {
             rcvr = myself.receiver();
             rcvr.deleteAllBlockInstances(myself.definition);
             if (myself.definition.isGlobal) {
-                stage = rcvr.parentThatIsA(StageMorph);
+                stage = rcvr.parentThatIsA('StageMorph');
                 idx = stage.globalBlocks.indexOf(myself.definition);
                 if (idx !== -1) {
                     stage.globalBlocks.splice(idx, 1);
@@ -782,7 +784,7 @@ CustomCommandBlockMorph.prototype.deleteBlockDefinition = function () {
                     rcvr.customBlocks.splice(idx, 1);
                 }
             }
-            ide = rcvr.parentThatIsA(IDE_Morph);
+            ide = rcvr.parentThatIsA('IDE_Morph');
             if (ide) {
                 ide.flushPaletteCache();
                 ide.refreshPalette();
@@ -876,7 +878,7 @@ CustomCommandBlockMorph.prototype.relabel = function (alternatives) {
 
 CustomCommandBlockMorph.prototype.alternatives = function () {
     var rcvr = this.receiver(),
-        stage = rcvr.parentThatIsA(StageMorph),
+        stage = rcvr.parentThatIsA('StageMorph'),
         allDefs = rcvr.customBlocks.concat(stage.globalBlocks),
         myself = this;
     return allDefs.filter(function (each) {
@@ -892,7 +894,7 @@ CustomCommandBlockMorph.prototype.alternatives = function () {
 CustomReporterBlockMorph.prototype = new ReporterBlockMorph();
 CustomReporterBlockMorph.prototype.constructor = CustomReporterBlockMorph;
 CustomReporterBlockMorph.uber = ReporterBlockMorph.prototype;
-
+CustomReporterBlockMorph.className = 'CustomReporterBlockMorph';
 // CustomReporterBlockMorph instance creation:
 
 function CustomReporterBlockMorph(definition, isPredicate, isProto) {
@@ -1021,7 +1023,7 @@ CustomReporterBlockMorph.prototype.alternatives
 JaggedBlockMorph.prototype = new ReporterBlockMorph();
 JaggedBlockMorph.prototype.constructor = JaggedBlockMorph;
 JaggedBlockMorph.uber = ReporterBlockMorph.prototype;
-
+JaggedBlockMorph.className = 'JaggedBlockMorph';
 // JaggedBlockMorph preferences settings:
 
 JaggedBlockMorph.prototype.jag = 5;
@@ -1170,7 +1172,7 @@ JaggedBlockMorph.prototype.drawEdges = function (context) {
 BlockDialogMorph.prototype = new DialogBoxMorph();
 BlockDialogMorph.prototype.constructor = BlockDialogMorph;
 BlockDialogMorph.uber = DialogBoxMorph.prototype;
-
+BlockDialogMorph.className = 'BlockDialogMorph';
 // BlockDialogMorph instance creation:
 
 function BlockDialogMorph(target, action, environment) {
@@ -1617,7 +1619,7 @@ BlockDialogMorph.prototype.fixLayout = function () {
 BlockEditorMorph.prototype = new DialogBoxMorph();
 BlockEditorMorph.prototype.constructor = BlockEditorMorph;
 BlockEditorMorph.uber = DialogBoxMorph.prototype;
-
+BlockEditorMorph.className = 'BlockEditorMorph';
 // BlockEditorMorph instance creation:
 
 function BlockEditorMorph(definition, target) {
@@ -1844,7 +1846,7 @@ BlockEditorMorph.prototype.updateDefinition = function () {
     this.definition.body = this.context(head);
     this.refreshAllBlockInstances();
 
-    ide = this.target.parentThatIsA(IDE_Morph);
+    ide = this.target.parentThatIsA('IDE_Morph');
     ide.flushPaletteCache();
     ide.refreshPalette();
 };
@@ -1926,7 +1928,7 @@ BlockEditorMorph.prototype.fixLayout = function () {
 PrototypeHatBlockMorph.prototype = new HatBlockMorph();
 PrototypeHatBlockMorph.prototype.constructor = PrototypeHatBlockMorph;
 PrototypeHatBlockMorph.uber = HatBlockMorph.prototype;
-
+PrototypeHatBlockMorph.className = 'PrototypeHatBlockMorph';
 // PrototypeHatBlockMorph instance creation:
 
 function PrototypeHatBlockMorph(definition) {
@@ -2130,7 +2132,7 @@ BlockLabelFragment.prototype.setSingleInputType = function (type) {
 BlockLabelFragmentMorph.prototype = new StringMorph();
 BlockLabelFragmentMorph.prototype.constructor = BlockLabelFragmentMorph;
 BlockLabelFragmentMorph.uber = StringMorph.prototype;
-
+BlockLabelFragmentMorph.className = 'BlockLabelFragmentMorph';
 // BlockLabelFragmentMorph instance creation:
 
 function BlockLabelFragmentMorph(text) {
@@ -2204,7 +2206,7 @@ BlockLabelFragmentMorph.prototype.mouseClickLeft = function () {
 };
 
 BlockLabelFragmentMorph.prototype.updateBlockLabel = function (newFragment) {
-    var prot = this.parentThatIsA(BlockMorph);
+    var prot = this.parentThatIsA('BlockMorph');
 
     this.fragment = newFragment;
     if (prot) {
@@ -2252,7 +2254,7 @@ BlockLabelFragmentMorph.prototype.userMenu = function () {
 BlockLabelPlaceHolderMorph.prototype = new StringMorph();
 BlockLabelPlaceHolderMorph.prototype.constructor = BlockLabelPlaceHolderMorph;
 BlockLabelPlaceHolderMorph.uber = StringMorph.prototype;
-
+BlockLabelPlaceHolderMorph.className = 'BlockLabelPlaceHolderMorph';
 // BlockLabelPlaceHolderMorph preferences settings
 
 BlockLabelPlaceHolderMorph.prototype.plainLabel = false; // always show (+)
@@ -2380,7 +2382,7 @@ BlockLabelPlaceHolderMorph.prototype.updateBlockLabel
 BlockInputFragmentMorph.prototype = new TemplateSlotMorph();
 BlockInputFragmentMorph.prototype.constructor = BlockInputFragmentMorph;
 BlockInputFragmentMorph.uber = TemplateSlotMorph.prototype;
-
+BlockInputFragmentMorph.className = 'BlockInputFragmentMorph';
 // BlockInputFragmentMorph instance creation:
 
 function BlockInputFragmentMorph(text) {
@@ -2410,7 +2412,7 @@ BlockInputFragmentMorph.prototype.updateBlockLabel
 InputSlotDialogMorph.prototype = new DialogBoxMorph();
 InputSlotDialogMorph.prototype.constructor = InputSlotDialogMorph;
 InputSlotDialogMorph.uber = DialogBoxMorph.prototype;
-
+InputSlotDialogMorph.className = 'InputSlotDialogMorph';
 // InputSlotDialogMorph preferences settings:
 
 // if "isLaunchingExpanded" is true I always open in the long form
@@ -3010,7 +3012,7 @@ InputSlotDialogMorph.prototype.show = function () {
 VariableDialogMorph.prototype = new DialogBoxMorph();
 VariableDialogMorph.prototype.constructor = VariableDialogMorph;
 VariableDialogMorph.uber = DialogBoxMorph.prototype;
-
+VariableDialogMorph.className = 'VariableDialogMorph';
 // ... and some behavior from BlockDialogMorph
 
 // VariableDialogMorph instance creation:
@@ -3129,7 +3131,7 @@ VariableDialogMorph.prototype.fixLayout = function () {
 BlockExportDialogMorph.prototype = new DialogBoxMorph();
 BlockExportDialogMorph.prototype.constructor = BlockExportDialogMorph;
 BlockExportDialogMorph.uber = DialogBoxMorph.prototype;
-
+BlockExportDialogMorph.className = 'BlockExportDialogMorph';
 // BlockExportDialogMorph constants:
 
 BlockExportDialogMorph.prototype.key = 'blockExport';
@@ -3309,7 +3311,7 @@ BlockExportDialogMorph.prototype.fixLayout
 BlockImportDialogMorph.prototype = new DialogBoxMorph();
 BlockImportDialogMorph.prototype.constructor = BlockImportDialogMorph;
 BlockImportDialogMorph.uber = DialogBoxMorph.prototype;
-
+BlockImportDialogMorph.className = 'BlockImportDialogMorph';
 // BlockImportDialogMorph constants:
 
 BlockImportDialogMorph.prototype.key = 'blockImport';
@@ -3365,7 +3367,7 @@ BlockImportDialogMorph.prototype.selectNone
 // BlockImportDialogMorph ops
 
 BlockImportDialogMorph.prototype.importBlocks = function (name) {
-    var ide = this.target.parentThatIsA(IDE_Morph);
+    var ide = this.target.parentThatIsA('IDE_Morph');
     if (!ide) {return; }
     if (this.blocks.length > 0) {
         this.blocks.forEach(function (def) {

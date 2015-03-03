@@ -83,6 +83,8 @@ function ReadStream(arrayOrString) {
     this.index = 0;
 }
 
+ReadStream.className = 'ReadStream';
+
 // ReadStream constants:
 
 ReadStream.prototype.space = /[\s]/;
@@ -169,7 +171,7 @@ ReadStream.prototype.word = function () {
 XML_Element.prototype = new Node();
 XML_Element.prototype.constructor = XML_Element;
 XML_Element.uber = Node.prototype;
-
+XML_Element.className = 'XML_Element';
 // XML_Element preferences settings:
 
 XML_Element.prototype.indentation = '  ';
