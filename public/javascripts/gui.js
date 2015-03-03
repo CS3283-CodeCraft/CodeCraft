@@ -95,6 +95,7 @@ var currentPage = 1;
 IDE_Morph.prototype = new Morph();
 IDE_Morph.prototype.constructor = IDE_Morph;
 IDE_Morph.uber = Morph.prototype;
+IDE_Morph.className = 'IDE_Morph';
 
 // IDE_Morph preferences settings and skins
 
@@ -2357,9 +2358,9 @@ IDE_Morph.prototype.showViewMembersPopup = function() {
     this.showPendingMemberTitle(pendingMembers.length, groupMembers.length);
     for (j = 0; j < pendingMembers.length; j++) {
         if (i == totalNumberOfMembers - 1) { // is last row
-            this.showMemberRow(false, false, pendingMembers[j], i + 1 + groupMembers.length, showingToCreator);
+            this.showMemberRow(false, false, pendingMembers[j], i + 1 + groupMembers.length + 1, showingToCreator);
         } else {
-            this.showMemberRow(false, false, pendingMembers[j], i + 1 + groupMembers.length, showingToCreator);
+            this.showMemberRow(false, false, pendingMembers[j], i + 1 + groupMembers.length + 1, showingToCreator);
         }
     }
 
@@ -2465,7 +2466,7 @@ IDE_Morph.prototype.showMemberRow = function(isCreator, isOnline, username, rowN
     console.log("Adding member row for " + username);
 
     groupMemberRow = new FrameMorph();
-    groupMemberRow.setHeight(100);
+    groupMemberRow.setHeight(50);
     groupMemberRow.setWidth(this.membersViewFrame.width());
 
     // show Online green dot
@@ -2478,8 +2479,9 @@ IDE_Morph.prototype.showMemberRow = function(isCreator, isOnline, username, rowN
             false,
             false,
             null,
-            new Color(0, 255, 0)
+            new Color(60, 158, 0)
         );
+        onlineDot.setColor(new Color(60, 158, 0));
         onlineDot.setLeft(myself.membersViewFrame.left() + 10);
         onlineDot.drawNew();
         groupMemberRow.add(onlineDot);
@@ -2496,7 +2498,7 @@ IDE_Morph.prototype.showMemberRow = function(isCreator, isOnline, username, rowN
         null,
         this.frameColor.darker(this.buttonContrast)
     );
-    username.setLeft(myself.membersViewFrame.left() + 10 + 100 + 10);
+    username.setLeft(myself.membersViewFrame.left() + 10 + 40 + 10);
     username.drawNew();
     groupMemberRow.add(username);
 
@@ -5756,7 +5758,7 @@ IDE_Morph.prototype.prompt = function (message, callback, choices, key) {
 ProjectDialogMorph.prototype = new DialogBoxMorph();
 ProjectDialogMorph.prototype.constructor = ProjectDialogMorph;
 ProjectDialogMorph.uber = DialogBoxMorph.prototype;
-
+ProjectDialogMorph.className = 'ProjectDialogMorph';
 // ProjectDialogMorph instance creation:
 
 function ProjectDialogMorph(ide, label) {
@@ -6677,7 +6679,7 @@ ProjectDialogMorph.prototype.fixLayout = function () {
 SpriteIconMorph.prototype = new ToggleButtonMorph();
 SpriteIconMorph.prototype.constructor = SpriteIconMorph;
 SpriteIconMorph.uber = ToggleButtonMorph.prototype;
-
+SpriteIconMorph.className = 'SpriteIconMorph';
 // SpriteIconMorph settings
 
 SpriteIconMorph.prototype.thumbSize = new Point(40, 40);
@@ -6706,7 +6708,7 @@ SpriteIconMorph.prototype.init = function (aSprite, aTemplate) {
 
     action = function () {
         // make my sprite the current one
-        var ide = myself.parentThatIsA(IDE_Morph);
+        var ide = myself.parentThatIsA('IDE_Morph');
 
         if (ide) {
             ide.selectSprite(myself.object);
@@ -6715,7 +6717,7 @@ SpriteIconMorph.prototype.init = function (aSprite, aTemplate) {
 
     query = function () {
         // answer true if my sprite is the current one
-        var ide = myself.parentThatIsA(IDE_Morph);
+        var ide = myself.parentThatIsA('IDE_Morph');
 
         if (ide) {
             return ide.currentSprite === myself.object;
@@ -6933,14 +6935,14 @@ SpriteIconMorph.prototype.userMenu = function () {
 };
 
 SpriteIconMorph.prototype.duplicateSprite = function () {
-    var ide = this.parentThatIsA(IDE_Morph);
+    var ide = this.parentThatIsA('IDE_Morph');
     if (ide) {
         ide.duplicateSprite(this.object);
     }
 };
 
 SpriteIconMorph.prototype.removeSprite = function () {
-    var ide = this.parentThatIsA(IDE_Morph);
+    var ide = this.parentThatIsA('IDE_Morph');
     if (ide) {
         ide.removeSprite(this.object);
     }
@@ -6994,7 +6996,7 @@ SpriteIconMorph.prototype.createBackgrounds = function () {
 // SpriteIconMorph drag & drop
 
 SpriteIconMorph.prototype.prepareToBeGrabbed = function () {
-    var ide = this.parentThatIsA(IDE_Morph),
+    var ide = this.parentThatIsA('IDE_Morph'),
         idx;
     this.mouseClickLeft(); // select me
     if (ide) {
@@ -7074,7 +7076,7 @@ SpriteIconMorph.prototype.copySound = function (sound) {
 CostumeIconMorph.prototype = new ToggleButtonMorph();
 CostumeIconMorph.prototype.constructor = CostumeIconMorph;
 CostumeIconMorph.uber = ToggleButtonMorph.prototype;
-
+CostumeIconMorph.className = 'CostumeIconMorph';
 // CostumeIconMorph settings
 
 CostumeIconMorph.prototype.thumbSize = new Point(80, 60);
@@ -7103,8 +7105,8 @@ CostumeIconMorph.prototype.init = function (aCostume, aTemplate) {
 
     action = function () {
         // make my costume the current one
-        var ide = myself.parentThatIsA(IDE_Morph),
-            wardrobe = myself.parentThatIsA(WardrobeMorph);
+        var ide = myself.parentThatIsA('IDE_Morph'),
+            wardrobe = myself.parentThatIsA('WardrobeMorph');
 
         if (ide) {
             ide.currentSprite.wearCostume(myself.object);
@@ -7116,7 +7118,7 @@ CostumeIconMorph.prototype.init = function (aCostume, aTemplate) {
 
     query = function () {
         // answer true if my costume is the current one
-        var ide = myself.parentThatIsA(IDE_Morph);
+        var ide = myself.parentThatIsA('IDE_Morph');
 
         if (ide) {
             return ide.currentSprite.costume === myself.object;
@@ -7198,21 +7200,21 @@ CostumeIconMorph.prototype.editCostume = function () {
     } else {
         this.object.edit(
             this.world(),
-            this.parentThatIsA(IDE_Morph)
+            this.parentThatIsA('IDE_Morph')
         );
     }
 };
 
 CostumeIconMorph.prototype.editRotationPointOnly = function () {
-    var ide = this.parentThatIsA(IDE_Morph);
+    var ide = this.parentThatIsA('IDE_Morph');
     this.object.editRotationPointOnly(this.world());
     ide.hasChangedMedia = true;
 };
 
 CostumeIconMorph.prototype.renameCostume = function () {
     var costume = this.object,
-        wardrobe = this.parentThatIsA(WardrobeMorph),
-        ide = this.parentThatIsA(IDE_Morph);
+        wardrobe = this.parentThatIsA('WardrobeMorph'),
+        ide = this.parentThatIsA('IDE_Morph');
     new DialogBoxMorph(
         null,
         function (answer) {
@@ -7233,8 +7235,8 @@ CostumeIconMorph.prototype.renameCostume = function () {
 };
 
 CostumeIconMorph.prototype.duplicateCostume = function () {
-    var wardrobe = this.parentThatIsA(WardrobeMorph),
-        ide = this.parentThatIsA(IDE_Morph),
+    var wardrobe = this.parentThatIsA('WardrobeMorph'),
+        ide = this.parentThatIsA('IDE_Morph'),
         newcos = this.object.copy();
     newcos.name = wardrobe.sprite.newCostumeName(newcos.name);
     wardrobe.sprite.addCostume(newcos);
@@ -7245,9 +7247,9 @@ CostumeIconMorph.prototype.duplicateCostume = function () {
 };
 
 CostumeIconMorph.prototype.removeCostume = function () {
-    var wardrobe = this.parentThatIsA(WardrobeMorph),
+    var wardrobe = this.parentThatIsA('WardrobeMorph'),
         idx = this.parent.children.indexOf(this),
-        ide = this.parentThatIsA(IDE_Morph);
+        ide = this.parentThatIsA('IDE_Morph');
     wardrobe.removeCostumeAt(idx - 2);
     if (ide.currentSprite.costume === this.object) {
         ide.currentSprite.wearCostume(null);
@@ -7287,7 +7289,7 @@ CostumeIconMorph.prototype.prepareToBeGrabbed = function () {
 TurtleIconMorph.prototype = new ToggleButtonMorph();
 TurtleIconMorph.prototype.constructor = TurtleIconMorph;
 TurtleIconMorph.uber = ToggleButtonMorph.prototype;
-
+TurtleIconMorph.className = 'TurtleIconMorph';
 // TurtleIconMorph settings
 
 TurtleIconMorph.prototype.thumbSize = new Point(80, 60);
@@ -7316,8 +7318,8 @@ TurtleIconMorph.prototype.init = function (aSpriteOrStage, aTemplate) {
 
     action = function () {
         // make my costume the current one
-        var ide = myself.parentThatIsA(IDE_Morph),
-            wardrobe = myself.parentThatIsA(WardrobeMorph);
+        var ide = myself.parentThatIsA('IDE_Morph'),
+            wardrobe = myself.parentThatIsA('WardrobeMorph');
 
         if (ide) {
             ide.currentSprite.wearCostume(null);
@@ -7329,7 +7331,7 @@ TurtleIconMorph.prototype.init = function (aSpriteOrStage, aTemplate) {
 
     query = function () {
         // answer true if my costume is the current one
-        var ide = myself.parentThatIsA(IDE_Morph);
+        var ide = myself.parentThatIsA('IDE_Morph');
 
         if (ide) {
             return ide.currentSprite.costume === null;
@@ -7470,7 +7472,7 @@ TurtleIconMorph.prototype.userMenu = function () {
 WardrobeMorph.prototype = new ScrollFrameMorph();
 WardrobeMorph.prototype.constructor = WardrobeMorph;
 WardrobeMorph.uber = ScrollFrameMorph.prototype;
-
+WardrobeMorph.className = 'WardrobeMorph';
 // WardrobeMorph settings
 
 // ... to follow ...
@@ -7610,7 +7612,7 @@ WardrobeMorph.prototype.paintNew = function () {
             newCanvas(),
             this.sprite.newCostumeName('Untitled')
         ),
-        ide = this.parentThatIsA(IDE_Morph),
+        ide = this.parentThatIsA('IDE_Morph'),
         myself = this;
     cos.edit(this.world(), ide, true, null, function () {
         myself.sprite.addCostume(cos);
@@ -7655,7 +7657,7 @@ WardrobeMorph.prototype.reactToDropOf = function (icon) {
 SoundIconMorph.prototype = new ToggleButtonMorph();
 SoundIconMorph.prototype.constructor = SoundIconMorph;
 SoundIconMorph.uber = ToggleButtonMorph.prototype;
-
+SoundIconMorph.className = 'SoundIconMorph';
 // SoundIconMorph settings
 
 SoundIconMorph.prototype.thumbSize = new Point(80, 60);
@@ -7816,7 +7818,7 @@ SoundIconMorph.prototype.userMenu = function () {
 
 SoundIconMorph.prototype.renameSound = function () {
     var sound = this.object,
-        ide = this.parentThatIsA(IDE_Morph),
+        ide = this.parentThatIsA('IDE_Morph'),
         myself = this;
     (new DialogBoxMorph(
         null,
@@ -7837,7 +7839,7 @@ SoundIconMorph.prototype.renameSound = function () {
 };
 
 SoundIconMorph.prototype.removeSound = function () {
-    var jukebox = this.parentThatIsA(JukeboxMorph),
+    var jukebox = this.parentThatIsA('JukeboxMorph'),
         idx = this.parent.children.indexOf(this);
     jukebox.removeSound(idx);
 };
@@ -7865,6 +7867,7 @@ SoundIconMorph.prototype.prepareToBeGrabbed = function () {
 JukeboxMorph.prototype = new ScrollFrameMorph();
 JukeboxMorph.prototype.constructor = JukeboxMorph;
 JukeboxMorph.uber = ScrollFrameMorph.prototype;
+JukeboxMorph.className = 'JukeboxMorph';
 
 function JukeboxMorph(aSprite, sliderColor) {
     this.init(aSprite, sliderColor);
