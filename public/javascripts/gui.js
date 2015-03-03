@@ -2396,11 +2396,18 @@ IDE_Morph.prototype.showGroupMemberTitle = function(numberOfGroupMembers) {
         this.frameColor.darker(this.buttonContrast)
     );
 
+
     // position title
     this.groupMemberTitle.setLeft(this.membersViewFrame.left() + titlePadding);
     this.groupMemberTitle.setTop(this.membersViewFrame.top() + titlePadding);
     this.groupMemberTitle.setWidth(this.membersViewFrame.width() - titlePadding*2);
     this.groupMemberTitle.drawNew();
+
+    // position text
+    this.groupMemberTxt.setLeft(this.groupMemberTitle.left() + titlePadding);
+    this.groupMemberTxt.setTop(this.groupMemberTitle.top() + titlePadding);
+    this.groupMemberTxt.setWidth(400);
+    this.groupMemberTxt.drawNew();
 
 
     // add title
@@ -2438,6 +2445,12 @@ IDE_Morph.prototype.showPendingMemberTitle = function(numberOfPendingMembers, nu
     this.pendingMemberTitle.setTop(this.groupMemberTitle.bottom() + (numberOfGroupMembers * (groupMemberRow.height() + titlePadding)) + titlePadding);
     this.pendingMemberTitle.setWidth(this.membersViewFrame.width() - titlePadding*2);
     this.pendingMemberTitle.drawNew();
+
+    // position text
+    this.pendingMemberTxt.setLeft(this.pendingMemberTitle.left() + titlePadding);
+    this.pendingMemberTxt.setTop(this.pendingMemberTitle.top() + titlePadding);
+    this.pendingMemberTxt.setWidth(400);
+    this.pendingMemberTxt.drawNew();
 
     // add title
     this.pendingMemberTitle.add(this.pendingMemberTxt);
