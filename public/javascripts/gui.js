@@ -682,7 +682,6 @@ IDE_Morph.prototype.createControlBar = function () {
     button.labelColor = this.buttonLabelColor;
     button.contrast = this.buttonContrast;
     button.drawNew();
-    // button.hint = 'edit settings';
     button.fixLayout();
     settingsButton = button;
     this.controlBar.add(settingsButton);
@@ -1438,7 +1437,6 @@ IDE_Morph.prototype.createCorral = function () {
 // SHAREBOX
 // ****************************
 
-
 // xinni: "settings" and "add member" buttons on the title bar.
 IDE_Morph.prototype.createShareBoxTitleBarButtons = function () {
 
@@ -1472,7 +1470,7 @@ IDE_Morph.prototype.createShareBoxTitleBarButtons = function () {
     // add member button
     button = new PushButtonMorph(
         this,
-        null,
+        'showAddMemberPopup',
         new SymbolMorph('crosshairs', 14),
         null,
         null,
@@ -1830,129 +1828,8 @@ IDE_Morph.shareBoxPrototypeFunctionality = function (myself, shareboxId) {
     */
 }
 
-// *******************************************************
-//   SHAREBOX screens to show on events
-// *******************************************************
 
-
-// xinni: Creates the request received screen.
-// i.e. "You have a group invite" message. Show this to the user who is requested!!
-IDE_Morph.prototype.showRequestReceivedMessage = function () {
-    // *****************************
-    // screen 3: Request received
-    // *****************************
-
-    var padding = 10;
-
-    // init screen
-    if (this.requestReceivedScreen) {
-        this.requestReceivedScreen.destroy();
-    }
-    this.requestReceivedScreen = new FrameMorph();
-    this.requestReceivedScreen.color = this.shareBoxConnect.color;
-    this.shareBoxConnect.addContents(this.requestReceivedScreen);
-
-    // screen 3: Awaiting reply logo
-    if (this.requestReceivedLogo) {
-        this.requestReceivedLogo.destroy();
-    }
-
-    var requestReceivedLogo = new Morph();
-    requestReceivedLogo.texture = 'images/notification.png';
-    requestReceivedLogo.drawNew = function () {
-        this.image = newCanvas(this.extent());
-        var context = this.image.getContext('2d');
-        var picBgColor = myself.shareBoxConnect.color;
-        context.fillStyle = picBgColor.toString();
-        context.fillRect(0, 0, this.width(), this.height());
-        if (this.texture) {
-            this.drawTexture(this.texture);
-        }
-    };
-    requestReceivedLogo.setExtent(new Point(129, 123));
-    requestReceivedLogo.setLeft(this.stage.width() / 2 - requestReceivedLogo.width() / 2);
-    requestReceivedLogo.setTop(this.stage.width() / 8);
-    this.requestReceivedScreen.add(requestReceivedLogo);
-
-    // screen 3: Awaiting reply text
-    txt = new TextMorph("'marylim' would like to invite you to their collaboration group.");
-
-    txt.setColor(SpriteMorph.prototype.paletteTextColor);
-    txt.setPosition(new Point(this.stage.width() / 2 - txt.width() / 2, requestReceivedLogo.bottom() + padding));
-    this.requestReceivedScreen.add(txt);
-
-    // screen 3: Accept button -> launch sharebox.
-    acceptButton = new PushButtonMorph(null, null, "Accept", null, null, null, "green");
-    acceptButton.setPosition(new Point(myself.stage.width() / 2 - acceptButton.width() - padding, txt.bottom() + padding));
-    acceptButton.action = function () {
-        console.log("Accept button pressed. Launch Sharebox.");
-        this.showEntireShareBoxComponent();
-    };
-    this.requestReceivedScreen.add(acceptButton);
-
-    // screen 3: Reject button -> go back to create group screen.
-    rejectButton = new PushButtonMorph(null, null, "Reject", null, null, null, "red");
-    rejectButton.setPosition(new Point(myself.stage.width() / 2 + padding, txt.bottom() + padding));
-    rejectButton.action = function () {
-        console.log("Reject button pressed. Back to Create group screen.");
-        myself.newGroupScreen.show();
-        myself.requestReceivedScreen.hide();
-    };
-    this.requestReceivedScreen.add(rejectButton);
-
-    // show the screen.
-    this.requestReceivedScreen.show();
-
-};
-
-// xinni: Show this window when not connected to server (this.showShareBoxDisconnectedWindow();)
-IDE_Morph.prototype.showShareBoxDisconnectedWindow = function () {
-    var padding = 10;
-
-    if (this.shareBoxDisconnectedWindow) {
-        this.shareBoxDisconnectedWindow.destroy();
-    }
-
-    // disconnected window morph
-    this.shareBoxDisconnectedWindow = new ScrollFrameMorph();
-    this.shareBoxDisconnectedWindow.color = this.groupColor;
-    this.shareBoxDisconnectedWindow.acceptsDrops = false;
-    myself = this;
-    this.add(this.shareBoxDisconnectedWindow);
-
-    // disconnected logo
-    if (this.disconnectedLogo) {
-        this.disconnectedLogo.destroy();
-    }
-    disconnectedLogo = new Morph();
-    disconnectedLogo.texture = 'images/error.png';
-    disconnectedLogo.drawNew = function () {
-        this.image = newCanvas(this.extent());
-        var context = this.image.getContext('2d');
-        var picBgColor = myself.groupColor;
-        context.fillStyle = picBgColor.toString();
-        context.fillRect(0, 0, this.width(), this.height());
-        if (this.texture) {
-            this.drawTexture(this.texture);
-        }
-    };
-    disconnectedLogo.setExtent(new Point(128, 128));
-    disconnectedLogo.setLeft(this.stage.width() / 2 - disconnectedLogo.width() / 2);
-    disconnectedLogo.setTop(this.stage.height() / 8);
-    this.shareBoxDisconnectedWindow.add(disconnectedLogo);
-
-    // disconnected text
-    disconnectedTxt = new TextMorph("Unable to connect to server.");
-    disconnectedTxt.setColor(SpriteMorph.prototype.paletteTextColor);
-    disconnectedTxt.setPosition(new Point(this.stage.width() / 2 - disconnectedTxt.width() / 2, disconnectedLogo.bottom() + padding));
-    this.shareBoxDisconnectedWindow.add(disconnectedTxt);
-
-
-};
-
-// / xinni: shows the whole share box and hide the connection screens and tabs
-// Once someone enters a collaboration session!
-// that is, they create a new group or they accept an invitation to join a group.
+// xinni: shows the whole share box and hide the connection screens and tabs
 IDE_Morph.prototype.createShareBox = function (shareboxId) {
     // Initialization of Sharebox and its default behavior
     var scripts = this.shareBoxPlaceholderSprite.scripts,
@@ -2135,7 +2012,7 @@ IDE_Morph.prototype.createShareBoxConnectBar = function () {
 
 };
 
-// xinni: ShareBox connection morph
+// xinni: creates and shows ShareBox connection morph
 IDE_Morph.prototype.createShareBoxConnect = function () {
 
     // init variables
@@ -2215,6 +2092,7 @@ IDE_Morph.prototype.createShareBoxConnect = function () {
 };
 
 
+// xinni: shows sharebox and title bar buttons (settings and add)
 IDE_Morph.prototype.showEntireShareBoxComponent = function() {
 
     console.log("showEntireShareBoxComponent triggered.");
@@ -2261,6 +2139,411 @@ IDE_Morph.prototype.showEntireShareBoxComponent = function() {
     });
 
 };
+
+
+
+// ********************************
+// ShareBox screens and messages
+// ********************************
+
+// xinni: Creates the request received screen.
+// i.e. "You have a group invite" message. Show this to the user who is requested!!
+IDE_Morph.prototype.showRequestReceivedMessage = function () {
+    // *****************************
+    // screen 3: Request received
+    // *****************************
+
+    var padding = 10;
+
+    // init screen
+    if (this.requestReceivedScreen) {
+        this.requestReceivedScreen.destroy();
+    }
+    this.requestReceivedScreen = new FrameMorph();
+    this.requestReceivedScreen.color = this.shareBoxConnect.color;
+
+    // add to shareBoxConnect
+    if (this.shareBoxConnect) {
+        this.shareBoxConnect.addContents(this.requestReceivedScreen);
+    } else {
+        console.log("Tried to show request received in non existing sharebox");
+    }
+
+    // screen 3: Awaiting reply logo
+    if (this.requestReceivedLogo) {
+        this.requestReceivedLogo.destroy();
+    }
+
+    var requestReceivedLogo = new Morph();
+    requestReceivedLogo.texture = 'images/notification.png';
+    requestReceivedLogo.drawNew = function () {
+        this.image = newCanvas(this.extent());
+        var context = this.image.getContext('2d');
+        var picBgColor = myself.shareBoxConnect.color;
+        context.fillStyle = picBgColor.toString();
+        context.fillRect(0, 0, this.width(), this.height());
+        if (this.texture) {
+            this.drawTexture(this.texture);
+        }
+    };
+    requestReceivedLogo.setExtent(new Point(129, 123));
+    requestReceivedLogo.setLeft(this.stage.width() / 2 - requestReceivedLogo.width() / 2);
+    requestReceivedLogo.setTop(this.stage.width() / 8);
+    this.requestReceivedScreen.add(requestReceivedLogo);
+
+    // screen 3: Awaiting reply text
+    txt = new TextMorph("'marylim' would like to invite you to their collaboration group.");
+
+    txt.setColor(SpriteMorph.prototype.paletteTextColor);
+    txt.setPosition(new Point(this.stage.width() / 2 - txt.width() / 2, requestReceivedLogo.bottom() + padding));
+    this.requestReceivedScreen.add(txt);
+
+    // screen 3: Accept button -> launch sharebox.
+    acceptButton = new PushButtonMorph(null, null, "Accept", null, null, null, "green");
+    acceptButton.setPosition(new Point(myself.stage.width() / 2 - acceptButton.width() - padding, txt.bottom() + padding));
+    acceptButton.action = function () {
+        console.log("Accept button pressed. Launch Sharebox.");
+        this.showEntireShareBoxComponent();
+    };
+    this.requestReceivedScreen.add(acceptButton);
+
+    // screen 3: Reject button -> go back to create group screen.
+    rejectButton = new PushButtonMorph(null, null, "Reject", null, null, null, "red");
+    rejectButton.setPosition(new Point(myself.stage.width() / 2 + padding, txt.bottom() + padding));
+    rejectButton.action = function () {
+        console.log("Reject button pressed. Back to Create group screen.");
+        myself.newGroupScreen.show();
+        myself.requestReceivedScreen.hide();
+    };
+    this.requestReceivedScreen.add(rejectButton);
+
+    // show the screen.
+    this.requestReceivedScreen.show();
+
+};
+
+// xinni: Show this when a sharebox session exists but there are no scripts added yet
+IDE_Morph.prototype.showNoScriptsMessage = function () {
+    var padding = 10;
+
+    // init morph
+    if (this.noScriptsMessage) {
+        this.noScriptsMessage.destroy();
+    }
+    this.noScriptsMessage = new FrameMorph();
+    this.noScriptsMessage.color = this.shareBoxConnect.color;
+
+    // add to sharebox
+    if (this.shareBox) {
+        this.shareBox.addContents(this.noScriptsMessage);
+    } else {
+        console.log("Tried to call No Scripts message in a non existing sharebox.");
+    }
+
+
+    // "Drag blocks to share script"
+    scriptsInstructionsTxt = new TextMorph("Drag block(s) here to share a script.");
+    scriptsInstructionsTxt.setColor(SpriteMorph.prototype.paletteTextColor);
+    scriptsInstructionsTxt.setPosition(new Point(this.shareBox.width() / 2 - scriptsInstructionsTxt.width() / 2, this.shareBox.top() + padding));
+    this.noScriptsMessage.add(scriptsInstructionsTxt);
+
+    // "No scripts here yet :("
+    noScriptsYetTxt = new TextMorph("No scripts shared yet :(");
+    noScriptsYetTxt.setColor(SpriteMorph.prototype.paletteTextColor);
+    noScriptsYetTxt.setPosition(new Point(this.shareBox.width() / 2 - noScriptsYetTxt.width() / 2, this.showNoScriptsMessage.scriptsInstructionsTxt.top() + padding*3));
+    this.noScriptsMessage.add(noScriptsYetTxt);
+
+
+    // show the screen.
+    this.noScriptsMessage.show();
+};
+
+// xinni: Show this window when not connected to server (this.showShareBoxDisconnectedWindow();)
+IDE_Morph.prototype.showShareBoxDisconnectedWindow = function () {
+    var padding = 10;
+
+    if (this.shareBoxDisconnectedWindow) {
+        this.shareBoxDisconnectedWindow.destroy();
+    }
+
+    // disconnected window morph
+    this.shareBoxDisconnectedWindow = new ScrollFrameMorph();
+    this.shareBoxDisconnectedWindow.color = this.groupColor;
+    this.shareBoxDisconnectedWindow.acceptsDrops = false;
+    myself = this;
+    this.add(this.shareBoxDisconnectedWindow);
+
+    // disconnected logo
+    if (this.disconnectedLogo) {
+        this.disconnectedLogo.destroy();
+    }
+    disconnectedLogo = new Morph();
+    disconnectedLogo.texture = 'images/error.png';
+    disconnectedLogo.drawNew = function () {
+        this.image = newCanvas(this.extent());
+        var context = this.image.getContext('2d');
+        var picBgColor = myself.groupColor;
+        context.fillStyle = picBgColor.toString();
+        context.fillRect(0, 0, this.width(), this.height());
+        if (this.texture) {
+            this.drawTexture(this.texture);
+        }
+    };
+    disconnectedLogo.setExtent(new Point(128, 128));
+    disconnectedLogo.setLeft(this.stage.width() / 2 - disconnectedLogo.width() / 2);
+    disconnectedLogo.setTop(this.stage.height() / 8);
+    this.shareBoxDisconnectedWindow.add(disconnectedLogo);
+
+    // disconnected text
+    disconnectedTxt = new TextMorph("Unable to connect to server.");
+    disconnectedTxt.setColor(SpriteMorph.prototype.paletteTextColor);
+    disconnectedTxt.setPosition(new Point(this.stage.width() / 2 - disconnectedTxt.width() / 2, disconnectedLogo.bottom() + padding));
+    this.shareBoxDisconnectedWindow.add(disconnectedTxt);
+
+
+};
+
+
+// *****************************
+// ShareBox popups
+// *****************************
+
+// * * * * * * * * * View Members Popup * * * * * * * * * * * * * * * * *
+
+// xinni: Displays a list of group members. Condition: must be in group.
+IDE_Morph.prototype.showViewMembersPopup = function() {
+    var myself = this,
+        world = this.world();
+
+    // these are just dummy lists and values.
+    // replace these values with actual sharebox group member data.
+    var showingToCreator = true; // creator view. you can delete members
+    var totalNumberOfMembers = 4; // group members + pending members
+    var groupMembers = ["john_the_creator", "seraphim_undisputed", "tang_huan_song"];
+    var pendingMembers = ["i_love_jesus"];
+    var groupMembersIsOnline = [true, false, true]; // stores whether each official member is online
+
+
+    // set up the frames to contain the member list
+    if (this.viewMembersPopup) {
+        this.viewMembersPopup.destroy();
+    }
+    this.viewMembersPopup = new DialogBoxMorph();
+    this.viewMembersPopup.setExtent(new Point(700, 500));
+
+    if (this.membersViewFrame) {
+        this.membersViewFrame.destroy();
+    }
+    this.membersViewFrame = new ScrollFrameMorph();
+    this.membersViewFrame.setExtent(new Point(640, 450));
+    this.viewMembersPopup.add(this.membersViewFrame);
+
+    // list group members
+    this.showGroupMemberTitle(groupMembers.length);
+    for (i = 0; i < groupMembers.length; i++) {
+        if (i == 0) { // assume first member is always the creator
+            this.showMemberRow(true, groupMembersIsOnline[i], groupMembers[i], false, showingToCreator);
+        } else if ((i == totalNumberOfMembers - 1) && (i != 0)) { // last row the list
+            this.showMemberRow(false, groupMembersIsOnline[i], groupMembers[i], true, showingToCreator);
+        } else {
+            this.showMemberRow(false, groupMembersIsOnline[i], groupMembers[i], false, showingToCreator);
+        }
+    }
+
+    // list pending group members
+    this.showPendingMemberTitle(pendingMembers.length, groupMembers.length);
+    for (j = 0; j < pendingMembers.length; j++) {
+        if (i == totalNumberOfMembers - 1) { // is last row
+            this.showMemberRow(false, false, pendingMembers[i], true, showingToCreator);
+        } else {
+            this.showMemberRow(false, false, pendingMembers[i], false, showingToCreator);
+        }
+    }
+};
+
+
+IDE_Morph.prototype.showGroupMemberTitle = function(numberOfGroupMembers) {
+    // initialize frame
+    if (this.groupMemberTitle) {
+        this.groupMemberTitle.destroy();
+    }
+    this.groupMemberTitle = new FrameMorph();
+    this.groupMemberTitle.setColor(this.groupColor.darker(20));
+
+    // initialize title "Group Members (count)"
+    if (this.groupMemberTxt) {
+        this.groupMemberTxt.destroy();
+    }
+    this.groupMemberTxt = new StringMorph(
+        "Group Members (" + numberOfGroupMembers + ")",
+        14,
+        'sans-serif',
+        true,
+        false,
+        false,
+        null,
+        this.frameColor.darker(this.buttonContrast)
+    );
+
+    /*// position title
+    this.groupMemberTitle.setLeft(this.membersViewFrame.left() + 5);
+    this.groupMemberTitle.setTop(this.membersViewFrame.top() + 5);
+    this.groupMemberTitle.setWidth(this.membersViewFrame.width());*/
+    this.groupMemberTitle.drawNew();
+
+    // add title
+    this.groupMemberTitle.add(this.groupMemberTxt);
+    this.membersViewFrame.add(this.groupMemberTitle);
+};
+
+IDE_Morph.prototype.showPendingMemberTitle = function(numberOfPendingMembers, numberOfGroupMembers) {
+    // initialize frame
+    if (this.pendingMemberTitle) {
+        this.pendingMemberTitle.destroy();
+    }
+    this.pendingMemberTitle = new FrameMorph();
+    this.pendingMemberTitle.setColor(this.groupColor.darker(20));
+
+    // initialize title "Pending Members (count)"
+    if (this.pendingMemberTxt) {
+        this.pendingMemberTxt.destroy();
+    }
+    this.pendingMemberTxt = new StringMorph(
+        "Pending Members (" + numberOfPendingMembers + ")",
+        14,
+        'sans-serif',
+        true,
+        false,
+        false,
+        null,
+        this.frameColor.darker(this.buttonContrast)
+    );
+
+    /*// position title
+    this.pendingMemberTitle.setLeft(this.membersViewFrame.left() + 5);
+    this.pendingMemberTitle.setTop(this.groupMemberTitle.bottom() + (numberOfGroupMembers * (groupMemberRow.getHeight() + 5)) + 5);
+    this.pendingMemberTitle.setWidth(this.membersViewFrame.width());*/
+    this.pendingMemberTitle.drawNew();
+
+    // add title
+    this.pendingMemberTitle.add(this.pendingMemberTxt);
+    this.membersViewFrame.add(this.pendingMemberTitle);
+};
+
+
+// isOnline, username, isLastRow (dont add line separator)
+IDE_Morph.prototype.showMemberRow = function(isCreator, isOnline, username, isLastRow, showingToCreator) {
+
+    console.log("Adding member row for " + username);
+
+    groupMemberRow = new FrameMorph();
+    groupMemberRow.setHeight(100);
+    groupMemberRow.setWidth(this.membersViewFrame.width());
+
+    // show Online green dot
+    if (isOnline) {
+        onlineDot = new StringMorph(
+            "☻",
+            14,
+            'sans-serif',
+            true,
+            false,
+            false,
+            null,
+            new Color(0, 255, 0)
+        );
+        groupMemberRow.add(onlineDot);
+    }
+
+    // show username
+    username = new StringMorph(
+        username,
+        14,
+        'sans-serif',
+        true,
+        false,
+        false,
+        null,
+        this.frameColor.darker(this.buttonContrast)
+    );
+    groupMemberRow.add(username);
+
+    // show delete button
+    deleteButton = new PushButtonMorph(
+        this,
+        'showRemoveMemberPopup', // replace this with delete user function
+        new SymbolMorph('line', 14),
+        null,
+        null,
+        null,
+        "symbolButton"
+    );
+    deleteButton.drawNew();
+    deleteButton.fixLayout();
+    groupMemberRow.add(deleteButton);
+
+
+    // add the row to the frame
+    this.membersViewFrame.add(groupMemberRow);
+};
+
+// * * * * * * * * * Add Member Popup * * * * * * * * * * * * * * * * *
+
+// xinni: Popup when creator chooses "Add new Member"
+IDE_Morph.prototype.showAddMemberPopup = function() {
+
+};
+
+IDE_Morph.prototype.showAddMemberSuccessScreen = function() {
+
+};
+
+// causes of error: 1) alreadyInGroup 2) connectionError 3) groupFull
+IDE_Morph.prototype.showAddMemberFailureScreen = function(errorCause) {
+
+};
+
+
+
+// * * * * * * * * * Leave group Popup * * * * * * * * * * * * * * * * *
+
+// xinni: Popup when user chooses "Leave group"
+IDE_Morph.prototype.showLeaveGroupPopup = function() {
+
+};
+
+IDE_Morph.prototype.showLeaveGroupSuccessScreen = function() {
+    // go back to sharebox connect
+};
+
+IDE_Morph.prototype.showLeaveGroupFailureScreen = function() {
+
+};
+
+
+// * * * * * * * * * Inform Removed Member Popup * * * * * * * * * * * * * * * * *
+
+// xinni: Popup to user, when creator kicks the user out of the group
+IDE_Morph.prototype.showYouHaveBeenRemovedPopup = function() {
+
+};
+
+
+// * * * * * * * * * Remove a Member Popup * * * * * * * * * * * * * * * * *
+
+// xinni: Popup to creator, when they try to remove a member
+IDE_Morph.prototype.showRemoveMemberPopup = function() {
+
+};
+
+IDE_Morph.prototype.showRemoveMemberSuccessScreen = function() {
+
+};
+
+IDE_Morph.prototype.showRemoveMemberFailureScreen = function() {
+
+};
+
 
 // IDE_Morph layout
 
@@ -2424,11 +2707,19 @@ IDE_Morph.prototype.fixLayout = function (situation) {
             this.newGroupScreen.setExtent(new Point(this.shareBoxConnect.width(), this.shareBoxConnect.height()));
         }
 
-        // ShareBox Group Request Received
+        // ShareBox Group Request Received (under sharebox connect)
         if (this.requestReceivedScreen) {
             this.requestReceivedScreen.setExtent(new Point(this.shareBoxConnect.width(), this.shareBoxConnect.height()));
         }
 
+        // Sharebox No scripts Message (under sharebox)
+        if (this.noScriptsMessage && this.shareBox) {
+            this.noScriptsMessage.setHeight(this.shareBox.height());
+            this.noScriptsMessage.setWidth(this.shareBox.width());
+        }
+
+        // huan song most likely scrapping these?
+        /*
         if (this.addScriptScreen) {
             this.addScriptScreen.setTop(this.stage.bottom() + shareBoxInternalTopPadding);
             this.addScriptScreen.setLeft(this.categories.width() + this.spriteBar.width() + shareBoxInternalLeftPadding);
@@ -2441,7 +2732,7 @@ IDE_Morph.prototype.fixLayout = function (situation) {
             this.scriptListScreen.setLeft(this.categories.width() + this.spriteBar.width() + shareBoxInternalLeftPadding);
             this.scriptListScreen.setWidth(this.stage.width());
             this.scriptListScreen.setHeight(this.bottom() - this.shareBox.top());
-        }
+        }*/
     }
 
     Morph.prototype.trackChanges = true;
@@ -3719,25 +4010,22 @@ IDE_Morph.prototype.shareBoxSettingsMenu = function() {
     menu = new MenuMorph(this);
     menu.addItem(
         'View/Edit Members',
-        'initializeCloud'
+        'showViewMembersPopup'
     );
     menu.addLine();
     menu.addItem(
         'Add Members',
-        'createCloudAccount'
+        'showAddMemberPopup'
     );
     menu.addLine();
     menu.addItem(
         'Leave group',
-        'resetCloudPassword'
+        'showLeaveGroupPopup'
     );
     menu.popup(world, pos);
 
 };
 
-IDE_Morph.prototype.shareBoxAddMemberMenu = function() {
-
-};
 
 // IDE_Morph menu actions
 
@@ -5345,6 +5633,71 @@ IDE_Morph.prototype.confirm = function (message, title, action) {
         localize(message),
         this.world()
     );
+};
+
+// xinni: popup with <warning image> and <yes/no buttons>
+IDE_Morph.prototype.imageConfirm = function(message, action) {
+
+    var pic = newCanvas(new Point(
+        129, 123
+    ));
+
+    ctx = pic.getContext("2d");
+    img = new Image();
+    img.src = '../images/notification.png';
+    img.onload = function () {
+        // create pattern
+        var ptrn = ctx.createPattern(img, 'repeat'); // Create a pattern with this image, and set it to "repeat".
+        ctx.fillStyle = ptrn;
+        ctx.fillRect(0, 0, pic.width, pic.height);
+    };
+
+    new DialogBoxMorph(null, action).askYesNo("Are you sure?", localize(message),this.world(), pic);
+
+};
+
+// xinni: failure message
+IDE_Morph.prototype.informFailure = function(message) {
+
+    var pic = newCanvas(new Point(
+        129, 123
+    ));
+
+    ctx = pic.getContext("2d");
+    img = new Image();
+    img.src = '../images/failure.png';
+    img.onload = function () {
+        // create pattern
+        var ptrn = ctx.createPattern(img, 'repeat'); // Create a pattern with this image, and set it to "repeat".
+        ctx.fillStyle = ptrn;
+        ctx.fillRect(0, 0, pic.width, pic.height);
+    };
+
+    new DialogBoxMorph(null, null).inform("Oops", localize(message), this.world(), pic);
+
+};
+
+
+
+// xinni: success message
+IDE_Morph.prototype.informSuccess = function(message) {
+
+    var pic = newCanvas(new Point(
+        129, 123
+    ));
+
+    ctx = pic.getContext("2d");
+    img = new Image();
+    img.src = '../images/success.png';
+    img.onload = function () {
+        // create pattern
+        var ptrn = ctx.createPattern(img, 'repeat'); // Create a pattern with this image, and set it to "repeat".
+        ctx.fillStyle = ptrn;
+        ctx.fillRect(0, 0, pic.width, pic.height);
+    };
+
+    new DialogBoxMorph(null, null).inform("Success", localize(message), this.world(), pic);
+
 };
 
 IDE_Morph.prototype.prompt = function (message, callback, choices, key) {
