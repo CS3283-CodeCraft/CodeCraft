@@ -2318,13 +2318,13 @@ IDE_Morph.prototype.showViewMembersPopup = function() {
     // these are just dummy lists and values.
     // replace these values with actual sharebox group member data.
     var showingToCreator = true; // creator view. you can delete members
-    var totalNumberOfMembers = 4; // group members + pending members
+    var totalNumberOfMembers = 5; // group members + pending members <= 5 total!
     var groupMembers = ["john_the_creator", "seraphim_undisputed", "tang_huan_song"];
-    var pendingMembers = ["i_love_jesus"];
+    var pendingMembers = ["i_love_jesus", "zhang_yiwen"];
     var groupMembersIsOnline = [true, false, true]; // stores whether each official member is online
 
 
-    // set up the frames to contain the member list
+    // set up the frames to contain the member list "viewMembersPopup" and "membersViewFrame"
     if (this.viewMembersPopup) {
         this.viewMembersPopup.destroy();
     }
@@ -2336,17 +2336,20 @@ IDE_Morph.prototype.showViewMembersPopup = function() {
     }
     this.membersViewFrame = new ScrollFrameMorph();
     this.membersViewFrame.setExtent(new Point(640, 450));
+    this.membersViewFrame.setLeft(this.viewMembersPopup.left());
+    this.membersViewFrame.setWidth(this.viewMembersPopup.width());
+    this.membersViewFrame.drawNew();
     this.viewMembersPopup.add(this.membersViewFrame);
 
     // list group members
     this.showGroupMemberTitle(groupMembers.length);
     for (i = 0; i < groupMembers.length; i++) {
         if (i == 0) { // assume first member is always the creator
-            this.showMemberRow(true, groupMembersIsOnline[i], groupMembers[i], false, showingToCreator);
+            this.showMemberRow(true, groupMembersIsOnline[i], groupMembers[i], i + 1, showingToCreator);
         } else if ((i == totalNumberOfMembers - 1) && (i != 0)) { // last row the list
-            this.showMemberRow(false, groupMembersIsOnline[i], groupMembers[i], true, showingToCreator);
+            this.showMemberRow(false, groupMembersIsOnline[i], groupMembers[i], i + 1, showingToCreator);
         } else {
-            this.showMemberRow(false, groupMembersIsOnline[i], groupMembers[i], false, showingToCreator);
+            this.showMemberRow(false, groupMembersIsOnline[i], groupMembers[i], i + 1, showingToCreator);
         }
     }
 
@@ -2354,15 +2357,23 @@ IDE_Morph.prototype.showViewMembersPopup = function() {
     this.showPendingMemberTitle(pendingMembers.length, groupMembers.length);
     for (j = 0; j < pendingMembers.length; j++) {
         if (i == totalNumberOfMembers - 1) { // is last row
-            this.showMemberRow(false, false, pendingMembers[i], true, showingToCreator);
+            this.showMemberRow(false, false, pendingMembers[j], i + 1 + groupMembers.length, showingToCreator);
         } else {
-            this.showMemberRow(false, false, pendingMembers[i], false, showingToCreator);
+            this.showMemberRow(false, false, pendingMembers[j], i + 1 + groupMembers.length, showingToCreator);
         }
     }
+
+
+    this.viewMembersPopup.fixLayout();
+    this.viewMembersPopup.drawNew();
+    this.viewMembersPopup.fixLayout();
+    this.viewMembersPopup.popUp(world);
 };
 
 
 IDE_Morph.prototype.showGroupMemberTitle = function(numberOfGroupMembers) {
+    var titlePadding = 5;
+
     // initialize frame
     if (this.groupMemberTitle) {
         this.groupMemberTitle.destroy();
@@ -2385,11 +2396,12 @@ IDE_Morph.prototype.showGroupMemberTitle = function(numberOfGroupMembers) {
         this.frameColor.darker(this.buttonContrast)
     );
 
-    /*// position title
-    this.groupMemberTitle.setLeft(this.membersViewFrame.left() + 5);
-    this.groupMemberTitle.setTop(this.membersViewFrame.top() + 5);
-    this.groupMemberTitle.setWidth(this.membersViewFrame.width());*/
+    // position title
+    this.groupMemberTitle.setLeft(this.membersViewFrame.left() + titlePadding);
+    this.groupMemberTitle.setTop(this.membersViewFrame.top() + titlePadding);
+    this.groupMemberTitle.setWidth(this.membersViewFrame.width() - titlePadding*2);
     this.groupMemberTitle.drawNew();
+
 
     // add title
     this.groupMemberTitle.add(this.groupMemberTxt);
@@ -2397,6 +2409,8 @@ IDE_Morph.prototype.showGroupMemberTitle = function(numberOfGroupMembers) {
 };
 
 IDE_Morph.prototype.showPendingMemberTitle = function(numberOfPendingMembers, numberOfGroupMembers) {
+    var titlePadding = 5;
+
     // initialize frame
     if (this.pendingMemberTitle) {
         this.pendingMemberTitle.destroy();
@@ -2419,10 +2433,10 @@ IDE_Morph.prototype.showPendingMemberTitle = function(numberOfPendingMembers, nu
         this.frameColor.darker(this.buttonContrast)
     );
 
-    /*// position title
-    this.pendingMemberTitle.setLeft(this.membersViewFrame.left() + 5);
-    this.pendingMemberTitle.setTop(this.groupMemberTitle.bottom() + (numberOfGroupMembers * (groupMemberRow.getHeight() + 5)) + 5);
-    this.pendingMemberTitle.setWidth(this.membersViewFrame.width());*/
+    // position title
+    this.pendingMemberTitle.setLeft(this.membersViewFrame.left() + titlePadding);
+    this.pendingMemberTitle.setTop(this.groupMemberTitle.bottom() + (numberOfGroupMembers * (groupMemberRow.height() + titlePadding)) + titlePadding);
+    this.pendingMemberTitle.setWidth(this.membersViewFrame.width() - titlePadding*2);
     this.pendingMemberTitle.drawNew();
 
     // add title
@@ -2432,8 +2446,9 @@ IDE_Morph.prototype.showPendingMemberTitle = function(numberOfPendingMembers, nu
 
 
 // isOnline, username, isLastRow (dont add line separator)
-IDE_Morph.prototype.showMemberRow = function(isCreator, isOnline, username, isLastRow, showingToCreator) {
-
+IDE_Morph.prototype.showMemberRow = function(isCreator, isOnline, username, rowNo, showingToCreator) {
+    var titlePadding = 5;
+    var myself = this;
     console.log("Adding member row for " + username);
 
     groupMemberRow = new FrameMorph();
@@ -2452,6 +2467,8 @@ IDE_Morph.prototype.showMemberRow = function(isCreator, isOnline, username, isLa
             null,
             new Color(0, 255, 0)
         );
+        onlineDot.setLeft(myself.membersViewFrame.left() + 10);
+        onlineDot.drawNew();
         groupMemberRow.add(onlineDot);
     }
 
@@ -2466,24 +2483,33 @@ IDE_Morph.prototype.showMemberRow = function(isCreator, isOnline, username, isLa
         null,
         this.frameColor.darker(this.buttonContrast)
     );
+    username.setLeft(myself.membersViewFrame.left() + 10 + 100 + 10);
+    username.drawNew();
     groupMemberRow.add(username);
 
     // show delete button
-    deleteButton = new PushButtonMorph(
-        this,
-        'showRemoveMemberPopup', // replace this with delete user function
-        new SymbolMorph('line', 14),
-        null,
-        null,
-        null,
-        "symbolButton"
-    );
-    deleteButton.drawNew();
-    deleteButton.fixLayout();
-    groupMemberRow.add(deleteButton);
+    if (showingToCreator) {
+        deleteButton = new PushButtonMorph(
+            this,
+            'showRemoveMemberPopup', // replace this with delete user function
+            new SymbolMorph('line', 14),
+            null,
+            null,
+            null,
+            "symbolButton"
+        );
+        deleteButton.setLeft(myself.membersViewFrame.left() + 10 + 100 + 10 + 150 + 10);
+        deleteButton.drawNew();
+        deleteButton.fixLayout();
+        groupMemberRow.add(deleteButton);
+    }
 
-
-    // add the row to the frame
+    // position and add the row to the frame
+    // position title
+    groupMemberRow.setLeft(myself.membersViewFrame.left() + titlePadding);
+    groupMemberRow.setTop(myself.groupMemberTitle.bottom() + ((rowNo - 1) * (groupMemberRow.height() + titlePadding)) + titlePadding);
+    groupMemberRow.setWidth(myself.membersViewFrame.width() - titlePadding*2);
+    groupMemberRow.drawNew();
     this.membersViewFrame.add(groupMemberRow);
 };
 
