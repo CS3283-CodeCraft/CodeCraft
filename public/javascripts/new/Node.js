@@ -6,6 +6,11 @@ var Node = Class.create({
         this.init(parent || null, childrenArray || []);
     },
 
+    instanceOf : function(className){
+    	var a = this.constructor;
+    	return instanceOf(a, className);
+	},
+
     init: function (parent, childrenArray) {
 	    this.parent = parent || null;
 	    this.children = childrenArray || [];

@@ -7,6 +7,12 @@ var Point = Class.create({
         this.y = y || 0;
     },
 
+    instanceOf: function(className){
+        var a = this.constructor;
+        return instanceOf(a, className);
+    },
+
+
     // Point string representation: e.g. '12@68'
 
     toString: function () {

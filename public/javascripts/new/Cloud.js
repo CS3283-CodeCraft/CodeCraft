@@ -34,20 +34,14 @@ var Cloud = Class.create({
 	        share_with: shareWith
 	    }
 	    var success = function(data){
+	    	console.log("success")
 	        callBack.call(null, data);
 	    }
 	    var url = this.url + 'sharebox'
 	    console.log(url)
 	    console.log(data)
-	    console.log(success)
-	    console.log($.post)
-	    $.ajax({
-	        type: "POST",
-	        url: url,
-	        data: data,
-	        success: success,
-	        dataType: 'json'
-	    });
+	    $.post(url, data, success, 'json')
+	    console.log("excuted")
 	},
 
 	signup: function (

@@ -199,7 +199,6 @@ function instanceOf(a, b) {
     }
 }
 
-Object.prototype.instanceOf = function(className){
-    var a = this.constructor;
-    return instanceOf(a, className);
-}
+
+
+

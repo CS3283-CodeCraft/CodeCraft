@@ -20,7 +20,10 @@ var BlinkerMorph = Class.create(Morph, {
 
 	step: function () {
     	this.toggleVisibility();
-	},
+	}
+
+	
+
 
 })
 

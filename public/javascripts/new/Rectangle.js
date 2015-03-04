@@ -11,6 +11,11 @@ var Rectangle = Class.create({
         new Point((right || 0), (bottom || 0)));
     },
 
+    instanceOf : function(className){
+        var a = this.constructor;
+        return instanceOf(a, className);
+    },
+
     init: function (originPoint, cornerPoint) {
         this.origin = originPoint;
         this.corner = cornerPoint;

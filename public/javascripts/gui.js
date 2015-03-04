@@ -2241,15 +2241,12 @@ IDE_Morph.prototype.showEntireShareBoxComponent = function() {
         this.createShareBoxTitleBarButtons();
     }
 
+
     // create share box
     myself = this;
     SnapCloud.createSharebox(tempIdentifier, function(data) {
-        console.log(data);
         var shareboxId = prompt("sharebox id?", data.data[0].id);
-
-
         console.log("show entire share box");
-        console.log(this);
         myself.createShareBoxBar();
         myself.createShareBox(shareboxId);
         myself.fixLayout();
