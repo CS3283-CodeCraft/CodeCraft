@@ -55,7 +55,7 @@ function PushButtonMorph(
     environment,
     hint,
     template,
-	demo
+	style
 ) {
     this.init(
         target,
@@ -64,7 +64,7 @@ function PushButtonMorph(
         environment,
         hint,
         template,
-		demo
+		style
     );
 }
 
