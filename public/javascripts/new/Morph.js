@@ -39,7 +39,7 @@ var Morph = Class.create(Node, {
 	},
 
 	init: function($super){
-		$super(null, []);
+		$super();
 		this.isMorph = true;
 	    this.bounds = new Rectangle(0, 0, 50, 40);
 	    this.color = new Color(80, 80, 80);

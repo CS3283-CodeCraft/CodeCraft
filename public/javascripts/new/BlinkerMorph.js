@@ -11,7 +11,7 @@ var BlinkerMorph = Class.create(Morph, {
 		this.init(rate);
 	},
 
-	init: function ($super) {
+	init: function ($super, rate) {
 	    $super();
 	    this.color = new Color(0, 0, 0);
 	    this.fps = rate || 2;

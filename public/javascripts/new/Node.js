@@ -105,6 +105,7 @@ var Node = Class.create({
 	},
 
 	parentThatIsA: function (constructorName) {
+		
 	    // including myself
 	    if (this.instanceOf(constructorName)) {
 	        return this;
@@ -113,6 +114,9 @@ var Node = Class.create({
 	    if (!this.parent){
 	    	return null;
 	    }
+
+
+
 		return this.parent.parentThatIsA(constructorName);
 	},
 

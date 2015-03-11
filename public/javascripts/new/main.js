@@ -34,10 +34,15 @@ global.HandMorph = require('./HandMorph');
 global.WorldMorph = require('./WorldMorph');
 
 // widgets.js
-
+global.AlignmentMorph = require('./AlignmentMorph');
+global.InputFieldMorph = require('./InputFieldMorph');
+global.PushButtonMorph = require('./PushButtonMorph');
 
 
 // blocks.js
+global.ArrowMorph = require('./ArrowMorph');
+global.BlockHighlightMorph = require('./BlockHighlightMorph');
+global.SymbolMorph = require('./SymbolMorph');
 
 // gui.js
 

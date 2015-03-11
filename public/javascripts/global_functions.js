@@ -190,13 +190,26 @@ function copy(target) {
 }
 
 function instanceOf(a, b) {
+
     if (a.className == b) {
         return true;
-    } else if (a.superclass == null) {
-        return false;
     } else {
-        return instanceOf(a.superclass, b);
-    }
+        var superClass;
+
+        if (a.hasOwnProperty('superclass')) {
+            superClass = a.superclass;
+        } else if (a.hasOwnProperty('uber')) {
+            superClass = a.uber.constructor;
+        } else {
+            superClass = null;
+        }
+
+        if (superClass == null) {
+            return false;
+        } else {
+            return instanceOf(superClass, b);
+        }
+    } 
 }
 
 

@@ -50,3 +50,7 @@ modules.cloud = '2014-May-26';
 
 $ = jQuery;
 
+// widget.js
+
+var typefilter = false;
+var locationfilter = false;

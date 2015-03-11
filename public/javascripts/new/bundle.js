@@ -1,5 +1,165 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 var Morph = require('./Morph');
+var Point = require('./Point');
+
+var AlignmentMorph = Class.create(Morph, {
+
+    // AlignmentMorph /////////////////////////////////////////////////////
+
+    // I am a reified layout, either a row or a column of submorphs
+    
+    initialize: function(orientation, padding){
+        this.init(orientation, padding);
+    },
+
+    init: function ($super, orientation, padding) {
+        // additional properties:
+        this.orientation = orientation || 'row'; // or 'column'
+        this.alignment = 'center'; // or 'left' in a column
+        this.padding = padding || 0;
+        this.respectHiddens = false;
+
+        // initialize inherited properties:
+        $super();
+
+        // override inherited properites:
+    },
+
+    // AlignmentMorph displaying and layout
+
+    drawNew: function () {
+        this.image = newCanvas(new Point(1, 1));
+        this.fixLayout();
+    },
+
+    fixLayout: function () {
+        var myself = this,
+            last = null,
+            newBounds;
+        if (this.children.length === 0) {
+            return null;
+        }
+        this.children.forEach(function (c) {
+            var cfb = c.fullBounds(),
+                lfb;
+            if (c.isVisible || myself.respectHiddens) {
+                if (last) {
+                    lfb = last.fullBounds();
+                    if (myself.orientation === 'row') {
+                        c.setPosition(
+                            lfb.topRight().add(new Point(
+                                myself.padding,
+                                (lfb.height() - cfb.height()) / 2
+                            ))
+                        );
+                    } else { // orientation === 'column'
+                        c.setPosition(
+                            lfb.bottomLeft().add(new Point(
+                                myself.alignment === 'center' ?
+                                        (lfb.width() - cfb.width()) / 2
+                                                : 0,
+                                myself.padding
+                            ))
+                        );
+                    }
+                    newBounds = newBounds.merge(cfb);
+                } else {
+                    newBounds = cfb;
+                }
+                last = c;
+            }
+        });
+        this.bounds = newBounds;
+    },
+
+})
+
+AlignmentMorph.uber = Morph.prototype;
+AlignmentMorph.className = 'AlignmentMorph';
+
+module.exports = AlignmentMorph;
+
+
+},{"./Morph":22,"./Point":26}],2:[function(require,module,exports){
+var Morph = require('./Morph');
+var Color = require('./Color');
+var Point = require('./Point');
+
+var ArrowMorph = Class.create(Morph, {
+	// ArrowMorph //////////////////////////////////////////////////////////
+
+	/*
+	    I am a triangular arrow shape, for use in drop-down menus etc.
+	    My orientation is governed by my 'direction' property, which can be
+	    'down', 'up', 'left' or 'right'.
+	*/
+
+	initialize: function(direction, size, padding, color){
+		this.init(direction, size, padding, color);
+	},
+
+	init: function ($super, direction, size, padding, color) {
+	    this.direction = direction || 'down';
+	    this.size = size || ((size === 0) ? 0 : 50);
+	    this.padding = padding || 0;
+
+	    $super();
+	    this.color = color || new Color(0, 0, 0);
+	    this.setExtent(new Point(this.size, this.size));
+	},
+
+	setSize: function (size) {
+	    var min = Math.max(size, 1);
+	    this.size = size;
+	    this.setExtent(new Point(min, min));
+	},
+
+	// ArrowMorph displaying:
+
+	drawNew: function () {
+	    // initialize my surface property
+	    this.image = newCanvas(this.extent());
+	    var context = this.image.getContext('2d'),
+	        pad = this.padding,
+	        h = this.height(),
+	        h2 = Math.floor(h / 2),
+	        w = this.width(),
+	        w2 = Math.floor(w / 2);
+
+	    context.fillStyle = this.color.toString();
+	    context.beginPath();
+	    if (this.direction === 'down') {
+	        context.moveTo(pad, h2);
+	        context.lineTo(w - pad, h2);
+	        context.lineTo(w2, h - pad);
+	    } else if (this.direction === 'up') {
+	        context.moveTo(pad, h2);
+	        context.lineTo(w - pad, h2);
+	        context.lineTo(w2, pad);
+	    } else if (this.direction === 'left') {
+	        context.moveTo(pad, h2);
+	        context.lineTo(w2, pad);
+	        context.lineTo(w2, h - pad);
+	    } else { // 'right'
+	        context.moveTo(w2, pad);
+	        context.lineTo(w - pad, h2);
+	        context.lineTo(w2, h - pad);
+	    }
+	    context.closePath();
+	    context.fill();
+	},
+})
+
+ArrowMorph.uber = Morph.prototype;
+ArrowMorph.className = 'ArrowMorph';
+
+module.exports = ArrowMorph;
+
+
+
+
+},{"./Color":9,"./Morph":22,"./Point":26}],3:[function(require,module,exports){
+var Morph = require('./Morph');
 var Color = require('./Color');
 
 var BlinkerMorph = Class.create(Morph, {
@@ -12,7 +172,7 @@ var BlinkerMorph = Class.create(Morph, {
 		this.init(rate);
 	},
 
-	init: function ($super) {
+	init: function ($super, rate) {
 	    $super();
 	    this.color = new Color(0, 0, 0);
 	    this.fps = rate || 2;
@@ -34,7 +194,26 @@ BlinkerMorph.className = 'BlinkerMorph';
 module.exports = BlinkerMorph;
 
 
-},{"./Color":6,"./Morph":18}],2:[function(require,module,exports){
+},{"./Color":9,"./Morph":22}],4:[function(require,module,exports){
+var Morph = require('./Morph');
+
+var BlockHighlightMorph = Class.create(Morph, {
+
+	// BlockHighlightMorph /////////////////////////////////////////////////
+
+	initialize: function(){
+		this.init();
+	}
+
+})
+
+BlockHighlightMorph.uber = Morph.prototype;
+BlockHighlightMorph.className = 'BlockHighlightMorph';
+
+module.exports = BlockHighlightMorph;
+
+
+},{"./Morph":22}],5:[function(require,module,exports){
 var Morph = require('./Morph');
 var Point = require('./Point');
 
@@ -123,7 +302,7 @@ BouncerMorph.className = 'BouncerMorph';
 module.exports = BouncerMorph;
 
 
-},{"./Morph":18,"./Point":22}],3:[function(require,module,exports){
+},{"./Morph":22,"./Point":26}],6:[function(require,module,exports){
 var Morph = require('./Morph');
 var Color = require('./Color');
 
@@ -330,7 +509,7 @@ module.exports = BoxMorph;
 
 
     
-},{"./Color":6,"./Morph":18}],4:[function(require,module,exports){
+},{"./Color":9,"./Morph":22}],7:[function(require,module,exports){
 var Morph = require('./Morph');
 var Point = require('./Point');
 var Rectangle = require('./Rectangle');
@@ -466,7 +645,7 @@ module.exports = CircleBoxMorph;
 
 
 
-},{"./Morph":18,"./Point":22,"./Rectangle":23}],5:[function(require,module,exports){
+},{"./Morph":22,"./Point":26,"./Rectangle":28}],8:[function(require,module,exports){
 var Cloud = Class.create({
 
 	// Cloud /////////////////////////////////////////////////////////////
@@ -1094,7 +1273,7 @@ Cloud.className = 'Cloud';
 
 module.exports = Cloud;
 
-},{}],6:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 var Color = Class.create({
 	
 	initialize: function(r, g, b, a){
@@ -1257,7 +1436,7 @@ var Color = Class.create({
 Color.className = 'Color';
 
 module.exports = Color;
-},{}],7:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 var Morph = require('./Morph');
 var Point = require('./Point');
 var Color = require('./Color');
@@ -1401,7 +1580,7 @@ module.exports = ColorPaletteMorph;
 
 
 	
-},{"./Color":6,"./Morph":18,"./Point":22}],8:[function(require,module,exports){
+},{"./Color":9,"./Morph":22,"./Point":26}],11:[function(require,module,exports){
 var Morph = require('./Morph');
 var Color = require('./Color');
 var Point = require('./Point');
@@ -1475,7 +1654,7 @@ ColorPickerMorph.className = 'ColorPickerMorph';
 module.exports = ColorPickerMorph;
 
 
-},{"./Color":6,"./ColorPaletteMorph":7,"./GrayPaletteMorph":11,"./Morph":18,"./Point":22}],9:[function(require,module,exports){
+},{"./Color":9,"./ColorPaletteMorph":10,"./GrayPaletteMorph":14,"./Morph":22,"./Point":26}],12:[function(require,module,exports){
 
 var BlinkerMorph = require('./BlinkerMorph');
 var InspectorMorph = require('./InspectorMorph');
@@ -1907,7 +2086,7 @@ module.exports = CursorMorph;
 
 
 
-},{"./BlinkerMorph":1,"./InspectorMorph":14,"./Point":22}],10:[function(require,module,exports){
+},{"./BlinkerMorph":3,"./InspectorMorph":18,"./Point":26}],13:[function(require,module,exports){
 var Morph = require('./Morph');
 var Color = require('./Color');
 var Point = require('./Point');
@@ -2113,7 +2292,7 @@ FrameMorph.className = 'FrameMorph';
 module.exports = FrameMorph;
 
     
-},{"./Color":6,"./Morph":18,"./Point":22}],11:[function(require,module,exports){
+},{"./Color":9,"./Morph":22,"./Point":26}],14:[function(require,module,exports){
 var Color = require('./Color');
 var Point = require('./Point');
 var ColorPaletteMorph = require('./ColorPaletteMorph');
@@ -2149,7 +2328,7 @@ GrayPaletteMorph.className = 'GrayPaletteMorph';
 module.exports = GrayPaletteMorph;
 
 
-},{"./Color":6,"./ColorPaletteMorph":7,"./Point":22}],12:[function(require,module,exports){
+},{"./Color":9,"./ColorPaletteMorph":10,"./Point":26}],15:[function(require,module,exports){
 var Morph = require('./Morph');
 var Point = require('./Point');
 var Rectangle = require('./Rectangle');
@@ -2791,7 +2970,7 @@ module.exports = HandMorph;
 
 
 
-},{"./Morph":18,"./Point":22,"./Rectangle":23}],13:[function(require,module,exports){
+},{"./Morph":22,"./Point":26,"./Rectangle":28}],16:[function(require,module,exports){
 var Morph = require('./Morph');
 var Point = require('./Point');
 var Color = require('./Color');
@@ -3042,7 +3221,389 @@ module.exports = HandleMorph;
 
 
 	
-},{"./Color":6,"./Morph":18,"./Point":22}],14:[function(require,module,exports){
+},{"./Color":9,"./Morph":22,"./Point":26}],17:[function(require,module,exports){
+var Morph = require('./Morph');
+var StringFieldMorph = require('./StringFieldMorph');
+var ArrowMorph = require('./ArrowMorph');
+var Color = require('./Color');
+
+var InputFieldMorph = Class.create(Morph, {
+
+    edge: 2,
+    fontSize: 12,
+    typeInPadding: 2,
+    contrast: 65,
+
+    
+    // InputFieldMorph //////////////////////////////////////////////////////
+    
+    initialize: function(text, isNumeric, choiceDict, isReadOnly){
+        this.init(text, isNumeric, choiceDict, isReadOnly);
+    },
+
+
+    init: function (
+        $super, 
+        text,
+        isNumeric,
+        choiceDict,
+        isReadOnly
+    ) {
+        var contents = new StringFieldMorph(text || ''),
+            arrow = new ArrowMorph(
+                'down',
+                0,
+                Math.max(Math.floor(this.fontSize / 6), 1)
+            );
+
+        this.choices = choiceDict || null; // object, function or selector
+        this.isReadOnly = isReadOnly || false;
+        this.isNumeric = isNumeric || false;
+
+        contents.alpha = 0;
+        contents.fontSize = this.fontSize;
+        contents.drawNew();
+
+        this.oldContentsExtent = contents.extent();
+        this.isNumeric = isNumeric || false;
+
+        $super();
+        this.color = new Color(255, 255, 255);
+        this.add(contents);
+        this.add(arrow);
+        contents.isDraggable = false;
+        this.drawNew();
+    },
+
+    // InputFieldMorph accessing:
+
+    contents: function () {
+        return detect(
+            this.children,
+            function (child) {
+                return (child instanceof StringFieldMorph);
+            }
+        );
+    },
+
+    arrow: function () {
+        return detect(
+            this.children,
+            function (child) {
+                return (child instanceof ArrowMorph);
+            }
+        );
+    },
+
+    setChoice: function (aStringOrFloat) {
+        this.setContents(aStringOrFloat);
+        this.escalateEvent('reactToChoice', aStringOrFloat);
+    },
+
+    setContents: function (aStringOrFloat) {
+        var cnts = this.contents();
+        cnts.text.text = aStringOrFloat;
+        if (aStringOrFloat === undefined) {
+            return null;
+        }
+        if (aStringOrFloat === null) {
+            cnts.text.text = '';
+        } else if (aStringOrFloat.toString) {
+            cnts.text.text = aStringOrFloat.toString();
+        }
+        cnts.drawNew();
+        cnts.changed();
+    },
+
+    edit: function () {
+        var c = this.contents();
+        c.text.edit();
+        c.text.selectAll();
+    },
+
+    setIsNumeric: function (bool) {
+        var value;
+
+        this.isNumeric = bool;
+        this.contents().isNumeric = bool;
+        this.contents().text.isNumeric = bool;
+
+        // adjust my shown value to conform with the numeric flag
+        value = this.getValue();
+        if (this.isNumeric) {
+            value = parseFloat(value);
+            if (isNaN(value)) {
+                value = null;
+            }
+        }
+        this.setContents(value);
+    },
+
+    // InputFieldMorph drop-down menu:
+
+    dropDownMenu: function () {
+        var choices = this.choices,
+            key,
+            menu = new MenuMorph(
+                this.setChoice,
+                null,
+                this,
+                this.fontSize
+            );
+
+        if (choices instanceof Function) {
+            choices = choices.call(this);
+        } else if (isString(choices)) {
+            choices = this[choices]();
+        }
+        if (!choices) {
+            return null;
+        }
+        menu.addItem(' ', null);
+        if (choices instanceof Array) {
+            choices.forEach(function (choice) {
+                menu.addItem(choice[0], choice[1]);
+            });
+        } else { // assuming a dictionary
+            for (key in choices) {
+                if (Object.prototype.hasOwnProperty.call(choices, key)) {
+                    if (key[0] === '~') {
+                        menu.addLine();
+                    } else {
+                        menu.addItem(key, choices[key]);
+                    }
+                }
+            }
+        }
+        if (menu.items.length > 0) {
+            menu.popUpAtHand(this.world());
+        } else {
+            return null;
+        }
+    },
+
+    // InputFieldMorph layout:
+
+    fixLayout: function () {
+        var contents = this.contents(),
+            arrow = this.arrow();
+
+        if (!contents) {return null; }
+        contents.isNumeric = this.isNumeric;
+        contents.isEditable = (!this.isReadOnly);
+        if (this.choices) {
+            arrow.setSize(this.fontSize);
+            arrow.show();
+        } else {
+            arrow.setSize(0);
+            arrow.hide();
+        }
+        this.silentSetHeight(
+            contents.height()
+                + this.edge * 2
+                + this.typeInPadding * 2
+        );
+        this.silentSetWidth(Math.max(
+            contents.minWidth
+                + this.edge * 2
+                + this.typeInPadding * 2,
+            this.width()
+        ));
+
+        contents.setWidth(
+            this.width() - this.edge - this.typeInPadding -
+                (this.choices ? arrow.width() + this.typeInPadding : 0)
+        );
+
+        contents.silentSetPosition(new Point(
+            this.edge,
+            this.edge
+        ).add(this.typeInPadding).add(this.position()));
+
+        arrow.silentSetPosition(new Point(
+            this.right() - arrow.width() - this.edge,
+            contents.top()
+        ));
+
+    },
+
+    // InputFieldMorph events:
+
+    mouseClickLeft: function (pos) {
+        if (this.arrow().bounds.containsPoint(pos)) {
+            this.dropDownMenu();
+        } else if (this.isReadOnly) {
+            this.dropDownMenu();
+        } else {
+            this.escalateEvent('mouseClickLeft', pos);
+        }
+    },
+
+    // InputFieldMorph retrieving:
+
+    getValue: function () {
+    /*
+        answer my content's text string. If I am numerical convert that
+        string to a number. If the conversion fails answer the string
+        otherwise the numerical value.
+    */
+        var num,
+            contents = this.contents();
+        if (this.isNumeric) {
+            num = parseFloat(contents.text);
+            if (!isNaN(num)) {
+                return num;
+            }
+        }
+        return this.normalizeSpaces(contents.string());
+    },
+
+    normalizeSpaces: function (string) {
+        var ans = '', i, c, flag = false;
+
+        for (i = 0; i < string.length; i += 1) {
+            c = string[i];
+            if (c === ' ') {
+                if (flag) {
+                    ans += c;
+                    flag = false;
+                }
+            } else {
+                ans += c;
+                flag = true;
+            }
+        }
+        return ans.trim();
+    },
+
+    // InputFieldMorph drawing:
+
+    drawNew: function () {
+        var context, borderColor;
+
+        this.fixLayout();
+
+        // initialize my surface property
+        this.image = newCanvas(this.extent());
+        context = this.image.getContext('2d');
+        if (this.parent) {
+            if (this.parent.color.eq(new Color(255, 255, 255))) {
+                this.color = this.parent.color.darker(this.contrast * 0.1);
+            } else {
+                this.color = this.parent.color.lighter(this.contrast * 0.75);
+            }
+            borderColor = this.parent.color;
+        } else {
+            borderColor = new Color(120, 120, 120);
+        }
+        context.fillStyle = this.color.toString();
+
+        // cache my border colors
+        this.cachedClr = borderColor.toString();
+        this.cachedClrBright = borderColor.lighter(this.contrast)
+            .toString();
+        this.cachedClrDark = borderColor.darker(this.contrast).toString();
+
+        context.fillRect(
+            this.edge,
+            this.edge,
+            this.width() - this.edge * 2,
+            this.height() - this.edge * 2
+        );
+
+        this.drawRectBorder(context);
+    },
+
+    drawRectBorder: function (context) {
+        var shift = this.edge * 0.5,
+            gradient;
+
+        if (MorphicPreferences.isFlat && !this.is3D) {return; }
+
+        context.lineWidth = this.edge;
+        context.lineJoin = 'round';
+        context.lineCap = 'round';
+
+        context.shadowOffsetY = shift;
+        context.shadowBlur = this.edge * 4;
+        context.shadowColor = this.cachedClrDark;
+
+        gradient = context.createLinearGradient(
+            0,
+            0,
+            0,
+            this.edge
+        );
+
+        gradient.addColorStop(0, this.cachedClr);
+        gradient.addColorStop(1, this.cachedClrDark);
+        context.strokeStyle = gradient;
+        context.beginPath();
+        context.moveTo(this.edge, shift);
+        context.lineTo(this.width() - this.edge - shift, shift);
+        context.stroke();
+
+        context.shadowOffsetY = 0;
+
+        gradient = context.createLinearGradient(
+            0,
+            0,
+            this.edge,
+            0
+        );
+        gradient.addColorStop(0, this.cachedClr);
+        gradient.addColorStop(1, this.cachedClrDark);
+        context.strokeStyle = gradient;
+        context.beginPath();
+        context.moveTo(shift, this.edge);
+        context.lineTo(shift, this.height() - this.edge - shift);
+        context.stroke();
+
+        context.shadowOffsetX = 0;
+        context.shadowOffsetY = 0;
+        context.shadowBlur = 0;
+
+        gradient = context.createLinearGradient(
+            0,
+            this.height() - this.edge,
+            0,
+            this.height()
+        );
+        gradient.addColorStop(0, this.cachedClrBright);
+        gradient.addColorStop(1, this.cachedClr);
+        context.strokeStyle = gradient;
+        context.beginPath();
+        context.moveTo(this.edge, this.height() - shift);
+        context.lineTo(this.width() - this.edge, this.height() - shift);
+        context.stroke();
+
+        gradient = context.createLinearGradient(
+            this.width() - this.edge,
+            0,
+            this.width(),
+            0
+        );
+        gradient.addColorStop(0, this.cachedClrBright);
+        gradient.addColorStop(1, this.cachedClr);
+        context.strokeStyle = gradient;
+        context.beginPath();
+        context.moveTo(this.width() - shift, this.edge);
+        context.lineTo(this.width() - shift, this.height() - this.edge);
+        context.stroke();
+    },
+
+})
+
+InputFieldMorph.uber = Morph.prototype;
+InputFieldMorph.className = 'InputFieldMorph';
+
+module.exports = InputFieldMorph;
+
+
+
+
+
+},{"./ArrowMorph":2,"./Color":9,"./Morph":22,"./StringFieldMorph":34}],18:[function(require,module,exports){
 var BoxMorph = require('./BoxMorph');
 var Point = require('./Point');
 var Color = require('./Color');
@@ -3547,7 +4108,7 @@ InspectorMorph.className = 'InspectorMorph';
 
 module.exports = InspectorMorph;
 
-},{"./BoxMorph":3,"./Color":6,"./CursorMorph":9,"./HandleMorph":13,"./ListMorph":15,"./MenuMorph":17,"./Morph":18,"./Point":22,"./ScrollFrameMorph":24,"./TextMorph":31,"./TriggerMorph":32}],15:[function(require,module,exports){
+},{"./BoxMorph":6,"./Color":9,"./CursorMorph":12,"./HandleMorph":16,"./ListMorph":19,"./MenuMorph":21,"./Morph":22,"./Point":26,"./ScrollFrameMorph":29,"./TextMorph":37,"./TriggerMorph":38}],19:[function(require,module,exports){
 var ScrollFrameMorph = require('./ScrollFrameMorph');
 var Color = require('./Color');
 var MenuMorph = require('./MenuMorph');
@@ -3701,7 +4262,7 @@ module.exports = ListMorph;
 
 
     
-},{"./Color":6,"./MenuMorph":17,"./ScrollFrameMorph":24}],16:[function(require,module,exports){
+},{"./Color":9,"./MenuMorph":21,"./ScrollFrameMorph":29}],20:[function(require,module,exports){
 var Morph = require('./Morph');
 var TriggerMorph = require('./TriggerMorph');
 var TextMorph = require('./TextMorph');
@@ -3873,7 +4434,7 @@ module.exports = MenuItemMorph;
 
 
 
-},{"./Morph":18,"./Point":22,"./Rectangle":23,"./TextMorph":31,"./TriggerMorph":32}],17:[function(require,module,exports){
+},{"./Morph":22,"./Point":26,"./Rectangle":28,"./TextMorph":37,"./TriggerMorph":38}],21:[function(require,module,exports){
 var BoxMorph = require('./BoxMorph');
 var MenuItemMorph = require('./MenuItemMorph');
 var FrameMorph = require('./FrameMorph');
@@ -4184,7 +4745,7 @@ MenuMorph.className = 'MenuMorph';
 module.exports = MenuMorph;
 
 
-},{"./BoxMorph":3,"./Color":6,"./ColorPickerMorph":8,"./FrameMorph":10,"./MenuItemMorph":16,"./Point":22,"./ScrollFrameMorph":24,"./SliderMorph":27,"./StringFieldMorph":29,"./TextMorph":31}],18:[function(require,module,exports){
+},{"./BoxMorph":6,"./Color":9,"./ColorPickerMorph":11,"./FrameMorph":13,"./MenuItemMorph":20,"./Point":26,"./ScrollFrameMorph":29,"./SliderMorph":32,"./StringFieldMorph":34,"./TextMorph":37}],22:[function(require,module,exports){
 var Node = require('./Node');
 var Rectangle = require('./Rectangle');
 var Color = require('./Color');
@@ -4226,7 +4787,7 @@ var Morph = Class.create(Node, {
 	},
 
 	init: function($super){
-		$super(null, []);
+		$super();
 		this.isMorph = true;
 	    this.bounds = new Rectangle(0, 0, 50, 40);
 	    this.color = new Color(80, 80, 80);
@@ -5729,7 +6290,7 @@ Morph.className = 'Morph';
 
 
 module.exports = Morph;
-},{"./Color":6,"./Node":20,"./Rectangle":23}],19:[function(require,module,exports){
+},{"./Color":9,"./Node":24,"./Rectangle":28}],23:[function(require,module,exports){
 var BoxMorph = require('./BoxMorph');
 var Color = require('./Color');
 
@@ -5803,7 +6364,7 @@ MouseSensorMorph.className = 'MouseSensorMorph';
 module.exports = MouseSensorMorph;
 
 
-},{"./BoxMorph":3,"./Color":6}],20:[function(require,module,exports){
+},{"./BoxMorph":6,"./Color":9}],24:[function(require,module,exports){
 // Nodes ///////////////////////////////////////////////////////////////
 
 var Node = Class.create({
@@ -5911,6 +6472,7 @@ var Node = Class.create({
 	},
 
 	parentThatIsA: function (constructorName) {
+		
 	    // including myself
 	    if (this.instanceOf(constructorName)) {
 	        return this;
@@ -5919,6 +6481,9 @@ var Node = Class.create({
 	    if (!this.parent){
 	    	return null;
 	    }
+
+
+
 		return this.parent.parentThatIsA(constructorName);
 	},
 
@@ -5947,7 +6512,7 @@ Node.className = 'Node';
 
 module.exports = Node;
 
-},{}],21:[function(require,module,exports){
+},{}],25:[function(require,module,exports){
 var Point = require('./Point');
 var Morph = require('./Morph');
 var Rectangle = require('./Rectangle');
@@ -6184,7 +6749,7 @@ module.exports = PenMorph;
 
 
     
-},{"./Morph":18,"./Point":22,"./Rectangle":23}],22:[function(require,module,exports){
+},{"./Morph":22,"./Point":26,"./Rectangle":28}],26:[function(require,module,exports){
 // Points //////////////////////////////////////////////////////////////
 
 var Point = Class.create({
@@ -6488,7 +7053,549 @@ var Point = Class.create({
 Point.className = 'Point';
 
 module.exports = Point;
-},{}],23:[function(require,module,exports){
+},{}],27:[function(require,module,exports){
+var Morph = require('./Morph');
+var Color = require('./Color');
+var Point = require('./Point');
+var StringMorph = require('./StringMorph');
+var SymbolMorph = require('./SymbolMorph');
+
+var PushButtonMoprhConfig = {
+    FONT_SIZE: 10,
+    FONT_STYLE: 'sans-serif',
+    LABEL_COLOR: new Color(0, 0, 0),
+    LABEL_SHADOW_COLOR: new Color(255, 255, 255),
+    LABEL_SHADOW_COLOR_OFFSET: new Point(1, 1),
+    COLOR: new Color(220, 220, 220),
+    PRESS_COLOR: new Color(115, 180, 240),
+    OUTLINE_COLOR: new Color(30, 30, 30),
+    OUTLINE_GRADIENT: false,
+    OUTLINE_COLOR: false,
+    CONTRAST: 60,
+    EDGE: 2,
+    CORNER: 5,
+    OUTLINE: 1.00001, 
+    PADDING: 3,
+};
+
+
+
+
+var PushButtonMorph = Class.create(TriggerMorph, {
+
+    // PushButtonMorph /////////////////////////////////////////////////////
+
+    // I am a Button with rounded corners and 3D-ish graphical effects
+
+    // PushButtonMorph preferences settings:
+
+    fontSize: PushButtonMoprhConfig.FONT_SIZE,
+    fontStyle: PushButtonMoprhConfig.FONT_STYLE,
+    labelColor: PushButtonMoprhConfig.LABEL_COLOR,
+    labelShadowColor: PushButtonMoprhConfig.LABEL_SHADOW_COLOR,
+    labelShadowOffset: PushButtonMoprhConfig.LABEL_SHADOW_COLOR_OFFSET,
+
+    color: PushButtonMoprhConfig.COLOR,
+    //color: "rgb(155, 102, 102)", 
+    pressColor: PushButtonMoprhConfig.PRESS_COLOR,
+    highlightColor: PushButtonMoprhConfig.PRESS_COLOR.lighter(50),
+    outlineColor: PushButtonMoprhConfig.OUTLINE_COLOR,
+    outlineGradient: PushButtonMoprhConfig.OUTLINE_GRADIENT,
+    contrast: PushButtonMoprhConfig.CONTRAST,
+
+    edge: PushButtonMoprhConfig.EDGE,
+    corner: PushButtonMoprhConfig.CORNER,
+    outline: PushButtonMoprhConfig.OUTLINE,
+    padding: PushButtonMoprhConfig.PADDING,
+
+
+    initialize: function(
+        target,
+        action,
+        labelString,
+        environment,
+        hint,
+        template,
+        style
+    ){
+        this.init(
+            target,
+            action,
+            labelString,
+            environment,
+            hint,
+            template,
+            style
+        );
+    },
+
+
+
+    init: function (
+        target,
+        action,
+        labelString,
+        environment,
+        hint,
+        template,
+        style
+    ) {
+        // additional properties:
+        this.is3D = false; // for "flat" design exceptions
+        this.target = target || null;
+        this.action = action || null;
+        this.environment = environment || null;
+        this.labelString = labelString || null;
+        this.label = null;
+        this.labelMinExtent = new Point(0, 0);
+        this.hint = hint || null;
+        this.template = template || null; // for pre-computed backbrounds
+        // if a template is specified, its background images are used as cache
+
+        // initialize inherited properties:
+        // BUG? TYPO?
+        TriggerMorph.uber.init.call(this);
+
+        // override inherited properites:
+        this.color = PushButtonMorph.prototype.color;
+
+
+
+        // Delete "fuck you" and "show green" if not needed.
+        if(style === "fuck you, morph"){
+            var col = new Color(255,255,255,0.01);
+            
+            this.color = col;
+            this.highlightColor = col;
+            this.pressColor = col;
+            this.outlineColor = new Color(30,30,30,0.01);
+            this.outline = 0.01;
+            this.edge = 0;
+            this.padding = 0;
+            this.corner = 0;
+        }
+        if(style === "show green button"){
+            var col = new Color(255,255,255,0.01);
+            
+            this.color = col;
+            this.labelColor = new Color(0,0,0,0.2);
+            this.highlightColor = new Color(0, 250, 0, 0.75);
+            this.pressColor = col;
+            this.outlineColor = new Color(30,30,30,0.1);
+            this.outline = 0.01;
+            this.edge = 0;
+            this.padding = 0;
+            this.corner = 35;
+            this.fontSize = 40;
+        }
+
+        // xinni: using demo to style buttons. rename demo to 'style' at a later time
+        if (style === "green") {
+            var greenColor = new Color(60, 158, 0);
+            var lightGreenColor = new Color(80, 209, 0);
+            var white = new Color(255, 255, 255);
+
+            this.color = greenColor;
+            this.highlightColor = lightGreenColor;
+            this.pressColor = lightGreenColor;
+            this.labelColor = white;
+
+            this.fontSize = 15;
+            this.label.setCenter(this.center());
+            this.padding = 7;
+        }
+
+        if (style === "red") {
+            var redColor = new Color(204, 0, 0);
+            var lightRedColor = new Color(255, 51, 51);
+            var white = new Color(255, 255, 255);
+
+            this.color = redColor;
+            this.highlightColor = lightRedColor;
+            this.pressColor = lightRedColor;
+            this.labelColor = white;
+
+            this.fontSize = 15;
+            this.label.setCenter(this.center());
+            this.padding = 7;
+        }
+
+        if (style === "symbolButton") {
+            var colors = [
+                (new Color(230, 230, 230)).darker(3),
+                (new Color(255, 255, 255)).darker(40),
+                (new Color(255, 255, 255)).darker(40),
+                new Color(70, 70, 70)
+            ];
+
+            this.corner = 12;
+            this.color = colors[0];
+            this.highlightColor = colors[1];
+            this.pressColor = colors[2];
+            this.labelMinExtent = new Point(36, 18);
+            this.padding = 0;
+            this.labelShadowOffset = new Point(-1, -1);
+            this.labelShadowColor = colors[1];
+            this.labelColor = colors[3];
+            this.contrast = 30;
+        }
+
+        this.drawNew();
+        this.fixLayout();
+    },
+
+    // PushButtonMorph layout:
+
+    fixLayout: function () {
+        // make sure I at least encompass my label
+        if (this.label !== null) {
+            var padding = this.padding * 2 + this.outline * 2 + this.edge * 2;
+            this.setExtent(new Point(
+                Math.max(this.label.width(), this.labelMinExtent.x) + padding,
+                Math.max(this.label instanceof StringMorph ?
+                        this.label.rawHeight() :
+                            this.label.height(), this.labelMinExtent.y) + padding
+            ));
+            this.label.setCenter(this.center());
+        }
+    },
+
+    // PushButtonMorph events
+
+    mouseDownLeft: function ($super) {
+        $super();
+        if (this.label) {
+            this.label.setCenter(this.center().add(1));
+        }
+    },
+
+    mouseClickLeft: function ($super) {
+        $super();
+        if (this.label) {
+            this.label.setCenter(this.center());
+        }
+    },
+
+    mouseLeave: function ($super) {
+        $super();
+        if (this.label) {
+            this.label.setCenter(this.center());
+        }
+    },
+
+    // PushButtonMorph drawing:
+
+    outlinePath: function (context, radius, inset) {
+        var offset = radius + inset,
+            w = this.width(),
+            h = this.height();
+
+        // top left:
+        context.arc(
+            offset,
+            offset,
+            radius,
+            radians(-180),
+            radians(-90),
+            false
+        );
+        // top right:
+        context.arc(
+            w - offset,
+            offset,
+            radius,
+            radians(-90),
+            radians(-0),
+            false
+        );
+        // bottom right:
+        context.arc(
+            w - offset,
+            h - offset,
+            radius,
+            radians(0),
+            radians(90),
+            false
+        );
+        // bottom left:
+        context.arc(
+            offset,
+            h - offset,
+            radius,
+            radians(90),
+            radians(180),
+            false
+        );
+    },
+
+    drawOutline: function (context) {
+        var outlineStyle,
+            isFlat = MorphicPreferences.isFlat && !this.is3D;
+
+        if (!this.outline || isFlat) {return null; }
+        if (this.outlineGradient) {
+            outlineStyle = context.createLinearGradient(
+                0,
+                0,
+                0,
+                this.height()
+            );
+            outlineStyle.addColorStop(1, 'white');
+            outlineStyle.addColorStop(0, this.outlineColor.darker().toString());
+        } else {
+            outlineStyle = this.outlineColor.toString();
+        }
+        context.fillStyle = outlineStyle;
+        context.beginPath();
+        this.outlinePath(
+            context,
+            isFlat ? 0 : this.corner,
+            0
+        );
+        context.closePath();
+        context.fill();
+    },
+
+    drawBackground: function (context, color) {
+        var isFlat = MorphicPreferences.isFlat && !this.is3D;
+
+        context.fillStyle = color.toString();
+        context.beginPath();
+        this.outlinePath(
+            context,
+            isFlat ? 0 : Math.max(this.corner - this.outline, 0),
+            this.outline
+        );
+        context.closePath();
+        context.fill();
+        context.lineWidth = this.outline;
+    },
+
+    drawEdges: function (
+        context,
+        color,
+        topColor,
+        bottomColor
+    ) {
+        if (MorphicPreferences.isFlat && !this.is3D) {return; }
+        var minInset = Math.max(this.corner, this.outline + this.edge),
+            w = this.width(),
+            h = this.height(),
+            gradient;
+
+        // top:
+        gradient = context.createLinearGradient(
+            0,
+            this.outline,
+            0,
+            this.outline + this.edge
+        );
+        gradient.addColorStop(0, topColor.toString());
+        gradient.addColorStop(1, color.toString());
+
+        context.strokeStyle = gradient;
+        context.lineCap = 'round';
+        context.lineWidth = this.edge;
+        context.beginPath();
+        context.moveTo(minInset, this.outline + this.edge / 2);
+        context.lineTo(w - minInset, this.outline + this.edge / 2);
+        context.stroke();
+
+        // top-left corner:
+        gradient = context.createRadialGradient(
+            this.corner,
+            this.corner,
+            Math.max(this.corner - this.outline - this.edge, 0),
+            this.corner,
+            this.corner,
+            Math.max(this.corner - this.outline, 0)
+        );
+        gradient.addColorStop(1, topColor.toString());
+        gradient.addColorStop(0, color.toString());
+
+        context.strokeStyle = gradient;
+        context.lineCap = 'round';
+        context.lineWidth = this.edge;
+        context.beginPath();
+        context.arc(
+            this.corner,
+            this.corner,
+            Math.max(this.corner - this.outline - this.edge / 2, 0),
+            radians(180),
+            radians(270),
+            false
+        );
+        context.stroke();
+
+        // left:
+        gradient = context.createLinearGradient(
+            this.outline,
+            0,
+            this.outline + this.edge,
+            0
+        );
+        gradient.addColorStop(0, topColor.toString());
+        gradient.addColorStop(1, color.toString());
+
+        context.strokeStyle = gradient;
+        context.lineCap = 'round';
+        context.lineWidth = this.edge;
+        context.beginPath();
+        context.moveTo(this.outline + this.edge / 2, minInset);
+        context.lineTo(this.outline + this.edge / 2, h - minInset);
+        context.stroke();
+
+        // bottom:
+        gradient = context.createLinearGradient(
+            0,
+            h - this.outline,
+            0,
+            h - this.outline - this.edge
+        );
+        gradient.addColorStop(0, bottomColor.toString());
+        gradient.addColorStop(1, color.toString());
+
+        context.strokeStyle = gradient;
+        context.lineCap = 'round';
+        context.lineWidth = this.edge;
+        context.beginPath();
+        context.moveTo(minInset, h - this.outline - this.edge / 2);
+        context.lineTo(w - minInset, h - this.outline - this.edge / 2);
+        context.stroke();
+
+        // bottom-right corner:
+        gradient = context.createRadialGradient(
+            w - this.corner,
+            h - this.corner,
+            Math.max(this.corner - this.outline - this.edge, 0),
+            w - this.corner,
+            h - this.corner,
+            Math.max(this.corner - this.outline, 0)
+        );
+        gradient.addColorStop(1, bottomColor.toString());
+        gradient.addColorStop(0, color.toString());
+
+        context.strokeStyle = gradient;
+        context.lineCap = 'round';
+        context.lineWidth = this.edge;
+        context.beginPath();
+        context.arc(
+            w - this.corner,
+            h - this.corner,
+            Math.max(this.corner - this.outline - this.edge / 2, 0),
+            radians(0),
+            radians(90),
+            false
+        );
+        context.stroke();
+
+        // right:
+        gradient = context.createLinearGradient(
+            w - this.outline,
+            0,
+            w - this.outline - this.edge,
+            0
+        );
+        gradient.addColorStop(0, bottomColor.toString());
+        gradient.addColorStop(1, color.toString());
+
+        context.strokeStyle = gradient;
+        context.lineCap = 'round';
+        context.lineWidth = this.edge;
+        context.beginPath();
+        context.moveTo(w - this.outline - this.edge / 2, minInset);
+        context.lineTo(w - this.outline - this.edge / 2, h - minInset);
+        context.stroke();
+    },
+
+    createBackgrounds: function () {
+        var context,
+            ext = this.extent();
+
+        if (this.template) { // take the backgrounds images from the template
+            this.image = this.template.image;
+            this.normalImage = this.template.normalImage;
+            this.highlightImage = this.template.highlightImage;
+            this.pressImage = this.template.pressImage;
+            return null;
+        }
+
+        this.normalImage = newCanvas(ext);
+        context = this.normalImage.getContext('2d');
+        this.drawOutline(context);
+        this.drawBackground(context, this.color);
+        this.drawEdges(
+            context,
+            this.color,
+            this.color.lighter(this.contrast),
+            this.color.darker(this.contrast)
+        );
+
+        this.highlightImage = newCanvas(ext);
+        context = this.highlightImage.getContext('2d');
+        this.drawOutline(context);
+        this.drawBackground(context, this.highlightColor);
+        this.drawEdges(
+            context,
+            this.highlightColor,
+            this.highlightColor.lighter(this.contrast),
+            this.highlightColor.darker(this.contrast)
+        );
+
+        this.pressImage = newCanvas(ext);
+        context = this.pressImage.getContext('2d');
+        this.drawOutline(context);
+        this.drawBackground(context, this.pressColor);
+        this.drawEdges(
+            context,
+            this.pressColor,
+            this.pressColor.darker(this.contrast),
+            this.pressColor.lighter(this.contrast)
+        );
+
+        this.image = this.normalImage;
+    },
+
+    createLabel: function () {
+        var shading = !MorphicPreferences.isFlat || this.is3D;
+
+        if (this.label !== null) {
+            this.label.destroy();
+        }
+        if (this.labelString instanceof SymbolMorph) {
+            this.label = this.labelString.fullCopy();
+            if (shading) {
+                this.label.shadowOffset = this.labelShadowOffset;
+                this.label.shadowColor = this.labelShadowColor;
+            }
+            this.label.color = this.labelColor;
+            this.label.drawNew();
+        } else {
+            this.label = new StringMorph(
+                localize(this.labelString),
+                this.fontSize,
+                this.fontStyle,
+                true,
+                false,
+                false,
+                shading ? this.labelShadowOffset : null,
+                this.labelShadowColor,
+                this.labelColor
+            );
+        }
+        this.add(this.label);
+    },
+
+
+})
+
+PushButtonMorph.uber = TriggerMorph.prototype;
+PushButtonMorph.className = 'PushButtonMorph';
+
+module.exports = PushButtonMorph;
+
+
+},{"./Color":9,"./Morph":22,"./Point":26,"./StringMorph":35,"./SymbolMorph":36}],28:[function(require,module,exports){
 Point = require('./Point');
 
 // Rectangles //////////////////////////////////////////////////////////
@@ -6794,7 +7901,7 @@ var Rectangle = Class.create({
 Rectangle.className = 'Rectangle';
 
 module.exports = Rectangle;
-},{"./Point":22}],24:[function(require,module,exports){
+},{"./Point":26}],29:[function(require,module,exports){
 var FrameMorph = require('./FrameMorph');
 var SliderMorph = require('./SliderMorph');
 var Point = require('./Point');
@@ -7183,7 +8290,7 @@ module.exports = ScrollFrameMorph;
 
 
 	
-},{"./FrameMorph":10,"./Point":22,"./SliderMorph":27}],25:[function(require,module,exports){
+},{"./FrameMorph":13,"./Point":26,"./SliderMorph":32}],30:[function(require,module,exports){
 var Morph = require('./Morph');
 
 var ShadowMorph = Class.create(Morph, {
@@ -7199,7 +8306,7 @@ ShadowMorph.className = 'ShadowMorph';
 
 module.exports = ShadowMorph;
 
-},{"./Morph":18}],26:[function(require,module,exports){
+},{"./Morph":22}],31:[function(require,module,exports){
 var CircleBoxMorph = require('./CircleBoxMorph');
 var Color = require('./Color');
 
@@ -7420,7 +8527,7 @@ SliderButtonMorph.className = 'SliderButtonMorph';
 module.exports = SliderButtonMorph;
 
 
-},{"./CircleBoxMorph":4,"./Color":6}],27:[function(require,module,exports){
+},{"./CircleBoxMorph":7,"./Color":9}],32:[function(require,module,exports){
 var CircleBoxMorph = require('./CircleBoxMorph');
 var Color = require('./Color');
 var SliderButtonMorph = require('./SliderButtonMorph');
@@ -7793,7 +8900,7 @@ SliderMorph.className = 'SliderMorph';
 
 module.exports = SliderMorph;
 
-},{"./CircleBoxMorph":4,"./Color":6,"./Point":22,"./SliderButtonMorph":26}],28:[function(require,module,exports){
+},{"./CircleBoxMorph":7,"./Color":9,"./Point":26,"./SliderButtonMorph":31}],33:[function(require,module,exports){
 var BoxMorph = require('./BoxMorph');
 var Morph = require('./Morph');
 var Point = require('./Point');
@@ -8108,7 +9215,7 @@ module.exports = SpeechBubbleMorph;
 
 
     
-},{"./BoxMorph":3,"./Color":6,"./Morph":18,"./Point":22,"./TextMorph":31}],29:[function(require,module,exports){
+},{"./BoxMorph":6,"./Color":9,"./Morph":22,"./Point":26,"./TextMorph":37}],34:[function(require,module,exports){
 var FrameMorph = require('./FrameMorph');
 var Point = require('./Point');
 var StringMorph = require('./StringMorph');
@@ -8224,7 +9331,7 @@ StringFieldMorph.className = 'StringFieldMorph';
 module.exports = StringFieldMorph;
 
 	
-},{"./FrameMorph":10,"./Point":22,"./StringMorph":30}],30:[function(require,module,exports){
+},{"./FrameMorph":13,"./Point":26,"./StringMorph":35}],35:[function(require,module,exports){
 var Morph = require('./Morph');
 var Color = require('./Color');
 var Point = require('./Point');
@@ -8780,7 +9887,1312 @@ StringMorph.className = 'StringMorph';
 module.exports = StringMorph;
 
 
-},{"./Color":6,"./Morph":18,"./Point":22}],31:[function(require,module,exports){
+},{"./Color":9,"./Morph":22,"./Point":26}],36:[function(require,module,exports){
+var Morph = require('./Morph');
+var Point = require('./Point');
+var Color = require('./Color');
+
+var SymbolMorph = Class.create(Morph, {
+
+    // SymbolMorph //////////////////////////////////////////////////////////
+
+    /*
+        I display graphical symbols, such as special letters. I have been
+        called into existence out of frustration about not being able to
+        consistently use Unicode characters to the same ends.
+
+        Symbols can also display costumes, if one is specified in lieu
+        of a name property, although this feature is currently not being
+        used because of asynchronous image loading issues.
+     */
+
+    name: [
+        'square',
+        'pointRight',
+        'gears',
+        'file',
+        'fullScreen',
+        'normalScreen',
+        'smallStage',
+        'normalStage',
+        'turtle',
+        'stage',
+        'turtleOutline',
+        'pause',
+        'flag',
+        'octagon',
+        'cloud',
+        'cloudOutline',
+        'cloudGradient',
+        'turnRight',
+        'turnLeft',
+        'storage',
+        'poster',
+        'flash',
+        'brush',
+        'rectangle',
+        'rectangleSolid',
+        'circle',
+        'circleSolid',
+        'line',
+        'crosshairs',
+        'paintbucket',
+        'eraser',
+        'pipette',
+        'speechBubble',
+        'speechBubbleOutline',
+        'arrowUp',
+        'arrowUpOutline',
+        'arrowLeft',
+        'arrowLeftOutline',
+        'arrowDown',
+        'arrowDownOutline',
+        'arrowRight',
+        'arrowRightOutline',
+        'robot',
+        'library'
+    ],
+
+    initialize: function(name, size, color, shaddowOffset, shadowColor){
+        this.init(name, size, color, shaddowOffset, shadowColor);
+    },
+
+    init: function (
+        $super, 
+        name, // or costume
+        size,
+        color,
+        shadowOffset,
+        shadowColor
+    ) {
+        this.isProtectedLabel = false; // participate in zebraing
+        this.isReadOnly = true;
+        this.name = name || 'gears'; // can also be a costume
+        this.size = size || ((size === 0) ? 0 : 50);
+        this.shadowOffset = shadowOffset || new Point(0, 0);
+        this.shadowColor = shadowColor || null;
+
+        $super();
+        this.color = color || new Color(0, 0, 0);
+        this.drawNew();
+    },
+
+    // SymbolMorph zebra coloring:
+
+    setLabelColor: function (
+        textColor,
+        shadowColor,
+        shadowOffset
+    ) {
+        this.shadowOffset = shadowOffset;
+        this.shadowColor = shadowColor;
+        this.setColor(textColor);
+    },
+
+    // SymbolMorph displaying:
+
+    drawNew: function () {
+        var ctx, x, y, sx, sy;
+        this.image = newCanvas(new Point(
+            this.symbolWidth() + Math.abs(this.shadowOffset.x),
+            this.size + Math.abs(this.shadowOffset.y)
+        ));
+        this.silentSetWidth(this.image.width);
+        this.silentSetHeight(this.image.height);
+        ctx = this.image.getContext('2d');
+        sx = this.shadowOffset.x < 0 ? 0 : this.shadowOffset.x;
+        sy = this.shadowOffset.y < 0 ? 0 : this.shadowOffset.y;
+        x = this.shadowOffset.x < 0 ? Math.abs(this.shadowOffset.x) : 0;
+        y = this.shadowOffset.y < 0 ? Math.abs(this.shadowOffset.y) : 0;
+        if (this.shadowColor) {
+            ctx.drawImage(
+                this.symbolCanvasColored(this.shadowColor),
+                sx,
+                sy
+            );
+        }
+        ctx.drawImage(
+            this.symbolCanvasColored(this.color),
+            x,
+            y
+        );
+    },
+
+    symbolCanvasColored: function (aColor) {
+        // private
+        if (this.name instanceof Costume) {
+            return this.name.thumbnail(new Point(this.symbolWidth(), this.size));
+        }
+
+        var canvas = newCanvas(new Point(this.symbolWidth(), this.size));
+
+        switch (this.name) {
+        case 'square':
+            return this.drawSymbolStop(canvas, aColor);
+        case 'pointRight':
+            return this.drawSymbolPointRight(canvas, aColor);
+        case 'gears':
+            return this.drawSymbolGears(canvas, aColor);
+        case 'file':
+            return this.drawSymbolFile(canvas, aColor);
+        case 'fullScreen':
+            return this.drawSymbolFullScreen(canvas, aColor);
+        case 'normalScreen':
+            return this.drawSymbolNormalScreen(canvas, aColor);
+        case 'smallStage':
+            return this.drawSymbolSmallStage(canvas, aColor);
+        case 'normalStage':
+            return this.drawSymbolNormalStage(canvas, aColor);
+        case 'turtle':
+            return this.drawSymbolTurtle(canvas, aColor);
+        case 'stage':
+            return this.drawSymbolStop(canvas, aColor);
+        case 'turtleOutline':
+            return this.drawSymbolTurtleOutline(canvas, aColor);
+        case 'pause':
+            return this.drawSymbolPause(canvas, aColor);
+        case 'flag':
+            return this.drawSymbolFlag(canvas, aColor);
+        case 'octagon':
+            return this.drawSymbolOctagon(canvas, aColor);
+        case 'cloud':
+            return this.drawSymbolCloud(canvas, aColor);
+        case 'cloudOutline':
+            return this.drawSymbolCloudOutline(canvas, aColor);
+        case 'cloudGradient':
+            return this.drawSymbolCloudGradient(canvas, aColor);
+        case 'turnRight':
+            return this.drawSymbolTurnRight(canvas, aColor);
+        case 'turnLeft':
+            return this.drawSymbolTurnLeft(canvas, aColor);
+        case 'storage':
+            return this.drawSymbolStorage(canvas, aColor);
+        case 'poster':
+            return this.drawSymbolPoster(canvas, aColor);
+        case 'flash':
+            return this.drawSymbolFlash(canvas, aColor);
+        case 'brush':
+            return this.drawSymbolBrush(canvas, aColor);
+        case 'rectangle':
+            return this.drawSymbolRectangle(canvas, aColor);
+        case 'rectangleSolid':
+            return this.drawSymbolRectangleSolid(canvas, aColor);
+        case 'circle':
+            return this.drawSymbolCircle(canvas, aColor);
+        case 'circleSolid':
+            return this.drawSymbolCircleSolid(canvas, aColor);
+        case 'line':
+            return this.drawSymbolLine(canvas, aColor);
+        case 'crosshairs':
+            return this.drawSymbolCrosshairs(canvas, aColor);
+        case 'paintbucket':
+            return this.drawSymbolPaintbucket(canvas, aColor);
+        case 'eraser':
+            return this.drawSymbolEraser(canvas, aColor);
+        case 'pipette':
+            return this.drawSymbolPipette(canvas, aColor);
+        case 'speechBubble':
+            return this.drawSymbolSpeechBubble(canvas, aColor);
+        case 'speechBubbleOutline':
+            return this.drawSymbolSpeechBubbleOutline(canvas, aColor);
+        case 'arrowUp':
+            return this.drawSymbolArrowUp(canvas, aColor);
+        case 'arrowUpOutline':
+            return this.drawSymbolArrowUpOutline(canvas, aColor);
+        case 'arrowLeft':
+            return this.drawSymbolArrowLeft(canvas, aColor);
+        case 'arrowLeftOutline':
+            return this.drawSymbolArrowLeftOutline(canvas, aColor);
+        case 'arrowDown':
+            return this.drawSymbolArrowDown(canvas, aColor);
+        case 'arrowDownOutline':
+            return this.drawSymbolArrowDownOutline(canvas, aColor);
+        case 'arrowRight':
+            return this.drawSymbolArrowRight(canvas, aColor);
+        case 'arrowRightOutline':
+            return this.drawSymbolArrowRightOutline(canvas, aColor);
+        case 'robot':
+            return this.drawSymbolRobot(canvas, aColor);
+        case 'library':
+            return this.drawSymbolLibrary(canvas, aColor);
+        default:
+            return canvas;
+        }
+    },
+
+    symbolWidth: function () {
+        // private
+        var size = this.size;
+
+        if (this.name instanceof Costume) {
+            return (size / this.name.height()) * this.name.width();
+        }
+        switch (this.name) {
+        case 'pointRight':
+            return Math.sqrt(size * size - Math.pow(size / 2, 2));
+        case 'flash':
+        case 'file':
+            return size * 0.8;
+        case 'smallStage':
+        case 'normalStage':
+            return size * 1.2;
+        case 'turtle':
+        case 'turtleOutline':
+        case 'stage':
+            return size * 1.3;
+        case 'cloud':
+        case 'cloudGradient':
+        case 'cloudOutline':
+            return size * 1.6;
+        case 'turnRight':
+        case 'turnLeft':
+            return size / 3 * 2;
+        default:
+            return size;
+        }
+    },
+
+    drawSymbolStop: function (canvas, color) {
+        // answer a canvas showing a vertically centered square
+        var ctx = canvas.getContext('2d');
+
+        ctx.fillStyle = color.toString();
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        return canvas;
+    },
+
+    drawSymbolPointRight: function (canvas, color) {
+        // answer a canvas showing a right-pointing, equilateral triangle
+        var ctx = canvas.getContext('2d');
+
+        ctx.fillStyle = color.toString();
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.lineTo(canvas.width, Math.round(canvas.height / 2));
+        ctx.lineTo(0, canvas.height);
+        ctx.lineTo(0, 0);
+        ctx.closePath();
+        ctx.fill();
+        return canvas;
+    },
+
+    drawSymbolGears: function (canvas, color) {
+        // answer a canvas showing gears
+        var ctx = canvas.getContext('2d'),
+            w = canvas.width,
+            r = w / 2,
+            e = w / 6;
+
+        ctx.strokeStyle = color.toString();
+        ctx.lineWidth = canvas.width / 7;
+
+        ctx.beginPath();
+        ctx.arc(r, r, w, radians(0), radians(360), true);
+        ctx.arc(r, r, e * 1.5, radians(0), radians(360), false);
+        ctx.closePath();
+        ctx.clip();
+
+        ctx.moveTo(0, r);
+        ctx.lineTo(w, r);
+        ctx.stroke();
+
+        ctx.moveTo(r, 0);
+        ctx.lineTo(r, w);
+        ctx.stroke();
+
+        ctx.moveTo(e, e);
+        ctx.lineTo(w - e, w - e);
+        ctx.stroke();
+
+        ctx.moveTo(w - e, e);
+        ctx.lineTo(e, w - e);
+        ctx.stroke();
+
+        return canvas;
+    },
+
+    drawSymbolFile: function (canvas, color) {
+        // answer a canvas showing a page symbol
+        var ctx = canvas.getContext('2d'),
+            w = Math.min(canvas.width, canvas.height) / 2;
+
+        ctx.fillStyle = color.toString();
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.lineTo(w, 0);
+        ctx.lineTo(w, w);
+        ctx.lineTo(canvas.width, w);
+        ctx.lineTo(canvas.width, canvas.height);
+        ctx.lineTo(0, canvas.height);
+        ctx.closePath();
+        ctx.fill();
+
+        ctx.fillStyle = color.darker(25).toString();
+        ctx.beginPath();
+        ctx.moveTo(w, 0);
+        ctx.lineTo(canvas.width, w);
+        ctx.lineTo(w, w);
+        ctx.lineTo(w, 0);
+        ctx.closePath();
+        ctx.fill();
+
+        return canvas;
+    },
+
+    drawSymbolFullScreen: function (canvas, color) {
+        // answer a canvas showing two arrows pointing diagonally outwards
+        var ctx = canvas.getContext('2d'),
+            h = canvas.height,
+            c = canvas.width / 2,
+            off = canvas.width / 20,
+            w = canvas.width / 2;
+
+        ctx.strokeStyle = color.toString();
+        ctx.lineWidth = canvas.width / 5;
+        ctx.moveTo(c - off, c + off);
+        ctx.lineTo(0, h);
+        ctx.stroke();
+
+        ctx.strokeStyle = color.toString();
+        ctx.lineWidth = canvas.width / 5;
+        ctx.moveTo(c + off, c - off);
+        ctx.lineTo(h, 0);
+        ctx.stroke();
+
+        ctx.fillStyle = color.toString();
+        ctx.beginPath();
+        ctx.moveTo(0, h);
+        ctx.lineTo(0, h - w);
+        ctx.lineTo(w, h);
+        ctx.closePath();
+        ctx.fill();
+
+        ctx.fillStyle = color.toString();
+        ctx.beginPath();
+        ctx.moveTo(h, 0);
+        ctx.lineTo(h - w, 0);
+        ctx.lineTo(h, w);
+        ctx.closePath();
+        ctx.fill();
+
+        return canvas;
+    },
+
+    drawSymbolNormalScreen: function (canvas, color) {
+        // answer a canvas showing two arrows pointing diagonally inwards
+        var ctx = canvas.getContext('2d'),
+            h = canvas.height,
+            c = canvas.width / 2,
+            off = canvas.width / 20,
+            w = canvas.width;
+
+        ctx.strokeStyle = color.toString();
+        ctx.lineWidth = canvas.width / 5;
+        ctx.moveTo(c - off * 3, c + off * 3);
+        ctx.lineTo(0, h);
+        ctx.stroke();
+
+        ctx.strokeStyle = color.toString();
+        ctx.lineWidth = canvas.width / 5;
+        ctx.moveTo(c + off * 3, c - off * 3);
+        ctx.lineTo(h, 0);
+        ctx.stroke();
+
+        ctx.fillStyle = color.toString();
+        ctx.beginPath();
+        ctx.moveTo(c + off, c - off);
+        ctx.lineTo(w, c - off);
+        ctx.lineTo(c + off, 0);
+        ctx.closePath();
+        ctx.fill();
+
+        ctx.fillStyle = color.toString();
+        ctx.beginPath();
+        ctx.moveTo(c - off, c + off);
+        ctx.lineTo(0, c + off);
+        ctx.lineTo(c - off, w);
+        ctx.closePath();
+        ctx.fill();
+
+        return canvas;
+    },
+
+    drawSymbolSmallStage: function (canvas, color) {
+        // answer a canvas showing a stage toggling symbol
+        var ctx = canvas.getContext('2d'),
+            w = canvas.width,
+            h = canvas.height,
+            w2 = w / 2,
+            h2 = h / 2;
+
+        ctx.fillStyle = color.darker(40).toString();
+        ctx.fillRect(0, 0, w, h);
+
+        ctx.fillStyle = color.toString();
+        ctx.fillRect(w2, 0, w2, h2);
+
+        return canvas;
+    },
+
+    drawSymbolNormalStage: function (canvas, color) {
+        // answer a canvas showing a stage toggling symbol
+        var ctx = canvas.getContext('2d'),
+            w = canvas.width,
+            h = canvas.height,
+            w2 = w / 2,
+            h2 = h / 2;
+
+        ctx.fillStyle = color.toString();
+        ctx.fillRect(0, 0, w, h);
+
+        ctx.fillStyle = color.darker(25).toString();
+        ctx.fillRect(w2, 0, w2, h2);
+
+        return canvas;
+    },
+
+    drawSymbolTurtle: function (canvas, color) {
+        // answer a canvas showing a turtle
+        var ctx = canvas.getContext('2d');
+
+        ctx.fillStyle = color.toString();
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.lineTo(canvas.width, canvas.height / 2);
+        ctx.lineTo(0, canvas.height);
+        ctx.lineTo(canvas.height / 2, canvas.height / 2);
+        ctx.closePath();
+        ctx.fill();
+        return canvas;
+    },
+
+    drawSymbolTurtleOutline: function (canvas, color) {
+        // answer a canvas showing a turtle
+        var ctx = canvas.getContext('2d');
+
+        ctx.strokeStyle = color.toString();
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.lineTo(canvas.width, canvas.height / 2);
+        ctx.lineTo(0, canvas.height);
+        ctx.lineTo(canvas.height / 2, canvas.height / 2);
+        ctx.closePath();
+        ctx.stroke();
+
+        return canvas;
+    },
+
+    drawSymbolPause: function (canvas, color) {
+        // answer a canvas showing two parallel rectangles
+        var ctx = canvas.getContext('2d'),
+            w = canvas.width / 5;
+
+        ctx.fillStyle = color.toString();
+        ctx.fillRect(0, 0, w * 2, canvas.height);
+        ctx.fillRect(w * 3, 0, w * 2, canvas.height);
+        return canvas;
+    },
+
+    drawSymbolFlag: function (canvas, color) {
+        // answer a canvas showing a flag
+        var ctx = canvas.getContext('2d'),
+            w = canvas.width,
+            l = Math.max(w / 12, 1),
+            h = canvas.height;
+
+        ctx.lineWidth = l;
+        ctx.strokeStyle = color.toString();
+        ctx.beginPath();
+        ctx.moveTo(l / 2, 0);
+        ctx.lineTo(l / 2, canvas.height);
+        ctx.stroke();
+
+        ctx.lineWidth = h / 2;
+        ctx.beginPath();
+        ctx.moveTo(0, h / 4);
+        ctx.bezierCurveTo(
+            w * 0.8,
+            h / 4,
+            w * 0.1,
+            h * 0.5,
+            w,
+            h * 0.5
+        );
+        ctx.stroke();
+
+        return canvas;
+    },
+
+    drawSymbolOctagon: function (canvas, color) {
+        // answer a canvas showing an octagon
+        var ctx = canvas.getContext('2d'),
+            side = canvas.width,
+            vert = (side - (side * 0.383)) / 2;
+
+        ctx.fillStyle = color.toString();
+        ctx.beginPath();
+        ctx.moveTo(vert, 0);
+        ctx.lineTo(side - vert, 0);
+        ctx.lineTo(side, vert);
+        ctx.lineTo(side, side - vert);
+        ctx.lineTo(side - vert, side);
+        ctx.lineTo(vert, side);
+        ctx.lineTo(0, side - vert);
+        ctx.lineTo(0, vert);
+        ctx.closePath();
+        ctx.fill();
+
+        return canvas;
+    },
+
+    drawSymbolCloud: function (canvas, color) {
+        // answer a canvas showing an cloud
+        var ctx = canvas.getContext('2d'),
+            w = canvas.width,
+            h = canvas.height,
+            r1 = h * 2 / 5,
+            r2 = h / 4,
+            r3 = h * 3 / 10,
+            r4 = h / 5;
+
+        ctx.fillStyle = color.toString();
+        ctx.beginPath();
+        ctx.arc(r2, h - r2, r2, radians(90), radians(259), false);
+        ctx.arc(w / 20 * 5, h / 9 * 4, r4, radians(165), radians(300), false);
+        ctx.arc(w / 20 * 11, r1, r1, radians(200), radians(357), false);
+        ctx.arc(w - r3, h - r3, r3, radians(269), radians(90), false);
+        ctx.closePath();
+        ctx.fill();
+
+        return canvas;
+    },
+
+    drawSymbolCloudGradient: function (canvas, color) {
+        // answer a canvas showing an cloud
+        var ctx = canvas.getContext('2d'),
+            gradient,
+            w = canvas.width,
+            h = canvas.height,
+            r1 = h * 2 / 5,
+            r2 = h / 4,
+            r3 = h * 3 / 10,
+            r4 = h / 5;
+
+        gradient = ctx.createRadialGradient(
+            0,
+            0,
+            0,
+            0,
+            0,
+            w
+        );
+        gradient.addColorStop(0, color.lighter(25).toString());
+        gradient.addColorStop(1, color.darker(25).toString());
+        ctx.fillStyle = gradient;
+        ctx.beginPath();
+        ctx.arc(r2, h - r2, r2, radians(90), radians(259), false);
+        ctx.arc(w / 20 * 5, h / 9 * 4, r4, radians(165), radians(300), false);
+        ctx.arc(w / 20 * 11, r1, r1, radians(200), radians(357), false);
+        ctx.arc(w - r3, h - r3, r3, radians(269), radians(90), false);
+        ctx.closePath();
+        ctx.fill();
+
+        return canvas;
+    },
+
+    drawSymbolCloudOutline: function (canvas, color) {
+        // answer a canvas showing an cloud
+        var ctx = canvas.getContext('2d'),
+            w = canvas.width,
+            h = canvas.height,
+            r1 = h * 2 / 5,
+            r2 = h / 4,
+            r3 = h * 3 / 10,
+            r4 = h / 5;
+
+        ctx.strokeStyle = color.toString();
+        ctx.beginPath();
+        ctx.arc(r2 + 1, h - r2 - 1, r2, radians(90), radians(259), false);
+        ctx.arc(w / 20 * 5, h / 9 * 4, r4, radians(165), radians(300), false);
+        ctx.arc(w / 20 * 11, r1 + 1, r1, radians(200), radians(357), false);
+        ctx.arc(w - r3 - 1, h - r3 - 1, r3, radians(269), radians(90), false);
+        ctx.closePath();
+        ctx.stroke();
+
+        return canvas;
+    },
+
+    drawSymbolTurnRight: function (canvas, color) {
+        // answer a canvas showing a right-turning arrow
+        var ctx = canvas.getContext('2d'),
+            w = canvas.width,
+            l = Math.max(w / 10, 1),
+            r = w / 2;
+
+        ctx.lineWidth = l;
+        ctx.strokeStyle = color.toString();
+        ctx.beginPath();
+        ctx.arc(r, r * 2, r - l / 2, radians(0), radians(-90), false);
+        ctx.stroke();
+
+        ctx.fillStyle = color.toString();
+        ctx.beginPath();
+        ctx.moveTo(w, r);
+        ctx.lineTo(r, 0);
+        ctx.lineTo(r, r * 2);
+        ctx.closePath();
+        ctx.fill();
+
+        return canvas;
+    },
+
+    drawSymbolTurnLeft: function (canvas, color) {
+        // answer a canvas showing a left-turning arrow
+        var ctx = canvas.getContext('2d'),
+            w = canvas.width,
+            l = Math.max(w / 10, 1),
+            r = w / 2;
+
+        ctx.lineWidth = l;
+        ctx.strokeStyle = color.toString();
+        ctx.beginPath();
+        ctx.arc(r, r * 2, r - l / 2, radians(180), radians(-90), true);
+        ctx.stroke();
+
+        ctx.fillStyle = color.toString();
+        ctx.beginPath();
+        ctx.moveTo(0, r);
+        ctx.lineTo(r, 0);
+        ctx.lineTo(r, r * 2);
+        ctx.closePath();
+        ctx.fill();
+
+        return canvas;
+    },
+
+    drawSymbolStorage: function (canvas, color) {
+        // answer a canvas showing a stack of three disks
+        var ctx = canvas.getContext('2d'),
+            w = canvas.width,
+            h = canvas.height,
+            r = canvas.height,
+            unit = canvas.height / 11;
+
+        function drawDisk(bottom, fillTop) {
+            ctx.fillStyle = color.toString();
+            ctx.beginPath();
+            ctx.arc(w / 2, bottom - h, r, radians(60), radians(120), false);
+            ctx.lineTo(0, bottom - unit * 2);
+            ctx.arc(
+                w / 2,
+                bottom - h - unit * 2,
+                r,
+                radians(120),
+                radians(60),
+                true
+            );
+            ctx.closePath();
+            ctx.fill();
+
+            ctx.fillStyle = color.darker(25).toString();
+            ctx.beginPath();
+
+            if (fillTop) {
+                ctx.arc(
+                    w / 2,
+                    bottom - h - unit * 2,
+                    r,
+                    radians(120),
+                    radians(60),
+                    true
+                );
+            }
+
+            ctx.arc(
+                w / 2,
+                bottom + unit * 6 + 1,
+                r,
+                radians(60),
+                radians(120),
+                true
+            );
+            ctx.closePath();
+
+            if (fillTop) {
+                ctx.fill();
+            } else {
+                ctx.stroke();
+            }
+        }
+
+        ctx.strokeStyle = color.toString();
+        drawDisk(h);
+        drawDisk(h - unit * 3);
+        drawDisk(h - unit * 6, false);
+        return canvas;
+    },
+
+    drawSymbolPoster: function (canvas, color) {
+        // answer a canvas showing a poster stand
+        var ctx = canvas.getContext('2d'),
+            w = canvas.width,
+            h = canvas.height,
+            bottom = h * 0.75,
+            edge = canvas.height / 5;
+
+        ctx.fillStyle = color.toString();
+        ctx.strokeStyle = color.toString();
+
+        ctx.lineWidth = w / 15;
+        ctx.moveTo(w / 2, h / 3);
+        ctx.lineTo(w / 6, h);
+        ctx.stroke();
+
+        ctx.moveTo(w / 2, h / 3);
+        ctx.lineTo(w / 2, h);
+        ctx.stroke();
+
+        ctx.moveTo(w / 2, h / 3);
+        ctx.lineTo(w * 5 / 6, h);
+        ctx.stroke();
+
+        ctx.fillRect(0, 0, w, bottom);
+        ctx.clearRect(0, bottom, w, w / 20);
+
+        ctx.clearRect(w - edge, bottom - edge, edge + 1, edge + 1);
+
+        ctx.fillStyle = color.darker(25).toString();
+        ctx.beginPath();
+        ctx.moveTo(w, bottom - edge);
+        ctx.lineTo(w - edge, bottom - edge);
+        ctx.lineTo(w - edge, bottom);
+        ctx.closePath();
+        ctx.fill();
+
+        return canvas;
+    },
+
+    drawSymbolFlash: function (canvas, color) {
+        // answer a canvas showing a flash
+        var ctx = canvas.getContext('2d'),
+            w = canvas.width,
+            w3 = w / 3,
+            h = canvas.height,
+            h3 = h / 3,
+            off = h3 / 3;
+
+        ctx.fillStyle = color.toString();
+        ctx.beginPath();
+        ctx.moveTo(w3, 0);
+        ctx.lineTo(0, h3);
+        ctx.lineTo(w3, h3);
+        ctx.lineTo(0, h3 * 2);
+        ctx.lineTo(w3, h3 * 2);
+        ctx.lineTo(0, h);
+        ctx.lineTo(w, h3 * 2 - off);
+        ctx.lineTo(w3 * 2, h3 * 2 - off);
+        ctx.lineTo(w, h3 - off);
+        ctx.lineTo(w3 * 2, h3 - off);
+        ctx.lineTo(w, 0);
+        ctx.closePath();
+        ctx.fill();
+        return canvas;
+    },
+
+    drawSymbolLibrary: function (canvas, color) {
+        // to create a library symbol
+        return canvas
+    },
+
+    drawSymbolBrush: function (canvas, color) {
+        // answer a canvas showing a paintbrush
+        var ctx = canvas.getContext('2d'),
+            w = canvas.width,
+            h = canvas.height,
+            l = Math.max(w / 30, 0.5);
+
+        ctx.fillStyle = color.toString();
+        ctx.lineWidth = l * 2;
+        ctx.beginPath();
+        ctx.moveTo(w / 8 * 3, h / 2);
+        ctx.quadraticCurveTo(0, h / 2, l, h - l);
+        ctx.quadraticCurveTo(w / 2, h, w / 2, h / 8 * 5);
+        ctx.closePath();
+        ctx.fill();
+
+        ctx.lineJoin = 'round';
+        ctx.lineCap = 'round';
+        ctx.strokeStyle = color.toString();
+
+        ctx.moveTo(w / 8 * 3, h / 2);
+        ctx.lineTo(w * 0.75, l);
+        ctx.quadraticCurveTo(w, 0, w - l, h * 0.25);
+        ctx.stroke();
+
+        ctx.moveTo(w / 2, h / 8 * 5);
+        ctx.lineTo(w - l, h * 0.25);
+        ctx.stroke();
+
+        return canvas;
+    },
+
+    drawSymbolRectangle: function (canvas, color) {
+        // answer a canvas showing a rectangle
+        var ctx = canvas.getContext('2d'),
+            w = canvas.width,
+            h = canvas.width,
+            l = Math.max(w / 20, 0.5);
+
+        ctx.strokeStyle = color.toString();
+        ctx.lineWidth = l * 2;
+        ctx.beginPath();
+        ctx.moveTo(l, l);
+        ctx.lineTo(w - l, l);
+        ctx.lineTo(w - l, h - l);
+        ctx.lineTo(l, h - l);
+        ctx.closePath();
+        ctx.stroke();
+        return canvas;
+    },
+
+    drawSymbolRectangleSolid: function (canvas, color) {
+        // answer a canvas showing a solid rectangle
+        var ctx = canvas.getContext('2d'),
+            w = canvas.width,
+            h = canvas.width;
+
+        ctx.fillStyle = color.toString();
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.lineTo(w, 0);
+        ctx.lineTo(w, h);
+        ctx.lineTo(0, h);
+        ctx.closePath();
+        ctx.fill();
+        return canvas;
+    },
+
+    drawSymbolCircle: function (canvas, color) {
+        // answer a canvas showing a circle
+        var ctx = canvas.getContext('2d'),
+            w = canvas.width,
+            l = Math.max(w / 20, 0.5);
+
+        ctx.strokeStyle = color.toString();
+        ctx.lineWidth = l * 2;
+        ctx.arc(w / 2, w / 2, w / 2 - l, radians(0), radians(360), false);
+        ctx.stroke();
+        return canvas;
+    },
+
+    drawSymbolCircleSolid: function (canvas, color) {
+        // answer a canvas showing a solid circle
+        var ctx = canvas.getContext('2d'),
+            w = canvas.width;
+
+        ctx.fillStyle = color.toString();
+        ctx.arc(w / 2, w / 2, w / 2, radians(0), radians(360), false);
+        ctx.fill();
+        return canvas;
+    },
+
+    drawSymbolLine: function (canvas, color) {
+        // answer a canvas showing a diagonal line
+        var ctx = canvas.getContext('2d'),
+            w = canvas.width,
+            h = canvas.height,
+            l = Math.max(w / 20, 0.5);
+
+        ctx.strokeStyle = color.toString();
+        ctx.lineWidth = l * 2;
+        ctx.lineCap = 'round';
+        ctx.moveTo(l, l);
+        ctx.lineTo(w - l, h - l);
+        ctx.stroke();
+        return canvas;
+    },
+
+    drawSymbolCrosshairs: function (canvas, color) {
+        // answer a canvas showing a crosshairs
+        var ctx = canvas.getContext('2d'),
+            w = canvas.width,
+            h = canvas.height,
+            l = 0.5;
+
+        ctx.strokeStyle = color.toString();
+        ctx.lineWidth = l * 2;
+        ctx.moveTo(l, h / 2);
+        ctx.lineTo(w - l, h / 2);
+        ctx.stroke();
+        ctx.moveTo(w / 2, l);
+        ctx.lineTo(w / 2, h - l);
+        ctx.stroke();
+        ctx.moveTo(w / 2, h / 2);
+        ctx.arc(w / 2, w / 2, w / 3 - l, radians(0), radians(360), false);
+        ctx.stroke();
+        return canvas;
+    },
+
+    drawSymbolPaintbucket: function (canvas, color) {
+        // answer a canvas showing a paint bucket
+        var ctx = canvas.getContext('2d'),
+            w = canvas.width,
+            h = canvas.height,
+            n = canvas.width / 5,
+            l = Math.max(w / 30, 0.5);
+
+        ctx.strokeStyle = color.toString();
+        ctx.lineWidth = l * 2;
+        ctx.beginPath();
+        ctx.moveTo(n * 2, n);
+        ctx.lineTo(n * 4, n * 3);
+        ctx.lineTo(n * 3, n * 4);
+        ctx.quadraticCurveTo(n * 2, h, n, n * 4);
+        ctx.quadraticCurveTo(0, n * 3, n, n * 2);
+        ctx.closePath();
+        ctx.stroke();
+
+        ctx.lineWidth = l;
+        ctx.moveTo(n * 2, n * 2.5);
+        ctx.arc(n * 2, n * 2.5, l, radians(0), radians(360), false);
+        ctx.stroke();
+
+        ctx.moveTo(n * 2, n * 2.5);
+        ctx.lineTo(n * 2, n / 2 + l);
+        ctx.stroke();
+
+        ctx.arc(n * 1.5, n / 2 + l, n / 2, radians(0), radians(180), true);
+        ctx.stroke();
+
+        ctx.moveTo(n, n / 2 + l);
+        ctx.lineTo(n, n * 2);
+        ctx.stroke();
+
+        ctx.fillStyle = color.toString();
+        ctx.beginPath();
+        ctx.moveTo(n * 3.5, n * 3.5);
+        ctx.quadraticCurveTo(w, n * 3.5, w - l, h);
+        ctx.lineTo(w, h);
+        ctx.quadraticCurveTo(w, n * 2, n * 2.5, n * 1.5);
+        ctx.lineTo(n * 4, n * 3);
+        ctx.closePath();
+        ctx.fill();
+
+        return canvas;
+    },
+
+    drawSymbolEraser: function (canvas, color) {
+        // answer a canvas showing an eraser
+        var ctx = canvas.getContext('2d'),
+            w = canvas.width,
+            h = canvas.height,
+            n = canvas.width / 4,
+            l = Math.max(w / 20, 0.5);
+
+        ctx.strokeStyle = color.toString();
+        ctx.lineWidth = l * 2;
+        ctx.beginPath();
+        ctx.moveTo(n * 3, l);
+        ctx.lineTo(l, n * 3);
+        ctx.quadraticCurveTo(n, h, n * 2, n * 3);
+        ctx.lineTo(w - l, n);
+        ctx.closePath();
+        ctx.stroke();
+
+        ctx.fillStyle = color.toString();
+        ctx.beginPath();
+        ctx.moveTo(n * 3, 0);
+        ctx.lineTo(n * 1.5, n * 1.5);
+        ctx.lineTo(n * 2.5, n * 2.5);
+        ctx.lineTo(w, n);
+        ctx.closePath();
+        ctx.fill();
+
+        return canvas;
+    },
+
+    drawSymbolPipette: function (canvas, color) {
+        // answer a canvas showing an eyedropper
+        var ctx = canvas.getContext('2d'),
+            w = canvas.width,
+            h = canvas.height,
+            n = canvas.width / 4,
+            n2 = n / 2,
+            l = Math.max(w / 20, 0.5);
+
+        ctx.strokeStyle = color.toString();
+        ctx.lineWidth = l * 2;
+        ctx.beginPath();
+        ctx.moveTo(l, h - l);
+        ctx.quadraticCurveTo(n2, h - n2, n2, h - n);
+        ctx.lineTo(n * 2, n * 1.5);
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.moveTo(l, h - l);
+        ctx.quadraticCurveTo(n2, h - n2, n, h - n2);
+        ctx.lineTo(n * 2.5, n * 2);
+        ctx.stroke();
+
+        ctx.fillStyle = color.toString();
+        ctx.arc(n * 3, n, n - l, radians(0), radians(360), false);
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.moveTo(n * 2, n);
+        ctx.lineTo(n * 3, n * 2);
+        ctx.stroke();
+
+        return canvas;
+    },
+
+    drawSymbolSpeechBubble: function (canvas, color) {
+        // answer a canvas showing a speech bubble
+        var ctx = canvas.getContext('2d'),
+            w = canvas.width,
+            h = canvas.height,
+            n = canvas.width / 3,
+            l = Math.max(w / 20, 0.5);
+
+        ctx.fillStyle = color.toString();
+        ctx.lineWidth = l * 2;
+        ctx.beginPath();
+        ctx.moveTo(n, n * 2);
+        ctx.quadraticCurveTo(l, n * 2, l, n);
+        ctx.quadraticCurveTo(l, l, n, l);
+        ctx.lineTo(n * 2, l);
+        ctx.quadraticCurveTo(w - l, l, w - l, n);
+        ctx.quadraticCurveTo(w - l, n * 2, n * 2, n * 2);
+        ctx.lineTo(n / 2, h - l);
+        ctx.closePath();
+        ctx.fill();
+        return canvas;
+    },
+
+    drawSymbolSpeechBubbleOutline: function (
+        canvas,
+        color
+    ) {
+        // answer a canvas showing a speech bubble
+        var ctx = canvas.getContext('2d'),
+            w = canvas.width,
+            h = canvas.height,
+            n = canvas.width / 3,
+            l = Math.max(w / 20, 0.5);
+
+        ctx.strokeStyle = color.toString();
+        ctx.lineWidth = l * 2;
+        ctx.beginPath();
+        ctx.moveTo(n, n * 2);
+        ctx.quadraticCurveTo(l, n * 2, l, n);
+        ctx.quadraticCurveTo(l, l, n, l);
+        ctx.lineTo(n * 2, l);
+        ctx.quadraticCurveTo(w - l, l, w - l, n);
+        ctx.quadraticCurveTo(w - l, n * 2, n * 2, n * 2);
+        ctx.lineTo(n / 2, h - l);
+        ctx.closePath();
+        ctx.stroke();
+        return canvas;
+    },
+
+    drawSymbolArrowUp: function (canvas, color) {
+        // answer a canvas showing an up arrow
+        var ctx = canvas.getContext('2d'),
+            w = canvas.width,
+            h = canvas.height,
+            n = canvas.width / 2,
+            l = Math.max(w / 20, 0.5);
+
+        ctx.fillStyle = color.toString();
+        ctx.lineWidth = l * 2;
+        ctx.beginPath();
+        ctx.moveTo(l, n);
+        ctx.lineTo(n, l);
+        ctx.lineTo(w - l, n);
+        ctx.lineTo(w * 0.65, n);
+        ctx.lineTo(w * 0.65, h - l);
+        ctx.lineTo(w * 0.35, h - l);
+        ctx.lineTo(w * 0.35, n);
+        ctx.closePath();
+        ctx.fill();
+        return canvas;
+    },
+
+    drawSymbolArrowUpOutline: function (canvas, color) {
+        // answer a canvas showing an up arrow
+        var ctx = canvas.getContext('2d'),
+            w = canvas.width,
+            h = canvas.height,
+            n = canvas.width / 2,
+            l = Math.max(w / 20, 0.5);
+
+        ctx.strokeStyle = color.toString();
+        ctx.lineWidth = l * 2;
+        ctx.beginPath();
+        ctx.moveTo(l, n);
+        ctx.lineTo(n, l);
+        ctx.lineTo(w - l, n);
+        ctx.lineTo(w * 0.65, n);
+        ctx.lineTo(w * 0.65, h - l);
+        ctx.lineTo(w * 0.35, h - l);
+        ctx.lineTo(w * 0.35, n);
+        ctx.closePath();
+        ctx.stroke();
+        return canvas;
+    },
+
+    drawSymbolArrowDown: function (canvas, color) {
+        // answer a canvas showing a down arrow
+        var ctx = canvas.getContext('2d'),
+            w = canvas.width;
+        ctx.save();
+        ctx.translate(w, w);
+        ctx.rotate(radians(180));
+        this.drawSymbolArrowUp(canvas, color);
+        ctx.restore();
+        return canvas;
+    },
+
+    drawSymbolArrowDownOutline: function (canvas, color) {
+        // answer a canvas showing a down arrow
+        var ctx = canvas.getContext('2d'),
+            w = canvas.width;
+        ctx.save();
+        ctx.translate(w, w);
+        ctx.rotate(radians(180));
+        this.drawSymbolArrowUpOutline(canvas, color);
+        ctx.restore();
+        return canvas;
+    },
+
+    drawSymbolArrowLeft: function (canvas, color) {
+        // answer a canvas showing a left arrow
+        var ctx = canvas.getContext('2d'),
+            w = canvas.width;
+        ctx.save();
+        ctx.translate(0, w);
+        ctx.rotate(radians(-90));
+        this.drawSymbolArrowUp(canvas, color);
+        ctx.restore();
+        return canvas;
+    },
+
+    drawSymbolArrowLeftOutline: function (canvas, color) {
+        // answer a canvas showing a left arrow
+        var ctx = canvas.getContext('2d'),
+            w = canvas.width;
+        ctx.save();
+        ctx.translate(0, w);
+        ctx.rotate(radians(-90));
+        this.drawSymbolArrowUpOutline(canvas, color);
+        ctx.restore();
+        return canvas;
+    },
+
+    drawSymbolArrowRight: function (canvas, color) {
+        // answer a canvas showing a right arrow
+        var ctx = canvas.getContext('2d'),
+            w = canvas.width;
+        ctx.save();
+        ctx.translate(w, 0);
+        ctx.rotate(radians(90));
+        this.drawSymbolArrowUp(canvas, color);
+        ctx.restore();
+        return canvas;
+    },
+
+    drawSymbolArrowRightOutline: function (canvas, color) {
+        // answer a canvas showing a right arrow
+        var ctx = canvas.getContext('2d'),
+            w = canvas.width;
+        ctx.save();
+        ctx.translate(w, 0);
+        ctx.rotate(radians(90));
+        this.drawSymbolArrowUpOutline(canvas, color);
+        ctx.restore();
+        return canvas;
+    },
+
+    drawSymbolRobot: function (canvas, color) {
+        // answer a canvas showing a humanoid robot
+        var ctx = canvas.getContext('2d'),
+            w = canvas.width,
+            h = canvas.height,
+            n = canvas.width / 6,
+            n2 = n / 2,
+            l = Math.max(w / 20, 0.5);
+
+        ctx.fillStyle = color.toString();
+        //ctx.lineWidth = l * 2;
+
+        ctx.beginPath();
+        ctx.moveTo(n + l, n);
+        ctx.lineTo(n * 2, n);
+        ctx.lineTo(n * 2.5, n * 1.5);
+        ctx.lineTo(n * 3.5, n * 1.5);
+        ctx.lineTo(n * 4, n);
+        ctx.lineTo(n * 5 - l, n);
+        ctx.lineTo(n * 4, n * 3);
+        ctx.lineTo(n * 4, n * 4 - l);
+        ctx.lineTo(n * 2, n * 4 - l);
+        ctx.lineTo(n * 2, n * 3);
+        ctx.closePath();
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.moveTo(n * 2.75, n + l);
+        ctx.lineTo(n * 2.4, n);
+        ctx.lineTo(n * 2.2, 0);
+        ctx.lineTo(n * 3.8, 0);
+        ctx.lineTo(n * 3.6, n);
+        ctx.lineTo(n * 3.25, n + l);
+        ctx.closePath();
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.moveTo(n * 2.5, n * 4);
+        ctx.lineTo(n, n * 4);
+        ctx.lineTo(n2 + l, h);
+        ctx.lineTo(n * 2, h);
+        ctx.closePath();
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.moveTo(n * 3.5, n * 4);
+        ctx.lineTo(n * 5, n * 4);
+        ctx.lineTo(w - (n2 + l), h);
+        ctx.lineTo(n * 4, h);
+        ctx.closePath();
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.moveTo(n, n);
+        ctx.lineTo(l, n * 1.5);
+        ctx.lineTo(l, n * 3.25);
+        ctx.lineTo(n * 1.5, n * 3.5);
+        ctx.closePath();
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.moveTo(n * 5, n);
+        ctx.lineTo(w - l, n * 1.5);
+        ctx.lineTo(w - l, n * 3.25);
+        ctx.lineTo(n * 4.5, n * 3.5);
+        ctx.closePath();
+        ctx.fill();
+
+        return canvas;
+    },
+
+})
+
+SymbolMorph.uber = Morph.prototype;
+SymbolMorph.className = 'SymbolMorph';
+
+module.exports = SymbolMorph;
+
+
+},{"./Color":9,"./Morph":22,"./Point":26}],37:[function(require,module,exports){
 var Morph = require('./Morph');
 var Color = require('./Color');
 var Point = require('./Point');
@@ -9323,7 +11735,7 @@ TextMorph.className = 'TextMorph';
 module.exports = TextMorph;
 
 
-},{"./Color":6,"./Morph":18,"./Point":22,"./StringMorph":30}],32:[function(require,module,exports){
+},{"./Color":9,"./Morph":22,"./Point":26,"./StringMorph":35}],38:[function(require,module,exports){
 
 var Morph = require('./Morph');
 var Color = require('./Color');
@@ -9597,7 +12009,7 @@ module.exports = TriggerMorph;
 
     
 
-},{"./Color":6,"./Morph":18,"./Point":22,"./SpeechBubbleMorph":28,"./StringMorph":30}],33:[function(require,module,exports){
+},{"./Color":9,"./Morph":22,"./Point":26,"./SpeechBubbleMorph":33,"./StringMorph":35}],39:[function(require,module,exports){
 var Morph = require('./Morph');
 var FrameMorph = require('./FrameMorph');
 var Color = require('./Color');
@@ -10575,7 +12987,7 @@ module.exports = WorldMorph;
 
 
 
-},{"./BouncerMorph":2,"./BoxMorph":3,"./CircleBoxMorph":4,"./Color":6,"./ColorPaletteMorph":7,"./ColorPickerMorph":8,"./FrameMorph":10,"./GrayPaletteMorph":11,"./HandMorph":12,"./HandleMorph":13,"./MenuMorph":17,"./Morph":18,"./MouseSensorMorph":19,"./PenMorph":21,"./Point":22,"./Rectangle":23,"./ScrollFrameMorph":24,"./SliderMorph":27,"./SpeechBubbleMorph":28,"./StringMorph":30,"./TextMorph":31}],34:[function(require,module,exports){
+},{"./BouncerMorph":5,"./BoxMorph":6,"./CircleBoxMorph":7,"./Color":9,"./ColorPaletteMorph":10,"./ColorPickerMorph":11,"./FrameMorph":13,"./GrayPaletteMorph":14,"./HandMorph":15,"./HandleMorph":16,"./MenuMorph":21,"./Morph":22,"./MouseSensorMorph":23,"./PenMorph":25,"./Point":26,"./Rectangle":28,"./ScrollFrameMorph":29,"./SliderMorph":32,"./SpeechBubbleMorph":33,"./StringMorph":35,"./TextMorph":37}],40:[function(require,module,exports){
 (function (global){
 // morphic.js
 
@@ -10613,10 +13025,15 @@ global.HandMorph = require('./HandMorph');
 global.WorldMorph = require('./WorldMorph');
 
 // widgets.js
-
+global.AlignmentMorph = require('./AlignmentMorph');
+global.InputFieldMorph = require('./InputFieldMorph');
+global.PushButtonMorph = require('./PushButtonMorph');
 
 
 // blocks.js
+global.ArrowMorph = require('./ArrowMorph');
+global.BlockHighlightMorph = require('./BlockHighlightMorph');
+global.SymbolMorph = require('./SymbolMorph');
 
 // gui.js
 
@@ -10625,4 +13042,4 @@ global.Cloud = require('./Cloud');
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./BlinkerMorph":1,"./BouncerMorph":2,"./BoxMorph":3,"./CircleBoxMorph":4,"./Cloud":5,"./Color":6,"./ColorPaletteMorph":7,"./ColorPickerMorph":8,"./CursorMorph":9,"./FrameMorph":10,"./GrayPaletteMorph":11,"./HandMorph":12,"./HandleMorph":13,"./InspectorMorph":14,"./MenuItemMorph":16,"./MenuMorph":17,"./Morph":18,"./MouseSensorMorph":19,"./Node":20,"./PenMorph":21,"./Point":22,"./Rectangle":23,"./ScrollFrameMorph":24,"./ShadowMorph":25,"./SliderButtonMorph":26,"./SliderMorph":27,"./SpeechBubbleMorph":28,"./StringFieldMorph":29,"./StringMorph":30,"./TextMorph":31,"./TriggerMorph":32,"./WorldMorph":33}]},{},[34]);
+},{"./AlignmentMorph":1,"./ArrowMorph":2,"./BlinkerMorph":3,"./BlockHighlightMorph":4,"./BouncerMorph":5,"./BoxMorph":6,"./CircleBoxMorph":7,"./Cloud":8,"./Color":9,"./ColorPaletteMorph":10,"./ColorPickerMorph":11,"./CursorMorph":12,"./FrameMorph":13,"./GrayPaletteMorph":14,"./HandMorph":15,"./HandleMorph":16,"./InputFieldMorph":17,"./InspectorMorph":18,"./MenuItemMorph":20,"./MenuMorph":21,"./Morph":22,"./MouseSensorMorph":23,"./Node":24,"./PenMorph":25,"./Point":26,"./PushButtonMorph":27,"./Rectangle":28,"./ScrollFrameMorph":29,"./ShadowMorph":30,"./SliderButtonMorph":31,"./SliderMorph":32,"./SpeechBubbleMorph":33,"./StringFieldMorph":34,"./StringMorph":35,"./SymbolMorph":36,"./TextMorph":37,"./TriggerMorph":38,"./WorldMorph":39}]},{},[40]);
