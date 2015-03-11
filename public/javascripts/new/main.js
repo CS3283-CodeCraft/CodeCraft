@@ -37,7 +37,11 @@ global.WorldMorph = require('./WorldMorph');
 global.AlignmentMorph = require('./AlignmentMorph');
 global.InputFieldMorph = require('./InputFieldMorph');
 global.PushButtonMorph = require('./PushButtonMorph');
-
+global.ToggleButtonMorph = require('./ToggleButtonMorph');
+global.ToggleElementMorph = require('./ToggleElementMorph');
+global.ToggleMorph = require('./ToggleMorph');
+global.TabMorph = require('./TabMorph');
+global.DialogBoxMorph = require('./DialogBoxMorph');
 
 // blocks.js
 global.ArrowMorph = require('./ArrowMorph');

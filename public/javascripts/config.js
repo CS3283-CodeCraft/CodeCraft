@@ -51,6 +51,7 @@ modules.cloud = '2014-May-26';
 $ = jQuery;
 
 // widget.js
+modules.widgets = '2014-February-13';
 
 var typefilter = false;
 var locationfilter = false;

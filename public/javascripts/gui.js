@@ -3341,7 +3341,11 @@ IDE_Morph.prototype.openLibrary = function () {
 	//db.fontSize = 40;
 	db.createCheckBox(db.length,db.height);
 	
-	db.createImage(screen.width * 0.3, screen.height * 0.15);
+	db.createImage(
+        function(){return new SpriteMorph(new Image())}, 
+        screen.width * 0.3, 
+        screen.height * 0.15
+    );
 };
 
 IDE_Morph.prototype.duplicateSprite = function (sprite) {
