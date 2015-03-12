@@ -2512,7 +2512,7 @@ IDE_Morph.prototype.showMemberRow = function(isCreator, isOnline, username, rowN
     if (showingToCreator && (rowNo > 1)) {
         deleteButton = new PushButtonMorph(
             this,
-            myself.showRemoveMemberPopup(username),
+            null,
             (String.fromCharCode("0xf068")),
             null,
             null,
@@ -2520,6 +2520,7 @@ IDE_Morph.prototype.showMemberRow = function(isCreator, isOnline, username, rowN
             "deleteIconButton"
         );
         deleteButton.setRight(myself.membersViewFrame.right() - titlePadding*2);
+        deleteButton.action = function() {myself.showRemoveMemberPopup(username);};
         deleteButton.drawNew();
         deleteButton.fixLayout();
         groupMemberRow.add(deleteButton);
