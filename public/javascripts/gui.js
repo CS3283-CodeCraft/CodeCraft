@@ -2515,11 +2515,11 @@ IDE_Morph.prototype.showMemberRow = function(isCreator, isOnline, username, rowN
         deleteButton = new PushButtonMorph(
             this,
             'showRemoveMemberPopup', // replace this with delete user function
-            new SymbolMorph('line', 14),
+            (String.fromCharCode("0xf068")),
             null,
             null,
             null,
-            "symbolButton"
+            "deleteIconButton"
         );
         deleteButton.setRight(myself.membersViewFrame.right() - titlePadding*2);
         deleteButton.drawNew();
