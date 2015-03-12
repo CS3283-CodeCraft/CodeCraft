@@ -8946,6 +8946,27 @@ var PushButtonMorph = Class.create(TriggerMorph, {
             this.contrast = 30;
         }
 
+        if (style === "deleteIconButton") {
+            var colors = [
+                (new Color(255, 61, 61)).darker(3),
+                (new Color(255, 138, 138)).darker(40),
+                (new Color(214, 0, 0)).darker(40),
+                new Color(255, 255, 255)
+            ];
+
+            this.corner = 14;
+            this.color = colors[0];
+            this.highlightColor = colors[1];
+            this.pressColor = colors[2];
+            this.labelMinExtent = new Point(20, 20);
+            this.padding = 0;
+            this.labelShadowOffset = new Point(-1, -1);
+            this.labelShadowColor = colors[1];
+            this.labelColor = colors[3];
+            this.contrast = 30;
+            this.fontName = "fontawesome";
+        }
+
         this.drawNew();
         this.fixLayout();
     },
@@ -9055,7 +9076,7 @@ var PushButtonMorph = Class.create(TriggerMorph, {
         context.beginPath();
         this.outlinePath(
             context,
-            isFlat ? 0 : this.corner,
+            /*isFlat ? 0 : */this.corner,
             0
         );
         context.closePath();
@@ -9069,7 +9090,7 @@ var PushButtonMorph = Class.create(TriggerMorph, {
         context.beginPath();
         this.outlinePath(
             context,
-            isFlat ? 0 : Math.max(this.corner - this.outline, 0),
+            /*isFlat ? 0 : */Math.max(this.corner - this.outline, 0),
             this.outline
         );
         context.closePath();
@@ -9286,7 +9307,8 @@ var PushButtonMorph = Class.create(TriggerMorph, {
                 false,
                 shading ? this.labelShadowOffset : null,
                 this.labelShadowColor,
-                this.labelColor
+                this.labelColor,
+                this.fontName
             );
         }
         this.add(this.label);

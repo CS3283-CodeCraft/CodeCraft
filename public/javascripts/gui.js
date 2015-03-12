@@ -2310,15 +2310,15 @@ IDE_Morph.prototype.showShareBoxDisconnectedWindow = function () {
 
 // xinni: Displays a list of group members. Condition: must be in group.
 IDE_Morph.prototype.showViewMembersPopup = function() {
-    var myself = this,
-        world = this.world();
+    var world = this.world();
+    var popupWidth = 500;
+    var popupHeight = 400;
 
     // these are just dummy lists and values.
     // replace these values with actual sharebox group member data.
     var showingToCreator = true; // creator view. you can delete members
-    var totalNumberOfMembers = 5; // group members + pending members <= 5 total!
     var groupMembers = ["john_the_creator", "seraphim_undisputed", "tang_huan_song"];
-    var pendingMembers = ["i_love_jesus", "zhang_yiwen"];
+    var pendingMembers = ["chng_xinni", "zhang_yiwen"];
     var groupMembersIsOnline = [true, false, true]; // stores whether each official member is online
 
 
@@ -2327,13 +2327,15 @@ IDE_Morph.prototype.showViewMembersPopup = function() {
         this.viewMembersPopup.destroy();
     }
     this.viewMembersPopup = new DialogBoxMorph();
-    this.viewMembersPopup.setExtent(new Point(700, 500));
+    this.viewMembersPopup.setExtent(new Point(popupWidth, popupHeight));
 
     if (this.membersViewFrame) {
         this.membersViewFrame.destroy();
     }
     this.membersViewFrame = new ScrollFrameMorph();
-    this.membersViewFrame.setExtent(new Point(640, 450));
+    this.membersViewFrame.setColor(this.viewMembersPopup.color);
+    this.membersViewFrame.setExtent(new Point(640, 350));
+    this.membersViewFrame.setTop(this.viewMembersPopup.top() + 30);
     this.membersViewFrame.setLeft(this.viewMembersPopup.left());
     this.membersViewFrame.setWidth(this.viewMembersPopup.width());
     this.membersViewFrame.drawNew();
@@ -2341,36 +2343,40 @@ IDE_Morph.prototype.showViewMembersPopup = function() {
 
     // list group members
     this.showGroupMemberTitle(groupMembers.length);
-    for (i = 0; i < groupMembers.length; i++) {
-        if (i == 0) { // assume first member is always the creator
+    for (var i = 0; i < groupMembers.length; i++) {
+        if (i === 0) { // assumes first member is always the creator
             this.showMemberRow(true, groupMembersIsOnline[i], groupMembers[i], i + 1, showingToCreator);
-        } else if ((i == totalNumberOfMembers - 1) && (i != 0)) { // last row the list
-            this.showMemberRow(false, groupMembersIsOnline[i], groupMembers[i], i + 1, showingToCreator);
-        } else {
+        } else { // not creator, is normal member
             this.showMemberRow(false, groupMembersIsOnline[i], groupMembers[i], i + 1, showingToCreator);
         }
     }
 
     // list pending group members
     this.showPendingMemberTitle(pendingMembers.length, groupMembers.length);
-    for (j = 0; j < pendingMembers.length; j++) {
-        if (i == totalNumberOfMembers - 1) { // is last row
-            this.showMemberRow(false, false, pendingMembers[j], i + 1 + groupMembers.length + 1, showingToCreator);
-        } else {
-            this.showMemberRow(false, false, pendingMembers[j], i + 1 + groupMembers.length + 1, showingToCreator);
-        }
+    for (var j = 0; j < pendingMembers.length; j++) {
+        this.showMemberRow(false, false, pendingMembers[j], j + groupMembers.length + 2, showingToCreator);
     }
 
 
-    this.viewMembersPopup.fixLayout();
+    // add close button
+    var button = this.viewMembersPopup.addButton('cancel', 'Close');
+    button.setCenter(this.viewMembersPopup.center());
+    button.setBottom(this.viewMembersPopup.bottom() - 10);
+    this.viewMembersPopup.add(button);
+
+    // add title
+    this.viewMembersPopup.labelString = "View Sharebox Members";
+    this.viewMembersPopup.createLabel();
+
+    // popup the popup
     this.viewMembersPopup.drawNew();
     this.viewMembersPopup.fixLayout();
     this.viewMembersPopup.popUp(world);
 };
 
-
 IDE_Morph.prototype.showGroupMemberTitle = function(numberOfGroupMembers) {
     var titlePadding = 5;
+    var titleBarHeight = 30;
 
     // initialize frame
     if (this.groupMemberTitle) {
@@ -2399,6 +2405,7 @@ IDE_Morph.prototype.showGroupMemberTitle = function(numberOfGroupMembers) {
     this.groupMemberTitle.setLeft(this.membersViewFrame.left() + titlePadding);
     this.groupMemberTitle.setTop(this.membersViewFrame.top() + titlePadding);
     this.groupMemberTitle.setWidth(this.membersViewFrame.width() - titlePadding*2);
+    this.groupMemberTitle.setHeight(titleBarHeight);
     this.groupMemberTitle.drawNew();
 
     // position text
@@ -2415,6 +2422,7 @@ IDE_Morph.prototype.showGroupMemberTitle = function(numberOfGroupMembers) {
 
 IDE_Morph.prototype.showPendingMemberTitle = function(numberOfPendingMembers, numberOfGroupMembers) {
     var titlePadding = 5;
+    var titleBarHeight = 30;
 
     // initialize frame
     if (this.pendingMemberTitle) {
@@ -2442,6 +2450,7 @@ IDE_Morph.prototype.showPendingMemberTitle = function(numberOfPendingMembers, nu
     this.pendingMemberTitle.setLeft(this.membersViewFrame.left() + titlePadding);
     this.pendingMemberTitle.setTop(this.groupMemberTitle.bottom() + (numberOfGroupMembers * (groupMemberRow.height() + titlePadding)) + titlePadding);
     this.pendingMemberTitle.setWidth(this.membersViewFrame.width() - titlePadding*2);
+    this.pendingMemberTitle.setHeight(titleBarHeight);
     this.pendingMemberTitle.drawNew();
 
     // position text
@@ -2455,7 +2464,6 @@ IDE_Morph.prototype.showPendingMemberTitle = function(numberOfPendingMembers, nu
     this.membersViewFrame.add(this.pendingMemberTitle);
 };
 
-
 // isOnline, username, isLastRow (dont add line separator)
 IDE_Morph.prototype.showMemberRow = function(isCreator, isOnline, username, rowNo, showingToCreator) {
     var titlePadding = 5;
@@ -2463,7 +2471,8 @@ IDE_Morph.prototype.showMemberRow = function(isCreator, isOnline, username, rowN
     console.log("Adding member row for " + username);
 
     groupMemberRow = new FrameMorph();
-    groupMemberRow.setHeight(50);
+    groupMemberRow.setColor(this.membersViewFrame.color);
+    groupMemberRow.setHeight(40);
     groupMemberRow.setWidth(this.membersViewFrame.width());
 
     // show Online green dot
@@ -2499,18 +2508,19 @@ IDE_Morph.prototype.showMemberRow = function(isCreator, isOnline, username, rowN
     username.drawNew();
     groupMemberRow.add(username);
 
-    // show delete button
-    if (showingToCreator) {
+    // show delete button for ordinary members
+    if (showingToCreator && (rowNo > 1)) {
         deleteButton = new PushButtonMorph(
             this,
-            'showRemoveMemberPopup', // replace this with delete user function
-            new SymbolMorph('line', 14),
+            null,
+            (String.fromCharCode("0xf068")),
             null,
             null,
             null,
-            "symbolButton"
+            "deleteIconButton"
         );
-        deleteButton.setLeft(myself.membersViewFrame.left() + 10 + 100 + 10 + 150 + 10);
+        deleteButton.setRight(myself.membersViewFrame.right() - titlePadding*2);
+        deleteButton.action = function() {myself.showRemoveMemberPopup(username);};
         deleteButton.drawNew();
         deleteButton.fixLayout();
         groupMemberRow.add(deleteButton);
@@ -2570,7 +2580,8 @@ IDE_Morph.prototype.showYouHaveBeenRemovedPopup = function() {
 // * * * * * * * * * Remove a Member Popup * * * * * * * * * * * * * * * * *
 
 // xinni: Popup to creator, when they try to remove a member
-IDE_Morph.prototype.showRemoveMemberPopup = function() {
+IDE_Morph.prototype.showRemoveMemberPopup = function(username) {
+    console.log(username + " deletion from sharebox group requested.");
 
 };
 
