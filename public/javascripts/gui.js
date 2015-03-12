@@ -2354,7 +2354,7 @@ IDE_Morph.prototype.showViewMembersPopup = function() {
     // list pending group members
     this.showPendingMemberTitle(pendingMembers.length, groupMembers.length);
     for (var j = 0; j < pendingMembers.length; j++) {
-        this.showMemberRow(false, false, pendingMembers[j], i + groupMembers.length, showingToCreator);
+        this.showMemberRow(false, false, pendingMembers[j], j + groupMembers.length + 2, showingToCreator);
     }
 
 
@@ -2364,6 +2364,11 @@ IDE_Morph.prototype.showViewMembersPopup = function() {
     button.setBottom(this.viewMembersPopup.bottom() - 10);
     this.viewMembersPopup.add(button);
 
+    // add title
+    this.viewMembersPopup.labelString = "View Sharebox Members";
+    this.viewMembersPopup.createLabel();
+
+    // popup the popup
     this.viewMembersPopup.drawNew();
     this.viewMembersPopup.fixLayout();
     this.viewMembersPopup.popUp(world);
@@ -2505,7 +2510,7 @@ IDE_Morph.prototype.showMemberRow = function(isCreator, isOnline, username, rowN
     username.drawNew();
     groupMemberRow.add(username);
 
-    // show delete button
+    // show delete button for ordinary members
     if (showingToCreator && (rowNo > 1)) {
         deleteButton = new PushButtonMorph(
             this,
