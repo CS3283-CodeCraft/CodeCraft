@@ -3576,7 +3576,7 @@ var DialogBoxMorph = Class.create(Morph, {
         context.beginPath();
         this.outlinePathBody(
             context,
-            isFlat ? 0 : this.corner
+            /*isFlat ? 0 : */this.corner
         );
         context.closePath();
         context.fill();
@@ -9076,7 +9076,7 @@ var PushButtonMorph = Class.create(TriggerMorph, {
         context.beginPath();
         this.outlinePath(
             context,
-            isFlat ? 0 : this.corner,
+            /*isFlat ? 0 :*/ this.corner,
             0
         );
         context.closePath();
@@ -9090,7 +9090,7 @@ var PushButtonMorph = Class.create(TriggerMorph, {
         context.beginPath();
         this.outlinePath(
             context,
-            isFlat ? 0 : Math.max(this.corner - this.outline, 0),
+            /*isFlat ? 0 : */Math.max(this.corner - this.outline, 0),
             this.outline
         );
         context.closePath();
