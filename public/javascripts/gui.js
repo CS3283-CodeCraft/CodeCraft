@@ -2374,7 +2374,6 @@ IDE_Morph.prototype.showViewMembersPopup = function() {
     this.viewMembersPopup.popUp(world);
 };
 
-
 IDE_Morph.prototype.showGroupMemberTitle = function(numberOfGroupMembers) {
     var titlePadding = 5;
     var titleBarHeight = 30;
@@ -2465,7 +2464,6 @@ IDE_Morph.prototype.showPendingMemberTitle = function(numberOfPendingMembers, nu
     this.membersViewFrame.add(this.pendingMemberTitle);
 };
 
-
 // isOnline, username, isLastRow (dont add line separator)
 IDE_Morph.prototype.showMemberRow = function(isCreator, isOnline, username, rowNo, showingToCreator) {
     var titlePadding = 5;
@@ -2514,7 +2512,7 @@ IDE_Morph.prototype.showMemberRow = function(isCreator, isOnline, username, rowN
     if (showingToCreator && (rowNo > 1)) {
         deleteButton = new PushButtonMorph(
             this,
-            'showRemoveMemberPopup', // replace this with delete user function
+            myself.showRemoveMemberPopup(username),
             (String.fromCharCode("0xf068")),
             null,
             null,
@@ -2581,7 +2579,8 @@ IDE_Morph.prototype.showYouHaveBeenRemovedPopup = function() {
 // * * * * * * * * * Remove a Member Popup * * * * * * * * * * * * * * * * *
 
 // xinni: Popup to creator, when they try to remove a member
-IDE_Morph.prototype.showRemoveMemberPopup = function() {
+IDE_Morph.prototype.showRemoveMemberPopup = function(username) {
+    console.log(username + " deletion from sharebox group requested.");
 
 };
 
