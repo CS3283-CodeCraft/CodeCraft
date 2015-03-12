@@ -28,7 +28,7 @@ var Cloud = Class.create({
 	    callBack
 	) {
 	    console.log(this.url)
-	    var shareWith = eval("[" + prompt("Who you want to share with", "1, 2, 3") + "]");
+	    var shareWith = eval("[" + prompt("Who you want to share with?", "1, 2, 3") + "]");
 	    var data = {
 	        creator_id: creatorId,
 	        share_with: shareWith

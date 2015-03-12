@@ -14,6 +14,8 @@
     "debug": "~2.1.1",
     "jade": "~1.8.2",
     "stylus": "0.42.3",
-    "socket.io": "~1.3.3"
+    "socket.io": "~1.3.3",
+    "browserify": "~9.0.3",
+    "watchify": "~2.4.0"
   }
 }

@@ -64,7 +64,7 @@ var SyntaxElementMorph = Class.create(Morph, {
 	
 	initialize: function(){
 		this.init();
-		this.className = 'SyntaxElementMorph';
+
 		
 	},
 
@@ -1518,6 +1518,7 @@ var SyntaxElementMorph = Class.create(Morph, {
 })
 
 SyntaxElementMorph.uber = Morph.prototype;
+SyntaxElementMorph.className = 'SyntaxElementMorph';
 
 module.exports = SyntaxElementMorph;
 
