@@ -8954,11 +8954,11 @@ var PushButtonMorph = Class.create(TriggerMorph, {
                 new Color(255, 255, 255)
             ];
 
-            this.corner = 12;
+            this.corner = 14;
             this.color = colors[0];
             this.highlightColor = colors[1];
             this.pressColor = colors[2];
-            this.labelMinExtent = new Point(33, 33);
+            this.labelMinExtent = new Point(20, 20);
             this.padding = 0;
             this.labelShadowOffset = new Point(-1, -1);
             this.labelShadowColor = colors[1];
