@@ -9023,8 +9023,8 @@ var PushButtonMorph = Class.create(TriggerMorph, {
             this.setExtent(new Point(
                 Math.max(this.label.width(), this.labelMinExtent.x) + padding,
                 Math.max(this.label instanceof StringMorph ?
-                        this.label.rawHeight() :
-                            this.label.height(), this.labelMinExtent.y) + padding
+                    this.label.rawHeight() :
+                    this.label.height(), this.labelMinExtent.y) + padding
             ));
             this.label.setCenter(this.center());
         }
