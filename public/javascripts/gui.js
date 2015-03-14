@@ -2858,9 +2858,12 @@ IDE_Morph.prototype.showLeaveGroupPopup = function() {
     confirmButton.setWidth(120);
     confirmButton.action = function () {
         // call a function here that lets member leave group. return success/failure value.
+        // IF A CREATOR LEAVES, THE ENTIRE SHAREBOX SESSION IS TERMINATED.
+
         var result = "failure"; // DUMMY VALUE FOR NOW. Can be success failure.
 
         if (result === "success") {
+            // destroy sharebox morph and show sharebox connect
             myself.destroyShareBox();
             myself.leaveGroupPopup.cancel();
         } else {
