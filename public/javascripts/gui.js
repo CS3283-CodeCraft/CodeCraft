@@ -1301,7 +1301,21 @@ IDE_Morph.prototype.createCorralBar = function () {
     // IMPORT FROM LIBRARY /////////////////////////////////////////
     img = new Image();
     img.src = 'merlion.jpg';
-    librarybutton = new PushButtonMorph(
+    button = new PushButtonMorph(
+        this,
+        null,
+        (String.fromCharCode("0xf03e")),
+        null,
+        null,
+        null,
+        "iconButton"
+    );
+    button.drawNew();
+    button.hint = 'Open library';
+    button.fixLayout();
+    librarybutton = button;
+
+    /*librarybutton = new PushButtonMorph(
         this,
         "openLibrary",
         new SymbolMorph('flash', 15)
@@ -1319,7 +1333,7 @@ IDE_Morph.prototype.createCorralBar = function () {
     librarybutton.contrast = this.buttonContrast;
     librarybutton.drawNew();
     librarybutton.hint = "Open library";
-    librarybutton.fixLayout();
+    librarybutton.fixLayout();*/
     librarybutton.setCenter(this.corralBar.center());
 //	librarybutton.setLeft(
 //		this.corralBar.left() + padding + newbutton.width() + padding
