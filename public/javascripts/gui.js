@@ -1455,8 +1455,8 @@ IDE_Morph.prototype.createShareBoxTitleBarButtons = function () {
     // add member button
     button = new PushButtonMorph(
         this,
-        null,
-        (String.fromCharCode("0xf068")),
+        "showAddMemberPopup",
+        (String.fromCharCode("0xf067")),
         null,
         null,
         null,
@@ -2301,7 +2301,7 @@ IDE_Morph.prototype.showViewMembersPopup = function() {
     // these are just dummy lists and values.
     // replace these values with actual sharebox group member data.
     var showingToCreator = true; // creator view. you can delete members
-    var groupMembers = ["john_the_creator", "seraphim_undisputed", "tang_huan_song"];
+    var groupMembers = ["john_the_creator", "seraphim_undisputed", "tang_huan_song"]; // first member is creator!
     var pendingMembers = ["chng_xinni", "zhang_yiwen"];
     var groupMembersIsOnline = [true, false, true]; // stores whether each official member is online
 
@@ -2523,7 +2523,64 @@ IDE_Morph.prototype.showMemberRow = function(isCreator, isOnline, username, rowN
 
 // xinni: Popup when creator chooses "Add new Member"
 IDE_Morph.prototype.showAddMemberPopup = function() {
+    var world = this.world();
+    var myself = this;
+    var popupWidth = 400;
+    var popupHeight = 300;
 
+    if (this.addMemberPopup) {
+        this.addMemberPopup.destroy();
+    }
+    this.addMemberPopup = new DialogBoxMorph();
+    this.addMemberPopup.setExtent(new Point(popupWidth, popupHeight));
+
+    // close dialog button
+    button = new PushButtonMorph(
+        this,
+        null,
+        (String.fromCharCode("0xf00d")),
+        null,
+        null,
+        null,
+        "redCircleIconButton"
+    );
+
+    button.setRight(this.addMemberPopup.right() - 3);
+    button.setTop(this.addMemberPopup.top() + 2);
+    button.action = function () { myself.addMemberPopup.cancel(); };
+    button.drawNew();
+    button.fixLayout();
+    this.addMemberPopup.add(button);
+
+    // the text input box
+    var usernameInput = new InputFieldMorph();
+    usernameInput.setWidth(200);
+    usernameInput.setCenter(myself.addMemberPopup.center());
+    usernameInput.fontSize = 15;
+    usernameInput.typeInPadding = 4;
+    usernameInput.fixLayout();
+    usernameInput.drawNew();
+    this.addMemberPopup.add(usernameInput);
+
+
+    // "Add" Button
+    addButton = new PushButtonMorph(null, null, "Add", null, null, null, "green");
+    addButton.setCenter(myself.addMemberPopup.center());
+    addButton.setTop(usernameInput.bottom() + 10);
+    addButton.action = function () {
+        console.log("Add button pressed. Add this member to the group. Return a failure/success message.");
+    };
+    this.addMemberPopup.add(addButton);
+
+
+    // add title
+    this.addMemberPopup.labelString = "Add a member";
+    this.addMemberPopup.createLabel();
+
+    // popup
+    this.addMemberPopup.drawNew();
+    this.addMemberPopup.fixLayout();
+    this.addMemberPopup.popUp(world);
 };
 
 IDE_Morph.prototype.showAddMemberSuccessScreen = function() {
@@ -2541,7 +2598,68 @@ IDE_Morph.prototype.showAddMemberFailureScreen = function(errorCause) {
 
 // xinni: Popup when user chooses "Leave group"
 IDE_Morph.prototype.showLeaveGroupPopup = function() {
+    var world = this.world();
+    var popupWidth = 400;
+    var popupHeight = 300;
 
+    if (this.leaveGroupPopup) {
+        this.leaveGroupPopup.destroy();
+    }
+    this.leaveGroupPopup = new DialogBoxMorph();
+    this.leaveGroupPopup.setExtent(new Point(popupWidth, popupHeight));
+/*
+    // Add new member
+    if (this.requestReceivedLogo) {
+        this.requestReceivedLogo.destroy();
+    }
+
+    var requestReceivedLogo = new Morph();
+    requestReceivedLogo.texture = 'images/notification.png';
+    requestReceivedLogo.drawNew = function () {
+        this.image = newCanvas(this.extent());
+        var context = this.image.getContext('2d');
+        var picBgColor = myself.shareBoxConnect.color;
+        context.fillStyle = picBgColor.toString();
+        context.fillRect(0, 0, this.width(), this.height());
+        if (this.texture) {
+            this.drawTexture(this.texture);
+        }
+    };
+
+    requestReceivedLogo.setExtent(new Point(129, 123));
+    requestReceivedLogo.setLeft(this.stage.width() / 2 - requestReceivedLogo.width() / 2);
+    requestReceivedLogo.setTop(this.stage.width() / 8);
+    this.requestReceivedScreen.add(requestReceivedLogo);
+
+    // screen 3: Awaiting reply text
+    txt = new TextMorph("'marylim' would like to invite you to their collaboration group.");
+
+    txt.setColor(SpriteMorph.prototype.paletteTextColor);
+    txt.setPosition(new Point(this.stage.width() / 2 - txt.width() / 2, requestReceivedLogo.bottom() + padding));
+    this.requestReceivedScreen.add(txt);
+
+    // screen 3: Accept button -> launch sharebox.
+    acceptButton = new PushButtonMorph(null, null, "Accept", null, null, null, "green");
+    acceptButton.setPosition(new Point(myself.stage.width() / 2 - acceptButton.width() - padding, txt.bottom() + padding));
+    acceptButton.action = function () {
+        console.log("Accept button pressed. Launch Sharebox.");
+        this.showEntireShareBoxComponent();
+    };
+    this.requestReceivedScreen.add(acceptButton);
+
+    // screen 3: Reject button -> go back to create group screen.
+    rejectButton = new PushButtonMorph(null, null, "Reject", null, null, null, "red");
+    rejectButton.setPosition(new Point(myself.stage.width() / 2 + padding, txt.bottom() + padding));
+    rejectButton.action = function () {
+        console.log("Reject button pressed. Back to Create group screen.");
+        myself.newGroupScreen.show();
+        myself.requestReceivedScreen.hide();
+    };
+    this.requestReceivedScreen.add(rejectButton);
+*/
+    this.leaveGroupPopup.drawNew();
+    this.leaveGroupPopup.fixLayout();
+    this.leaveGroupPopup.popUp(world);
 };
 
 IDE_Morph.prototype.showLeaveGroupSuccessScreen = function() {
