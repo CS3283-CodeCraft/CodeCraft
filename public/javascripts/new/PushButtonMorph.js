@@ -184,6 +184,28 @@ var PushButtonMorph = Class.create(TriggerMorph, {
             this.contrast = 30;
         }
 
+        if (style === "iconButton") {
+            var colors = [
+                (new Color(230, 230, 230)).darker(3),
+                (new Color(255, 255, 255)).darker(40),
+                (new Color(255, 255, 255)).darker(40),
+                new Color(70, 70, 70)
+            ];
+
+            this.corner = 14;
+            this.color = colors[0];
+            this.highlightColor = colors[1];
+            this.pressColor = colors[2];
+            this.labelMinExtent = new Point(36, 18);
+            this.padding = 0;
+            this.labelShadowOffset = new Point(-1, -1);
+            this.labelShadowColor = colors[1];
+            this.labelColor = colors[3];
+            this.contrast = 30;
+            this.fontName = "fontawesome";
+            this.fontSize = 14;
+        }
+
         if (style === "deleteIconButton") {
             var colors = [
                 (new Color(255, 61, 61)).darker(3),

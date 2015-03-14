@@ -1471,12 +1471,12 @@ IDE_Morph.prototype.createShareBoxTitleBarButtons = function () {
     // add member button
     button = new PushButtonMorph(
         this,
-        'showAddMemberPopup',
-        new SymbolMorph('crosshairs', 14),
+        null,
+        (String.fromCharCode("0xf068")),
         null,
         null,
         null,
-        "symbolButton"
+        "iconButton"
     );
     button.drawNew();
     button.hint = 'New Member';
@@ -2520,7 +2520,7 @@ IDE_Morph.prototype.showMemberRow = function(isCreator, isOnline, username, rowN
             "deleteIconButton"
         );
         deleteButton.setRight(myself.membersViewFrame.right() - titlePadding*2);
-        deleteButton.action = function() {myself.showRemoveMemberPopup(username);};
+        deleteButton.action = function() { myself.showRemoveMemberPopup(username); };
         deleteButton.drawNew();
         deleteButton.fixLayout();
         groupMemberRow.add(deleteButton);
