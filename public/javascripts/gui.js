@@ -1696,11 +1696,12 @@ function buildInvisibleButton(action, point, left, top) {
 
 // Tang Huan Song: I'll be Morphing this prototype function slowly into the fully-functional function (puns intended)
 
-IDE_Morph.shareBoxPrototypeFunctionality = function (myself, shareboxId) {
+IDE_Morph.makeSocket = function (myself, shareboxId) {
     // First Screen: Script drag behavior to load the next screen for naming.
     // Override default behavior
-    var shareBoxBGEmpty = drawShareBoxPrototypeUsingImage.call(this, myself, 'images/sharebox_prototype.png');
-    this.shareBox.add(shareBoxBGEmpty);
+    var shareBoxPlaceholderSprite = myself.shareBoxPlaceholderSprite;
+    //var shareBoxBGEmpty = drawShareBoxPrototypeUsingImage.call(this, myself, 'images/sharebox_prototype.png');
+    //this.shareBox.add(shareBoxBGEmpty);
     var serializer = this.serializer,
         ide = this,
         room = shareboxId.toString(), 
@@ -1709,10 +1710,13 @@ IDE_Morph.shareBoxPrototypeFunctionality = function (myself, shareboxId) {
     var sharer = new ShareBoxItemSharer(serializer, ide, socket);
 
     sharer.socket.emit('join', {id: tempIdentifier, room: room });
-    console.log(tempIdentifier +": join room " + room)
+    console.log(tempIdentifier +": join room " + room);
 
     // When I receive data, I parse objectData and add it to my data list
     sharer.socket.on('message', function (objectData) {
+        shareBoxPlaceholderSprite.sounds = new List();
+        shareBoxPlaceholderSprite.costumes = new List();
+        shareBoxPlaceholderSprite.costume = null;
         alert("received:" + objectData);
         // Build array object to update list
         var arrayItem = objectData;
@@ -1720,97 +1724,28 @@ IDE_Morph.shareBoxPrototypeFunctionality = function (myself, shareboxId) {
         // Update local list
         this.data.items.push(arrayItem);
         console.log("draw following code in sharebox: \n" + JSON.stringify(this.data.items, null, '\t'));
-    }.bind(sharer));
-
-
-    // Final function will serialize the object into XML and call Yiwen's API to write it to a file
-    this.shareBox.reactToDropOf = function (droppedMorph) {
-        // Currently this is a function to demonstrate both dropping and dragging.
-        var shareName = 'shareName';
-        // After the drop, sharer is to call shareObject only. shareObject will communicate with the server API and
-        // handle everything else
-        sharer.shareObject(room, socket, droppedMorph, shareName);
-
-        // Following is a demonstration of some of the functions used by the sharer. They are meant to be private access
-        // and will be hidden later on
-
-        // Demonstrates conversion of object to XML.
-        // var xml = sharer.serializeItem(droppedMorph);
-        droppedMorph.destroy();
-
-        // Gets a deserialized object back, which is not in a one-to-one correspondence the original dragged object,
-        // so...
-
-
-
-        // ~~Fin~~
-    };
-
-    // Most of the following code will likely be scrapped
-    /*
-    // Second Screen: Static screen with text box and button requesting script name.
-    // init screen
-    if (this.addScriptScreen) {
-        this.addScriptScreen.destroy();
-    }
-    this.addScriptScreen = new FrameMorph();
-    this.addScriptScreen.color = this.shareBox.color;
-    var padding = 20;
-    this.add(this.addScriptScreen);
-    // Add-a-script instruction
-    var txt = new TextMorph("Name your new script.");
-    txt.fontSize = 13;
-    txt.fontName = "verdana";
-    txt.setColor(SpriteMorph.prototype.paletteTextColor);
-    txt.setPosition(new Point(this.stage.width() / 2 - txt.width() / 2 + 20, padding));
-    this.addScriptScreen.add(txt);
-
-    // Add-a-script input box
-    var inputName = new InputFieldMorph("Script Name");
-    inputName.setPosition(new Point(this.stage.width() / 2 - inputName.width() / 2, txt.bottom() + padding));
-    this.addScriptScreen.add(inputName);
-
-    this.addScriptScreen.hide();
-
-    // Third Screen: Static screen with list of existing scripts.
-    // Existing scripts list
-    if (this.scriptListScreen) {
-        this.scriptListScreen.destroy();
-    }
-    this.scriptListScreen = new FrameMorph();
-    this.scriptListScreen.color = this.shareBox.color;
-    this.add(this.scriptListScreen);
-
-
-    // Button to fake-sync
-    var fakeSyncButton = buildInvisibleButton.call(this,
-        function () {
-            this.scriptListScreen.show();
-        },
-        new Point(20, 20), 0, 0);
-    this.shareBox.add(fakeSyncButton);
-
-    // Scripts before
-    var shareBoxBG = drawShareBoxPrototypeUsingImage.call(this, myself, 'images/sharebox_prototype_add.png');
-    shareBoxBG.hide();
-
-    var shareBoxCloseScript = drawShareBoxPrototypeUsingImage.call(this, myself, 'images/sharebox_prototype_close.png');
-
-    // Button to simulate accordion behavior
-    var hiddenButton = buildInvisibleButton.call(this,
-        function () {
-            if (shareBoxBG.isVisible == false) {
-                shareBoxBG.show();
-            } else {
-                shareBoxBG.hide();
+        /*
+        this.contents.children.forEach(function (item) {
+            if (item instanceof CostumeIconMorph && item.top() < top - 4) {
+                idx += 1;
             }
-        },
-        new Point(20, 20), 18, 130);
-    this.scriptListScreen.add(shareBoxCloseScript);
-    this.scriptListScreen.add(shareBoxBG);
-    this.scriptListScreen.add(hiddenButton);
-    this.scriptListScreen.hide();
-    */
+        });
+        this.sprite.costumes.add(costume, idx + 1);
+        */
+        var costume_idx = 0;
+        for (var i = 0; i < this.data.items.length; i++) {
+            var shareObject = sharer.getObject(this.data.items[i].xml);
+            if (shareObject instanceof CostumeIconMorph) {
+                costume_idx += 1;
+                shareBoxPlaceholderSprite.costumes.add(shareObject.object, costume_idx);
+            } else if (shareObject instanceof SoundIconMorph) {
+                shareBoxPlaceholderSprite.sounds.push(shareObject.object);
+            }
+
+            shareObject.destroy();
+        }
+    }.bind(sharer));
+    return sharer;
 }
 
 
@@ -1831,7 +1766,7 @@ IDE_Morph.prototype.createShareBox = function (shareboxId) {
     if (this.shareBoxConnect) {
         this.shareBoxConnect.destroy();
     }
-
+    var sharer = IDE_Morph.makeSocket.call(this, myself, shareboxId);
     if (this.currentShareBoxTab === 'scripts') {
         scripts.isDraggable = false;
         scripts.color = this.groupColor;
@@ -1844,15 +1779,16 @@ IDE_Morph.prototype.createShareBox = function (shareboxId) {
         //this.shareBox.texture = IDE_Morph.prototype.scriptsPaneTexture;
 
         this.shareBox.reactToDropOf = function (droppedMorph) {
-            if (droppedMorph instanceof BlockMorph) {
-                myself.shareBox.add(droppedMorph);
-            } else {
-                droppedMorph.destroy();
-            }
+            // Currently this is a function to demonstrate both dropping and dragging.
+            //var shareName = 'shareName';
+            var shareName = prompt("Give the item a name.");
+            // After the drop, sharer is to call shareObject only. shareObject will communicate with the server API and
+            // handle everything else
+            sharer.shareObject((shareboxId.toString()), droppedMorph, shareName);
+            droppedMorph.destroy();
+            // ~~Fin~~
         };
-
-        // Executes shareBox prototype functionality. To be modified/deleted thereafter
-        IDE_Morph.shareBoxPrototypeFunctionality.call(this, myself, shareboxId);
+        //IDE_Morph.makeSocket.call(this, myself, shareboxId);
     } else if (this.currentShareBoxTab === 'assets') {
         this.shareBox = new ShareBoxAssetsMorph(
             this.shareBoxPlaceholderSprite,
@@ -1864,8 +1800,7 @@ IDE_Morph.prototype.createShareBox = function (shareboxId) {
 
         this.shareBox.acceptsDrops = false;
         this.shareBox.contents.acceptsDrops = false;
-
-        //this.createShareAssetsBox();
+        //IDE_Morph.makeSocket.call(this, myself, shareboxId);
     } else {
         this.shareBox = new Morph();
 
@@ -1934,7 +1869,7 @@ IDE_Morph.prototype.createShareAssetsBox = function () {
     };
 
     // Executes shareBox prototype functionality. To be modified/deleted thereafter
-    // IDE_Morph.shareBoxPrototypeFunctionality.call(this, myself);
+    // IDE_Morph.makeSocket.call(this, myself);
 };
 
 // xinni: ShareBox connection tab bar that just says "Create group"
@@ -8734,6 +8669,7 @@ ShareBoxAssetsMorph.prototype.updateList = function () {
     this.updateSelection();
 };
 
+
 // Huan Song: Slightly modified version of the original WardrobeMorph reactToDropOf
 ShareBoxAssetsMorph.prototype.reactToDropOf = function (icon) {
     // Primarily differs in preventing the costume from being removed from WardrobeMorph on sharing
@@ -8764,3 +8700,4 @@ ShareBoxAssetsMorph.prototype.reactToDropOf = function (icon) {
         icon.destroy();
     }
 };
+
