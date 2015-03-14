@@ -2361,7 +2361,8 @@ IDE_Morph.prototype.showViewMembersPopup = function() {
 
 
     // add close button
-    var button = this.viewMembersPopup.addButton('cancel', 'Close');
+    var button = new PushButtonMorph(null, null, "Close me", null, null, null, "green");
+    button.action = function() { myself.viewMembersPopup.cancel(); };
     button.setCenter(this.viewMembersPopup.center());
     button.setBottom(this.viewMembersPopup.bottom() - 10);
     this.viewMembersPopup.add(button);
@@ -2496,7 +2497,7 @@ IDE_Morph.prototype.showMemberRow = function(isCreator, isOnline, username, rowN
     }
 
     // show username
-    username = new StringMorph(
+    usernameLabel = new StringMorph(
         username,
         14,
         'sans-serif',
@@ -2506,9 +2507,9 @@ IDE_Morph.prototype.showMemberRow = function(isCreator, isOnline, username, rowN
         null,
         this.frameColor.darker(this.buttonContrast)
     );
-    username.setLeft(myself.membersViewFrame.left() + 10 + 40 + 10);
-    username.drawNew();
-    groupMemberRow.add(username);
+    usernameLabel.setLeft(myself.membersViewFrame.left() + 10 + 40 + 10);
+    usernameLabel.drawNew();
+    groupMemberRow.add(usernameLabel);
 
     // show delete button for ordinary members
     if (showingToCreator && (rowNo > 1)) {
@@ -3043,16 +3044,176 @@ IDE_Morph.prototype.showYouHaveBeenRemovedPopup = function() {
 
 // xinni: Popup to creator, when they try to remove a member
 IDE_Morph.prototype.showRemoveMemberPopup = function(username) {
-    console.log(username + " deletion from sharebox group requested.");
+    var world = this.world();
+    var myself = this;
+    var popupWidth = 500;
+    var popupHeight = 400;
+
+    if (this.removeMemberPopup) {
+        this.removeMemberPopup.destroy();
+    }
+    this.removeMemberPopup = new DialogBoxMorph();
+    this.removeMemberPopup.setExtent(new Point(popupWidth, popupHeight));
+
+    // close dialog button
+    button = new PushButtonMorph(
+        this,
+        null,
+        (String.fromCharCode("0xf00d")),
+        null,
+        null,
+        null,
+        "redCircleIconButton"
+    );
+    button.setRight(this.removeMemberPopup.right() - 3);
+    button.setTop(this.removeMemberPopup.top() + 2);
+    button.action = function () { myself.removeMemberPopup.cancel(); };
+    button.drawNew();
+    button.fixLayout();
+    this.removeMemberPopup.add(button);
+
+    // add title
+    this.removeMemberPopup.labelString = "Remove " + username + " from group";
+    this.removeMemberPopup.createLabel();
+
+    // leave group image
+    var removeMemberImage = new Morph();
+    removeMemberImage.texture = 'images/removed.png';
+    removeMemberImage.drawNew = function () {
+        this.image = newCanvas(this.extent());
+        var context = this.image.getContext('2d');
+        var picBgColor = myself.removeMemberPopup.color;
+        context.fillStyle = picBgColor.toString();
+        context.fillRect(0, 0, this.width(), this.height());
+        if (this.texture) {
+            this.drawTexture(this.texture);
+        }
+    };
+
+    removeMemberImage.setExtent(new Point(128, 128));
+    removeMemberImage.setCenter(this.removeMemberPopup.center());
+    removeMemberImage.setTop(this.removeMemberPopup.top() + 90);
+    this.removeMemberPopup.add(removeMemberImage);
+
+    // leave group text
+    txt = new TextMorph("You're about to remove " + username + " from your group.\nPress OK to continue.")
+    txt.setCenter(this.removeMemberPopup.center());
+    txt.setTop(removeMemberImage.bottom() + 20);
+    this.removeMemberPopup.add(txt);
+    txt.drawNew();
+
+    // OK -> close sharebox and go back to Sharebox Connect
+    confirmButton = new PushButtonMorph(null, null, "OK", null, null, null, "green");
+    confirmButton.setWidth(120);
+    confirmButton.action = function () {
+        // call a function here that lets creator delete the member. return success/failure value.
+        var result = "failure"; // DUMMY VALUE FOR NOW. Can be success || failure.
+
+        if (result === "success") {
+            myself.removeMemberPopup.cancel();
+            if (myself.viewMembersPopup) {
+                myself.viewMembersPopup.destroy();
+            }
+            myself.showViewMembersPopup();
+        } else {
+            myself.showRemoveMemberFailurePopup(username);
+        }
+    };
+    // Cancel -> close the dialog.
+    rejectButton = new PushButtonMorph(null, null, "Cancel", null, null, null, "red");
+    rejectButton.setWidth(120);
+    rejectButton.action = function () {
+        myself.removeMemberPopup.cancel();
+    };
+
+    // position and add the OK and cancel buttons
+    confirmButton.setTop(txt.bottom() + 20);
+    rejectButton.setTop(txt.bottom() + 20);
+    confirmButton.setLeft(this.removeMemberPopup.left() + 115);
+    rejectButton.setLeft(confirmButton.right() + 30);
+    confirmButton.label.setCenter(confirmButton.center());
+    rejectButton.label.setCenter(rejectButton.center());
+    this.removeMemberPopup.add(confirmButton);
+    this.removeMemberPopup.add(rejectButton);
+
+    // popup
+    this.removeMemberPopup.drawNew();
+    this.removeMemberPopup.fixLayout();
+    this.removeMemberPopup.popUp(world);
 
 };
 
-IDE_Morph.prototype.showRemoveMemberSuccessScreen = function() {
+IDE_Morph.prototype.showRemoveMemberFailurePopup = function(username) {
+    var world = this.world();
+    var myself = this;
+    var popupWidth = 500;
+    var popupHeight = 400;
 
-};
+    if (this.removeMemberFailurePopup) {
+        this.removeMemberFailurePopup.destroy();
+    }
+    this.removeMemberFailurePopup = new DialogBoxMorph();
+    this.removeMemberFailurePopup.setExtent(new Point(popupWidth, popupHeight));
 
-IDE_Morph.prototype.showRemoveMemberFailureScreen = function() {
+    // close dialog button
+    button = new PushButtonMorph(
+        this,
+        null,
+        (String.fromCharCode("0xf00d")),
+        null,
+        null,
+        null,
+        "redCircleIconButton"
+    );
+    button.setRight(this.removeMemberFailurePopup.right() - 3);
+    button.setTop(this.removeMemberFailurePopup.top() + 2);
+    button.action = function () { myself.removeMemberFailurePopup.cancel(); };
+    button.drawNew();
+    button.fixLayout();
+    this.removeMemberFailurePopup.add(button);
 
+    // add title
+    this.removeMemberFailurePopup.labelString = "Failed to remove " + username;
+    this.removeMemberFailurePopup.createLabel();
+
+    // failure image
+    var failureImage = new Morph();
+    failureImage.texture = 'images/failure.png';
+    failureImage.drawNew = function () {
+        this.image = newCanvas(this.extent());
+        var context = this.image.getContext('2d');
+        var picBgColor = myself.removeMemberFailurePopup.color;
+        context.fillStyle = picBgColor.toString();
+        context.fillRect(0, 0, this.width(), this.height());
+        if (this.texture) {
+            this.drawTexture(this.texture);
+        }
+    };
+
+    failureImage.setExtent(new Point(128, 128));
+    failureImage.setCenter(this.removeMemberFailurePopup.center());
+    failureImage.setTop(this.removeMemberFailurePopup.top() + 90);
+    this.removeMemberFailurePopup.add(failureImage);
+
+    // failure message
+
+    txt = new TextMorph("Failed to remove " + username + " due to a connection error.\nPlease try again later.");
+    txt.setCenter(this.removeMemberFailurePopup.center());
+    txt.setTop(failureImage.bottom() + 20);
+    this.removeMemberFailurePopup.add(txt);
+    txt.drawNew();
+
+    // "OK" button, closes the dialog.
+    okButton = new PushButtonMorph(null, null, "OK :(", null, null, null, "green");
+    okButton.setCenter(this.removeMemberFailurePopup.center());
+    okButton.setTop(txt.bottom() + 20);
+    okButton.action = function() { myself.removeMemberFailurePopup.cancel(); };
+    this.removeMemberFailurePopup.add(okButton);
+
+    // popup
+    this.removeMemberFailurePopup.drawNew();
+    this.removeMemberFailurePopup.fixLayout();
+    this.removeMemberFailurePopup.popUp(world);
 };
 
 
