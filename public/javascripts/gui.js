@@ -1903,6 +1903,7 @@ IDE_Morph.prototype.destroyShareBox = function() {
 
     this.createShareBoxConnectBar();
     this.createShareBoxConnect();
+    this.fixLayout();
 }
 
 IDE_Morph.prototype.createShareAssetsBox = function () {
@@ -2855,8 +2856,15 @@ IDE_Morph.prototype.showLeaveGroupPopup = function() {
     confirmButton = new PushButtonMorph(null, null, "OK", null, null, null, "green");
     confirmButton.setWidth(120);
     confirmButton.action = function () {
-        myself.destroyShareBox();
-        myself.leaveGroupPopup.cancel();
+        // call a function here that lets member leave group. return success/failure value.
+        var result = "failure"; // DUMMY VALUE FOR NOW. Can be success failure.
+
+        if (result === "success") {
+            myself.destroyShareBox();
+            myself.leaveGroupPopup.cancel();
+        } else {
+            myself.showLeaveGroupFailurePopup();
+        }
     };
     // Cancel -> close the dialog.
     rejectButton = new PushButtonMorph(null, null, "Cancel", null, null, null, "red");
@@ -2881,12 +2889,76 @@ IDE_Morph.prototype.showLeaveGroupPopup = function() {
     this.leaveGroupPopup.popUp(world);
 };
 
-IDE_Morph.prototype.showLeaveGroupSuccessScreen = function() {
-    // go back to sharebox connect
-};
+IDE_Morph.prototype.showLeaveGroupFailurePopup = function() { var world = this.world();
+    var myself = this;
+    var popupWidth = 400;
+    var popupHeight = 300;
 
-IDE_Morph.prototype.showLeaveGroupFailureScreen = function() {
+    if (this.leaveGroupFailurePopup) {
+        this.leaveGroupFailurePopup.destroy();
+    }
+    this.leaveGroupFailurePopup = new DialogBoxMorph();
+    this.leaveGroupFailurePopup.setExtent(new Point(popupWidth, popupHeight));
 
+    // close dialog button
+    button = new PushButtonMorph(
+        this,
+        null,
+        (String.fromCharCode("0xf00d")),
+        null,
+        null,
+        null,
+        "redCircleIconButton"
+    );
+    button.setRight(this.leaveGroupFailurePopup.right() - 3);
+    button.setTop(this.leaveGroupFailurePopup.top() + 2);
+    button.action = function () { myself.leaveGroupFailurePopup.cancel(); };
+    button.drawNew();
+    button.fixLayout();
+    this.leaveGroupFailurePopup.add(button);
+
+    // add title
+    this.leaveGroupFailurePopup.labelString = "Error leaving group";
+    this.leaveGroupFailurePopup.createLabel();
+
+    // failure image
+    var failureImage = new Morph();
+    failureImage.texture = 'images/failure.png';
+    failureImage.drawNew = function () {
+        this.image = newCanvas(this.extent());
+        var context = this.image.getContext('2d');
+        var picBgColor = myself.leaveGroupFailurePopup.color;
+        context.fillStyle = picBgColor.toString();
+        context.fillRect(0, 0, this.width(), this.height());
+        if (this.texture) {
+            this.drawTexture(this.texture);
+        }
+    };
+
+    failureImage.setExtent(new Point(128, 128));
+    failureImage.setCenter(this.leaveGroupFailurePopup.center());
+    failureImage.setTop(this.leaveGroupFailurePopup.top() + 40);
+    this.leaveGroupFailurePopup.add(failureImage);
+
+    // failure message
+
+    txt = new TextMorph("Sorry! We failed to remove you from the group.\nThis could be due to a connection error.\nPlease try again.");
+    txt.setCenter(this.leaveGroupFailurePopup.center());
+    txt.setTop(failureImage.bottom() + 20);
+    this.leaveGroupFailurePopup.add(txt);
+    txt.drawNew();
+
+    // "OK" button, closes the dialog.
+    okButton = new PushButtonMorph(null, null, "OK :(", null, null, null, "green");
+    okButton.setCenter(this.leaveGroupFailurePopup.center());
+    okButton.setBottom(this.leaveGroupFailurePopup.bottom() - 10);
+    okButton.action = function() { myself.leaveGroupFailurePopup.cancel(); };
+    this.leaveGroupFailurePopup.add(okButton);
+
+    // popup
+    this.leaveGroupFailurePopup.drawNew();
+    this.leaveGroupFailurePopup.fixLayout();
+    this.leaveGroupFailurePopup.popUp(world);
 };
 
 
