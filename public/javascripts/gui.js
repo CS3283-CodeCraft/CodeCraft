@@ -2564,11 +2564,34 @@ IDE_Morph.prototype.showAddMemberPopup = function() {
 
 
     // "Add" Button
-    addButton = new PushButtonMorph(null, null, "Add", null, null, null, "green");
+    addButton = new PushButtonMorph(null, null, "Add this user", null, null, null, "green");
     addButton.setCenter(myself.addMemberPopup.center());
     addButton.setTop(usernameInput.bottom() + 10);
     addButton.action = function () {
-        console.log("Add button pressed. Add this member to the group. Return a failure/success message.");
+        // get the username from the input
+        var username = usernameInput.getValue();
+        var txtColor = new Color(204, 0, 0);
+
+        if (username == "") {
+            // show error message for blank username
+            this.txt = new TextMorph("Please enter a non-blank username.");
+            this.txt.setColor(txtColor);
+            this.txt.setCenter(myself.addMemberPopup.center());
+            this.txt.setTop(addButton.bottom() + 20);
+            myself.addMemberPopup.add(this.txt);
+            this.txt.drawNew();
+            myself.addMemberPopup.fixLayout();
+            myself.addMemberPopup.drawNew();
+        } else {
+            // add member to pending members, and feedback result to the user (success/fail)
+            var result = "success"; // DUMMY VALUE FOR TESTING. replace this with actual result value returned from attempting to add the member.
+            if (result === "success") {
+                myself.addMemberPopup.cancel();
+                myself.showAddMemberSuccessPopup(username);
+            } else { // return result as any of the following: connection_error, user_offline, user_nonexistent, user_has_group, group_full
+                myself.showAddMemberFailurePopup(username, result);
+            }
+        }
     };
     this.addMemberPopup.add(addButton);
 
@@ -2583,13 +2606,120 @@ IDE_Morph.prototype.showAddMemberPopup = function() {
     this.addMemberPopup.popUp(world);
 };
 
-IDE_Morph.prototype.showAddMemberSuccessScreen = function() {
+// notifies the user that new member has been added successfully.
+IDE_Morph.prototype.showAddMemberSuccessPopup = function(username) {
+    var world = this.world();
+    var myself = this;
+    var popupWidth = 400;
+    var popupHeight = 330;
+
+    if (this.addMemberSuccessPopup) {
+        this.addMemberSuccessPopup.destroy();
+    }
+    this.addMemberSuccessPopup = new DialogBoxMorph();
+    this.addMemberSuccessPopup.setExtent(new Point(popupWidth, popupHeight));
+
+    // close dialog button
+    button = new PushButtonMorph(
+        this,
+        null,
+        (String.fromCharCode("0xf00d")),
+        null,
+        null,
+        null,
+        "redCircleIconButton"
+    );
+    button.setRight(this.addMemberSuccessPopup.right() - 3);
+    button.setTop(this.addMemberSuccessPopup.top() + 2);
+    button.action = function () { myself.addMemberSuccessPopup.cancel(); };
+    button.drawNew();
+    button.fixLayout();
+    this.addMemberSuccessPopup.add(button);
+
+    // add title
+    this.addMemberSuccessPopup.labelString = username + " added!";
+    this.addMemberSuccessPopup.createLabel();
+
+    // success image
+    var successImage = new Morph();
+    successImage.texture = 'images/success.png';
+    successImage.drawNew = function () {
+        this.image = newCanvas(this.extent());
+        var context = this.image.getContext('2d');
+        var picBgColor = myself.addMemberSuccessPopup.color;
+        context.fillStyle = picBgColor.toString();
+        context.fillRect(0, 0, this.width(), this.height());
+        if (this.texture) {
+            this.drawTexture(this.texture);
+        }
+    };
+
+    successImage.setExtent(new Point(128, 128));
+    successImage.setCenter(this.addMemberSuccessPopup.center());
+    successImage.setTop(this.addMemberSuccessPopup.top() + 40);
+    this.addMemberSuccessPopup.add(successImage);
+
+    // success message
+    txt = new TextMorph("You've sent " + username + " a group invite. \n\n" + username + " has been added as a Pending Member, \nand will become a group member once the\ninvite is accepted.");
+    txt.setCenter(this.addMemberSuccessPopup.center());
+    txt.setTop(successImage.bottom() + 20);
+    this.addMemberSuccessPopup.add(txt);
+    txt.drawNew();
+
+    // "got it!" button, closes the dialog.
+    okButton = new PushButtonMorph(null, null, "Got it!", null, null, null, "green");
+    okButton.setCenter(this.addMemberSuccessPopup.center());
+    okButton.setBottom(this.addMemberSuccessPopup.bottom() - 10);
+    okButton.action = function() { myself.addMemberSuccessPopup.cancel(); };
+    this.addMemberSuccessPopup.add(okButton);
+
+
+    // popup
+    this.addMemberSuccessPopup.drawNew();
+    this.addMemberSuccessPopup.fixLayout();
+    this.addMemberSuccessPopup.popUp(world);
 
 };
 
-// causes of error: 1) alreadyInGroup 2) connectionError 3) groupFull
-IDE_Morph.prototype.showAddMemberFailureScreen = function(errorCause) {
+// causes of error: connection_error, user_offline, user_nonexistent, user_has_group, group_full
+IDE_Morph.prototype.showAddMemberFailurePopup = function(username, errorCause) {
+    var world = this.world();
+    var myself = this;
+    var popupWidth = 400;
+    var popupHeight = 300;
 
+    if (this.addMemberFailurePopup) {
+        this.addMemberFailurePopup.destroy();
+    }
+    this.addMemberFailurePopup = new DialogBoxMorph();
+    this.addMemberFailurePopup.setExtent(new Point(popupWidth, popupHeight));
+
+    // close dialog button
+    button = new PushButtonMorph(
+        this,
+        null,
+        (String.fromCharCode("0xf00d")),
+        null,
+        null,
+        null,
+        "redCircleIconButton"
+    );
+
+    button.setRight(this.addMemberFailurePopup.right() - 3);
+    button.setTop(this.addMemberFailurePopup.top() + 2);
+    button.action = function () { myself.addMemberFailurePopup.cancel(); };
+    button.drawNew();
+    button.fixLayout();
+    this.addMemberFailurePopup.add(button);
+
+    // add title
+    this.addMemberFailurePopup.labelString = "Add Member Failed";
+    this.addMemberFailurePopup.createLabel();
+
+    // popup
+    this.addMemberFailurePopup.drawNew();
+    this.addMemberFailurePopup.fixLayout();
+    this.addMemberFailurePopup.popUp(world);
 };
 
 
