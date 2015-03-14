@@ -1250,47 +1250,37 @@ IDE_Morph.prototype.createCorralBar = function () {
     this.add(this.corralBar);
 
     // NEW SPRITE BUTTON ///////////////////////////////////////////
-    newbutton = new PushButtonMorph(
+    button = new PushButtonMorph(
         this,
         "addNewSprite",
-        new SymbolMorph("turtle", 14)
+        new SymbolMorph("turtle", 14),
+        null,
+        null,
+        null,
+        "symbolButton"
     );
-    newbutton.corner = 12;
-    newbutton.color = colors[0];
-    newbutton.highlightColor = colors[1];
-    newbutton.pressColor = colors[2];
-    newbutton.labelMinExtent = new Point(36, 18);
-    newbutton.padding = 0;
-    newbutton.labelShadowOffset = new Point(-1, -1);
-    newbutton.labelShadowColor = colors[1];
-    newbutton.labelColor = this.buttonLabelColor;
-    newbutton.contrast = this.buttonContrast;
-    newbutton.drawNew();
-    newbutton.hint = "Add a new Turtle sprite";
-    newbutton.fixLayout();
+    button.drawNew();
+    button.hint = 'Add a new Turtle sprite';
+    button.fixLayout();
+    newbutton = button;
     newbutton.setCenter(this.corralBar.center());
     newbutton.setLeft(this.corralBar.left() + padding);
     this.corralBar.add(newbutton);
 
     // PAINT BUTTON ////////////////////////////////////////////////
-    paintbutton = new PushButtonMorph(
+    button = new PushButtonMorph(
         this,
         "paintNewSprite",
-        new SymbolMorph("brush", 15)
+        new SymbolMorph("brush",15),
+        null,
+        null,
+        null,
+        "symbolButton"
     );
-    paintbutton.corner = 12;
-    paintbutton.color = colors[0];
-    paintbutton.highlightColor = colors[1];
-    paintbutton.pressColor = colors[2];
-    paintbutton.labelMinExtent = new Point(36, 18);
-    paintbutton.padding = 0;
-    paintbutton.labelShadowOffset = new Point(-1, -1);
-    paintbutton.labelShadowColor = colors[1];
-    paintbutton.labelColor = this.buttonLabelColor;
-    paintbutton.contrast = this.buttonContrast;
-    paintbutton.drawNew();
-    paintbutton.hint = "Paint a new sprite";
-    paintbutton.fixLayout();
+    button.drawNew();
+    button.hint = 'Paint a new sprite';
+    button.fixLayout();
+    paintbutton = button;
     paintbutton.setCenter(this.corralBar.center());
 //	paintbutton.setLeft(
 //		this.corralBar.left() + padding + newbutton.width() + padding
@@ -1303,7 +1293,7 @@ IDE_Morph.prototype.createCorralBar = function () {
     img.src = 'merlion.jpg';
     button = new PushButtonMorph(
         this,
-        null,
+        "openLibrary",
         (String.fromCharCode("0xf03e")),
         null,
         null,
@@ -1314,26 +1304,6 @@ IDE_Morph.prototype.createCorralBar = function () {
     button.hint = 'Open library';
     button.fixLayout();
     librarybutton = button;
-
-    /*librarybutton = new PushButtonMorph(
-        this,
-        "openLibrary",
-        new SymbolMorph('flash', 15)
-    );
-    librarybutton.texture = 'librarybutton.png';
-    librarybutton.corner = 12;
-    librarybutton.color = colors[0];
-    librarybutton.highlightColor = colors[1];
-    librarybutton.pressColor = colors[2];
-    librarybutton.labelMinExtent = new Point(36, 18);
-    librarybutton.padding = 0;
-    librarybutton.labelShadowOffset = new Point(-1, -1);
-    librarybutton.labelShadowColor = colors[1];
-    librarybutton.labelColor = this.buttonLabelColor;
-    librarybutton.contrast = this.buttonContrast;
-    librarybutton.drawNew();
-    librarybutton.hint = "Open library";
-    librarybutton.fixLayout();*/
     librarybutton.setCenter(this.corralBar.center());
 //	librarybutton.setLeft(
 //		this.corralBar.left() + padding + newbutton.width() + padding
