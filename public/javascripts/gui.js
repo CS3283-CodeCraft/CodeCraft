@@ -2889,7 +2889,8 @@ IDE_Morph.prototype.showLeaveGroupPopup = function() {
     this.leaveGroupPopup.popUp(world);
 };
 
-IDE_Morph.prototype.showLeaveGroupFailurePopup = function() { var world = this.world();
+IDE_Morph.prototype.showLeaveGroupFailurePopup = function() {
+    var world = this.world();
     var myself = this;
     var popupWidth = 400;
     var popupHeight = 300;
@@ -2966,7 +2967,75 @@ IDE_Morph.prototype.showLeaveGroupFailurePopup = function() { var world = this.w
 
 // xinni: Popup to user, when creator kicks the user out of the group
 IDE_Morph.prototype.showYouHaveBeenRemovedPopup = function() {
+    var world = this.world();
+    var myself = this;
+    var popupWidth = 400;
+    var popupHeight = 300;
 
+    if (this.youHaveBeenRemovedPopup) {
+        this.youHaveBeenRemovedPopup.destroy();
+    }
+    this.youHaveBeenRemovedPopup = new DialogBoxMorph();
+    this.youHaveBeenRemovedPopup.setExtent(new Point(popupWidth, popupHeight));
+
+    // close dialog button
+    button = new PushButtonMorph(
+        this,
+        null,
+        (String.fromCharCode("0xf00d")),
+        null,
+        null,
+        null,
+        "redCircleIconButton"
+    );
+    button.setRight(this.youHaveBeenRemovedPopup.right() - 3);
+    button.setTop(this.youHaveBeenRemovedPopup.top() + 2);
+    button.action = function () { myself.youHaveBeenRemovedPopup.cancel(); };
+    button.drawNew();
+    button.fixLayout();
+    this.youHaveBeenRemovedPopup.add(button);
+
+    // add title
+    this.youHaveBeenRemovedPopup.labelString = "Oops!";
+    this.youHaveBeenRemovedPopup.createLabel();
+
+    // failure image
+    var failureImage = new Morph();
+    failureImage.texture = 'images/error.png';
+    failureImage.drawNew = function () {
+        this.image = newCanvas(this.extent());
+        var context = this.image.getContext('2d');
+        var picBgColor = myself.youHaveBeenRemovedPopup.color;
+        context.fillStyle = picBgColor.toString();
+        context.fillRect(0, 0, this.width(), this.height());
+        if (this.texture) {
+            this.drawTexture(this.texture);
+        }
+    };
+
+    failureImage.setExtent(new Point(128, 128));
+    failureImage.setCenter(this.youHaveBeenRemovedPopup.center());
+    failureImage.setTop(this.youHaveBeenRemovedPopup.top() + 40);
+    this.youHaveBeenRemovedPopup.add(failureImage);
+
+    // You were removed message
+    txt = new TextMorph("You have been removed from your Sharebox group.\nWe will bring you back to the connection screen shortly.");
+    txt.setCenter(this.youHaveBeenRemovedPopup.center());
+    txt.setTop(failureImage.bottom() + 20);
+    this.youHaveBeenRemovedPopup.add(txt);
+    txt.drawNew();
+
+    // "OK" button, closes the dialog.
+    okButton = new PushButtonMorph(null, null, "Alrighty", null, null, null, "green");
+    okButton.setCenter(this.youHaveBeenRemovedPopup.center());
+    okButton.setBottom(this.youHaveBeenRemovedPopup.bottom() - 20);
+    okButton.action = function() { myself.youHaveBeenRemovedPopup.cancel(); };
+    this.youHaveBeenRemovedPopup.add(okButton);
+
+    // popup
+    this.youHaveBeenRemovedPopup.drawNew();
+    this.youHaveBeenRemovedPopup.fixLayout();
+    this.youHaveBeenRemovedPopup.popUp(world);
 };
 
 
