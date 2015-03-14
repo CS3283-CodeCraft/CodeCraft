@@ -2574,6 +2574,9 @@ IDE_Morph.prototype.showAddMemberPopup = function() {
 
         if (username == "") {
             // show error message for blank username
+            if (this.txt) {
+                this.txt.destroy();
+            }
             this.txt = new TextMorph("Please enter a non-blank username.");
             this.txt.setColor(txtColor);
             this.txt.setCenter(myself.addMemberPopup.center());
@@ -2584,11 +2587,12 @@ IDE_Morph.prototype.showAddMemberPopup = function() {
             myself.addMemberPopup.drawNew();
         } else {
             // add member to pending members, and feedback result to the user (success/fail)
-            var result = "success"; // DUMMY VALUE FOR TESTING. replace this with actual result value returned from attempting to add the member.
+            // this result value is returned from an internal add member function (NOT ADDED YET)
+            var result = "connection_error"; // EITHER: success, connection_error, user_offline, user_nonexistent, user_has_group, group_full
             if (result === "success") {
                 myself.addMemberPopup.cancel();
                 myself.showAddMemberSuccessPopup(username);
-            } else { // return result as any of the following: connection_error, user_offline, user_nonexistent, user_has_group, group_full
+            } else { // return result as any of the following:
                 myself.showAddMemberFailurePopup(username, result);
             }
         }
@@ -2673,7 +2677,6 @@ IDE_Morph.prototype.showAddMemberSuccessPopup = function(username) {
     okButton.action = function() { myself.addMemberSuccessPopup.cancel(); };
     this.addMemberSuccessPopup.add(okButton);
 
-
     // popup
     this.addMemberSuccessPopup.drawNew();
     this.addMemberSuccessPopup.fixLayout();
@@ -2704,7 +2707,6 @@ IDE_Morph.prototype.showAddMemberFailurePopup = function(username, errorCause) {
         null,
         "redCircleIconButton"
     );
-
     button.setRight(this.addMemberFailurePopup.right() - 3);
     button.setTop(this.addMemberFailurePopup.top() + 2);
     button.action = function () { myself.addMemberFailurePopup.cancel(); };
@@ -2713,8 +2715,54 @@ IDE_Morph.prototype.showAddMemberFailurePopup = function(username, errorCause) {
     this.addMemberFailurePopup.add(button);
 
     // add title
-    this.addMemberFailurePopup.labelString = "Add Member Failed";
+    this.addMemberFailurePopup.labelString = "Failed to add " + username;
     this.addMemberFailurePopup.createLabel();
+
+    // failure image
+    var failureImage = new Morph();
+    failureImage.texture = 'images/failure.png';
+    failureImage.drawNew = function () {
+        this.image = newCanvas(this.extent());
+        var context = this.image.getContext('2d');
+        var picBgColor = myself.addMemberFailurePopup.color;
+        context.fillStyle = picBgColor.toString();
+        context.fillRect(0, 0, this.width(), this.height());
+        if (this.texture) {
+            this.drawTexture(this.texture);
+        }
+    };
+
+    failureImage.setExtent(new Point(128, 128));
+    failureImage.setCenter(this.addMemberFailurePopup.center());
+    failureImage.setTop(this.addMemberFailurePopup.top() + 40);
+    this.addMemberFailurePopup.add(failureImage);
+
+    // failure message
+    if (errorCause === "connection_error") {
+        txt = new TextMorph("Failed to add " + username + " due to a connection error.\nPlease try again later.");
+    } else if (errorCause === "user_offline") {
+        txt = new TextMorph("Sorry, " + username + " is offline right now.\nPlease trying adding them later.");
+    } else if (errorCause === "user_nonexistent") {
+        txt = new TextMorph("Failed to add " + username + ".\nThis user does not exist.");
+    } else if (errorCause === "user_has_group") {
+        txt = new TextMorph("Sorry, " + username + " is already in a group.");
+    } else if (errorCause === "group_full") {
+        txt = new TextMorph("Your group is full.\nNew members can't be added right now.");
+    } else {
+        txt = new TextMorph(username + " could not be added for unknown reasons.");
+    }
+
+    txt.setCenter(this.addMemberFailurePopup.center());
+    txt.setTop(failureImage.bottom() + 20);
+    this.addMemberFailurePopup.add(txt);
+    txt.drawNew();
+
+    // "got it!" button, closes the dialog.
+    okButton = new PushButtonMorph(null, null, "OK :(", null, null, null, "green");
+    okButton.setCenter(this.addMemberFailurePopup.center());
+    okButton.setBottom(this.addMemberFailurePopup.bottom() - 10);
+    okButton.action = function() { myself.addMemberFailurePopup.cancel(); };
+    this.addMemberFailurePopup.add(okButton);
 
     // popup
     this.addMemberFailurePopup.drawNew();
