@@ -1,4 +1,4 @@
-(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\AlignmentMorph.js":[function(require,module,exports){
+(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\AlignmentMorph.js":[function(require,module,exports){
 var Morph = require('./Morph');
 var Point = require('./Point');
 
@@ -80,7 +80,7 @@ AlignmentMorph.className = 'AlignmentMorph';
 module.exports = AlignmentMorph;
 
 
-},{"./Morph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\Morph.js","./Point":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\Point.js"}],"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\ArrowMorph.js":[function(require,module,exports){
+},{"./Morph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Morph.js","./Point":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Point.js"}],"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\ArrowMorph.js":[function(require,module,exports){
 var Morph = require('./Morph');
 var Color = require('./Color');
 var Point = require('./Point');
@@ -158,7 +158,7 @@ module.exports = ArrowMorph;
 
 
 
-},{"./Color":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\Color.js","./Morph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\Morph.js","./Point":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\Point.js"}],"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\BlinkerMorph.js":[function(require,module,exports){
+},{"./Color":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Color.js","./Morph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Morph.js","./Point":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Point.js"}],"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\BlinkerMorph.js":[function(require,module,exports){
 var Morph = require('./Morph');
 var Color = require('./Color');
 
@@ -194,7 +194,7 @@ BlinkerMorph.className = 'BlinkerMorph';
 module.exports = BlinkerMorph;
 
 
-},{"./Color":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\Color.js","./Morph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\Morph.js"}],"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\BlockHighlightMorph.js":[function(require,module,exports){
+},{"./Color":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Color.js","./Morph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Morph.js"}],"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\BlockHighlightMorph.js":[function(require,module,exports){
 var Morph = require('./Morph');
 
 var BlockHighlightMorph = Class.create(Morph, {
@@ -213,7 +213,7 @@ BlockHighlightMorph.className = 'BlockHighlightMorph';
 module.exports = BlockHighlightMorph;
 
 
-},{"./Morph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\Morph.js"}],"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\BouncerMorph.js":[function(require,module,exports){
+},{"./Morph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Morph.js"}],"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\BouncerMorph.js":[function(require,module,exports){
 var Morph = require('./Morph');
 var Point = require('./Point');
 
@@ -302,7 +302,7 @@ BouncerMorph.className = 'BouncerMorph';
 module.exports = BouncerMorph;
 
 
-},{"./Morph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\Morph.js","./Point":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\Point.js"}],"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\BoxMorph.js":[function(require,module,exports){
+},{"./Morph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Morph.js","./Point":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Point.js"}],"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\BoxMorph.js":[function(require,module,exports){
 var Morph = require('./Morph');
 var Color = require('./Color');
 
@@ -509,7 +509,7 @@ module.exports = BoxMorph;
 
 
     
-},{"./Color":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\Color.js","./Morph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\Morph.js"}],"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\CircleBoxMorph.js":[function(require,module,exports){
+},{"./Color":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Color.js","./Morph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Morph.js"}],"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\CircleBoxMorph.js":[function(require,module,exports){
 var Morph = require('./Morph');
 var Point = require('./Point');
 var Rectangle = require('./Rectangle');
@@ -645,7 +645,7 @@ module.exports = CircleBoxMorph;
 
 
 
-},{"./Morph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\Morph.js","./Point":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\Point.js","./Rectangle":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\Rectangle.js"}],"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\Cloud.js":[function(require,module,exports){
+},{"./Morph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Morph.js","./Point":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Point.js","./Rectangle":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Rectangle.js"}],"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Cloud.js":[function(require,module,exports){
 var Cloud = Class.create({
 
 	// Cloud /////////////////////////////////////////////////////////////
@@ -1273,7 +1273,7 @@ Cloud.className = 'Cloud';
 
 module.exports = Cloud;
 
-},{}],"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\Color.js":[function(require,module,exports){
+},{}],"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Color.js":[function(require,module,exports){
 var Color = Class.create({
 	
 	initialize: function(r, g, b, a){
@@ -1436,7 +1436,7 @@ var Color = Class.create({
 Color.className = 'Color';
 
 module.exports = Color;
-},{}],"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\ColorPaletteMorph.js":[function(require,module,exports){
+},{}],"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\ColorPaletteMorph.js":[function(require,module,exports){
 var Morph = require('./Morph');
 var Point = require('./Point');
 var Color = require('./Color');
@@ -1580,7 +1580,7 @@ module.exports = ColorPaletteMorph;
 
 
 	
-},{"./Color":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\Color.js","./Morph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\Morph.js","./Point":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\Point.js"}],"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\ColorPickerMorph.js":[function(require,module,exports){
+},{"./Color":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Color.js","./Morph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Morph.js","./Point":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Point.js"}],"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\ColorPickerMorph.js":[function(require,module,exports){
 var Morph = require('./Morph');
 var Color = require('./Color');
 var Point = require('./Point');
@@ -1654,7 +1654,7 @@ ColorPickerMorph.className = 'ColorPickerMorph';
 module.exports = ColorPickerMorph;
 
 
-},{"./Color":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\Color.js","./ColorPaletteMorph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\ColorPaletteMorph.js","./GrayPaletteMorph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\GrayPaletteMorph.js","./Morph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\Morph.js","./Point":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\Point.js"}],"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\CursorMorph.js":[function(require,module,exports){
+},{"./Color":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Color.js","./ColorPaletteMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\ColorPaletteMorph.js","./GrayPaletteMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\GrayPaletteMorph.js","./Morph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Morph.js","./Point":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Point.js"}],"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\CursorMorph.js":[function(require,module,exports){
 
 var BlinkerMorph = require('./BlinkerMorph');
 var InspectorMorph = require('./InspectorMorph');
@@ -2086,7 +2086,7 @@ module.exports = CursorMorph;
 
 
 
-},{"./BlinkerMorph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\BlinkerMorph.js","./InspectorMorph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\InspectorMorph.js","./Point":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\Point.js"}],"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\DialogBoxMorph.js":[function(require,module,exports){
+},{"./BlinkerMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\BlinkerMorph.js","./InspectorMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\InspectorMorph.js","./Point":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Point.js"}],"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\DialogBoxMorph.js":[function(require,module,exports){
 var Morph = require('./Morph');
 var Color = require('./Color');
 var TextMorph = require('./TextMorph');
@@ -3792,7 +3792,7 @@ DialogBoxMorph.className = 'DialogBoxMorph';
 module.exports = DialogBoxMorph;
 
 
-},{"./AlignmentMorph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\AlignmentMorph.js","./Color":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\Color.js","./InputFieldMorph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\InputFieldMorph.js","./Morph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\Morph.js","./Point":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\Point.js","./PushButtonMorph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\PushButtonMorph.js","./ScrollFrameMorph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\ScrollFrameMorph.js","./SliderMorph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\SliderMorph.js","./SpeechBubbleMorph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\SpeechBubbleMorph.js","./StringMorph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\StringMorph.js","./TextMorph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\TextMorph.js","./ToggleMorph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\ToggleMorph.js"}],"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\FrameMorph.js":[function(require,module,exports){
+},{"./AlignmentMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\AlignmentMorph.js","./Color":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Color.js","./InputFieldMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\InputFieldMorph.js","./Morph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Morph.js","./Point":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Point.js","./PushButtonMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\PushButtonMorph.js","./ScrollFrameMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\ScrollFrameMorph.js","./SliderMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\SliderMorph.js","./SpeechBubbleMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\SpeechBubbleMorph.js","./StringMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\StringMorph.js","./TextMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\TextMorph.js","./ToggleMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\ToggleMorph.js"}],"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\FrameMorph.js":[function(require,module,exports){
 var Morph = require('./Morph');
 var Color = require('./Color');
 var Point = require('./Point');
@@ -3998,7 +3998,7 @@ FrameMorph.className = 'FrameMorph';
 module.exports = FrameMorph;
 
     
-},{"./Color":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\Color.js","./Morph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\Morph.js","./Point":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\Point.js"}],"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\GrayPaletteMorph.js":[function(require,module,exports){
+},{"./Color":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Color.js","./Morph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Morph.js","./Point":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Point.js"}],"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\GrayPaletteMorph.js":[function(require,module,exports){
 var Color = require('./Color');
 var Point = require('./Point');
 var ColorPaletteMorph = require('./ColorPaletteMorph');
@@ -4034,7 +4034,7 @@ GrayPaletteMorph.className = 'GrayPaletteMorph';
 module.exports = GrayPaletteMorph;
 
 
-},{"./Color":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\Color.js","./ColorPaletteMorph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\ColorPaletteMorph.js","./Point":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\Point.js"}],"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\HandMorph.js":[function(require,module,exports){
+},{"./Color":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Color.js","./ColorPaletteMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\ColorPaletteMorph.js","./Point":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Point.js"}],"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\HandMorph.js":[function(require,module,exports){
 var Morph = require('./Morph');
 var Point = require('./Point');
 var Rectangle = require('./Rectangle');
@@ -4676,7 +4676,7 @@ module.exports = HandMorph;
 
 
 
-},{"./Morph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\Morph.js","./Point":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\Point.js","./Rectangle":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\Rectangle.js"}],"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\HandleMorph.js":[function(require,module,exports){
+},{"./Morph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Morph.js","./Point":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Point.js","./Rectangle":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Rectangle.js"}],"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\HandleMorph.js":[function(require,module,exports){
 var Morph = require('./Morph');
 var Point = require('./Point');
 var Color = require('./Color');
@@ -4927,7 +4927,7 @@ module.exports = HandleMorph;
 
 
 	
-},{"./Color":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\Color.js","./Morph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\Morph.js","./Point":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\Point.js"}],"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\InputFieldMorph.js":[function(require,module,exports){
+},{"./Color":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Color.js","./Morph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Morph.js","./Point":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Point.js"}],"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\InputFieldMorph.js":[function(require,module,exports){
 var Morph = require('./Morph');
 var StringFieldMorph = require('./StringFieldMorph');
 var ArrowMorph = require('./ArrowMorph');
@@ -5309,7 +5309,7 @@ module.exports = InputFieldMorph;
 
 
 
-},{"./ArrowMorph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\ArrowMorph.js","./Color":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\Color.js","./Morph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\Morph.js","./StringFieldMorph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\StringFieldMorph.js"}],"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\InspectorMorph.js":[function(require,module,exports){
+},{"./ArrowMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\ArrowMorph.js","./Color":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Color.js","./Morph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Morph.js","./StringFieldMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\StringFieldMorph.js"}],"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\InspectorMorph.js":[function(require,module,exports){
 var BoxMorph = require('./BoxMorph');
 var Point = require('./Point');
 var Color = require('./Color');
@@ -5814,7 +5814,7 @@ InspectorMorph.className = 'InspectorMorph';
 
 module.exports = InspectorMorph;
 
-},{"./BoxMorph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\BoxMorph.js","./Color":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\Color.js","./CursorMorph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\CursorMorph.js","./HandleMorph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\HandleMorph.js","./ListMorph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\ListMorph.js","./MenuMorph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\MenuMorph.js","./Morph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\Morph.js","./Point":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\Point.js","./ScrollFrameMorph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\ScrollFrameMorph.js","./TextMorph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\TextMorph.js","./TriggerMorph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\TriggerMorph.js"}],"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\ListMorph.js":[function(require,module,exports){
+},{"./BoxMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\BoxMorph.js","./Color":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Color.js","./CursorMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\CursorMorph.js","./HandleMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\HandleMorph.js","./ListMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\ListMorph.js","./MenuMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\MenuMorph.js","./Morph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Morph.js","./Point":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Point.js","./ScrollFrameMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\ScrollFrameMorph.js","./TextMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\TextMorph.js","./TriggerMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\TriggerMorph.js"}],"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\ListMorph.js":[function(require,module,exports){
 var ScrollFrameMorph = require('./ScrollFrameMorph');
 var Color = require('./Color');
 var MenuMorph = require('./MenuMorph');
@@ -5968,7 +5968,7 @@ module.exports = ListMorph;
 
 
     
-},{"./Color":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\Color.js","./MenuMorph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\MenuMorph.js","./ScrollFrameMorph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\ScrollFrameMorph.js"}],"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\MenuItemMorph.js":[function(require,module,exports){
+},{"./Color":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Color.js","./MenuMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\MenuMorph.js","./ScrollFrameMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\ScrollFrameMorph.js"}],"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\MenuItemMorph.js":[function(require,module,exports){
 var Morph = require('./Morph');
 var TriggerMorph = require('./TriggerMorph');
 var TextMorph = require('./TextMorph');
@@ -6140,7 +6140,7 @@ module.exports = MenuItemMorph;
 
 
 
-},{"./Morph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\Morph.js","./Point":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\Point.js","./Rectangle":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\Rectangle.js","./TextMorph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\TextMorph.js","./TriggerMorph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\TriggerMorph.js"}],"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\MenuMorph.js":[function(require,module,exports){
+},{"./Morph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Morph.js","./Point":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Point.js","./Rectangle":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Rectangle.js","./TextMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\TextMorph.js","./TriggerMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\TriggerMorph.js"}],"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\MenuMorph.js":[function(require,module,exports){
 var BoxMorph = require('./BoxMorph');
 var MenuItemMorph = require('./MenuItemMorph');
 var FrameMorph = require('./FrameMorph');
@@ -6451,7 +6451,7 @@ MenuMorph.className = 'MenuMorph';
 module.exports = MenuMorph;
 
 
-},{"./BoxMorph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\BoxMorph.js","./Color":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\Color.js","./ColorPickerMorph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\ColorPickerMorph.js","./FrameMorph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\FrameMorph.js","./MenuItemMorph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\MenuItemMorph.js","./Point":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\Point.js","./ScrollFrameMorph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\ScrollFrameMorph.js","./SliderMorph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\SliderMorph.js","./StringFieldMorph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\StringFieldMorph.js","./TextMorph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\TextMorph.js"}],"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\Morph.js":[function(require,module,exports){
+},{"./BoxMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\BoxMorph.js","./Color":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Color.js","./ColorPickerMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\ColorPickerMorph.js","./FrameMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\FrameMorph.js","./MenuItemMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\MenuItemMorph.js","./Point":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Point.js","./ScrollFrameMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\ScrollFrameMorph.js","./SliderMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\SliderMorph.js","./StringFieldMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\StringFieldMorph.js","./TextMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\TextMorph.js"}],"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Morph.js":[function(require,module,exports){
 var Node = require('./Node');
 var Rectangle = require('./Rectangle');
 var Color = require('./Color');
@@ -7996,7 +7996,7 @@ Morph.className = 'Morph';
 
 
 module.exports = Morph;
-},{"./Color":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\Color.js","./Node":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\Node.js","./Rectangle":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\Rectangle.js"}],"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\MouseSensorMorph.js":[function(require,module,exports){
+},{"./Color":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Color.js","./Node":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Node.js","./Rectangle":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Rectangle.js"}],"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\MouseSensorMorph.js":[function(require,module,exports){
 var BoxMorph = require('./BoxMorph');
 var Color = require('./Color');
 
@@ -8070,7 +8070,7 @@ MouseSensorMorph.className = 'MouseSensorMorph';
 module.exports = MouseSensorMorph;
 
 
-},{"./BoxMorph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\BoxMorph.js","./Color":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\Color.js"}],"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\Node.js":[function(require,module,exports){
+},{"./BoxMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\BoxMorph.js","./Color":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Color.js"}],"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Node.js":[function(require,module,exports){
 // Nodes ///////////////////////////////////////////////////////////////
 
 var Node = Class.create({
@@ -8218,7 +8218,7 @@ Node.className = 'Node';
 
 module.exports = Node;
 
-},{}],"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\PenMorph.js":[function(require,module,exports){
+},{}],"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\PenMorph.js":[function(require,module,exports){
 var Point = require('./Point');
 var Morph = require('./Morph');
 var Rectangle = require('./Rectangle');
@@ -8455,7 +8455,7 @@ module.exports = PenMorph;
 
 
     
-},{"./Morph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\Morph.js","./Point":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\Point.js","./Rectangle":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\Rectangle.js"}],"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\Point.js":[function(require,module,exports){
+},{"./Morph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Morph.js","./Point":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Point.js","./Rectangle":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Rectangle.js"}],"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Point.js":[function(require,module,exports){
 // Points //////////////////////////////////////////////////////////////
 
 var Point = Class.create({
@@ -8759,7 +8759,7 @@ var Point = Class.create({
 Point.className = 'Point';
 
 module.exports = Point;
-},{}],"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\PushButtonMorph.js":[function(require,module,exports){
+},{}],"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\PushButtonMorph.js":[function(require,module,exports){
 var Morph = require('./Morph');
 var Color = require('./Color');
 var Point = require('./Point');
@@ -9366,7 +9366,7 @@ PushButtonMorph.className = 'PushButtonMorph';
 module.exports = PushButtonMorph;
 
 
-},{"./Color":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\Color.js","./Morph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\Morph.js","./Point":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\Point.js","./StringMorph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\StringMorph.js","./SymbolMorph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\SymbolMorph.js"}],"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\Rectangle.js":[function(require,module,exports){
+},{"./Color":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Color.js","./Morph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Morph.js","./Point":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Point.js","./StringMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\StringMorph.js","./SymbolMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\SymbolMorph.js"}],"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Rectangle.js":[function(require,module,exports){
 Point = require('./Point');
 
 // Rectangles //////////////////////////////////////////////////////////
@@ -9672,7 +9672,7 @@ var Rectangle = Class.create({
 Rectangle.className = 'Rectangle';
 
 module.exports = Rectangle;
-},{"./Point":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\Point.js"}],"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\ScrollFrameMorph.js":[function(require,module,exports){
+},{"./Point":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Point.js"}],"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\ScrollFrameMorph.js":[function(require,module,exports){
 var FrameMorph = require('./FrameMorph');
 var SliderMorph = require('./SliderMorph');
 var Point = require('./Point');
@@ -10061,7 +10061,7 @@ module.exports = ScrollFrameMorph;
 
 
 	
-},{"./FrameMorph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\FrameMorph.js","./Point":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\Point.js","./SliderMorph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\SliderMorph.js"}],"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\ShadowMorph.js":[function(require,module,exports){
+},{"./FrameMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\FrameMorph.js","./Point":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Point.js","./SliderMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\SliderMorph.js"}],"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\ShadowMorph.js":[function(require,module,exports){
 var Morph = require('./Morph');
 
 var ShadowMorph = Class.create(Morph, {
@@ -10077,7 +10077,7 @@ ShadowMorph.className = 'ShadowMorph';
 
 module.exports = ShadowMorph;
 
-},{"./Morph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\Morph.js"}],"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\SliderButtonMorph.js":[function(require,module,exports){
+},{"./Morph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Morph.js"}],"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\SliderButtonMorph.js":[function(require,module,exports){
 var CircleBoxMorph = require('./CircleBoxMorph');
 var Color = require('./Color');
 
@@ -10298,7 +10298,7 @@ SliderButtonMorph.className = 'SliderButtonMorph';
 module.exports = SliderButtonMorph;
 
 
-},{"./CircleBoxMorph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\CircleBoxMorph.js","./Color":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\Color.js"}],"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\SliderMorph.js":[function(require,module,exports){
+},{"./CircleBoxMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\CircleBoxMorph.js","./Color":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Color.js"}],"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\SliderMorph.js":[function(require,module,exports){
 var CircleBoxMorph = require('./CircleBoxMorph');
 var Color = require('./Color');
 var SliderButtonMorph = require('./SliderButtonMorph');
@@ -10671,7 +10671,7 @@ SliderMorph.className = 'SliderMorph';
 
 module.exports = SliderMorph;
 
-},{"./CircleBoxMorph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\CircleBoxMorph.js","./Color":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\Color.js","./Point":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\Point.js","./SliderButtonMorph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\SliderButtonMorph.js"}],"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\SpeechBubbleMorph.js":[function(require,module,exports){
+},{"./CircleBoxMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\CircleBoxMorph.js","./Color":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Color.js","./Point":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Point.js","./SliderButtonMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\SliderButtonMorph.js"}],"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\SpeechBubbleMorph.js":[function(require,module,exports){
 var BoxMorph = require('./BoxMorph');
 var Morph = require('./Morph');
 var Point = require('./Point');
@@ -10986,7 +10986,7 @@ module.exports = SpeechBubbleMorph;
 
 
     
-},{"./BoxMorph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\BoxMorph.js","./Color":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\Color.js","./Morph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\Morph.js","./Point":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\Point.js","./TextMorph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\TextMorph.js"}],"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\StringFieldMorph.js":[function(require,module,exports){
+},{"./BoxMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\BoxMorph.js","./Color":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Color.js","./Morph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Morph.js","./Point":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Point.js","./TextMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\TextMorph.js"}],"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\StringFieldMorph.js":[function(require,module,exports){
 var FrameMorph = require('./FrameMorph');
 var Point = require('./Point');
 var StringMorph = require('./StringMorph');
@@ -11102,7 +11102,7 @@ StringFieldMorph.className = 'StringFieldMorph';
 module.exports = StringFieldMorph;
 
 	
-},{"./FrameMorph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\FrameMorph.js","./Point":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\Point.js","./StringMorph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\StringMorph.js"}],"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\StringMorph.js":[function(require,module,exports){
+},{"./FrameMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\FrameMorph.js","./Point":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Point.js","./StringMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\StringMorph.js"}],"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\StringMorph.js":[function(require,module,exports){
 var Morph = require('./Morph');
 var Color = require('./Color');
 var Point = require('./Point');
@@ -11658,7 +11658,7 @@ StringMorph.className = 'StringMorph';
 module.exports = StringMorph;
 
 
-},{"./Color":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\Color.js","./Morph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\Morph.js","./Point":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\Point.js"}],"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\SymbolMorph.js":[function(require,module,exports){
+},{"./Color":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Color.js","./Morph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Morph.js","./Point":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Point.js"}],"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\SymbolMorph.js":[function(require,module,exports){
 var Morph = require('./Morph');
 var Point = require('./Point');
 var Color = require('./Color');
@@ -12963,7 +12963,7 @@ SymbolMorph.className = 'SymbolMorph';
 module.exports = SymbolMorph;
 
 
-},{"./Color":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\Color.js","./Morph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\Morph.js","./Point":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\Point.js"}],"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\TabMorph.js":[function(require,module,exports){
+},{"./Color":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Color.js","./Morph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Morph.js","./Point":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Point.js"}],"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\TabMorph.js":[function(require,module,exports){
 var ToggleButtonMorph = require('./ToggleButtonMorph');
 var Point = require('./Point');
 
@@ -13086,7 +13086,7 @@ module.exports = TabMorph;
 
 
     
-},{"./Point":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\Point.js","./ToggleButtonMorph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\ToggleButtonMorph.js"}],"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\TextMorph.js":[function(require,module,exports){
+},{"./Point":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Point.js","./ToggleButtonMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\ToggleButtonMorph.js"}],"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\TextMorph.js":[function(require,module,exports){
 var Morph = require('./Morph');
 var Color = require('./Color');
 var Point = require('./Point');
@@ -13629,7 +13629,7 @@ TextMorph.className = 'TextMorph';
 module.exports = TextMorph;
 
 
-},{"./Color":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\Color.js","./Morph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\Morph.js","./Point":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\Point.js","./StringMorph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\StringMorph.js"}],"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\ToggleButtonMorph.js":[function(require,module,exports){
+},{"./Color":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Color.js","./Morph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Morph.js","./Point":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Point.js","./StringMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\StringMorph.js"}],"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\ToggleButtonMorph.js":[function(require,module,exports){
 var PushButtonMorph = require('./PushButtonMorph');
 var Morph = require('./Morph');
 var StringMorph = require('./StringMorph');
@@ -14069,7 +14069,7 @@ module.exports = ToggleButtonMorph;
 
 
 
-},{"./Morph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\Morph.js","./PushButtonMorph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\PushButtonMorph.js","./StringMorph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\StringMorph.js","./SymbolMorph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\SymbolMorph.js"}],"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\ToggleElementMorph.js":[function(require,module,exports){
+},{"./Morph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Morph.js","./PushButtonMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\PushButtonMorph.js","./StringMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\StringMorph.js","./SymbolMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\SymbolMorph.js"}],"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\ToggleElementMorph.js":[function(require,module,exports){
 var TriggerMorph = require('./TriggerMorph');
 var ToggleButtonMorph = require('./ToggleButtonMorph');
 var Point = require('./Point');
@@ -14243,7 +14243,7 @@ module.exports = ToggleElementMorph;
 
 
 
-},{"./Color":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\Color.js","./Point":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\Point.js","./StringMorph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\StringMorph.js","./ToggleButtonMorph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\ToggleButtonMorph.js","./TriggerMorph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\TriggerMorph.js"}],"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\ToggleMorph.js":[function(require,module,exports){
+},{"./Color":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Color.js","./Point":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Point.js","./StringMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\StringMorph.js","./ToggleButtonMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\ToggleButtonMorph.js","./TriggerMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\TriggerMorph.js"}],"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\ToggleMorph.js":[function(require,module,exports){
 
 var PushButtonMorph = require('./PushButtonMorph');
 var Point = require('./Point');
@@ -14516,7 +14516,7 @@ module.exports = ToggleMorph;
     
 
 
-},{"./Morph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\Morph.js","./Point":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\Point.js","./PushButtonMorph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\PushButtonMorph.js","./StringMorph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\StringMorph.js","./TextMorph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\TextMorph.js","./ToggleButtonMorph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\ToggleButtonMorph.js","./ToggleElementMorph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\ToggleElementMorph.js"}],"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\TriggerMorph.js":[function(require,module,exports){
+},{"./Morph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Morph.js","./Point":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Point.js","./PushButtonMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\PushButtonMorph.js","./StringMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\StringMorph.js","./TextMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\TextMorph.js","./ToggleButtonMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\ToggleButtonMorph.js","./ToggleElementMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\ToggleElementMorph.js"}],"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\TriggerMorph.js":[function(require,module,exports){
 
 var Morph = require('./Morph');
 var Color = require('./Color');
@@ -14790,7 +14790,7 @@ module.exports = TriggerMorph;
 
     
 
-},{"./Color":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\Color.js","./Morph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\Morph.js","./Point":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\Point.js","./SpeechBubbleMorph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\SpeechBubbleMorph.js","./StringMorph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\StringMorph.js"}],"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\WorldMorph.js":[function(require,module,exports){
+},{"./Color":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Color.js","./Morph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Morph.js","./Point":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Point.js","./SpeechBubbleMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\SpeechBubbleMorph.js","./StringMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\StringMorph.js"}],"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\WorldMorph.js":[function(require,module,exports){
 var Morph = require('./Morph');
 var FrameMorph = require('./FrameMorph');
 var Color = require('./Color');
@@ -15768,7 +15768,7 @@ module.exports = WorldMorph;
 
 
 
-},{"./BouncerMorph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\BouncerMorph.js","./BoxMorph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\BoxMorph.js","./CircleBoxMorph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\CircleBoxMorph.js","./Color":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\Color.js","./ColorPaletteMorph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\ColorPaletteMorph.js","./ColorPickerMorph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\ColorPickerMorph.js","./FrameMorph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\FrameMorph.js","./GrayPaletteMorph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\GrayPaletteMorph.js","./HandMorph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\HandMorph.js","./HandleMorph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\HandleMorph.js","./MenuMorph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\MenuMorph.js","./Morph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\Morph.js","./MouseSensorMorph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\MouseSensorMorph.js","./PenMorph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\PenMorph.js","./Point":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\Point.js","./Rectangle":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\Rectangle.js","./ScrollFrameMorph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\ScrollFrameMorph.js","./SliderMorph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\SliderMorph.js","./SpeechBubbleMorph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\SpeechBubbleMorph.js","./StringMorph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\StringMorph.js","./TextMorph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\TextMorph.js"}],"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\main.js":[function(require,module,exports){
+},{"./BouncerMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\BouncerMorph.js","./BoxMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\BoxMorph.js","./CircleBoxMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\CircleBoxMorph.js","./Color":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Color.js","./ColorPaletteMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\ColorPaletteMorph.js","./ColorPickerMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\ColorPickerMorph.js","./FrameMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\FrameMorph.js","./GrayPaletteMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\GrayPaletteMorph.js","./HandMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\HandMorph.js","./HandleMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\HandleMorph.js","./MenuMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\MenuMorph.js","./Morph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Morph.js","./MouseSensorMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\MouseSensorMorph.js","./PenMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\PenMorph.js","./Point":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Point.js","./Rectangle":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Rectangle.js","./ScrollFrameMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\ScrollFrameMorph.js","./SliderMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\SliderMorph.js","./SpeechBubbleMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\SpeechBubbleMorph.js","./StringMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\StringMorph.js","./TextMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\TextMorph.js"}],"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\main.js":[function(require,module,exports){
 (function (global){
 // morphic.js
 
@@ -15827,4 +15827,4 @@ global.Cloud = require('./Cloud');
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./AlignmentMorph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\AlignmentMorph.js","./ArrowMorph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\ArrowMorph.js","./BlinkerMorph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\BlinkerMorph.js","./BlockHighlightMorph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\BlockHighlightMorph.js","./BouncerMorph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\BouncerMorph.js","./BoxMorph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\BoxMorph.js","./CircleBoxMorph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\CircleBoxMorph.js","./Cloud":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\Cloud.js","./Color":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\Color.js","./ColorPaletteMorph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\ColorPaletteMorph.js","./ColorPickerMorph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\ColorPickerMorph.js","./CursorMorph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\CursorMorph.js","./DialogBoxMorph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\DialogBoxMorph.js","./FrameMorph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\FrameMorph.js","./GrayPaletteMorph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\GrayPaletteMorph.js","./HandMorph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\HandMorph.js","./HandleMorph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\HandleMorph.js","./InputFieldMorph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\InputFieldMorph.js","./InspectorMorph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\InspectorMorph.js","./MenuItemMorph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\MenuItemMorph.js","./MenuMorph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\MenuMorph.js","./Morph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\Morph.js","./MouseSensorMorph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\MouseSensorMorph.js","./Node":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\Node.js","./PenMorph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\PenMorph.js","./Point":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\Point.js","./PushButtonMorph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\PushButtonMorph.js","./Rectangle":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\Rectangle.js","./ScrollFrameMorph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\ScrollFrameMorph.js","./ShadowMorph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\ShadowMorph.js","./SliderButtonMorph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\SliderButtonMorph.js","./SliderMorph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\SliderMorph.js","./SpeechBubbleMorph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\SpeechBubbleMorph.js","./StringFieldMorph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\StringFieldMorph.js","./StringMorph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\StringMorph.js","./SymbolMorph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\SymbolMorph.js","./TabMorph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\TabMorph.js","./TextMorph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\TextMorph.js","./ToggleButtonMorph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\ToggleButtonMorph.js","./ToggleElementMorph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\ToggleElementMorph.js","./ToggleMorph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\ToggleMorph.js","./TriggerMorph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\TriggerMorph.js","./WorldMorph":"C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\WorldMorph.js"}]},{},["C:\\wamp\\www\\CodeCraft\\public\\javascripts\\new\\main.js"]);
+},{"./AlignmentMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\AlignmentMorph.js","./ArrowMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\ArrowMorph.js","./BlinkerMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\BlinkerMorph.js","./BlockHighlightMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\BlockHighlightMorph.js","./BouncerMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\BouncerMorph.js","./BoxMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\BoxMorph.js","./CircleBoxMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\CircleBoxMorph.js","./Cloud":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Cloud.js","./Color":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Color.js","./ColorPaletteMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\ColorPaletteMorph.js","./ColorPickerMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\ColorPickerMorph.js","./CursorMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\CursorMorph.js","./DialogBoxMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\DialogBoxMorph.js","./FrameMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\FrameMorph.js","./GrayPaletteMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\GrayPaletteMorph.js","./HandMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\HandMorph.js","./HandleMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\HandleMorph.js","./InputFieldMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\InputFieldMorph.js","./InspectorMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\InspectorMorph.js","./MenuItemMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\MenuItemMorph.js","./MenuMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\MenuMorph.js","./Morph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Morph.js","./MouseSensorMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\MouseSensorMorph.js","./Node":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Node.js","./PenMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\PenMorph.js","./Point":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Point.js","./PushButtonMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\PushButtonMorph.js","./Rectangle":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Rectangle.js","./ScrollFrameMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\ScrollFrameMorph.js","./ShadowMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\ShadowMorph.js","./SliderButtonMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\SliderButtonMorph.js","./SliderMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\SliderMorph.js","./SpeechBubbleMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\SpeechBubbleMorph.js","./StringFieldMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\StringFieldMorph.js","./StringMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\StringMorph.js","./SymbolMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\SymbolMorph.js","./TabMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\TabMorph.js","./TextMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\TextMorph.js","./ToggleButtonMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\ToggleButtonMorph.js","./ToggleElementMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\ToggleElementMorph.js","./ToggleMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\ToggleMorph.js","./TriggerMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\TriggerMorph.js","./WorldMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\WorldMorph.js"}]},{},["C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\main.js"]);

@@ -33,7 +33,7 @@ ShareBoxItemSharer.className = 'ShareBoxItemSharer';
  * @param {string} shareName - the name to share the object as
  * @throws {Null XML} The object shareItem could not be serialized.
  */
-ShareBoxItemSharer.prototype.shareObject = function (room, socket, shareItem, shareName) {
+ShareBoxItemSharer.prototype.shareObject = function (room, shareItem, shareName) {
     // Saving is relatively simple, and requires one serialization step, as opposed to deserialization
     var xml = this.serializeItem(shareItem);
     if (xml === null || xml === undefined) {
@@ -47,9 +47,9 @@ ShareBoxItemSharer.prototype.shareObject = function (room, socket, shareItem, sh
             xml: _.escape(xml),
             status: 0
         };
-        console.log(room)
+        console.log(room);
         var string = { room: room, data: objectData };
-        socket.emit('send', string);
+        this.socket.emit('send', string);
         console.log("send:" + string);
     }
 };
@@ -62,10 +62,9 @@ ShareBoxItemSharer.prototype.shareObject = function (room, socket, shareItem, sh
  * @param {string} objectType - either 'script', 'costume' or 'sound'
  * @returns {(CommandBlockMorph|CostumeIconMorph|SoundIconMorph)} the grabbable result of the deserialized object
  */
-ShareBoxItemSharer.prototype.getObject = function (shareName, objectType) {
+ShareBoxItemSharer.prototype.getObject = function (xml) {
     // Loading is more complex, as deserialization loads the objects in a raw form not directly manipulable by the
     // cursor. It requires 2 steps: deserialization, then loading the object's associated GUI elements
-    var xml = null; // Load XML from Yiwen's loading API
     var deserialized = this.deserializeItem(xml);
     return this.returnGrabbableDeserializedItem(deserialized);
 };
@@ -126,6 +125,7 @@ ShareBoxItemSharer.prototype.returnGrabbableDeserializedItem = function(deserial
             return morph instanceof CostumeIconMorph;
         });
         deserializedCostume = costumeIcons[costumeIcons.length - 1];
+
         return deserializedCostume;
     } else if (deserializedItem instanceof Sound) {
         var deserializedSound,
