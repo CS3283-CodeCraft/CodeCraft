@@ -1714,6 +1714,7 @@ IDE_Morph.makeSocket = function (myself, shareboxId) {
 
     // When I receive data, I parse objectData and add it to my data list
     sharer.socket.on('message', function (objectData) {
+        // Clean up shareBoxPlaceholderSprite
         shareBoxPlaceholderSprite.sounds = new List();
         shareBoxPlaceholderSprite.costumes = new List();
         shareBoxPlaceholderSprite.costume = null;
@@ -1722,16 +1723,8 @@ IDE_Morph.makeSocket = function (myself, shareboxId) {
         var arrayItem = objectData;
         arrayItem.xml = _.unescape(arrayItem.xml);
         // Update local list
-        this.data.items.push(arrayItem);
+        sharer.data.items.push(arrayItem);
         console.log("draw following code in sharebox: \n" + JSON.stringify(this.data.items, null, '\t'));
-        /*
-        this.contents.children.forEach(function (item) {
-            if (item instanceof CostumeIconMorph && item.top() < top - 4) {
-                idx += 1;
-            }
-        });
-        this.sprite.costumes.add(costume, idx + 1);
-        */
         var costume_idx = 0;
         for (var i = 0; i < this.data.items.length; i++) {
             var shareObject = sharer.getObject(this.data.items[i].xml);
@@ -1744,6 +1737,10 @@ IDE_Morph.makeSocket = function (myself, shareboxId) {
 
             shareObject.destroy();
         }
+        myself.shareBox.updateList();
+        myself.shareBox.changed();
+        myself.spriteEditor.updateList();
+        myself.spriteEditor.changed();
     }.bind(sharer));
     return sharer;
 }
@@ -1766,6 +1763,7 @@ IDE_Morph.prototype.createShareBox = function (shareboxId) {
     if (this.shareBoxConnect) {
         this.shareBoxConnect.destroy();
     }
+
     var sharer = IDE_Morph.makeSocket.call(this, myself, shareboxId);
     if (this.currentShareBoxTab === 'scripts') {
         scripts.isDraggable = false;
@@ -1776,19 +1774,12 @@ IDE_Morph.prototype.createShareBox = function (shareboxId) {
         this.shareBox.color = this.groupColor;
         this.shareBox.acceptsDrops = true;
         this.add(this.shareBox);
-        //this.shareBox.texture = IDE_Morph.prototype.scriptsPaneTexture;
 
         this.shareBox.reactToDropOf = function (droppedMorph) {
-            // Currently this is a function to demonstrate both dropping and dragging.
-            //var shareName = 'shareName';
             var shareName = prompt("Give the item a name.");
-            // After the drop, sharer is to call shareObject only. shareObject will communicate with the server API and
-            // handle everything else
             sharer.shareObject((shareboxId.toString()), droppedMorph, shareName);
             droppedMorph.destroy();
-            // ~~Fin~~
         };
-        //IDE_Morph.makeSocket.call(this, myself, shareboxId);
     } else if (this.currentShareBoxTab === 'assets') {
         this.shareBox = new ShareBoxAssetsMorph(
             this.shareBoxPlaceholderSprite,
@@ -1798,9 +1789,14 @@ IDE_Morph.prototype.createShareBox = function (shareboxId) {
         this.add(this.shareBox);
         this.shareBox.updateSelection();
 
-        this.shareBox.acceptsDrops = false;
-        this.shareBox.contents.acceptsDrops = false;
-        //IDE_Morph.makeSocket.call(this, myself, shareboxId);
+        this.shareBox.acceptsDrops = true;
+
+        this.shareBox.reactToDropOf = function (droppedMorph) {
+            var shareName = prompt("Give the item a name.");
+            sharer.shareObject((shareboxId.toString()), droppedMorph, shareName);
+            droppedMorph.destroy();
+        };
+
     } else {
         this.shareBox = new Morph();
 

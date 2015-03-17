@@ -47,7 +47,7 @@ ShareBoxItemSharer.prototype.shareObject = function (room, shareItem, shareName)
             xml: _.escape(xml),
             status: 0
         };
-        console.log(room)
+        console.log(room);
         var string = { room: room, data: objectData };
         this.socket.emit('send', string);
         console.log("send:" + string);
@@ -125,6 +125,7 @@ ShareBoxItemSharer.prototype.returnGrabbableDeserializedItem = function(deserial
             return morph instanceof CostumeIconMorph;
         });
         deserializedCostume = costumeIcons[costumeIcons.length - 1];
+
         return deserializedCostume;
     } else if (deserializedItem instanceof Sound) {
         var deserializedSound,
