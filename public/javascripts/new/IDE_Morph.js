@@ -22,6 +22,8 @@ var AlignmentMorph = require('./AlignmentMorph');
 // I am SNAP's top-level frame the editor window.
 // IDE_Morph inherits from Morph.
 
+
+
 var IDE_Morph = Class.create(Morph, {
 
 	initialize: function() {
@@ -6160,6 +6162,10 @@ var IDE_Morph = Class.create(Morph, {
 	}
 
 });
+
+IDE_Morph.className = 'IDE_Morph';
+
+module.exports = IDE_Morph;
 
 IDE_Morph.setFlatDesign();
 
