@@ -61,7 +61,7 @@ var ColorPickerMorph = Class.create(Morph, {
 
 	rootForGrab: function () {
 	    return this;
-	},
+	}
 
 })
 

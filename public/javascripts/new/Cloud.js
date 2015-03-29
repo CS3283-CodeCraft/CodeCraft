@@ -617,7 +617,7 @@ var Cloud = Class.create({
 
 	message: function (string) {
 	    alert(string);
-	},
+	}
 
 })
 

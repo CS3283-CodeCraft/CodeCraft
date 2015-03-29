@@ -122,7 +122,7 @@ var CircleBoxMorph = Class.create(Morph, {
 	    this.setCenter(center);
 	    this.drawNew();
 	    this.changed();
-	},
+	}
 
 })
 

@@ -296,7 +296,7 @@ var MenuMorph = Class.create(BoxMorph, {
 	            this.extent().floorDivideBy(2)
 	        )
 	    );
-	},
+	}
 
 
 

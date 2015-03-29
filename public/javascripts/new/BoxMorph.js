@@ -193,7 +193,7 @@ var BoxMorph = Class.create(Morph, {
         var list = $super();
         list.push('setBorderWidth', 'setCornerSize');
         return list;
-    },
+    }
 
 })
 

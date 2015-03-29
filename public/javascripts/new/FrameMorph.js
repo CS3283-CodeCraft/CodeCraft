@@ -191,7 +191,7 @@ var FrameMorph = Class.create(Morph, {
         this.children.forEach(function (m) {
             m.keepWithin(myself);
         });
-    },
+    }
 
 
 

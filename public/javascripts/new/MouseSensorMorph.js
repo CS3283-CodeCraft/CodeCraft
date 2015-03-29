@@ -60,7 +60,7 @@ var MouseSensorMorph = Class.create(BoxMorph, {
 
 	mouseClickLeft: function () {
 	    this.unTouch();
-	},
+	}
 
 
 })
