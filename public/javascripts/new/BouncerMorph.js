@@ -76,7 +76,7 @@ var BouncerMorph = Class.create(Morph, {
 	            }
 	        }
 	    }
-	},
+	}
 
 })
 

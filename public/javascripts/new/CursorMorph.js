@@ -418,7 +418,7 @@ var CursorMorph = Class.create(BlinkerMorph, {
                 event.metaKey.toString()
         );
     },
-    viewPadding: 1,
+    viewPadding: 1
 
 })
 

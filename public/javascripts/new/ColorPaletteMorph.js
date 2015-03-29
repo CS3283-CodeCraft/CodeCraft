@@ -127,7 +127,7 @@ var ColorPaletteMorph = Class.create(Morph, {
 	    } else if (choices.length > 0) {
 	        menu.popUpAtHand(this.world());
 	    }
-	},
+	}
 
 
 })

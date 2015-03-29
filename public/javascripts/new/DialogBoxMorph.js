@@ -1693,7 +1693,7 @@ var DialogBoxMorph = Class.create(Morph, {
             radians(180),
             false
         );
-    },
+    }
 
 })
 

@@ -23,7 +23,7 @@ var GrayPaletteMorph = Class.create(ColorPaletteMorph, {
 	    gradient.addColorStop(1, 'white');
 	    context.fillStyle = gradient;
 	    context.fillRect(0, 0, ext.x, ext.y);
-	},
+	}
 
 })
 

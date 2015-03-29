@@ -220,7 +220,7 @@ var PenMorph = Class.create(Morph, {
             this.turn(angle);
             this.forward(-length);
         }
-    },
+    }
 
 
 

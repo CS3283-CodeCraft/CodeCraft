@@ -237,7 +237,7 @@ var HandleMorph = Class.create(Morph, {
 	    if (choices.length > 0) {
 	        menu.popUpAtHand(this.world());
 	    }
-	},
+	}
 
 })
 

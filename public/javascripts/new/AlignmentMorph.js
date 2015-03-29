@@ -69,7 +69,7 @@ var AlignmentMorph = Class.create(Morph, {
             }
         });
         this.bounds = newBounds;
-    },
+    }
 
 })
 

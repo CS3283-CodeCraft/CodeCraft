@@ -155,7 +155,7 @@ var MenuItemMorph = Class.create(TriggerMorph, {
 	        return this.image === this.pressImage;
 	    }
 	    return false;
-	},
+	}
 
 
 

@@ -492,7 +492,7 @@ var InspectorMorph = Class.create(BoxMorph, {
         this.label.text = lbl;
         this.label.drawNew();
         this.fixLayout();
-    },
+    }
 
 
 })

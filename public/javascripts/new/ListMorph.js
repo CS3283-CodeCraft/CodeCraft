@@ -137,7 +137,7 @@ var ListMorph = Class.create(ScrollFrameMorph, {
             this.listContents.setBottom(nb.bottom());
         }
         $super(aPoint);
-    },
+    }
 
 
 })

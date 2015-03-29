@@ -366,7 +366,7 @@ var InputFieldMorph = Class.create(Morph, {
         context.moveTo(this.width() - shift, this.edge);
         context.lineTo(this.width() - shift, this.height() - this.edge);
         context.stroke();
-    },
+    }
 
 })
 

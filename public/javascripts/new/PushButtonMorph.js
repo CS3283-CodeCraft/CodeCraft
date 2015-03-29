@@ -593,7 +593,7 @@ var PushButtonMorph = Class.create(TriggerMorph, {
             );
         }
         this.add(this.label);
-    },
+    }
 
 
 })

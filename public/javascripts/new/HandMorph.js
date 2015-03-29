@@ -626,7 +626,7 @@ var HandMorph = Class.create(Morph, {
 	    $super(delta);
 	    Morph.prototype.trackChanges = true;
 	    this.fullChanged();
-	},
+	}
 
 })
 
