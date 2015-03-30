@@ -298,10 +298,8 @@ var SpeechBubbleMorph = Class.create(BoxMorph, {
         this.removeShadow();
         this.drawNew();
         this.addShadow(new Point(2, 2), 80);
-    },
-
-
-})
+    }
+});
 
 SpeechBubbleMorph.uber = BoxMorph.prototype;
 SpeechBubbleMorph.className = 'SpeechBubbleMorph';

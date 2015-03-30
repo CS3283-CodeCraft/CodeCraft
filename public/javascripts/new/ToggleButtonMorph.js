@@ -2,6 +2,7 @@ var PushButtonMorph = require('./PushButtonMorph');
 var Morph = require('./Morph');
 var StringMorph = require('./StringMorph');
 var SymbolMorph = require('./SymbolMorph');
+var Point = require('./Point');
 
 var ToggleButtonMorph = Class.create(PushButtonMorph, {
     // ToggleButtonMorph ///////////////////////////////////////////////////////
@@ -41,8 +42,6 @@ var ToggleButtonMorph = Class.create(PushButtonMorph, {
             isPicture
         );
     },
-
-
 
     init: function (
         $super, 
@@ -424,15 +423,10 @@ var ToggleButtonMorph = Class.create(PushButtonMorph, {
     show: function () {
         this.isVisible = true;
         this.changed();
-    },
-
-
-})
+    }
+});
 
 ToggleButtonMorph.uber = PushButtonMorph.prototype;
 ToggleButtonMorph.className = 'ToggleButtonMorph';
 
 module.exports = ToggleButtonMorph;
-
-
-

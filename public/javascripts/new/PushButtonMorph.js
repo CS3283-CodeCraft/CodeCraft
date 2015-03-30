@@ -3,6 +3,7 @@ var Color = require('./Color');
 var Point = require('./Point');
 var StringMorph = require('./StringMorph');
 var SymbolMorph = require('./SymbolMorph');
+var TriggerMorph = require('./TriggerMorph');
 
 var PushButtonMoprhConfig = {
     FONT_SIZE: 10,
@@ -14,16 +15,12 @@ var PushButtonMoprhConfig = {
     PRESS_COLOR: new Color(115, 180, 240),
     OUTLINE_COLOR: new Color(30, 30, 30),
     OUTLINE_GRADIENT: false,
-    OUTLINE_COLOR: false,
     CONTRAST: 60,
     EDGE: 2,
     CORNER: 5,
     OUTLINE: 1.00001, 
-    PADDING: 3,
+    PADDING: 3
 };
-
-
-
 
 var PushButtonMorph = Class.create(TriggerMorph, {
 
@@ -38,7 +35,6 @@ var PushButtonMorph = Class.create(TriggerMorph, {
     labelColor: PushButtonMoprhConfig.LABEL_COLOR,
     labelShadowColor: PushButtonMoprhConfig.LABEL_SHADOW_COLOR,
     labelShadowOffset: PushButtonMoprhConfig.LABEL_SHADOW_COLOR_OFFSET,
-
     color: PushButtonMoprhConfig.COLOR,
     //color: "rgb(155, 102, 102)", 
     pressColor: PushButtonMoprhConfig.PRESS_COLOR,
@@ -51,7 +47,6 @@ var PushButtonMorph = Class.create(TriggerMorph, {
     corner: PushButtonMoprhConfig.CORNER,
     outline: PushButtonMoprhConfig.OUTLINE,
     padding: PushButtonMoprhConfig.PADDING,
-
 
     initialize: function(
         target,
@@ -73,8 +68,6 @@ var PushButtonMorph = Class.create(TriggerMorph, {
         );
     },
 
-
-
     init: function (
         target,
         action,
@@ -93,14 +86,14 @@ var PushButtonMorph = Class.create(TriggerMorph, {
         this.label = null;
         this.labelMinExtent = new Point(0, 0);
         this.hint = hint || null;
-        this.template = template || null; // for pre-computed backbrounds
+        this.template = template || null; // for pre-computed backgrounds
         // if a template is specified, its background images are used as cache
 
         // initialize inherited properties:
         // BUG? TYPO?
         TriggerMorph.uber.init.call(this);
 
-        // override inherited properites:
+        // override inherited properties:
         this.color = PushButtonMorph.prototype.color;
 
 
@@ -594,12 +587,9 @@ var PushButtonMorph = Class.create(TriggerMorph, {
         }
         this.add(this.label);
     }
-
-
-})
+});
 
 PushButtonMorph.uber = TriggerMorph.prototype;
 PushButtonMorph.className = 'PushButtonMorph';
 
 module.exports = PushButtonMorph;
-

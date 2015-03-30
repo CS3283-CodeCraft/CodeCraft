@@ -65,12 +65,9 @@ var ArrowMorph = Class.create(Morph, {
 	    context.closePath();
 	    context.fill();
 	}
-})
+});
 
 ArrowMorph.uber = Morph.prototype;
 ArrowMorph.className = 'ArrowMorph';
 
 module.exports = ArrowMorph;
-
-
-

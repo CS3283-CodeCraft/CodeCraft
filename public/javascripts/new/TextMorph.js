@@ -2,6 +2,7 @@ var Morph = require('./Morph');
 var Color = require('./Color');
 var Point = require('./Point');
 var StringMorph = require('./StringMorph');
+var Rectangle = require('./Rectangle');
 
 var TextMorph = Class.create(Morph, {
 
@@ -519,8 +520,8 @@ var TextMorph = Class.create(Morph, {
 	inspectIt: function (result, inspector) {
 	    // var result = this.receiver.evaluateString(this.selection()),
 	    //     
-	    var world = this.world(),
-	        inspector;
+	    var world = this.world();
+		// var inspector;
 	    if (isObject(result)) {
 	        // inspector = new InspectorMorph(result);
 	        inspector.setPosition(world.hand.position());
@@ -528,14 +529,10 @@ var TextMorph = Class.create(Morph, {
 	        world.add(inspector);
 	        inspector.changed();
 	    }
-	},
-
-
-
-})
+	}
+});
 
 TextMorph.uber = Morph.prototype;
 TextMorph.className = 'TextMorph';
 
 module.exports = TextMorph;
-

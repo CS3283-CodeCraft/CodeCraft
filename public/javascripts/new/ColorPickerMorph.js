@@ -7,7 +7,7 @@ var GrayPaletteMorph = require('./GrayPaletteMorph');
 var ColorPickerMorph = Class.create(Morph, {
 
 	// ColorPickerMorph ///////////////////////////////////////////////////
-	
+
 	initialize: function(defaultColor){
 	    this.init(defaultColor || new Color(255, 255, 255));
 	},
@@ -62,11 +62,9 @@ var ColorPickerMorph = Class.create(Morph, {
 	rootForGrab: function () {
 	    return this;
 	}
-
-})
+});
 
 ColorPickerMorph.uber = Morph.prototype;
 ColorPickerMorph.className = 'ColorPickerMorph';
 
 module.exports = ColorPickerMorph;
-

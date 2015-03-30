@@ -1,6 +1,7 @@
 var ScrollFrameMorph = require('./ScrollFrameMorph');
 var Color = require('./Color');
 var MenuMorph = require('./MenuMorph');
+var Rectangle = require('./Rectangle');
 
 var ListMorph = Class.create(ScrollFrameMorph, {
 
@@ -138,16 +139,9 @@ var ListMorph = Class.create(ScrollFrameMorph, {
         }
         $super(aPoint);
     }
-
-
-})
+});
 
 ListMorph.uber = ScrollFrameMorph.prototype;
 ListMorph.className = 'ListMorph';
 
 module.exports = ListMorph;
-
-
-
-
-    

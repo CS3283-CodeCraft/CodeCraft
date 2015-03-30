@@ -8,7 +8,6 @@ var Color = require('./Color');
 var DialogBoxMorph = require('./DialogBoxMorph');
 var MenuMorph = require('./MenuMorph');
 
-
 // CostumeIconMorph ////////////////////////////////////////////////////
 
 /*

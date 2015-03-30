@@ -9,6 +9,8 @@ var Color = require('./Color');
 var Point = require('./Point');
 var TextMorph = require('./TextMorph');
 
+var Morph = require('./Morph');
+
 var MenuMorph = Class.create(BoxMorph, {
 
 	// MenuMorph ///////////////////////////////////////////////////////////
@@ -297,13 +299,9 @@ var MenuMorph = Class.create(BoxMorph, {
 	        )
 	    );
 	}
-
-
-
-})
+});
 
 MenuMorph.uber = BoxMorph.prototype;
 MenuMorph.className = 'MenuMorph';
 
 module.exports = MenuMorph;
-
