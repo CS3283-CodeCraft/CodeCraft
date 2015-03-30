@@ -1707,6 +1707,8 @@ IDE_Morph.makeSocket = function (myself, shareboxId) {
         room = shareboxId.toString(), 
         socket = io();
 
+    console.log(socket);
+
     var sharer = new ShareBoxItemSharer(serializer, ide, socket);
 
     sharer.socket.emit('join', {id: tempIdentifier, room: room });
@@ -1734,7 +1736,6 @@ IDE_Morph.makeSocket = function (myself, shareboxId) {
             } else if (shareObject instanceof SoundIconMorph) {
                 shareBoxPlaceholderSprite.sounds.push(shareObject.object);
             }
-
             shareObject.destroy();
         }
         myself.shareBox.updateList();

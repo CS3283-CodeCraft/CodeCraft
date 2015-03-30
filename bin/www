@@ -33,16 +33,20 @@ server.on('listening', onListening);
 var io = require('socket.io')(server);
 
 io.on('connection', function(socket){
-    socket.on('send', function(data){
-        io.sockets.in(data.room).emit('message', data.data);
-    });
+//    socket.on('send', function(data){
+//        socket.broadcast.emit('message', data.data);
+//    });
 
     socket.on('join', function(data) {
-        socket.join(data.room);
-        console.log(data.id + "is joining " + data.room)
+        //socket.join(data.room);
+        //console.log(data.id + "is joining " + data.room)
     });
-});
 
+    socket.on('send', function(data) {
+        socket.broadcast.emit('message', data.data);
+    });
+
+});
 
 
 /**
