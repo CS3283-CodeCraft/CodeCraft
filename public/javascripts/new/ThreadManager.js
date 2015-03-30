@@ -4,6 +4,10 @@
 
 var ThreadManager = Class.create({
 
+    initialize: function() {
+        this.init();
+    },
+
     init: function() {
         this.processes = [];
     },
