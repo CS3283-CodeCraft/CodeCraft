@@ -1,6 +1,6 @@
 var ToggleButtonMorph = require('./ToggleButtonMorph');
 var Point = require('./Point');
-var StringMorph = require('./StringMoerph');
+var StringMorph = require('./StringMorph');
 
 var TabMorph = Class.create(ToggleButtonMorph, {
     
