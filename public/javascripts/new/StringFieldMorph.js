@@ -1,4 +1,5 @@
 var FrameMorph = require('./FrameMorph');
+var Color = require('./Color');
 var Point = require('./Point');
 var StringMorph = require('./StringMorph');
 
@@ -102,14 +103,10 @@ var StringFieldMorph = Class.create(FrameMorph, {
 	        c.text = (dict[this.text]);
 	    }
 	    return c;
-	},
-
-
-})
+	}
+});
 
 StringFieldMorph.uber = FrameMorph.prototype;
 StringFieldMorph.className = 'StringFieldMorph';
 
 module.exports = StringFieldMorph;
-
-	

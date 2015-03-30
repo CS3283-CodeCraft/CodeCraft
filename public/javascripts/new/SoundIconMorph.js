@@ -2,9 +2,8 @@
  * Created by Shurelia on 30/3/2015.
  */
 
-
-
-
+var Color = require('./Color');
+var Point = require('./Point');
 var ToggleButtonMorph = require('./ToggleButtonMorph');
 
 // SoundIconMorph ///////////////////////////////////////////////////////
@@ -17,8 +16,14 @@ var ToggleButtonMorph = require('./ToggleButtonMorph');
 // ... and copies methods from SpriteIconMorph
 
 var SoundIconMorph = Class.create(ToggleButtonMorph, {
-	initialize: function() {
+	thumbSize: new Point(80, 60),
+	labelShadowOffset: null,
+	labelShadowColor: null,
+	labelColor: new Color(255, 255, 255),
+	fontSize: 9,
 
+	initialize: function(aSound, aTemplate) {
+		this.init(aSound, aTemplate);
 	},
 
 	init: function($super, aSound, aTemplate) {
@@ -69,7 +74,6 @@ var SoundIconMorph = Class.create(ToggleButtonMorph, {
 		this.fixLayout();
 		this.fps = 1;
 	}
-
 });
 
 

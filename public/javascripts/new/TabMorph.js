@@ -1,5 +1,6 @@
 var ToggleButtonMorph = require('./ToggleButtonMorph');
 var Point = require('./Point');
+var StringMorph = require('./StringMoerph');
 
 var TabMorph = Class.create(ToggleButtonMorph, {
     
@@ -106,9 +107,8 @@ var TabMorph = Class.create(ToggleButtonMorph, {
         context.lineTo(w - c * 2, eh);
         context.bezierCurveTo(w - c, 0, w - c, h, w, h + eh);
         context.stroke();
-    },
-
-})
+    }
+});
 
 TabMorph.uber = ToggleButtonMorph.prototype;
 TabMorph.className = 'TabMorph';

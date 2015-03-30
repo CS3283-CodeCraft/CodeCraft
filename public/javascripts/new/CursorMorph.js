@@ -419,12 +419,9 @@ var CursorMorph = Class.create(BlinkerMorph, {
         );
     },
     viewPadding: 1
-
-})
+});
 
 CursorMorph.uber = BlinkerMorph.prototype;
 CursorMorph.className = 'CursorMorph';
 
 module.exports = CursorMorph;
-
-

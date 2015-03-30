@@ -261,12 +261,10 @@ var TriggerMorph = Class.create(Morph, {
             null,
             1
         ).popUp(this.world(), this.rightCenter().add(new Point(-8, 0)));
-    },
-})
+    }
+});
 
 TriggerMorph.uber = Morph.prototype;
 TriggerMorph.className = 'TriggerMorph';
 
 module.exports = TriggerMorph;
-
-    

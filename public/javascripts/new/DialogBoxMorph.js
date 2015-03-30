@@ -52,7 +52,6 @@ var DialogBoxMorph = Class.create(Morph, {
         this.init(target, action, environment);
     },
 
-
     init: function ($super, target, action, environment) {
         // additional properties:
         this.is3D = false; // for "flat" design exceptions
@@ -135,7 +134,7 @@ var DialogBoxMorph = Class.create(Morph, {
         
         var sprite = spriteCreator();
 
-        for(i = 0; i < 15; i++){
+        for(var i = 0; i < 15; i++){
             sprite = spriteCreator(); 
             
             //sprite.setCenter(this.stage.center());
@@ -1133,13 +1132,6 @@ var DialogBoxMorph = Class.create(Morph, {
         }
     },
 
-    destroy: function () {
-        DialogBoxMorph.uber.destroy.call(this);
-        if (this.key) {
-            delete this.instances[this.key];
-        }
-    },
-
     ok: function () {
         this.accept();
     },
@@ -1173,6 +1165,10 @@ var DialogBoxMorph = Class.create(Morph, {
         world.keyboardReceiver = null;
         world.hand.destroyTemporaries();
         DialogBoxMorph.uber.destroy.call(this);
+
+        if (this.key) {
+            delete this.instances[this.key];
+        }
     },
 
     normalizeSpaces: function (string) {

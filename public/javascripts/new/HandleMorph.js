@@ -238,13 +238,9 @@ var HandleMorph = Class.create(Morph, {
 	        menu.popUpAtHand(this.world());
 	    }
 	}
-
-})
+});
 
 HandleMorph.uber = Morph.prototype;
 HandleMorph.className = 'HandleMorph';
 
 module.exports = HandleMorph;
-
-
-	

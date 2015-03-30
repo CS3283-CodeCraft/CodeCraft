@@ -627,14 +627,9 @@ var HandMorph = Class.create(Morph, {
 	    Morph.prototype.trackChanges = true;
 	    this.fullChanged();
 	}
-
-})
+});
 
 HandMorph.uber = Morph.prototype;
 HandMorph.className = 'HandMorph';
 
 module.exports = HandMorph;
-
-
-
-

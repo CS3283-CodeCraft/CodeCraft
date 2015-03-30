@@ -114,7 +114,7 @@ var PenMorph = Class.create(Morph, {
             context.lineTo(to.x, to.y);
             context.stroke();
             if (this.isWarped === false) {
-                rect = new Rectangle(0, 0, 0, 0);
+                var rect = new Rectangle(0, 0, 0, 0);
                 this.world().broken.push(
                     start.rectangle(rect, dest).expandBy(
                         Math.max(this.size / 2, 1)
@@ -221,11 +221,7 @@ var PenMorph = Class.create(Morph, {
             this.forward(-length);
         }
     }
-
-
-
-
-})
+});
 
 PenMorph.uber = Morph.prototype;
 PenMorph.className = 'PenMorph';

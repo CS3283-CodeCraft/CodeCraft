@@ -6,6 +6,7 @@ var StringMorph = require('./StringMorph');
 var Morph = require('./Morph');
 var ToggleElementMorph = require('./ToggleElementMorph');
 var ToggleButtonMorph = require('./ToggleButtonMorph');
+var Color = frequire('./Color');
 
 var ToggleMorph = Class.create(PushButtonMorph, {
     
@@ -255,17 +256,10 @@ var ToggleMorph = Class.create(PushButtonMorph, {
 
     hide: ToggleButtonMorph.prototype.hide,
 
-    show: ToggleButtonMorph.prototype.show,
-
-
-})
+    show: ToggleButtonMorph.prototype.show
+});
 
 ToggleMorph.uber = PushButtonMorph.prototype;
 ToggleMorph.className = 'ToggleMorph';
 
 module.exports = ToggleMorph;
-
-
-
-    
-

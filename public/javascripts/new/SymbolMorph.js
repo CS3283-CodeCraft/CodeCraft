@@ -1292,12 +1292,10 @@ var SymbolMorph = Class.create(Morph, {
         ctx.fill();
 
         return canvas;
-    },
-
-})
+    }
+});
 
 SymbolMorph.uber = Morph.prototype;
 SymbolMorph.className = 'SymbolMorph';
 
 module.exports = SymbolMorph;
-
