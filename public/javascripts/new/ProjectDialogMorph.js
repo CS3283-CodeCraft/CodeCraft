@@ -932,4 +932,4 @@ var ProjectDialogMorph = Class.create(DialogBoxMorph, {
 ProjectDialogMorph.uber = DialogBoxMorph.prototype;
 ProjectDialogMorph.className = 'ProjectDialogMorph';
 
-modules.export = ProjectDialogMorph;
+module.exports = ProjectDialogMorph;

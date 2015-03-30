@@ -183,4 +183,4 @@ var TurtleIconMorph = Class.create(ToggleButtonMorph, {
 TurtleIconMorph.uber = ToggleButtonMorph.prototype;
 TurtleIconMorph.className = 'TurtleIconMorph';
 
-module.export = TurtleIconMorph;
+module.exports = TurtleIconMorph;
