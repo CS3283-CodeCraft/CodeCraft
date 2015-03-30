@@ -208,6 +208,7 @@ IDE_Morph.prototype.init = function (isAutoFill) {
     this.currentShareBoxConnectTab = 'connect';
     this.projectName = '';
     this.projectNotes = '';
+    this.sharer = IDE_Morph.makeSocket.call(this, this, '42');
 
     this.logo = null;
     this.controlBar = null;
@@ -1765,7 +1766,8 @@ IDE_Morph.prototype.createShareBox = function (shareboxId) {
         this.shareBoxConnect.destroy();
     }
 
-    var sharer = IDE_Morph.makeSocket.call(this, myself, shareboxId);
+    //var sharer = IDE_Morph.makeSocket.call(this, myself, shareboxId);
+    var sharer = this.sharer;
     if (this.currentShareBoxTab === 'scripts') {
         scripts.isDraggable = false;
         scripts.color = this.groupColor;
