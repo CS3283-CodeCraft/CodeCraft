@@ -31,7 +31,9 @@ var SpriteIconMorph = Class.create(ToggleButtonMorph, {
 
 	},
 
-	init: function(aSprite, aTemplate) {
+	init: function($super, aSprite, aTemplate) {
+		$super();
+
 		var colors, action, query, myself = this;
 
 		if (!aTemplate) {
@@ -396,3 +398,8 @@ var SpriteIconMorph = Class.create(ToggleButtonMorph, {
 		this.object.addSound(dup.audio, dup.name);
 	}
 });
+
+SpriteIconMorph.uber = ToggleButtonMorph.prototype;
+SpriteIconMorph.className = 'SpriteIconMorph';
+
+module.exports = SpriteIconMorph;
