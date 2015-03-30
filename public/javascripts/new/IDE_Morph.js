@@ -3712,9 +3712,14 @@ var IDE_Morph = Class.create(Morph, {
 		db.createCheckBox(db.length,db.height);
 
 		db.createImage(
-			function(){return new SpriteMorph(new Image())},
+			function() {
+				return new SpriteMorph(new Image());
+			},
 			screen.width * 0.3,
-			screen.height * 0.15
+			screen.height * 0.15,
+			myself,
+			currentPage,
+			maxPage
 		);
 	},
 
