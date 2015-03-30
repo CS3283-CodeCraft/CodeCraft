@@ -86,6 +86,7 @@ var JukeboxMorph;
 var ShareBoxAssetsMorph;
 
 var currentPage = 1;
+var maxPage = 3;
 
 // IDE_Morph ///////////////////////////////////////////////////////////
 
@@ -3909,10 +3910,15 @@ IDE_Morph.prototype.openLibrary = function () {
 	//db.fontSize = 40;
 	db.createCheckBox(db.length,db.height);
 	
+	db.createAddButton(myself);
+	
 	db.createImage(
         function(){return new SpriteMorph(new Image())}, 
         screen.width * 0.3, 
-        screen.height * 0.15
+        screen.height * 0.15,
+		myself,
+		currentPage,
+		maxPage
     );
 };
 

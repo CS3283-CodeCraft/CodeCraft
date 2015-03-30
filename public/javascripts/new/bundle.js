@@ -1,4 +1,4 @@
-(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\AlignmentMorph.js":[function(require,module,exports){
+(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 var Morph = require('./Morph');
 var Point = require('./Point');
 
@@ -70,17 +70,14 @@ var AlignmentMorph = Class.create(Morph, {
             }
         });
         this.bounds = newBounds;
-    },
-
-})
+    }
+});
 
 AlignmentMorph.uber = Morph.prototype;
 AlignmentMorph.className = 'AlignmentMorph';
 
 module.exports = AlignmentMorph;
-
-
-},{"./Morph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Morph.js","./Point":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Point.js"}],"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\ArrowMorph.js":[function(require,module,exports){
+},{"./Morph":23,"./Point":27}],2:[function(require,module,exports){
 var Morph = require('./Morph');
 var Color = require('./Color');
 var Point = require('./Point');
@@ -147,18 +144,14 @@ var ArrowMorph = Class.create(Morph, {
 	    }
 	    context.closePath();
 	    context.fill();
-	},
-})
+	}
+});
 
 ArrowMorph.uber = Morph.prototype;
 ArrowMorph.className = 'ArrowMorph';
 
 module.exports = ArrowMorph;
-
-
-
-
-},{"./Color":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Color.js","./Morph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Morph.js","./Point":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Point.js"}],"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\BlinkerMorph.js":[function(require,module,exports){
+},{"./Color":9,"./Morph":23,"./Point":27}],3:[function(require,module,exports){
 var Morph = require('./Morph');
 var Color = require('./Color');
 
@@ -182,38 +175,29 @@ var BlinkerMorph = Class.create(Morph, {
 	step: function () {
     	this.toggleVisibility();
 	}
-
-	
-
-
-})
+});
 
 BlinkerMorph.uber = Morph.prototype;
 BlinkerMorph.className = 'BlinkerMorph';
 
 module.exports = BlinkerMorph;
-
-
-},{"./Color":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Color.js","./Morph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Morph.js"}],"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\BlockHighlightMorph.js":[function(require,module,exports){
+},{"./Color":9,"./Morph":23}],4:[function(require,module,exports){
 var Morph = require('./Morph');
 
 var BlockHighlightMorph = Class.create(Morph, {
 
 	// BlockHighlightMorph /////////////////////////////////////////////////
 
-	initialize: function(){
+	initialize: function() {
 		this.init();
 	}
-
-})
+});
 
 BlockHighlightMorph.uber = Morph.prototype;
 BlockHighlightMorph.className = 'BlockHighlightMorph';
 
 module.exports = BlockHighlightMorph;
-
-
-},{"./Morph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Morph.js"}],"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\BouncerMorph.js":[function(require,module,exports){
+},{"./Morph":23}],5:[function(require,module,exports){
 var Morph = require('./Morph');
 var Point = require('./Point');
 
@@ -226,7 +210,7 @@ var BouncerMorph = Class.create(Morph, {
 	},
 
 	init: function ($super, type, speed) {
-	    $super()
+	    $super();
 	    this.fps = 50;
 
 	    // additional properties:
@@ -268,7 +252,7 @@ var BouncerMorph = Class.create(Morph, {
 	            } else {
 	                this.moveUp();
 	            }
-	            if (this.fullBounds().top() < this.parent.top() &&
+	            if (this.fullBounds().top < this.parent.top() &&
 	                    this.direction === 'up') {
 	                this.direction = 'down';
 	            }
@@ -292,17 +276,14 @@ var BouncerMorph = Class.create(Morph, {
 	            }
 	        }
 	    }
-	},
-
-})
+	}
+});
 
 BouncerMorph.uber = Morph.prototype;
 BouncerMorph.className = 'BouncerMorph';
 
 module.exports = BouncerMorph;
-
-
-},{"./Morph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Morph.js","./Point":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Point.js"}],"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\BoxMorph.js":[function(require,module,exports){
+},{"./Morph":23,"./Point":27}],6:[function(require,module,exports){
 var Morph = require('./Morph');
 var Color = require('./Color');
 
@@ -498,18 +479,14 @@ var BoxMorph = Class.create(Morph, {
         var list = $super();
         list.push('setBorderWidth', 'setCornerSize');
         return list;
-    },
-
-})
+    }
+});
 
 BoxMorph.uber = Morph.prototype;
 BoxMorph.className = 'BoxMorph';
 
 module.exports = BoxMorph;
-
-
-    
-},{"./Color":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Color.js","./Morph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Morph.js"}],"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\CircleBoxMorph.js":[function(require,module,exports){
+},{"./Color":9,"./Morph":23}],7:[function(require,module,exports){
 var Morph = require('./Morph');
 var Point = require('./Point');
 var Rectangle = require('./Rectangle');
@@ -523,7 +500,6 @@ var CircleBoxMorph = Class.create(Morph, {
 	initialize: function(orientation) {
 	    this.init(orientation || 'vertical');
 	},
-
 
 	init: function ($super, orientation) {
 	    $super();
@@ -634,18 +610,14 @@ var CircleBoxMorph = Class.create(Morph, {
 	    this.setCenter(center);
 	    this.drawNew();
 	    this.changed();
-	},
-
-})
+	}
+});
 
 CircleBoxMorph.uber = Morph.prototype;
 CircleBoxMorph.className = 'CircleBoxMorph';
 
 module.exports = CircleBoxMorph;
-
-
-
-},{"./Morph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Morph.js","./Point":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Point.js","./Rectangle":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Rectangle.js"}],"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Cloud.js":[function(require,module,exports){
+},{"./Morph":23,"./Point":27,"./Rectangle":29}],8:[function(require,module,exports){
 var Cloud = Class.create({
 
 	// Cloud /////////////////////////////////////////////////////////////
@@ -675,21 +647,21 @@ var Cloud = Class.create({
 	    creatorId,
 	    callBack
 	) {
-	    console.log(this.url)
+	    console.log(this.url);
 	    var shareWith = eval("[" + prompt("Who you want to share with?", "1, 2, 3") + "]");
 	    var data = {
 	        creator_id: creatorId,
 	        share_with: shareWith
-	    }
-	    var success = function(data){
-	    	console.log("success")
+	    };
+	    var success = function(data) {
+	    	console.log("success");
 	        callBack.call(null, data);
-	    }
-	    var url = this.url + 'sharebox'
-	    console.log(url)
-	    console.log(data)
-	    $.post(url, data, success, 'json')
-	    console.log("excuted")
+	    };
+	    var url = this.url + 'sharebox';
+	    console.log(url);
+	    console.log(data);
+	    $.post(url, data, success, 'json');
+	    console.log("excuted");
 	},
 
 	signup: function (
@@ -1265,15 +1237,13 @@ var Cloud = Class.create({
 
 	message: function (string) {
 	    alert(string);
-	},
-
-})
+	}
+});
 
 Cloud.className = 'Cloud';
 
 module.exports = Cloud;
-
-},{}],"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Color.js":[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 var Color = Class.create({
 	
 	initialize: function(r, g, b, a){
@@ -1430,13 +1400,12 @@ var Color = Class.create({
 	    result.set_hsv(hsv[0], hsv[1], vv);
 	    return result;
 	}
-
-})
+});
 
 Color.className = 'Color';
 
 module.exports = Color;
-},{}],"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\ColorPaletteMorph.js":[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 var Morph = require('./Morph');
 var Point = require('./Point');
 var Color = require('./Color');
@@ -1566,21 +1535,14 @@ var ColorPaletteMorph = Class.create(Morph, {
 	    } else if (choices.length > 0) {
 	        menu.popUpAtHand(this.world());
 	    }
-	},
-
-
-})
+	}
+});
 
 ColorPaletteMorph.uber = Morph.prototype;
 ColorPaletteMorph.className = 'ColorPaletteMorph';
 
 module.exports = ColorPaletteMorph;
-
-
-
-
-	
-},{"./Color":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Color.js","./Morph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Morph.js","./Point":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Point.js"}],"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\ColorPickerMorph.js":[function(require,module,exports){
+},{"./Color":9,"./Morph":23,"./Point":27}],11:[function(require,module,exports){
 var Morph = require('./Morph');
 var Color = require('./Color');
 var Point = require('./Point');
@@ -1590,7 +1552,7 @@ var GrayPaletteMorph = require('./GrayPaletteMorph');
 var ColorPickerMorph = Class.create(Morph, {
 
 	// ColorPickerMorph ///////////////////////////////////////////////////
-	
+
 	initialize: function(defaultColor){
 	    this.init(defaultColor || new Color(255, 255, 255));
 	},
@@ -1644,17 +1606,14 @@ var ColorPickerMorph = Class.create(Morph, {
 
 	rootForGrab: function () {
 	    return this;
-	},
-
-})
+	}
+});
 
 ColorPickerMorph.uber = Morph.prototype;
 ColorPickerMorph.className = 'ColorPickerMorph';
 
 module.exports = ColorPickerMorph;
-
-
-},{"./Color":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Color.js","./ColorPaletteMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\ColorPaletteMorph.js","./GrayPaletteMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\GrayPaletteMorph.js","./Morph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Morph.js","./Point":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Point.js"}],"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\CursorMorph.js":[function(require,module,exports){
+},{"./Color":9,"./ColorPaletteMorph":10,"./GrayPaletteMorph":15,"./Morph":23,"./Point":27}],12:[function(require,module,exports){
 
 var BlinkerMorph = require('./BlinkerMorph');
 var InspectorMorph = require('./InspectorMorph');
@@ -2075,18 +2034,14 @@ var CursorMorph = Class.create(BlinkerMorph, {
                 event.metaKey.toString()
         );
     },
-    viewPadding: 1,
-
-})
+    viewPadding: 1
+});
 
 CursorMorph.uber = BlinkerMorph.prototype;
 CursorMorph.className = 'CursorMorph';
 
 module.exports = CursorMorph;
-
-
-
-},{"./BlinkerMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\BlinkerMorph.js","./InspectorMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\InspectorMorph.js","./Point":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Point.js"}],"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\DialogBoxMorph.js":[function(require,module,exports){
+},{"./BlinkerMorph":3,"./InspectorMorph":19,"./Point":27}],13:[function(require,module,exports){
 var Morph = require('./Morph');
 var Color = require('./Color');
 var TextMorph = require('./TextMorph');
@@ -2133,14 +2088,13 @@ var DialogBoxMorph = Class.create(Morph, {
     buttonOutline: 3,
     buttonOutlineColor: PushButtonMorph.prototype.color,
     buttonOutlineGradient: true,
-    currentpage: 1,
-    maxpage: 1,
+    //currentpage: 1,
+    //maxpage: 3,
     instances: {}, // prevent multiple instances
     
     initialize: function(target, action, environment){
         this.init(target, action, environment);
     },
-
 
     init: function ($super, target, action, environment) {
         // additional properties:
@@ -2210,22 +2164,77 @@ var DialogBoxMorph = Class.create(Morph, {
             this.popUp(world);
         }
     },
+	
+	createAddButton: function(
+		myself
+	){
+		var button;     //next button
+		//var myself = this;
+        button = new PushButtonMorph(
+            this,
+            function () {
+				//debugger;
+				var inp = document.createElement('input');
+				if (myself.filePicker) {
+					document.body.removeChild(myself.filePicker);
+					myself.filePicker = null;
+				}
+				inp.type = 'file';
+				inp.style.color = "transparent";
+				inp.style.backgroundColor = "transparent";
+				inp.style.border = "none";
+				inp.style.outline = "none";
+				inp.style.position = "absolute";
+				inp.style.top = "0px";
+				inp.style.left = "0px";
+				inp.style.width = "0px";
+				inp.style.height = "0px";
+				inp.addEventListener(
+					"change",
+					function () {
+						document.body.removeChild(inp);
+						myself.filePicker = null;
+						world.hand.processDrop(inp.files);
+					},
+					false
+				);
+				document.body.appendChild(inp);
+				myself.filePicker = inp;
+				inp.click();
+			},
+            "Add",
+            null,
+            null,
+            null
+        );
+
+        button.setWidth(50);
+        button.setHeight(20);
+
+        button.setPosition(new Point(screen.width * 0.27, screen.height * 0.08));
+
+        this.add(button);
+		
+	},
 
     createImage: function (
         spriteCreator,
         spacelength,
-        spaceheight){
+        spaceheight,
+		theworld,
+		curpage,
+		maxpage){
         
         //var sprite = new SpriteMorph(new Image()),
             //cos = new Costume(newCanvas(new Point(100, 100));
             //myself = this;
         var picsize = 40;
-        this.maxpage = Math.ceil(picsize / 15);
+        maxpage = Math.ceil(picsize / 15);
         
-        var sprite = spriteCreator();
+        //var sprite = spriteCreator();
 
-        for(i = 0; i < 15; i++){
-            sprite = spriteCreator(); 
+        for(var i = 0; i < 15; i++){
+            var sprite = spriteCreator(); 
             
             //sprite.setCenter(this.stage.center());
             sprite.setWidth(100);
@@ -2233,14 +2242,65 @@ var DialogBoxMorph = Class.create(Morph, {
             
             sprite.setPosition(new Point(spacelength + (i%5)*150, spaceheight + Math.floor(i/5) * 180));
             sprite.isDraggable = false;
+			sprite.name = 'Sprite' + i;
+			
+			this.add(sprite);
             
-            this.add(sprite);
+			var buttonforadding;		//button to add sprite
+			buttonforadding = new PushButtonMorph(
+				this,
+				function () {
+					var img = new Image();
+					//img.src = 'merlion.jpg';
+
+					//sprite.image = img;
+
+					//sprite.name = this.newSpriteName('Merlion');
+					//sprite.name = 'Merlion';
+					//sprite.setCenter(this.stage.center());
+					theworld.stage.add(sprite);
+
+					theworld.sprites.add(sprite);
+					theworld.corral.addSprite(sprite);
+					theworld.selectSprite(sprite);
+
+					//myself.removeSprite(sprite);
+					//sprite.addCostume(cos);
+					//sprite.wearCostume(cos);
+				},
+				"+",
+				null,
+				null,
+				null,
+				'show green button'
+			);
+			
+		
+			
+			buttonforadding.setWidth(70);
+			buttonforadding.setHeight(70);
+
+			buttonforadding.setPosition(new Point(spacelength + (i%5)*150, spaceheight + Math.floor(i/5) * 180));
+
+			this.add(buttonforadding);
         }
+		
+		var text = new TextMorph(curpage.toString() + " / " + maxpage.toString());
+        //this.fontSize = 10;
+        text.setPosition(new Point(screen.width*0.49,screen.height*0.755)); 
+        this.add(text);
         
         var button;     //next button
         button = new PushButtonMorph(
             this,
-            'goNextPage',
+            function (){        
+				curpage++;
+				if(curpage > maxpage){
+					curpage -= maxpage;
+				}
+				//text.refresh();
+				//this.createImage(screen.width * 0.3, screen.height * 0.15);
+			},
             "Next",
             null,
             null,
@@ -2254,7 +2314,7 @@ var DialogBoxMorph = Class.create(Morph, {
 
         this.add(button);
         
-        var button2;        //next button
+        var button2;        //prev button
         button2 = new PushButtonMorph(
             this,
             'goPrevPage',
@@ -2271,10 +2331,7 @@ var DialogBoxMorph = Class.create(Morph, {
 
         this.add(button2);
         
-        var text = new TextMorph(this.currentpage.toString() + " / " + this.maxpage.toString());
-        //this.fontSize = 10;
-        text.setPosition(new Point(screen.width*0.49,screen.height*0.755)); 
-        this.add(text);
+        
         
         //this.stage.add(sprite);
 
@@ -3222,13 +3279,6 @@ var DialogBoxMorph = Class.create(Morph, {
         }
     },
 
-    destroy: function () {
-        DialogBoxMorph.uber.destroy.call(this);
-        if (this.key) {
-            delete this.instances[this.key];
-        }
-    },
-
     ok: function () {
         this.accept();
     },
@@ -3262,6 +3312,10 @@ var DialogBoxMorph = Class.create(Morph, {
         world.keyboardReceiver = null;
         world.hand.destroyTemporaries();
         DialogBoxMorph.uber.destroy.call(this);
+
+        if (this.key) {
+            delete this.instances[this.key];
+        }
     },
 
     normalizeSpaces: function (string) {
@@ -3782,7 +3836,7 @@ var DialogBoxMorph = Class.create(Morph, {
             radians(180),
             false
         );
-    },
+    }
 
 })
 
@@ -3792,7 +3846,7 @@ DialogBoxMorph.className = 'DialogBoxMorph';
 module.exports = DialogBoxMorph;
 
 
-},{"./AlignmentMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\AlignmentMorph.js","./Color":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Color.js","./InputFieldMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\InputFieldMorph.js","./Morph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Morph.js","./Point":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Point.js","./PushButtonMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\PushButtonMorph.js","./ScrollFrameMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\ScrollFrameMorph.js","./SliderMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\SliderMorph.js","./SpeechBubbleMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\SpeechBubbleMorph.js","./StringMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\StringMorph.js","./TextMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\TextMorph.js","./ToggleMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\ToggleMorph.js"}],"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\FrameMorph.js":[function(require,module,exports){
+},{"./AlignmentMorph":1,"./Color":9,"./InputFieldMorph":18,"./Morph":23,"./Point":27,"./PushButtonMorph":28,"./ScrollFrameMorph":30,"./SliderMorph":33,"./SpeechBubbleMorph":34,"./StringMorph":36,"./TextMorph":39,"./ToggleMorph":42}],14:[function(require,module,exports){
 var Morph = require('./Morph');
 var Color = require('./Color');
 var Point = require('./Point');
@@ -3986,19 +4040,14 @@ var FrameMorph = Class.create(Morph, {
         this.children.forEach(function (m) {
             m.keepWithin(myself);
         });
-    },
-
-
-
-})
+    }
+});
 
 FrameMorph.uber = Morph.prototype;
 FrameMorph.className = 'FrameMorph';
 
 module.exports = FrameMorph;
-
-    
-},{"./Color":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Color.js","./Morph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Morph.js","./Point":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Point.js"}],"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\GrayPaletteMorph.js":[function(require,module,exports){
+},{"./Color":9,"./Morph":23,"./Point":27}],15:[function(require,module,exports){
 var Color = require('./Color');
 var Point = require('./Point');
 var ColorPaletteMorph = require('./ColorPaletteMorph');
@@ -4024,17 +4073,14 @@ var GrayPaletteMorph = Class.create(ColorPaletteMorph, {
 	    gradient.addColorStop(1, 'white');
 	    context.fillStyle = gradient;
 	    context.fillRect(0, 0, ext.x, ext.y);
-	},
-
-})
+	}
+});
 
 GrayPaletteMorph.uber = ColorPaletteMorph.prototype;
 GrayPaletteMorph.className = 'GrayPaletteMorph';
 
 module.exports = GrayPaletteMorph;
-
-
-},{"./Color":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Color.js","./ColorPaletteMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\ColorPaletteMorph.js","./Point":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Point.js"}],"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\HandMorph.js":[function(require,module,exports){
+},{"./Color":9,"./ColorPaletteMorph":10,"./Point":27}],16:[function(require,module,exports){
 var Morph = require('./Morph');
 var Point = require('./Point');
 var Rectangle = require('./Rectangle');
@@ -4663,20 +4709,14 @@ var HandMorph = Class.create(Morph, {
 	    $super(delta);
 	    Morph.prototype.trackChanges = true;
 	    this.fullChanged();
-	},
-
-})
+	}
+});
 
 HandMorph.uber = Morph.prototype;
 HandMorph.className = 'HandMorph';
 
 module.exports = HandMorph;
-
-
-
-
-
-},{"./Morph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Morph.js","./Point":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Point.js","./Rectangle":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Rectangle.js"}],"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\HandleMorph.js":[function(require,module,exports){
+},{"./Morph":23,"./Point":27,"./Rectangle":29}],17:[function(require,module,exports){
 var Morph = require('./Morph');
 var Point = require('./Point');
 var Color = require('./Color');
@@ -4916,22 +4956,20 @@ var HandleMorph = Class.create(Morph, {
 	    if (choices.length > 0) {
 	        menu.popUpAtHand(this.world());
 	    }
-	},
-
-})
+	}
+});
 
 HandleMorph.uber = Morph.prototype;
 HandleMorph.className = 'HandleMorph';
 
 module.exports = HandleMorph;
-
-
-	
-},{"./Color":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Color.js","./Morph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Morph.js","./Point":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Point.js"}],"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\InputFieldMorph.js":[function(require,module,exports){
+},{"./Color":9,"./Morph":23,"./Point":27}],18:[function(require,module,exports){
 var Morph = require('./Morph');
 var StringFieldMorph = require('./StringFieldMorph');
 var ArrowMorph = require('./ArrowMorph');
 var Color = require('./Color');
+var Point = require('./Point');
+var MenuMorph = require('./MenuMorph');
 
 var InputFieldMorph = Class.create(Morph, {
 
@@ -4939,7 +4977,6 @@ var InputFieldMorph = Class.create(Morph, {
     fontSize: 12,
     typeInPadding: 2,
     contrast: 65,
-
     
     // InputFieldMorph //////////////////////////////////////////////////////
     
@@ -5296,20 +5333,14 @@ var InputFieldMorph = Class.create(Morph, {
         context.moveTo(this.width() - shift, this.edge);
         context.lineTo(this.width() - shift, this.height() - this.edge);
         context.stroke();
-    },
-
-})
+    }
+});
 
 InputFieldMorph.uber = Morph.prototype;
 InputFieldMorph.className = 'InputFieldMorph';
 
 module.exports = InputFieldMorph;
-
-
-
-
-
-},{"./ArrowMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\ArrowMorph.js","./Color":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Color.js","./Morph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Morph.js","./StringFieldMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\StringFieldMorph.js"}],"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\InspectorMorph.js":[function(require,module,exports){
+},{"./ArrowMorph":2,"./Color":9,"./MenuMorph":22,"./Morph":23,"./Point":27,"./StringFieldMorph":35}],19:[function(require,module,exports){
 var BoxMorph = require('./BoxMorph');
 var Point = require('./Point');
 var Color = require('./Color');
@@ -5804,20 +5835,18 @@ var InspectorMorph = Class.create(BoxMorph, {
         this.label.text = lbl;
         this.label.drawNew();
         this.fixLayout();
-    },
-
-
-})
+    }
+});
 
 InspectorMorph.uber = BoxMorph.prototype;
 InspectorMorph.className = 'InspectorMorph';
 
 module.exports = InspectorMorph;
-
-},{"./BoxMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\BoxMorph.js","./Color":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Color.js","./CursorMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\CursorMorph.js","./HandleMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\HandleMorph.js","./ListMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\ListMorph.js","./MenuMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\MenuMorph.js","./Morph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Morph.js","./Point":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Point.js","./ScrollFrameMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\ScrollFrameMorph.js","./TextMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\TextMorph.js","./TriggerMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\TriggerMorph.js"}],"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\ListMorph.js":[function(require,module,exports){
+},{"./BoxMorph":6,"./Color":9,"./CursorMorph":12,"./HandleMorph":17,"./ListMorph":20,"./MenuMorph":22,"./Morph":23,"./Point":27,"./ScrollFrameMorph":30,"./TextMorph":39,"./TriggerMorph":43}],20:[function(require,module,exports){
 var ScrollFrameMorph = require('./ScrollFrameMorph');
 var Color = require('./Color');
 var MenuMorph = require('./MenuMorph');
+var Rectangle = require('./Rectangle');
 
 var ListMorph = Class.create(ScrollFrameMorph, {
 
@@ -5954,21 +5983,14 @@ var ListMorph = Class.create(ScrollFrameMorph, {
             this.listContents.setBottom(nb.bottom());
         }
         $super(aPoint);
-    },
-
-
-})
+    }
+});
 
 ListMorph.uber = ScrollFrameMorph.prototype;
 ListMorph.className = 'ListMorph';
 
 module.exports = ListMorph;
-
-
-
-
-    
-},{"./Color":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Color.js","./MenuMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\MenuMorph.js","./ScrollFrameMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\ScrollFrameMorph.js"}],"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\MenuItemMorph.js":[function(require,module,exports){
+},{"./Color":9,"./MenuMorph":22,"./Rectangle":29,"./ScrollFrameMorph":30}],21:[function(require,module,exports){
 var Morph = require('./Morph');
 var TriggerMorph = require('./TriggerMorph');
 var TextMorph = require('./TextMorph');
@@ -6126,21 +6148,14 @@ var MenuItemMorph = Class.create(TriggerMorph, {
 	        return this.image === this.pressImage;
 	    }
 	    return false;
-	},
-
-
-
-
-})
+	}
+});
 
 MenuItemMorph.uber = TriggerMorph.prototype;
 MenuItemMorph.className = 'MenuItemMorph';
 
 module.exports = MenuItemMorph;
-
-
-
-},{"./Morph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Morph.js","./Point":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Point.js","./Rectangle":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Rectangle.js","./TextMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\TextMorph.js","./TriggerMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\TriggerMorph.js"}],"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\MenuMorph.js":[function(require,module,exports){
+},{"./Morph":23,"./Point":27,"./Rectangle":29,"./TextMorph":39,"./TriggerMorph":43}],22:[function(require,module,exports){
 var BoxMorph = require('./BoxMorph');
 var MenuItemMorph = require('./MenuItemMorph');
 var FrameMorph = require('./FrameMorph');
@@ -6151,6 +6166,8 @@ var SliderMorph = require('./SliderMorph');
 var Color = require('./Color');
 var Point = require('./Point');
 var TextMorph = require('./TextMorph');
+
+var Morph = require('./Morph');
 
 var MenuMorph = Class.create(BoxMorph, {
 
@@ -6439,22 +6456,20 @@ var MenuMorph = Class.create(BoxMorph, {
 	            this.extent().floorDivideBy(2)
 	        )
 	    );
-	},
-
-
-
-})
+	}
+});
 
 MenuMorph.uber = BoxMorph.prototype;
 MenuMorph.className = 'MenuMorph';
 
 module.exports = MenuMorph;
-
-
-},{"./BoxMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\BoxMorph.js","./Color":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Color.js","./ColorPickerMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\ColorPickerMorph.js","./FrameMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\FrameMorph.js","./MenuItemMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\MenuItemMorph.js","./Point":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Point.js","./ScrollFrameMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\ScrollFrameMorph.js","./SliderMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\SliderMorph.js","./StringFieldMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\StringFieldMorph.js","./TextMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\TextMorph.js"}],"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Morph.js":[function(require,module,exports){
+},{"./BoxMorph":6,"./Color":9,"./ColorPickerMorph":11,"./FrameMorph":14,"./MenuItemMorph":21,"./Morph":23,"./Point":27,"./ScrollFrameMorph":30,"./SliderMorph":33,"./StringFieldMorph":35,"./TextMorph":39}],23:[function(require,module,exports){
 var Node = require('./Node');
+var Point = require('./Point');
 var Rectangle = require('./Rectangle');
 var Color = require('./Color');
+
+var ShadowMorph = require('./ShadowMorph');
 
 var Morph = Class.create(Node, {
 
@@ -6483,7 +6498,6 @@ var Morph = Class.create(Node, {
 
 	    methods of SyntaxElementMorph in the Snap application.
 	*/
-
 
 	trackChanges: true,
 	shadowBlur: 4,
@@ -6784,7 +6798,7 @@ var Morph = Class.create(Node, {
 	    if (rightOff > 0) {
 	        this.moveBy(new Point(-rightOff, 0));
 	    }
-	    topOff = this.fullBounds().top() - aMorph.top();
+	    topOff = this.fullBounds().top - aMorph.top();
 	    if (topOff < 0) {
 	        this.moveBy(new Point(0, -topOff));
 	    }
@@ -7988,15 +8002,14 @@ var Morph = Class.create(Node, {
 	    );
 	    return oImg;
 	}
-
-})
+});
 
 Morph.uber = Node.prototype;
 Morph.className = 'Morph';
 
 
 module.exports = Morph;
-},{"./Color":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Color.js","./Node":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Node.js","./Rectangle":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Rectangle.js"}],"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\MouseSensorMorph.js":[function(require,module,exports){
+},{"./Color":9,"./Node":25,"./Point":27,"./Rectangle":29,"./ShadowMorph":31}],24:[function(require,module,exports){
 var BoxMorph = require('./BoxMorph');
 var Color = require('./Color');
 
@@ -8059,18 +8072,14 @@ var MouseSensorMorph = Class.create(BoxMorph, {
 
 	mouseClickLeft: function () {
 	    this.unTouch();
-	},
-
-
-})
+	}
+});
 
 MouseSensorMorph.uber = BoxMorph.prototype;
 MouseSensorMorph.className = 'MouseSensorMorph';
 
 module.exports = MouseSensorMorph;
-
-
-},{"./BoxMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\BoxMorph.js","./Color":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Color.js"}],"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Node.js":[function(require,module,exports){
+},{"./BoxMorph":6,"./Color":9}],25:[function(require,module,exports){
 // Nodes ///////////////////////////////////////////////////////////////
 
 var Node = Class.create({
@@ -8218,7 +8227,7 @@ Node.className = 'Node';
 
 module.exports = Node;
 
-},{}],"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\PenMorph.js":[function(require,module,exports){
+},{}],26:[function(require,module,exports){
 var Point = require('./Point');
 var Morph = require('./Morph');
 var Rectangle = require('./Rectangle');
@@ -8335,7 +8344,7 @@ var PenMorph = Class.create(Morph, {
             context.lineTo(to.x, to.y);
             context.stroke();
             if (this.isWarped === false) {
-                rect = new Rectangle(0, 0, 0, 0);
+                var rect = new Rectangle(0, 0, 0, 0);
                 this.world().broken.push(
                     start.rectangle(rect, dest).expandBy(
                         Math.max(this.size / 2, 1)
@@ -8441,12 +8450,8 @@ var PenMorph = Class.create(Morph, {
             this.turn(angle);
             this.forward(-length);
         }
-    },
-
-
-
-
-})
+    }
+});
 
 PenMorph.uber = Morph.prototype;
 PenMorph.className = 'PenMorph';
@@ -8455,7 +8460,7 @@ module.exports = PenMorph;
 
 
     
-},{"./Morph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Morph.js","./Point":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Point.js","./Rectangle":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Rectangle.js"}],"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Point.js":[function(require,module,exports){
+},{"./Morph":23,"./Point":27,"./Rectangle":29}],27:[function(require,module,exports){
 // Points //////////////////////////////////////////////////////////////
 
 var Point = Class.create({
@@ -8469,7 +8474,6 @@ var Point = Class.create({
         var a = this.constructor;
         return instanceOf(a, className);
     },
-
 
     // Point string representation: e.g. '12@68'
 
@@ -8753,18 +8757,18 @@ var Point = Class.create({
             return this;
         }
     }
-
-})
+});
 
 Point.className = 'Point';
 
 module.exports = Point;
-},{}],"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\PushButtonMorph.js":[function(require,module,exports){
+},{}],28:[function(require,module,exports){
 var Morph = require('./Morph');
 var Color = require('./Color');
 var Point = require('./Point');
 var StringMorph = require('./StringMorph');
 var SymbolMorph = require('./SymbolMorph');
+var TriggerMorph = require('./TriggerMorph');
 
 var PushButtonMoprhConfig = {
     FONT_SIZE: 10,
@@ -8776,16 +8780,12 @@ var PushButtonMoprhConfig = {
     PRESS_COLOR: new Color(115, 180, 240),
     OUTLINE_COLOR: new Color(30, 30, 30),
     OUTLINE_GRADIENT: false,
-    OUTLINE_COLOR: false,
     CONTRAST: 60,
     EDGE: 2,
     CORNER: 5,
     OUTLINE: 1.00001, 
-    PADDING: 3,
+    PADDING: 3
 };
-
-
-
 
 var PushButtonMorph = Class.create(TriggerMorph, {
 
@@ -8800,7 +8800,6 @@ var PushButtonMorph = Class.create(TriggerMorph, {
     labelColor: PushButtonMoprhConfig.LABEL_COLOR,
     labelShadowColor: PushButtonMoprhConfig.LABEL_SHADOW_COLOR,
     labelShadowOffset: PushButtonMoprhConfig.LABEL_SHADOW_COLOR_OFFSET,
-
     color: PushButtonMoprhConfig.COLOR,
     //color: "rgb(155, 102, 102)", 
     pressColor: PushButtonMoprhConfig.PRESS_COLOR,
@@ -8813,7 +8812,6 @@ var PushButtonMorph = Class.create(TriggerMorph, {
     corner: PushButtonMoprhConfig.CORNER,
     outline: PushButtonMoprhConfig.OUTLINE,
     padding: PushButtonMoprhConfig.PADDING,
-
 
     initialize: function(
         target,
@@ -8835,8 +8833,6 @@ var PushButtonMorph = Class.create(TriggerMorph, {
         );
     },
 
-
-
     init: function (
         target,
         action,
@@ -8855,14 +8851,14 @@ var PushButtonMorph = Class.create(TriggerMorph, {
         this.label = null;
         this.labelMinExtent = new Point(0, 0);
         this.hint = hint || null;
-        this.template = template || null; // for pre-computed backbrounds
+        this.template = template || null; // for pre-computed backgrounds
         // if a template is specified, its background images are used as cache
 
         // initialize inherited properties:
         // BUG? TYPO?
         TriggerMorph.uber.init.call(this);
 
-        // override inherited properites:
+        // override inherited properties:
         this.color = PushButtonMorph.prototype.color;
 
 
@@ -9355,18 +9351,14 @@ var PushButtonMorph = Class.create(TriggerMorph, {
             );
         }
         this.add(this.label);
-    },
-
-
-})
+    }
+});
 
 PushButtonMorph.uber = TriggerMorph.prototype;
 PushButtonMorph.className = 'PushButtonMorph';
 
 module.exports = PushButtonMorph;
-
-
-},{"./Color":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Color.js","./Morph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Morph.js","./Point":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Point.js","./StringMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\StringMorph.js","./SymbolMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\SymbolMorph.js"}],"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Rectangle.js":[function(require,module,exports){
+},{"./Color":9,"./Morph":23,"./Point":27,"./StringMorph":36,"./SymbolMorph":37,"./TriggerMorph":43}],29:[function(require,module,exports){
 Point = require('./Point');
 
 // Rectangles //////////////////////////////////////////////////////////
@@ -9664,15 +9656,12 @@ var Rectangle = Class.create({
     asArray_xywh: function () {
         return [this.left(), this.top(), this.width(), this.height()];
     }
-
-
-
-})
+});
 
 Rectangle.className = 'Rectangle';
 
 module.exports = Rectangle;
-},{"./Point":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Point.js"}],"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\ScrollFrameMorph.js":[function(require,module,exports){
+},{"./Point":27}],30:[function(require,module,exports){
 var FrameMorph = require('./FrameMorph');
 var SliderMorph = require('./SliderMorph');
 var Point = require('./Point');
@@ -10048,10 +10037,8 @@ var ScrollFrameMorph = Class.create(FrameMorph, {
 	toggleTextLineWrapping: function () {
 	    this.isTextLineWrapping = !this.isTextLineWrapping;
 	
-	},
-
-
-})
+	}
+});
 
 ScrollFrameMorph.uber = FrameMorph.prototype;
 ScrollFrameMorph.className = 'ScrollFrameMorph';
@@ -10061,7 +10048,7 @@ module.exports = ScrollFrameMorph;
 
 
 	
-},{"./FrameMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\FrameMorph.js","./Point":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Point.js","./SliderMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\SliderMorph.js"}],"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\ShadowMorph.js":[function(require,module,exports){
+},{"./FrameMorph":14,"./Point":27,"./SliderMorph":33}],31:[function(require,module,exports){
 var Morph = require('./Morph');
 
 var ShadowMorph = Class.create(Morph, {
@@ -10069,15 +10056,14 @@ var ShadowMorph = Class.create(Morph, {
 	initialize: function(){
 		this.init();
 	}
-
-})
+});
 
 ShadowMorph.uber = Morph.prototype;
 ShadowMorph.className = 'ShadowMorph';
 
 module.exports = ShadowMorph;
 
-},{"./Morph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Morph.js"}],"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\SliderButtonMorph.js":[function(require,module,exports){
+},{"./Morph":23}],32:[function(require,module,exports){
 var CircleBoxMorph = require('./CircleBoxMorph');
 var Color = require('./Color');
 
@@ -10288,9 +10274,8 @@ var SliderButtonMorph = Class.create(CircleBoxMorph, {
 	mouseMove: function () {
 	    // prevent my parent from getting picked up
 	    nop();
-	},
-
-})
+	}
+});
 
 SliderButtonMorph.uber = CircleBoxMorph.prototype;
 SliderButtonMorph.className = 'SliderButtonMorph';
@@ -10298,7 +10283,7 @@ SliderButtonMorph.className = 'SliderButtonMorph';
 module.exports = SliderButtonMorph;
 
 
-},{"./CircleBoxMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\CircleBoxMorph.js","./Color":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Color.js"}],"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\SliderMorph.js":[function(require,module,exports){
+},{"./CircleBoxMorph":7,"./Color":9}],33:[function(require,module,exports){
 var CircleBoxMorph = require('./CircleBoxMorph');
 var Color = require('./Color');
 var SliderButtonMorph = require('./SliderButtonMorph');
@@ -10660,18 +10645,15 @@ var SliderMorph = Class.create(CircleBoxMorph, {
 	            this.step = null;
 	        }
 	    };
-	},
-
-
-
-})
+	}
+});
 
 SliderMorph.uber = CircleBoxMorph.prototype;
 SliderMorph.className = 'SliderMorph';
 
 module.exports = SliderMorph;
 
-},{"./CircleBoxMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\CircleBoxMorph.js","./Color":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Color.js","./Point":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Point.js","./SliderButtonMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\SliderButtonMorph.js"}],"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\SpeechBubbleMorph.js":[function(require,module,exports){
+},{"./CircleBoxMorph":7,"./Color":9,"./Point":27,"./SliderButtonMorph":32}],34:[function(require,module,exports){
 var BoxMorph = require('./BoxMorph');
 var Morph = require('./Morph');
 var Point = require('./Point');
@@ -10972,10 +10954,8 @@ var SpeechBubbleMorph = Class.create(BoxMorph, {
         this.removeShadow();
         this.drawNew();
         this.addShadow(new Point(2, 2), 80);
-    },
-
-
-})
+    }
+});
 
 SpeechBubbleMorph.uber = BoxMorph.prototype;
 SpeechBubbleMorph.className = 'SpeechBubbleMorph';
@@ -10986,8 +10966,9 @@ module.exports = SpeechBubbleMorph;
 
 
     
-},{"./BoxMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\BoxMorph.js","./Color":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Color.js","./Morph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Morph.js","./Point":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Point.js","./TextMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\TextMorph.js"}],"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\StringFieldMorph.js":[function(require,module,exports){
+},{"./BoxMorph":6,"./Color":9,"./Morph":23,"./Point":27,"./TextMorph":39}],35:[function(require,module,exports){
 var FrameMorph = require('./FrameMorph');
+var Color = require('./Color');
 var Point = require('./Point');
 var StringMorph = require('./StringMorph');
 
@@ -11091,18 +11072,14 @@ var StringFieldMorph = Class.create(FrameMorph, {
 	        c.text = (dict[this.text]);
 	    }
 	    return c;
-	},
-
-
-})
+	}
+});
 
 StringFieldMorph.uber = FrameMorph.prototype;
 StringFieldMorph.className = 'StringFieldMorph';
 
 module.exports = StringFieldMorph;
-
-	
-},{"./FrameMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\FrameMorph.js","./Point":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Point.js","./StringMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\StringMorph.js"}],"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\StringMorph.js":[function(require,module,exports){
+},{"./Color":9,"./FrameMorph":14,"./Point":27,"./StringMorph":36}],36:[function(require,module,exports){
 var Morph = require('./Morph');
 var Color = require('./Color');
 var Point = require('./Point');
@@ -11647,18 +11624,14 @@ var StringMorph = Class.create(Morph, {
 	disableSelecting: function () {
 	    this.isSelectable = false;
 	    delete this.mouseMove;
-	},
-
-
-})
+	}
+});
 
 StringMorph.uber = Morph.prototype;
 StringMorph.className = 'StringMorph';
 
 module.exports = StringMorph;
-
-
-},{"./Color":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Color.js","./Morph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Morph.js","./Point":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Point.js"}],"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\SymbolMorph.js":[function(require,module,exports){
+},{"./Color":9,"./Morph":23,"./Point":27}],37:[function(require,module,exports){
 var Morph = require('./Morph');
 var Point = require('./Point');
 var Color = require('./Color');
@@ -12953,19 +12926,17 @@ var SymbolMorph = Class.create(Morph, {
         ctx.fill();
 
         return canvas;
-    },
-
-})
+    }
+});
 
 SymbolMorph.uber = Morph.prototype;
 SymbolMorph.className = 'SymbolMorph';
 
 module.exports = SymbolMorph;
-
-
-},{"./Color":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Color.js","./Morph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Morph.js","./Point":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Point.js"}],"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\TabMorph.js":[function(require,module,exports){
+},{"./Color":9,"./Morph":23,"./Point":27}],38:[function(require,module,exports){
 var ToggleButtonMorph = require('./ToggleButtonMorph');
 var Point = require('./Point');
+var StringMorph = require('./StringMorph');
 
 var TabMorph = Class.create(ToggleButtonMorph, {
     
@@ -13072,9 +13043,8 @@ var TabMorph = Class.create(ToggleButtonMorph, {
         context.lineTo(w - c * 2, eh);
         context.bezierCurveTo(w - c, 0, w - c, h, w, h + eh);
         context.stroke();
-    },
-
-})
+    }
+});
 
 TabMorph.uber = ToggleButtonMorph.prototype;
 TabMorph.className = 'TabMorph';
@@ -13086,11 +13056,12 @@ module.exports = TabMorph;
 
 
     
-},{"./Point":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Point.js","./ToggleButtonMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\ToggleButtonMorph.js"}],"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\TextMorph.js":[function(require,module,exports){
+},{"./Point":27,"./StringMorph":36,"./ToggleButtonMorph":40}],39:[function(require,module,exports){
 var Morph = require('./Morph');
 var Color = require('./Color');
 var Point = require('./Point');
 var StringMorph = require('./StringMorph');
+var Rectangle = require('./Rectangle');
 
 var TextMorph = Class.create(Morph, {
 
@@ -13608,8 +13579,8 @@ var TextMorph = Class.create(Morph, {
 	inspectIt: function (result, inspector) {
 	    // var result = this.receiver.evaluateString(this.selection()),
 	    //     
-	    var world = this.world(),
-	        inspector;
+	    var world = this.world();
+		// var inspector;
 	    if (isObject(result)) {
 	        // inspector = new InspectorMorph(result);
 	        inspector.setPosition(world.hand.position());
@@ -13617,23 +13588,19 @@ var TextMorph = Class.create(Morph, {
 	        world.add(inspector);
 	        inspector.changed();
 	    }
-	},
-
-
-
-})
+	}
+});
 
 TextMorph.uber = Morph.prototype;
 TextMorph.className = 'TextMorph';
 
 module.exports = TextMorph;
-
-
-},{"./Color":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Color.js","./Morph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Morph.js","./Point":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Point.js","./StringMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\StringMorph.js"}],"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\ToggleButtonMorph.js":[function(require,module,exports){
+},{"./Color":9,"./Morph":23,"./Point":27,"./Rectangle":29,"./StringMorph":36}],40:[function(require,module,exports){
 var PushButtonMorph = require('./PushButtonMorph');
 var Morph = require('./Morph');
 var StringMorph = require('./StringMorph');
 var SymbolMorph = require('./SymbolMorph');
+var Point = require('./Point');
 
 var ToggleButtonMorph = Class.create(PushButtonMorph, {
     // ToggleButtonMorph ///////////////////////////////////////////////////////
@@ -13673,8 +13640,6 @@ var ToggleButtonMorph = Class.create(PushButtonMorph, {
             isPicture
         );
     },
-
-
 
     init: function (
         $super, 
@@ -14056,20 +14021,14 @@ var ToggleButtonMorph = Class.create(PushButtonMorph, {
     show: function () {
         this.isVisible = true;
         this.changed();
-    },
-
-
-})
+    }
+});
 
 ToggleButtonMorph.uber = PushButtonMorph.prototype;
 ToggleButtonMorph.className = 'ToggleButtonMorph';
 
 module.exports = ToggleButtonMorph;
-
-
-
-
-},{"./Morph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Morph.js","./PushButtonMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\PushButtonMorph.js","./StringMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\StringMorph.js","./SymbolMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\SymbolMorph.js"}],"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\ToggleElementMorph.js":[function(require,module,exports){
+},{"./Morph":23,"./Point":27,"./PushButtonMorph":28,"./StringMorph":36,"./SymbolMorph":37}],41:[function(require,module,exports){
 var TriggerMorph = require('./TriggerMorph');
 var ToggleButtonMorph = require('./ToggleButtonMorph');
 var Point = require('./Point');
@@ -14229,9 +14188,8 @@ var ToggleElementMorph = Class.create(TriggerMorph, {
 
     mouseDownLeft: ToggleButtonMorph.prototype.mouseDownLeft,
 
-    mouseClickLeft: ToggleButtonMorph.prototype.mouseClickLeft,
-
-})
+    mouseClickLeft: ToggleButtonMorph.prototype.mouseClickLeft
+});
 
 ToggleElementMorph.uber = TriggerMorph.prototype;
 ToggleElementMorph.className = 'ToggleElementMorph';
@@ -14243,7 +14201,7 @@ module.exports = ToggleElementMorph;
 
 
 
-},{"./Color":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Color.js","./Point":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Point.js","./StringMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\StringMorph.js","./ToggleButtonMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\ToggleButtonMorph.js","./TriggerMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\TriggerMorph.js"}],"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\ToggleMorph.js":[function(require,module,exports){
+},{"./Color":9,"./Point":27,"./StringMorph":36,"./ToggleButtonMorph":40,"./TriggerMorph":43}],42:[function(require,module,exports){
 
 var PushButtonMorph = require('./PushButtonMorph');
 var Point = require('./Point');
@@ -14252,6 +14210,7 @@ var StringMorph = require('./StringMorph');
 var Morph = require('./Morph');
 var ToggleElementMorph = require('./ToggleElementMorph');
 var ToggleButtonMorph = require('./ToggleButtonMorph');
+var Color = frequire('./Color');
 
 var ToggleMorph = Class.create(PushButtonMorph, {
     
@@ -14501,22 +14460,14 @@ var ToggleMorph = Class.create(PushButtonMorph, {
 
     hide: ToggleButtonMorph.prototype.hide,
 
-    show: ToggleButtonMorph.prototype.show,
-
-
-})
+    show: ToggleButtonMorph.prototype.show
+});
 
 ToggleMorph.uber = PushButtonMorph.prototype;
 ToggleMorph.className = 'ToggleMorph';
 
 module.exports = ToggleMorph;
-
-
-
-    
-
-
-},{"./Morph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Morph.js","./Point":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Point.js","./PushButtonMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\PushButtonMorph.js","./StringMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\StringMorph.js","./TextMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\TextMorph.js","./ToggleButtonMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\ToggleButtonMorph.js","./ToggleElementMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\ToggleElementMorph.js"}],"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\TriggerMorph.js":[function(require,module,exports){
+},{"./Morph":23,"./Point":27,"./PushButtonMorph":28,"./StringMorph":36,"./TextMorph":39,"./ToggleButtonMorph":40,"./ToggleElementMorph":41}],43:[function(require,module,exports){
 
 var Morph = require('./Morph');
 var Color = require('./Color');
@@ -14780,17 +14731,14 @@ var TriggerMorph = Class.create(Morph, {
             null,
             1
         ).popUp(this.world(), this.rightCenter().add(new Point(-8, 0)));
-    },
-})
+    }
+});
 
 TriggerMorph.uber = Morph.prototype;
 TriggerMorph.className = 'TriggerMorph';
 
 module.exports = TriggerMorph;
-
-    
-
-},{"./Color":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Color.js","./Morph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Morph.js","./Point":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Point.js","./SpeechBubbleMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\SpeechBubbleMorph.js","./StringMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\StringMorph.js"}],"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\WorldMorph.js":[function(require,module,exports){
+},{"./Color":9,"./Morph":23,"./Point":27,"./SpeechBubbleMorph":34,"./StringMorph":36}],44:[function(require,module,exports){
 var Morph = require('./Morph');
 var FrameMorph = require('./FrameMorph');
 var Color = require('./Color');
@@ -14813,7 +14761,7 @@ var MouseSensorMorph = require('./MouseSensorMorph');
 var BouncerMorph = require('./BouncerMorph');
 var PenMorph = require('./PenMorph');
 var SliderMorph = require('./SliderMorph');
-
+var CursorMorph = require('./CursorMorph');
 
 var WorldMorph = Class.create(FrameMorph, {
 	
@@ -15757,18 +15705,14 @@ var WorldMorph = Class.create(FrameMorph, {
 		        new RingReporterSlotMorph(true)
 		    ];
 		*/
-	},
-
-})
+	}
+});
 
 WorldMorph.uber = FrameMorph.prototype;
 WorldMorph.className = 'WorldMorph';
 
 module.exports = WorldMorph;
-
-
-
-},{"./BouncerMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\BouncerMorph.js","./BoxMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\BoxMorph.js","./CircleBoxMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\CircleBoxMorph.js","./Color":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Color.js","./ColorPaletteMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\ColorPaletteMorph.js","./ColorPickerMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\ColorPickerMorph.js","./FrameMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\FrameMorph.js","./GrayPaletteMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\GrayPaletteMorph.js","./HandMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\HandMorph.js","./HandleMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\HandleMorph.js","./MenuMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\MenuMorph.js","./Morph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Morph.js","./MouseSensorMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\MouseSensorMorph.js","./PenMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\PenMorph.js","./Point":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Point.js","./Rectangle":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Rectangle.js","./ScrollFrameMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\ScrollFrameMorph.js","./SliderMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\SliderMorph.js","./SpeechBubbleMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\SpeechBubbleMorph.js","./StringMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\StringMorph.js","./TextMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\TextMorph.js"}],"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\main.js":[function(require,module,exports){
+},{"./BouncerMorph":5,"./BoxMorph":6,"./CircleBoxMorph":7,"./Color":9,"./ColorPaletteMorph":10,"./ColorPickerMorph":11,"./CursorMorph":12,"./FrameMorph":14,"./GrayPaletteMorph":15,"./HandMorph":16,"./HandleMorph":17,"./MenuMorph":22,"./Morph":23,"./MouseSensorMorph":24,"./PenMorph":26,"./Point":27,"./Rectangle":29,"./ScrollFrameMorph":30,"./SliderMorph":33,"./SpeechBubbleMorph":34,"./StringMorph":36,"./TextMorph":39}],45:[function(require,module,exports){
 (function (global){
 // morphic.js
 
@@ -15827,4 +15771,4 @@ global.Cloud = require('./Cloud');
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./AlignmentMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\AlignmentMorph.js","./ArrowMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\ArrowMorph.js","./BlinkerMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\BlinkerMorph.js","./BlockHighlightMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\BlockHighlightMorph.js","./BouncerMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\BouncerMorph.js","./BoxMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\BoxMorph.js","./CircleBoxMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\CircleBoxMorph.js","./Cloud":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Cloud.js","./Color":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Color.js","./ColorPaletteMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\ColorPaletteMorph.js","./ColorPickerMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\ColorPickerMorph.js","./CursorMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\CursorMorph.js","./DialogBoxMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\DialogBoxMorph.js","./FrameMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\FrameMorph.js","./GrayPaletteMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\GrayPaletteMorph.js","./HandMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\HandMorph.js","./HandleMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\HandleMorph.js","./InputFieldMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\InputFieldMorph.js","./InspectorMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\InspectorMorph.js","./MenuItemMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\MenuItemMorph.js","./MenuMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\MenuMorph.js","./Morph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Morph.js","./MouseSensorMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\MouseSensorMorph.js","./Node":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Node.js","./PenMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\PenMorph.js","./Point":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Point.js","./PushButtonMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\PushButtonMorph.js","./Rectangle":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\Rectangle.js","./ScrollFrameMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\ScrollFrameMorph.js","./ShadowMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\ShadowMorph.js","./SliderButtonMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\SliderButtonMorph.js","./SliderMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\SliderMorph.js","./SpeechBubbleMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\SpeechBubbleMorph.js","./StringFieldMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\StringFieldMorph.js","./StringMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\StringMorph.js","./SymbolMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\SymbolMorph.js","./TabMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\TabMorph.js","./TextMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\TextMorph.js","./ToggleButtonMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\ToggleButtonMorph.js","./ToggleElementMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\ToggleElementMorph.js","./ToggleMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\ToggleMorph.js","./TriggerMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\TriggerMorph.js","./WorldMorph":"C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\WorldMorph.js"}]},{},["C:\\Users\\Tang\\Source\\Repos\\CodeCraft\\public\\javascripts\\new\\main.js"]);
+},{"./AlignmentMorph":1,"./ArrowMorph":2,"./BlinkerMorph":3,"./BlockHighlightMorph":4,"./BouncerMorph":5,"./BoxMorph":6,"./CircleBoxMorph":7,"./Cloud":8,"./Color":9,"./ColorPaletteMorph":10,"./ColorPickerMorph":11,"./CursorMorph":12,"./DialogBoxMorph":13,"./FrameMorph":14,"./GrayPaletteMorph":15,"./HandMorph":16,"./HandleMorph":17,"./InputFieldMorph":18,"./InspectorMorph":19,"./MenuItemMorph":21,"./MenuMorph":22,"./Morph":23,"./MouseSensorMorph":24,"./Node":25,"./PenMorph":26,"./Point":27,"./PushButtonMorph":28,"./Rectangle":29,"./ScrollFrameMorph":30,"./ShadowMorph":31,"./SliderButtonMorph":32,"./SliderMorph":33,"./SpeechBubbleMorph":34,"./StringFieldMorph":35,"./StringMorph":36,"./SymbolMorph":37,"./TabMorph":38,"./TextMorph":39,"./ToggleButtonMorph":40,"./ToggleElementMorph":41,"./ToggleMorph":42,"./TriggerMorph":43,"./WorldMorph":44}]},{},[45]);
