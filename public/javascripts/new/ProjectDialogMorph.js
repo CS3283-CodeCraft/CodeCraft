@@ -26,7 +26,9 @@ var ProjectDialogMorph = Class.create(DialogBoxMorph, {
 
 	},
 
-	init: function(ide, task) {
+	init: function($super, ide, task) {
+		$super();
+
 		var myself = this;
 
 		// additional properties:
@@ -926,3 +928,8 @@ var ProjectDialogMorph = Class.create(DialogBoxMorph, {
 		this.changed();
 	}
 });
+
+ProjectDialogMorph.uber = DialogBoxMorph.prototype;
+ProjectDialogMorph.className = 'ProjectDialogMorph';
+
+modules.export = ProjectDialogMorph;
