@@ -3,6 +3,7 @@
  */
 
 var ToggleButtonMorph = require('./ToggleButtonMorph');
+var Point = require('./Point');
 var Color = require('./Color');
 var DialogBoxMorph = require('./DialogBoxMorph');
 var MenuMorph = require('./MenuMorph');
@@ -21,8 +22,15 @@ var MenuMorph = require('./MenuMorph');
 // ... and copies methods from SpriteIconMorph
 
 var CostumeIconMorph = Class.create(ToggleButtonMorph, {
-	initialize: function() {
+	//Member fields / settings
+	thumbSize: new Point(80, 60),
+	labelShadowOffset: null,
+	labelShadowColor: null,
+	labelColor: new Color(255, 255, 255),
+	fontSize: 9,
 
+	initialize: function(aCostume, aTemplate) {
+		this.init(aCostume, aTemplate);
 	},
 
 	init: function($super, aCostume, aTemplate) {
@@ -36,7 +44,6 @@ var CostumeIconMorph = Class.create(ToggleButtonMorph, {
 				IDE_Morph.prototype.frameColor,
 				IDE_Morph.prototype.frameColor
 			];
-
 		}
 
 		action = function () {

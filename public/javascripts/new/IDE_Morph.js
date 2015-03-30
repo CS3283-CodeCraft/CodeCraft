@@ -26,11 +26,13 @@ var AlignmentMorph = require('./AlignmentMorph');
 
 var IDE_Morph = Class.create(Morph, {
 
-	initialize: function() {
-
+	initialize: function(isAutoFill) {
+		this.init(isAutoFill);
 	},
 
 	init: function($super, isAutoFill) {
+		$super();
+
 		// global font setting
 		MorphicPreferences.globalFontFamily = 'Helvetica, Arial';
 
