@@ -26,20 +26,34 @@ var server = http.createServer(app);
  * Listen on provided port, on all network interfaces.
  */
 
+
 server.listen(port);
 server.on('error', onError);
 server.on('listening', onListening);
 
 var io = require('socket.io')(server);
 
-io.on('connection', function(socket){
+var clients = {}
+
+io.sockets.on('connection', function(socket){
 //    socket.on('send', function(data){
 //        socket.broadcast.emit('message', data.data);
 //    });
 
     socket.on('JOIN_SHAREBOX', function(data) {
+        var clientInfo = {
+            clientId: data.id,
+            socketId: socket.id
+        }
         socket.join(data.room);
-        console.log(data.id + "is joining " + data.room)
+        if(clients[data.room]){
+          clients[data.room].push(clientInfo);
+        } else {
+          clients[data.room] = [];
+          clients[data.room].push(clientInfo);
+        }
+        console.log(data.id + "is joining " + data.room);
+        console.log(clients);
     });
 
     socket.on('send', function(data) {
@@ -55,6 +69,11 @@ io.on('connection', function(socket){
       socket.join(data.room);
       console.log(data.id + "is joining " + data.room)
       socket.to(data.room).emit('NEW_MEMBER_JOINED', data);
+    })
+
+    socket.on('GET_MEMBERS', function(data){
+      console.log(clients[data.room])
+      socket.to(data.room).emit('UPDATE_MEMBERS', clients[data.room])
     })
 
 });

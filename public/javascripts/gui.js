@@ -1731,8 +1731,10 @@ IDE_Morph.makeSocket = function (myself, shareboxId) {
     })
 
     sharer.socket.on('INVITE_JOIN', function(data){
-        console.log("[SOCKET-RECEIVE] INVITE_JOIN: " + JSON.stringify(data));
-        myself.showRequestReceivedMessage(data);
+        if(data.inviteId == tempIdentifier){
+            myself.showRequestReceivedMessage(data);
+            console.log("[SOCKET-RECEIVE] INVITE_JOIN: " + JSON.stringify(data));
+        }
     })
 
     // When I receive data, I parse objectData and add it to my data list
@@ -2147,7 +2149,7 @@ IDE_Morph.prototype.showRequestReceivedMessage = function (inviteData) {
     // *****************************
     // screen 3: Request received
     // *****************************
-    console.log("showRequestReceivedMessage runned")
+
     var myself = this;
     var padding = 10;
 
@@ -2192,7 +2194,7 @@ IDE_Morph.prototype.showRequestReceivedMessage = function (inviteData) {
     this.requestReceivedScreen.add(requestReceivedLogo);
 
     // screen 3: Awaiting reply text
-    txt = new TextMorph("'marylim' would like to invite you to their collaboration group.");
+    txt = new TextMorph(inviteData.ownerId  + " would like to invite you to their collaboration group.");
 
     txt.setColor(SpriteMorph.prototype.paletteTextColor);
     txt.setPosition(new Point(this.stage.width() / 2 - txt.width() / 2, requestReceivedLogo.bottom() + padding));
@@ -2203,11 +2205,15 @@ IDE_Morph.prototype.showRequestReceivedMessage = function (inviteData) {
     acceptButton.setPosition(new Point(myself.stage.width() / 2 - acceptButton.width() - padding, txt.bottom() + padding));
     acceptButton.action = function () {
         console.log("Accept button pressed. Launch Sharebox.");
-        myself.showEntireShareBoxComponent(false);
+        
         var socketData = {id: tempIdentifier, room: inviteData.room}
-        myself.sharer.socket.emit('INVITE_ACCEPT',socketData);
-        myself.shareboxId = socketData.room;
+        
+        myself.sharer.socket.emit('INVITE_ACCEPT', socketData);
         console.log("[SOCKET-SEND] INVITE_ACCEPT: " + JSON.stringify(socketData))
+
+        myself.shareboxId = socketData.room;
+        myself.showEntireShareBoxComponent(false);
+        
     };
     this.requestReceivedScreen.add(acceptButton);
 
@@ -2324,66 +2330,82 @@ IDE_Morph.prototype.showViewMembersPopup = function() {
     var world = this.world();
     var popupWidth = 500;
     var popupHeight = 400;
+    var myself = this;
 
-    // these are just dummy lists and values.
-    // replace these values with actual sharebox group member data.
-    var showingToCreator = true; // creator view. you can delete members
-    var groupMembers = ["john_the_creator", "seraphim_undisputed", "tang_huan_song"]; // first member is creator!
-    var pendingMembers = ["chng_xinni", "zhang_yiwen"];
-    var groupMembersIsOnline = [true, false, true]; // stores whether each official member is online
+    // ask for members right now
+    var socketData = {room:shareboxId}
+    this.sharer.socket.emit('GET_MEMBERS', socketData);
+    console.log("[SOCKET-SEND] GET_MEMBERS: " + JSON.stringify(socketData));
+    this.sharer.socket.on('UPDATE_MEMBERS', function(data){
+        console.log("[SOCKET-RECEIVE] UPDATE_MEMBERS: " + JSON.stringify(data));
+
+        var pendingMembers = [];
+        for (var i = data.length - 1; i >= 0; i--) {
+            pendingMembers.push(data[i].clientId);
+        };
+
+        console.log(pendingMembers);
+        // these are just dummy lists and values.
+        // replace these values with actual sharebox group member data.
+        var showingToCreator = true; // creator view. you can delete members
+        var groupMembers = ["john_the_creator", "seraphim_undisputed", "tang_huan_song"]; // first member is creator!
+        var groupMembersIsOnline = [true, false, true]; // stores whether each official member is online
 
 
-    // set up the frames to contain the member list "viewMembersPopup" and "membersViewFrame"
-    if (this.viewMembersPopup) {
-        this.viewMembersPopup.destroy();
-    }
-    this.viewMembersPopup = new DialogBoxMorph();
-    this.viewMembersPopup.setExtent(new Point(popupWidth, popupHeight));
-
-    if (this.membersViewFrame) {
-        this.membersViewFrame.destroy();
-    }
-    this.membersViewFrame = new ScrollFrameMorph();
-    this.membersViewFrame.setColor(this.viewMembersPopup.color);
-    this.membersViewFrame.setExtent(new Point(640, 350));
-    this.membersViewFrame.setTop(this.viewMembersPopup.top() + 30);
-    this.membersViewFrame.setLeft(this.viewMembersPopup.left());
-    this.membersViewFrame.setWidth(this.viewMembersPopup.width());
-    this.membersViewFrame.drawNew();
-    this.viewMembersPopup.add(this.membersViewFrame);
-
-    // list group members
-    this.showGroupMemberTitle(groupMembers.length);
-    for (var i = 0; i < groupMembers.length; i++) {
-        if (i === 0) { // assumes first member is always the creator
-            this.showMemberRow(true, groupMembersIsOnline[i], groupMembers[i], i + 1, showingToCreator);
-        } else { // not creator, is normal member
-            this.showMemberRow(false, groupMembersIsOnline[i], groupMembers[i], i + 1, showingToCreator);
+        // set up the frames to contain the member list "viewMembersPopup" and "membersViewFrame"
+        if (myself.viewMembersPopup) {
+            myself.viewMembersPopup.destroy();
         }
-    }
+        myself.viewMembersPopup = new DialogBoxMorph();
+        myself.viewMembersPopup.setExtent(new Point(popupWidth, popupHeight));
 
-    // list pending group members
-    this.showPendingMemberTitle(pendingMembers.length, groupMembers.length);
-    for (var j = 0; j < pendingMembers.length; j++) {
-        this.showMemberRow(false, false, pendingMembers[j], j + groupMembers.length + 2, showingToCreator);
-    }
+        if (myself.membersViewFrame) {
+            myself.membersViewFrame.destroy();
+        }
+        myself.membersViewFrame = new ScrollFrameMorph();
+        myself.membersViewFrame.setColor(myself.viewMembersPopup.color);
+        myself.membersViewFrame.setExtent(new Point(640, 350));
+        myself.membersViewFrame.setTop(myself.viewMembersPopup.top() + 30);
+        myself.membersViewFrame.setLeft(myself.viewMembersPopup.left());
+        myself.membersViewFrame.setWidth(myself.viewMembersPopup.width());
+        myself.membersViewFrame.drawNew();
+        myself.viewMembersPopup.add(myself.membersViewFrame);
+
+        // list group members
+        myself.showGroupMemberTitle(groupMembers.length);
+        for (var i = 0; i < groupMembers.length; i++) {
+            if (i === 0) { // assumes first member is always the creator
+                myself.showMemberRow(true, groupMembersIsOnline[i], groupMembers[i], i + 1, showingToCreator);
+            } else { // not creator, is normal member
+                myself.showMemberRow(false, groupMembersIsOnline[i], groupMembers[i], i + 1, showingToCreator);
+            }
+        }
+
+        // list pending group members
+        myself.showPendingMemberTitle(pendingMembers.length, groupMembers.length);
+        for (var j = 0; j < pendingMembers.length; j++) {
+            myself.showMemberRow(false, false, pendingMembers[j], j + groupMembers.length + 2, showingToCreator);
+        }
 
 
-    // add close button
-    var button = new PushButtonMorph(null, null, "Close me", null, null, null, "green");
-    button.action = function() { myself.viewMembersPopup.cancel(); };
-    button.setCenter(this.viewMembersPopup.center());
-    button.setBottom(this.viewMembersPopup.bottom() - 10);
-    this.viewMembersPopup.add(button);
+        // add close button
+        var button = new PushButtonMorph(null, null, "Close me", null, null, null, "green");
+        button.action = function() { myself.viewMembersPopup.cancel(); };
+        button.setCenter(myself.viewMembersPopup.center());
+        button.setBottom(myself.viewMembersPopup.bottom() - 10);
+        myself.viewMembersPopup.add(button);
 
-    // add title
-    this.viewMembersPopup.labelString = "View Sharebox Members";
-    this.viewMembersPopup.createLabel();
+        // add title
+        myself.viewMembersPopup.labelString = "View Sharebox Members";
+        myself.viewMembersPopup.createLabel();
 
-    // popup the popup
-    this.viewMembersPopup.drawNew();
-    this.viewMembersPopup.fixLayout();
-    this.viewMembersPopup.popUp(world);
+        // popup the popup
+        myself.viewMembersPopup.drawNew();
+        myself.viewMembersPopup.fixLayout();
+        myself.viewMembersPopup.popUp(world);
+    })
+
+    
 };
 
 IDE_Morph.prototype.showGroupMemberTitle = function(numberOfGroupMembers) {
@@ -2622,8 +2644,8 @@ IDE_Morph.prototype.showAddMemberPopup = function() {
             var result = "success"
             if (result === "success") {
                 socketData = { room: myself.shareboxId, inviteUser: username};
-                myself.sharer.socket.emit('ADD_USER', { room: myself.shareboxId, inviteUser: username});
-                console.log("[SOCKET-SEND] ADD_USER: " + socketData);
+                myself.sharer.socket.emit('ADD_USER', { room: myself.shareboxId, inviteId: username, ownerId: tempIdentifier});
+                console.log("[SOCKET-SEND] ADD_USER: " + JSON.stringify(socketData));
                 myself.addMemberPopup.cancel();
                 myself.showAddMemberSuccessPopup(username);
             } else { // return result as any of the following:
