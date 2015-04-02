@@ -165,12 +165,16 @@ var DialogBoxMorph = Class.create(Morph, {
                     //    }
                     //);
                 //}
-				
-				sprite.setWidth(100);
-				sprite.setHeight(100);
-				
 				var imagetoshow = new Image();
 				imagetoshow.src = line.url;
+				imagetoshow.width = 100;
+				imagetoshow.height = 100;
+				
+				sprite.setWidth(100);
+				
+				sprite.setHeight(100);
+				
+				
 				sprite.image = imagetoshow;
 				sprite.name = line.name;
 				//debugger;
