@@ -6,7 +6,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
 var routes = require('./routes/index');
-var users = require('./routes/users');
+var test = require('./routes/test');
 var shareboxApi = require('./routes/shareboxApi');
 var libraryApi = require('./routes/libraryApi');
 
@@ -27,7 +27,7 @@ app.use(require('stylus').middleware(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
-app.use('/users', users);
+app.use('/test', test);
 app.use('/api/sharebox', shareboxApi)
 app.use('/api/library', libraryApi)
 
