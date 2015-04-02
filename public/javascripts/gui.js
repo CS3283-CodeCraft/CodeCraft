@@ -2120,11 +2120,9 @@ IDE_Morph.prototype.showRequestReceivedMessage = function (inviteData) {
     this.requestReceivedScreen = new FrameMorph();
     this.requestReceivedScreen.color = this.shareBoxConnect.color;
 
-    // add to shareBoxConnect
-    if (this.shareBoxConnect) {
-        this.shareBoxConnect.addContents(this.requestReceivedScreen);
-    } else {
-        console.log("Tried to show request received in non existing sharebox");
+    // delete new group screen
+    if (this.newGroupScreen) {
+        this.newGroupScreen.destroy();
     }
 
     // screen 3: Awaiting reply logo
@@ -2174,6 +2172,13 @@ IDE_Morph.prototype.showRequestReceivedMessage = function (inviteData) {
         myself.requestReceivedScreen.hide();
     };
     this.requestReceivedScreen.add(rejectButton);
+
+    // add to shareBoxConnect
+    if (this.shareBoxConnect) {
+        this.shareBoxConnect.addContents(this.requestReceivedScreen);
+    } else {
+        console.log("Tried to show request received in non existing sharebox");
+    }
 
     //to be deleted later
     var socketData = {id: tempIdentifier, room: inviteData.room}
