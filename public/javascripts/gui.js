@@ -2023,10 +2023,7 @@ IDE_Morph.prototype.showEntireShareBoxComponent = function() {
 
     console.log("sharebox about to be created. previous screens destroyed.");
 
-    // create title bar buttons
-    if (!this.shareBoxTitleBarButtons) {
-        this.createShareBoxTitleBarButtons();
-    }
+
 
     // create share box
     myself = this;
@@ -2034,6 +2031,8 @@ IDE_Morph.prototype.showEntireShareBoxComponent = function() {
         myself.shareboxId = prompt("sharebox id?", data.data[0].id);
         console.log("show entire share box");
         myself.createShareBoxBar();
+        // create title bar buttons
+        myself.createShareBoxTitleBarButtons();
         myself.createShareBox(shareboxId);
         myself.fixLayout();
 
