@@ -83,6 +83,8 @@ var WardrobeMorph;
 var SoundIconMorph;
 var JukeboxMorph;
 
+var ScriptIconMorph;
+var ShareBoxScriptsMorph;
 var ShareBoxAssetsMorph;
 
 var currentPage = 1;
@@ -202,6 +204,7 @@ IDE_Morph.prototype.init = function (isAutoFill) {
     this.globalVariables = new VariableFrame();
     this.currentSprite = new SpriteMorph(this.globalVariables);
     this.shareBoxPlaceholderSprite = new SpriteMorph(this.globalVariables);
+    this.shareBoxPlaceholderSprite.scripts = [];
     this.sprites = new List([this.currentSprite]);
     this.currentCategory = 'motion';
     this.currentTab = 'scripts';
@@ -8718,3 +8721,285 @@ ShareBoxAssetsMorph.prototype.reactToDropOf = function (icon) {
         icon.destroy();
     }
 };
+<<<<<<< HEAD
+=======
+
+
+
+// ShareBoxScriptsMorph ///////////////////////////////////////////////////////
+
+// I am a watcher on the Sharebox for shared costumes
+
+// ShareBoxScriptsMorph inherits from WardrobeMorph
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// ScriptIconMorph ///////////////////////////////////////////////////////
+
+/*
+ I am a script in the sharebox scripts
+ */
+
+// ScriptIconMorph inherits from ToggleButtonMorph (Widgets)
+// ... and copies methods from SpriteIconMorph
+
+ScriptIconMorph.prototype = new ToggleButtonMorph();
+ScriptIconMorph.prototype.constructor = ScriptIconMorph;
+ScriptIconMorph.uber = ToggleButtonMorph.prototype;
+ScriptIconMorph.className = 'ScriptIconMorph';
+// ScriptIconMorph settings
+
+ScriptIconMorph.prototype.thumbSize = new Point(80, 60);
+ScriptIconMorph.prototype.labelShadowOffset = null;
+ScriptIconMorph.prototype.labelShadowColor = null;
+ScriptIconMorph.prototype.labelColor = new Color(255, 255, 255);
+ScriptIconMorph.prototype.fontSize = 9;
+
+// ScriptIconMorph instance creation:
+
+function ScriptIconMorph(aScript, aTemplate) {
+    this.init(aScript, aTemplate);
+}
+
+ScriptIconMorph.prototype.init = function (aScript, aTemplate) {
+    var colors, action, query;
+
+    if (!aTemplate) {
+        colors = [
+            IDE_Morph.prototype.groupColor,
+            IDE_Morph.prototype.frameColor,
+            IDE_Morph.prototype.frameColor
+        ];
+
+    }
+
+    action = function () {
+        nop(); // When I am selected (which is never the case for sounds)
+    };
+
+    query = function () {
+        return false;
+    };
+
+    // additional properties:
+    this.object = aScript; // mandatory, actually
+    this.version = this.object.version;
+    this.thumbnail = null;
+
+    // initialize inherited properties:
+    ScriptIconMorph.uber.init.call(
+        this,
+        colors, // color overrides, <array>: [normal, highlight, pressed]
+        null, // target - not needed here
+        action, // a toggle function
+        this.object.name, // label string
+        query, // predicate/selector
+        null, // environment
+        null, // hint
+        aTemplate // optional, for cached background images
+    );
+
+    // override defaults and build additional components
+    this.isDraggable = true;
+    this.createThumbnail();
+    this.padding = 2;
+    this.corner = 8;
+    this.fixLayout();
+    this.fps = 1;
+};
+
+ScriptIconMorph.prototype.createThumbnail = function () {
+    var label;
+    if (this.thumbnail) {
+        this.thumbnail.destroy();
+    }
+    this.thumbnail = new Morph();
+    this.thumbnail.setExtent(this.thumbSize);
+    this.add(this.thumbnail);
+};
+
+// ScriptIconMorph stepping
+
+/*
+ ScriptIconMorph.prototype.step
+ = SpriteIconMorph.prototype.step;
+ */
+
+// ScriptIconMorph layout
+
+ScriptIconMorph.prototype.fixLayout
+    = SpriteIconMorph.prototype.fixLayout;
+
+// ScriptIconMorph menu
+
+ScriptIconMorph.prototype.userMenu = function () {
+    var menu = new MenuMorph(this);
+    if (!(this.object instanceof Sound)) {
+        return null;
+    }
+    menu.addItem('rename', 'renameSound');
+    menu.addItem('delete', 'removeSound');
+    return menu;
+};
+
+
+ScriptIconMorph.prototype.renameSound = function () {
+    var sound = this.object,
+        ide = this.parentThatIsA('IDE_Morph'),
+        myself = this;
+    (new DialogBoxMorph(
+        null,
+        function (answer) {
+            if (answer && (answer !== sound.name)) {
+                sound.name = answer;
+                sound.version = Date.now();
+                myself.createLabel(); // can be omitted once I'm stepping
+                myself.fixLayout(); // can be omitted once I'm stepping
+                ide.hasChangedMedia = true;
+            }
+        }
+    )).prompt(
+        'rename sound',
+        sound.name,
+        this.world()
+    );
+};
+
+// NEED TO CHANGE THIS
+ScriptIconMorph.prototype.removeSound = function () {
+    var jukebox = this.parentThatIsA('ShareBoxScriptsMorph'),
+        idx = this.parent.children.indexOf(this);
+    jukebox.removeSound(idx);
+};
+
+ScriptIconMorph.prototype.createBackgrounds
+    = SpriteIconMorph.prototype.createBackgrounds;
+
+ScriptIconMorph.prototype.createLabel
+    = SpriteIconMorph.prototype.createLabel;
+
+// ScriptIconMorph drag & drop
+
+ScriptIconMorph.prototype.prepareToBeGrabbed = function () {
+    this.removeScript();
+};
+
+// ShareBoxScriptsMorph /////////////////////////////////////////////////////
+
+/*
+ I am ShareBoxScriptsMorph, like WardrobeMorph, but for sounds
+ */
+
+// ShareBoxScriptsMorph instance creation
+
+ShareBoxScriptsMorph.prototype = new ScrollFrameMorph();
+ShareBoxScriptsMorph.prototype.constructor = ShareBoxScriptsMorph;
+ShareBoxScriptsMorph.uber = ScrollFrameMorph.prototype;
+ShareBoxScriptsMorph.className = 'ShareBoxScriptsMorph';
+
+function ShareBoxScriptsMorph(aSprite, sliderColor) {
+    this.init(aSprite, sliderColor);
+}
+
+ShareBoxScriptsMorph.prototype.init = function (aSprite, sliderColor) {
+    // additional properties
+    this.sprite = aSprite || new SpriteMorph();
+    this.costumesVersion = null;
+    this.spriteVersion = null;
+
+    // initialize inherited properties
+    ShareBoxScriptsMorph.uber.init.call(this, null, null, sliderColor);
+
+    // configure inherited properties
+    this.acceptsDrops = false;
+    this.fps = 2;
+    this.updateList();
+};
+
+// Jukebox updating
+
+ShareBoxScriptsMorph.prototype.updateList = function () {
+    var myself = this,
+        x = this.left() + 5,
+        y = this.top() + 5,
+        padding = 4,
+        oldFlag = Morph.prototype.trackChanges,
+        icon,
+        template,
+        txt;
+
+    this.changed();
+    oldFlag = Morph.prototype.trackChanges;
+    Morph.prototype.trackChanges = false;
+
+    this.contents.destroy();
+    this.contents = new FrameMorph(this);
+    this.contents.acceptsDrops = false;
+    this.contents.reactToDropOf = function (icon) {
+        myself.reactToDropOf(icon);
+    };
+    this.addBack(this.contents);
+
+    this.sprite.scripts.asArray().forEach(function (script) {
+        template = icon = new ScriptIconMorph(script, template);
+        icon.setPosition(new Point(x, y));
+        myself.addContents(icon);
+        y = icon.bottom() + padding;
+    });
+
+    Morph.prototype.trackChanges = oldFlag;
+    this.changed();
+
+    this.updateSelection();
+};
+
+ShareBoxScriptsMorph.prototype.updateSelection = function () {
+    this.contents.children.forEach(function (morph) {
+        if (morph.refresh) {
+            morph.refresh();
+        }
+    });
+    this.spriteVersion = this.sprite.version;
+};
+
+// Scriptbox ops
+
+// Fix this remove
+ShareBoxScriptsMorph.prototype.removeScript = function (idx) {
+    this.sprite.scripts.remove(idx);
+    this.updateList();
+};
+
+// Jukebox drag & drop
+
+ShareBoxScriptsMorph.prototype.wantsDropOf = function (morph) {
+    return morph instanceof ScriptIconMorph;
+};
+
+// Fix this add
+ShareBoxScriptsMorph.prototype.reactToDropOf = function (icon) {
+    var idx = 0,
+        script = icon.object,
+        top = icon.top();
+
+    icon.destroy();
+    this.contents.children.forEach(function (item) {
+        if (item.top() < top - 4) {
+            idx += 1;
+        }
+    });
+    this.sprite.scripts.add(script, idx);
+    this.updateList();
+};
+>>>>>>> origin/master

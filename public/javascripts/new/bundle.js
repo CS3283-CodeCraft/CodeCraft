@@ -15821,6 +15821,15 @@ global.BlockHighlightMorph = require('./BlockHighlightMorph');
 global.SymbolMorph = require('./SymbolMorph');
 
 // gui.js
+/*global.IDE_Morph = require('./IDE_Morph');
+global.ProjectDialogMorph = require('./ProjectDialogMorph');
+global.SpriteIconMorph = require('./SpriteIconMorph');
+global.TurtleIconMorph = require('./TurtleIconMorph');
+global.CostumeIconMorph = require('./CostumeIconMorph');
+global.WardrobeMorph = require('./WardrobeMorph');
+global.JukeboxMorph = require('./JukeboxMorph');
+global.ShareBoxAssetsMorph = require('./ShareBoxAssetsMorph');
+*/
 
 // cloud.js
 global.Cloud = require('./Cloud');
