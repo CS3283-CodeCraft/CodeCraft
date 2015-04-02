@@ -7,8 +7,8 @@ router.get('/', function(req, res) {
 	res.render('index', { title: 'Express' });
 });
 
-router.get('/hello', function(req, res) {
-	res.send("hello world");
+router.get('/socket', function(req, res) {
+	res.render('socketCtrl', { title: 'Express' });
 })
 
 

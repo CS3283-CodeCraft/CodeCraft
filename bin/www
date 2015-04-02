@@ -53,6 +53,7 @@ io.on('connection', function(socket){
 
     socket.on('INVITE_ACCEPT', function(data){
       socket.join(data.room);
+      console.log(data.id + "is joining " + data.room)
       socket.to(data.room).emit('NEW_MEMBER_JOINED', data);
     })
 
