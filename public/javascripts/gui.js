@@ -1688,7 +1688,7 @@ function drawShareBoxPrototypeUsingImage(myself, image) {
     sharebox.setLeft(this.stage.width() / 2 - sharebox.width() / 2);
     sharebox.setTop(-2);
     return sharebox;
-}
+};
 
 function buildInvisibleButton(action, point, left, top) {
     var button = new TriggerMorph(
@@ -1700,7 +1700,7 @@ function buildInvisibleButton(action, point, left, top) {
     button.setTop(top);
     button.setAlphaScaled(0);
     return button;
-}
+};
 
 // Tang Huan Song: I'll be Morphing this prototype function slowly into the fully-functional function (puns intended)
 
@@ -1728,12 +1728,12 @@ IDE_Morph.makeSocket = function (myself, shareboxId) {
 
     sharer.socket.on('NEW_MEMBER_JOINED', function(data) {
         console.log("[SOCKET-RECEIVE] NEW_MEMBER_JOINED: " + JSON.stringify(data))
-    })
+    });
 
     sharer.socket.on('INVITE_JOIN', function(data){
         console.log("[SOCKET-RECEIVE] INVITE_JOIN: " + JSON.stringify(data));
         myself.showRequestReceivedMessage(data);
-    })
+    });
 
     // When I receive data, I parse objectData and add it to my data list
     sharer.socket.on('message', function (objectData) {
@@ -1752,10 +1752,9 @@ IDE_Morph.makeSocket = function (myself, shareboxId) {
         for (var i = 0; i < this.data.items.length; i++) {
             var shareObject = sharer.getObject(this.data.items[i].xml);
             if (shareObject instanceof CostumeIconMorph) {
-                costume_idx += 1;
-                shareBoxPlaceholderSprite.costumes.add(shareObject.object, costume_idx);
+                shareBoxPlaceholderSprite.addCostume(shareObject.object);
             } else if (shareObject instanceof SoundIconMorph) {
-                shareBoxPlaceholderSprite.sounds.push(shareObject.object);
+                shareBoxPlaceholderSprite.addSound(shareObject.object, shareObject.name);
             }
             shareObject.destroy();
         }
@@ -1769,7 +1768,7 @@ IDE_Morph.makeSocket = function (myself, shareboxId) {
     
     
     return sharer;
-}
+};
 
 
 // xinni: shows the whole share box and hide the connection screens and tabs
@@ -1871,7 +1870,7 @@ IDE_Morph.prototype.destroyShareBox = function() {
     this.createShareBoxConnect();
     this.showNewGroupScreen();
     this.fixLayout();
-}
+};
 
 IDE_Morph.prototype.createShareAssetsBox = function () {
     // Initialization of ShareAssetsBox and its default behavior

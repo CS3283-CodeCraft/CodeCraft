@@ -51,6 +51,7 @@ ShareBoxItemSharer.prototype.shareObject = function (room, shareItem, shareName)
         var string = { room: room, data: objectData };
         this.socket.emit('send', string);
         console.log("send:" + string);
+        this.ide.shareBoxPlaceholderSprite.addCostume(shareItem.object);
     }
 };
 
