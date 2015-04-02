@@ -37,7 +37,7 @@ io.on('connection', function(socket){
 //        socket.broadcast.emit('message', data.data);
 //    });
 
-    socket.on('CREATE_SHAREBOX', function(data) {
+    socket.on('JOIN_SHAREBOX', function(data) {
         socket.join(data.room);
         console.log(data.id + "is joining " + data.room)
     });

@@ -427,7 +427,6 @@ IDE_Morph.prototype.buildPanes = function () {
     this.createShareBoxConnectBar();
     this.createShareBoxConnect();
     this.showNewGroupScreen();
-    
 };
 
 IDE_Morph.prototype.createLogo = function () {
@@ -1734,7 +1733,6 @@ IDE_Morph.makeSocket = function (myself, shareboxId) {
     sharer.socket.on('INVITE_JOIN', function(data){
         console.log("[SOCKET-RECEIVE] INVITE_JOIN: " + JSON.stringify(data));
         myself.showRequestReceivedMessage(data);
-
     })
 
     // When I receive data, I parse objectData and add it to my data list
@@ -1799,8 +1797,8 @@ IDE_Morph.prototype.createShareBox = function () {
     var sharer = this.sharer;
     // join the room that was created
     var socketData = {id: tempIdentifier, room: room }
-    sharer.socket.emit('CREATE_SHAREBOX', socketData);
-    console.log("[SOCKET-SEND] CREATE_SHAREBOX: " + JSON.stringify(socketData));
+    sharer.socket.emit('JOIN_SHAREBOX', socketData);
+    console.log("[SOCKET-SEND] JOIN_SHAREBOX: " + JSON.stringify(socketData));
 
 
     if (this.currentShareBoxTab === 'scripts') {
@@ -1851,7 +1849,6 @@ IDE_Morph.prototype.createShareBox = function () {
         this.add(this.shareBox);
     }
 
-    console.log("sharebox created with id " + shareboxId)
 
 };
 
@@ -2013,7 +2010,7 @@ IDE_Morph.prototype.createShareBoxConnect = function () {
 
 
 // xinni: shows sharebox and title bar buttons (settings and add)
-IDE_Morph.prototype.showEntireShareBoxComponent = function() {
+IDE_Morph.prototype.showEntireShareBoxComponent = function(isOwner) {
 
     console.log("showEntireShareBoxComponent triggered.");
 
@@ -2032,26 +2029,41 @@ IDE_Morph.prototype.showEntireShareBoxComponent = function() {
     }
 
     console.log("sharebox about to be created. previous screens destroyed.");
-
-
-
-    // create share box
     myself = this;
-    SnapCloud.createSharebox(tempIdentifier, function(data) {
-        myself.shareboxId = prompt("sharebox id?", data.data[0].id);
+
+    if(isOwner){
+
+        // create share box
+        SnapCloud.createSharebox(tempIdentifier, function(data) {
+            myself.shareboxId = prompt("sharebox id?", data.data[0].id);
+            console.log("show entire share box");
+            myself.createShareBoxBar();
+            // create title bar buttons
+            myself.createShareBoxTitleBarButtons();
+            myself.createShareBox();
+            myself.fixLayout();
+
+            var txt = new TextMorph(data.data[0].id.toString());
+            txt.setColor(SpriteMorph.prototype.paletteTextColor);
+            txt.setPosition(new Point(5, 5));
+            txt.show();
+            myself.shareBox.add(txt);
+        });
+    } else {
+        
         console.log("show entire share box");
         myself.createShareBoxBar();
         // create title bar buttons
         myself.createShareBoxTitleBarButtons();
-        myself.createShareBox(shareboxId);
+        myself.createShareBox();
         myself.fixLayout();
 
-        var txt = new TextMorph(data.data[0].id.toString());
+        var txt = new TextMorph(myself.shareboxId);
         txt.setColor(SpriteMorph.prototype.paletteTextColor);
         txt.setPosition(new Point(5, 5));
         txt.show();
         myself.shareBox.add(txt);
-    });
+    }
 };
 
 
@@ -2122,7 +2134,7 @@ IDE_Morph.prototype.showNewGroupScreen = function() {
      groupButton.setPosition(new Point(this.stage.width() / 2 - groupButton.width() / 2, txt.bottom() + padding));
      groupButton.action = function() {
      console.log("Creating a new group and initializing a new session.");
-        myself.showEntireShareBoxComponent();
+        myself.showEntireShareBoxComponent(true);
      }
      this.newGroupScreen.add(groupButton);
 
@@ -2190,7 +2202,7 @@ IDE_Morph.prototype.showRequestReceivedMessage = function (inviteData) {
     acceptButton.setPosition(new Point(myself.stage.width() / 2 - acceptButton.width() - padding, txt.bottom() + padding));
     acceptButton.action = function () {
         console.log("Accept button pressed. Launch Sharebox.");
-        this.showEntireShareBoxComponent();
+        this.showEntireShareBoxComponent(false);
     };
     this.requestReceivedScreen.add(acceptButton);
 
@@ -2209,14 +2221,17 @@ IDE_Morph.prototype.showRequestReceivedMessage = function (inviteData) {
     this.shareBoxConnect.addContents(this.requestReceivedScreen);
 
 
+    // show the screen.
+    this.requestReceivedScreen.show();
+    this.shareBoxConnect.drawNew();
+
     //to be deleted later
     var socketData = {id: tempIdentifier, room: inviteData.room}
 
     myself.sharer.socket.emit('INVITE_ACCEPT',socketData);
+    myself.shareboxId = socketData.room;
     console.log("[SOCKET-SEND] INVITE_ACCEPT: " + JSON.stringify(socketData))
-    // show the screen.
-    this.requestReceivedScreen.show();
-    this.shareBoxConnect.drawNew();
+    this.showEntireShareBoxComponent(false);
 
 };
 
