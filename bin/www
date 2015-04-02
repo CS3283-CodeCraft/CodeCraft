@@ -44,6 +44,7 @@ io.on('connection', function(socket){
 
     socket.on('send', function(data) {
         socket.broadcast.emit('message', data.data);
+        console.log("send received" + socket.id)
     });
 
 });
