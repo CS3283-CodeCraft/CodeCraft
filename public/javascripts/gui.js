@@ -190,6 +190,7 @@ function IDE_Morph(isAutoFill) {
 IDE_Morph.prototype.init = function (isAutoFill) {
     // global font setting
 
+
     MorphicPreferences.globalFontFamily = 'Helvetica, Arial';
 
     // restore saved user preferences
@@ -426,6 +427,7 @@ IDE_Morph.prototype.buildPanes = function () {
     this.createShareBoxConnectBar();
     this.createShareBoxConnect();
     this.showNewGroupScreen();
+    
 };
 
 IDE_Morph.prototype.createLogo = function () {
@@ -1713,9 +1715,14 @@ IDE_Morph.makeSocket = function (myself, shareboxId) {
         ide = this,
         socket = io();
 
-    console.log(socket);
+    console.log(myself);
+    console.log(ide);
+
+    
 
     var sharer = new ShareBoxItemSharer(serializer, ide, socket);
+
+
 
     //sharer.socket.emit('join', {id: tempIdentifier, room: room });
     //console.log(tempIdentifier +": join room " + room);
@@ -1760,6 +1767,9 @@ IDE_Morph.makeSocket = function (myself, shareboxId) {
         myself.spriteEditor.updateList();
         myself.spriteEditor.changed();
     }.bind(sharer));
+
+    
+    
     return sharer;
 }
 
@@ -2111,7 +2121,7 @@ IDE_Morph.prototype.showNewGroupScreen = function() {
      groupButton.setPosition(new Point(this.stage.width() / 2 - groupButton.width() / 2, txt.bottom() + padding));
      groupButton.action = function() {
      console.log("Creating a new group and initializing a new session.");
-     myself.showEntireShareBoxComponent();
+        myself.showEntireShareBoxComponent();
      }
      this.newGroupScreen.add(groupButton);
 
@@ -2124,8 +2134,11 @@ IDE_Morph.prototype.showRequestReceivedMessage = function (inviteData) {
     // *****************************
     // screen 3: Request received
     // *****************************
+    console.log("showRequestReceivedMessage runned")
     var myself = this;
     var padding = 10;
+
+
 
     // init screen
     if (this.requestReceivedScreen) {
@@ -2204,6 +2217,7 @@ IDE_Morph.prototype.showRequestReceivedMessage = function (inviteData) {
     // show the screen.
     this.requestReceivedScreen.show();
     this.shareBoxConnect.drawNew();
+
 };
 
 // xinni: Show this when a sharebox session exists but there are no scripts added yet
