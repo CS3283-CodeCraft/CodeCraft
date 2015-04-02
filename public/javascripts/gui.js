@@ -2065,10 +2065,14 @@ IDE_Morph.prototype.showNewGroupScreen = function() {
      // screen 1: CREATE A NEW GROUP
      // *****************************
 
-     // init screen
-     if (this.newGroupScreen) {
-     this.newGroupScreen.destroy();
-     }
+    // init screen
+    if (this.newGroupScreen) {
+      this.newGroupScreen.destroy();
+    }
+
+    if (this.requestReceivedScreen) {
+        this.requestReceivedScreen.destroy();
+    }
 
      this.newGroupScreen = new FrameMorph();
      this.newGroupScreen.color = this.shareBoxConnect.color;
@@ -2178,6 +2182,7 @@ IDE_Morph.prototype.showRequestReceivedMessage = function (inviteData) {
     rejectButton.setPosition(new Point(myself.stage.width() / 2 + padding, txt.bottom() + padding));
     rejectButton.action = function () {
         console.log("Reject button pressed. Back to Create group screen.");
+        this.showNewGroupScreen();
         myself.newGroupScreen.show();
         myself.requestReceivedScreen.hide();
     };
