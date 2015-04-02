@@ -125,11 +125,96 @@ var DialogBoxMorph = Class.create(Morph, {
     createImage: function (
         spriteCreator,
         spacelength,
-        spaceheight){
+        spaceheight,
+		myself){
+		var sprite = new SpriteMorph(new Image());
+		
+		var mine = this;
+		//------------------------------------------
+		var dir = 'api/library/costumes',
+                names = myself.getCostumesList(dir),
+				i = 0;
+                //libMenu = new MenuMorph(
+                //    myself,
+                //        localize('Import') + ' ' + localize(dir)
+                //);
+
+            function loadCostume(name) {
+                //var url = dir + '/' + name,
+				var url = name,
+                    img = new Image();
+                img.onload = function () {
+                    var canvas = newCanvas(new Point(img.width, img.height));
+                    canvas.getContext('2d').drawImage(img, 0, 0);
+                    myself.droppedImage(canvas, name);
+                };
+                img.src = url;
+				
+            }
+			
+			//debugger;
+            names.forEach(function (line) {
+				sprite = spriteCreator();
+				//console.log(line.length);
+				//debugger;
+                //if (line.length > 0) {
+                    //libMenu.addItem(
+                    //    line.name,
+                    //    function () {
+                    //        loadCostume(line.url);
+                    //    }
+                    //);
+                //}
+				var imagetoshow = new Image();
+				imagetoshow.src = line.url;
+				imagetoshow.width = 100;
+				imagetoshow.height = 100;
+				
+				sprite.setWidth(100);
+				
+				sprite.setHeight(100);
+				
+				
+				sprite.image = imagetoshow;
+				sprite.name = line.name;
+				//debugger;
+				
+				sprite.setPosition(new Point(spacelength + (i%5)*150, spaceheight + Math.floor(i/5) * 180));
+				sprite.isDraggable = false;
+            
+				mine.add(sprite);
+				
+				var buttonforadding;		//button to add sprite
+				buttonforadding = new PushButtonMorph(
+					this,
+					function () {
+						loadCostume(line.url);
+						//myself.sprites.add(sprite);
+						//myself.corral.addSprite(sprite);
+					},
+					"+",
+					null,
+					null,
+					null,
+					'show green button'
+				);
+				buttonforadding.setWidth(70);
+				buttonforadding.setHeight(70);
+
+				buttonforadding.setPosition(new Point(spacelength + (i%5)*150, spaceheight + Math.floor(i/5) * 180));
+
+				mine.add(buttonforadding);
+				
+				i++;
+				
+            });
+            //libMenu.popup(world, pos);
+		//------------------------------------------
         
         //var sprite = new SpriteMorph(new Image()),
             //cos = new Costume(newCanvas(new Point(100, 100));
             //myself = this;
+		/*	
         var picsize = 40;
         this.maxpage = Math.ceil(picsize / 15);
         
@@ -146,8 +231,46 @@ var DialogBoxMorph = Class.create(Morph, {
             sprite.isDraggable = false;
             
             this.add(sprite);
+			
+			var buttonforadding;		//button to add sprite
+			buttonforadding = new PushButtonMorph(
+				this,
+				function () {
+					var img = new Image();
+					//img.src = 'merlion.jpg';
+
+					//sprite.image = img;
+
+					//sprite.name = this.newSpriteName('Merlion');
+					//sprite.name = 'Merlion';
+					//sprite.setCenter(this.stage.center());
+					myself.stage.add(sprite);
+
+					myself.sprites.add(sprite);
+					myself.corral.addSprite(sprite);
+					myself.selectSprite(sprite);
+
+					//myself.removeSprite(sprite);
+					//sprite.addCostume(cos);
+					//sprite.wearCostume(cos);
+				},
+				"+",
+				null,
+				null,
+				null,
+				'show green button'
+			);
+			
+		
+			
+			buttonforadding.setWidth(70);
+			buttonforadding.setHeight(70);
+
+			buttonforadding.setPosition(new Point(spacelength + (i%5)*150, spaceheight + Math.floor(i/5) * 180));
+
+			this.add(buttonforadding);
         }
-        
+        */
         var button;     //next button
         button = new PushButtonMorph(
             this,

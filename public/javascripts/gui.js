@@ -3971,7 +3971,8 @@ IDE_Morph.prototype.openLibrary = function () {
 	db.createImage(
         function(){return new SpriteMorph(new Image())}, 
         screen.width * 0.3, 
-        screen.height * 0.15
+        screen.height * 0.15,
+		myself
     );
 };
 
@@ -4577,7 +4578,8 @@ IDE_Morph.prototype.projectMenu = function () {
     menu.addItem(
             localize(graphicsName) + '...',
         function () {
-            var dir = graphicsName,
+            //var dir = graphicsName,
+			var dir = 'api/library/costumes',
                 names = myself.getCostumesList(dir),
                 libMenu = new MenuMorph(
                     myself,
@@ -4585,7 +4587,8 @@ IDE_Morph.prototype.projectMenu = function () {
                 );
 
             function loadCostume(name) {
-                var url = dir + '/' + name,
+                //var url = dir + '/' + name,
+				var url = name,
                     img = new Image();
                 img.onload = function () {
                     var canvas = newCanvas(new Point(img.width, img.height));
@@ -4596,14 +4599,16 @@ IDE_Morph.prototype.projectMenu = function () {
             }
 
             names.forEach(function (line) {
-                if (line.length > 0) {
+				//console.log(line.length);
+				//debugger;
+                //if (line.length > 0) {
                     libMenu.addItem(
-                        line,
+                        line.name,
                         function () {
-                            loadCostume(line);
+                            loadCostume(line.url);
                         }
                     );
-                }
+                //}
             });
             libMenu.popup(world, pos);
         },
@@ -4645,7 +4650,11 @@ IDE_Morph.prototype.getCostumesList = function (dirname) {
     var dir,
         costumes = [];
 
-    dir = this.getURL(dirname);
+    dir = JSON.parse(this.getURL(dirname));
+	costumes = dir.data;
+	//debugger;
+	/*
+	debugger;
     dir.split('\n').forEach(
         function (line) {
             var startIdx = line.search(new RegExp('href="[^./?].*"')),
@@ -4663,6 +4672,7 @@ IDE_Morph.prototype.getCostumesList = function (dirname) {
     costumes.sort(function (x, y) {
         return x < y ? -1 : 1;
     });
+	*/
     return costumes;
 };
 
