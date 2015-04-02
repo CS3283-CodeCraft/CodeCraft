@@ -425,7 +425,6 @@ IDE_Morph.prototype.buildPanes = function () {
     this.createShareAssetsBox();
     this.createShareBoxConnectBar();
     this.createShareBoxConnect();
-    this.showNewGroupScreen();
 };
 
 IDE_Morph.prototype.createLogo = function () {
@@ -1862,7 +1861,6 @@ IDE_Morph.prototype.destroyShareBox = function() {
 
     this.createShareBoxConnectBar();
     this.createShareBoxConnect();
-    this.showNewGroupScreen();
     this.fixLayout();
 }
 
@@ -1943,7 +1941,7 @@ IDE_Morph.prototype.createShareBoxConnectBar = function () {
         function () {
             tabBar.tabTo('connect');
         },
-        localize('No Group Yet'), // label
+        localize('Create New Group'), // label
         function () {  // query
             return myself.currentShareBoxConnectTab === 'connect';
         }
@@ -1981,6 +1979,8 @@ IDE_Morph.prototype.createShareBoxConnect = function () {
 
     // init variables
     var myself = this;
+    var padding = 10;
+    this.newGroupScreen = new FrameMorph();
 
     // hide sharebox if haven't connected
     if (this.shareBox) {
@@ -1999,6 +1999,59 @@ IDE_Morph.prototype.createShareBoxConnect = function () {
 
     // add to myself
     this.add(this.shareBoxConnect);
+
+    // *****************************
+    // screen 1: CREATE A NEW GROUP
+    // *****************************
+
+    // init screen
+    if (this.newGroupScreen) {
+        this.newGroupScreen.destroy();
+    }
+
+    this.newGroupScreen = new FrameMorph();
+    this.newGroupScreen.color = this.shareBoxConnect.color;
+    this.shareBoxConnect.addContents(this.newGroupScreen);
+
+    // screen 1: NEW GROUP logo
+    if (this.newGroupLogo) {
+        this.newGroupLogo.destroy();
+    }
+    newGroupLogo = new Morph();
+    newGroupLogo.texture = 'images/share.png';
+    newGroupLogo.drawNew = function () {
+        this.image = newCanvas(this.extent());
+        var context = this.image.getContext('2d');
+        var picBgColor = myself.shareBoxConnect.color;
+        context.fillStyle = picBgColor.toString();
+        context.fillRect(0, 0, this.width(), this.height());
+        if (this.texture) {
+            this.drawTexture(this.texture);
+        }
+    };
+
+    newGroupLogo.setExtent(new Point(181, 123));
+    newGroupLogo.setLeft(this.stage.width() / 2 - newGroupLogo.width() / 2);
+    newGroupLogo.setTop(this.stage.height() / 8);
+    this.newGroupScreen.add(newGroupLogo);
+
+    // screen 1: NEW SESSION text
+    txt = new TextMorph("Start a collaboration session");
+    txt.setColor(SpriteMorph.prototype.paletteTextColor);
+    txt.setPosition(new Point(this.stage.width() / 2 - txt.width() / 2, newGroupLogo.bottom() + padding));
+    this.newGroupScreen.add(txt);
+
+    // screen 1: CREATE NEW GROUP button
+    var groupButton = new PushButtonMorph(null, null, "Create a Group", null, null, null, "green");
+    groupButton.setPosition(new Point(this.stage.width() / 2 - groupButton.width() / 2, txt.bottom() + padding));
+    groupButton.action = function() {
+        console.log("Creating a new group and initializing a new session.");
+        myself.showEntireShareBoxComponent();
+    }
+    this.newGroupScreen.add(groupButton);
+
+    this.shareBoxConnect.drawNew();
+
 };
 
 
@@ -2050,73 +2103,6 @@ IDE_Morph.prototype.showEntireShareBoxComponent = function() {
 // ********************************
 // ShareBox screens and messages
 // ********************************
-
-// xinni: Create new group screen
-IDE_Morph.prototype.showNewGroupScreen = function() {
-
-    var myself = this;
-    var padding = 10;
-
-    if (!this.shareBoxConnect) {
-        console.log("Tried to show new group screen without a sharebox connect")
-    }
-
-    // *****************************
-     // screen 1: CREATE A NEW GROUP
-     // *****************************
-
-    // init screen
-    if (this.newGroupScreen) {
-      this.newGroupScreen.destroy();
-    }
-
-    if (this.requestReceivedScreen) {
-        this.requestReceivedScreen.destroy();
-    }
-
-     this.newGroupScreen = new FrameMorph();
-     this.newGroupScreen.color = this.shareBoxConnect.color;
-     this.shareBoxConnect.addContents(this.newGroupScreen);
-
-     // screen 1: NEW GROUP logo
-     if (this.newGroupLogo) {
-     this.newGroupLogo.destroy();
-     }
-     newGroupLogo = new Morph();
-     newGroupLogo.texture = 'images/share.png';
-     newGroupLogo.drawNew = function () {
-     this.image = newCanvas(this.extent());
-     var context = this.image.getContext('2d');
-     var picBgColor = myself.shareBoxConnect.color;
-     context.fillStyle = picBgColor.toString();
-     context.fillRect(0, 0, this.width(), this.height());
-     if (this.texture) {
-     this.drawTexture(this.texture);
-     }
-     };
-
-     newGroupLogo.setExtent(new Point(181, 123));
-     newGroupLogo.setLeft(this.stage.width() / 2 - newGroupLogo.width() / 2);
-     newGroupLogo.setTop(this.stage.height() / 8);
-     this.newGroupScreen.add(newGroupLogo);
-
-     // screen 1: NEW SESSION text
-     txt = new TextMorph("Start a collaboration session");
-     txt.setColor(SpriteMorph.prototype.paletteTextColor);
-     txt.setPosition(new Point(this.stage.width() / 2 - txt.width() / 2, newGroupLogo.bottom() + padding));
-     this.newGroupScreen.add(txt);
-
-     // screen 1: CREATE NEW GROUP button
-     var groupButton = new PushButtonMorph(null, null, "Create a Group", null, null, null, "green");
-     groupButton.setPosition(new Point(this.stage.width() / 2 - groupButton.width() / 2, txt.bottom() + padding));
-     groupButton.action = function() {
-     console.log("Creating a new group and initializing a new session.");
-     myself.showEntireShareBoxComponent();
-     }
-     this.newGroupScreen.add(groupButton);
-
-     this.shareBoxConnect.drawNew();
-}
 
 // xinni: Creates the request received screen.
 // i.e. "You have a group invite" message. Show this to the user who is requested!!
@@ -2182,12 +2168,12 @@ IDE_Morph.prototype.showRequestReceivedMessage = function (inviteData) {
     rejectButton.setPosition(new Point(myself.stage.width() / 2 + padding, txt.bottom() + padding));
     rejectButton.action = function () {
         console.log("Reject button pressed. Back to Create group screen.");
-        this.showNewGroupScreen();
         myself.newGroupScreen.show();
         myself.requestReceivedScreen.hide();
     };
     this.requestReceivedScreen.add(rejectButton);
 
+<<<<<<< HEAD
     // add to shareBoxConnect
     if (this.shareBoxConnect) {
         this.shareBoxConnect.addContents(this.requestReceivedScreen);
@@ -2195,15 +2181,16 @@ IDE_Morph.prototype.showRequestReceivedMessage = function (inviteData) {
         console.log("Tried to show request received in non existing sharebox");
     }
 
-
+=======
     //to be deleted later
     var socketData = {id: tempIdentifier, room: inviteData.room}
 
     myself.sharer.socket.emit('INVITE_ACCEPT',socketData);
     console.log("[SOCKET-SEND] INVITE_ACCEPT: " + JSON.stringify(socketData))
+>>>>>>> 163b9b759bf17162bfd6a849842534a51ffbdc1e
     // show the screen.
     this.requestReceivedScreen.show();
-    this.shareBoxConnect.drawNew();
+
 };
 
 // xinni: Show this when a sharebox session exists but there are no scripts added yet
