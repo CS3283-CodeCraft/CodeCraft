@@ -1511,7 +1511,7 @@ IDE_Morph.prototype.createShareBoxTitleBar = function () {
 
     // initialize title "ShareBox"
     this.shareBoxTitle = new StringMorph(
-        "ShareBox",
+        "ShareBox: " + this.shareboxId,
         14,
         'sans-serif',
         true,
@@ -1520,6 +1520,8 @@ IDE_Morph.prototype.createShareBoxTitleBar = function () {
         null,
         this.frameColor.darker(this.buttonContrast)
     );
+
+    console.log(this.shareboxId);
 
     this.shareBoxTitle.setLeft(this.shareBoxTitleBar.left() + 5);
     this.shareBoxTitle.setTop(this.shareBoxTitleBar.top() + 5);
@@ -1728,6 +1730,11 @@ IDE_Morph.makeSocket = function (myself, shareboxId) {
 
     sharer.socket.on('NEW_MEMBER_JOINED', function(data) {
         console.log("[SOCKET-RECEIVE] NEW_MEMBER_JOINED: " + JSON.stringify(data))
+    })
+
+    sharer.socket.on('BE_REMOVED', function(data){
+        myself.showYouHaveBeenRemovedPopup();
+        console.log("[SOCKET-RECEIVE] BE_REMOVED: " + JSON.stringify(data));
     })
 
     sharer.socket.on('INVITE_JOIN', function(data){
@@ -2030,34 +2037,61 @@ IDE_Morph.prototype.showEntireShareBoxComponent = function(isOwner) {
         this.shareBoxConnectBar.destroy();
     }
 
+
+
+
+
+
+
     console.log("sharebox about to be created. previous screens destroyed.");
     myself = this;
 
     if(isOwner){
 
         // create share box
-        SnapCloud.createSharebox(tempIdentifier, function(data) {
-            myself.shareboxId = prompt("sharebox id?", data.data[0].id);
-            console.log("show entire share box");
-            myself.createShareBoxBar();
-            // create title bar buttons
-            myself.createShareBoxTitleBarButtons();
-            myself.createShareBox();
-            myself.fixLayout();
+        // SnapCloud.createSharebox(tempIdentifier, function(data) {
+        //     myself.shareboxId = prompt("sharebox id?", data.data[0].id);
+        //     console.log("show entire share box");
+        //     myself.createShareBoxBar();
+        //     // create title bar buttons
+        //     myself.createShareBoxTitleBar();
+        //     myself.createShareBoxTitleBarButtons();
+        //     myself.createShareBox();
+            
+        //     myself.fixLayout();
 
-            var txt = new TextMorph(data.data[0].id.toString());
-            txt.setColor(SpriteMorph.prototype.paletteTextColor);
-            txt.setPosition(new Point(5, 5));
-            txt.show();
-            myself.shareBox.add(txt);
-        });
+        //     var txt = new TextMorph(data.data[0].id.toString());
+        //     txt.setColor(SpriteMorph.prototype.paletteTextColor);
+        //     txt.setPosition(new Point(5, 5));
+        //     txt.show();
+        //     myself.shareBox.add(txt);
+        // });
+
+        myself.shareboxId = prompt("sharebox id?");
+        console.log("show entire share box");
+        myself.createShareBoxBar();
+        // create title bar buttons
+        myself.createShareBoxTitleBar();
+        myself.createShareBoxTitleBarButtons();
+        myself.createShareBox();
+        
+        myself.fixLayout();
+
+        var txt = new TextMorph(myself.shareboxId);
+        txt.setColor(SpriteMorph.prototype.paletteTextColor);
+        txt.setPosition(new Point(5, 5));
+        txt.show();
+        myself.shareBox.add(txt);
+
     } else {
         
         console.log("show entire share box");
         myself.createShareBoxBar();
         // create title bar buttons
+        myself.createShareBoxTitleBar();
         myself.createShareBoxTitleBarButtons();
         myself.createShareBox();
+        
         myself.fixLayout();
 
         var txt = new TextMorph(myself.shareboxId);
@@ -2066,6 +2100,10 @@ IDE_Morph.prototype.showEntireShareBoxComponent = function(isOwner) {
         txt.show();
         myself.shareBox.add(txt);
     }
+
+
+
+
 };
 
 
@@ -2331,6 +2369,11 @@ IDE_Morph.prototype.showViewMembersPopup = function() {
     var popupWidth = 500;
     var popupHeight = 400;
     var myself = this;
+    var showingToCreator = true;
+    var pendingMembers = [];
+    var groupMembers = [tempIdentifier];
+    var groupMembersIsOnline = [true];
+
 
     // ask for members right now
     var socketData = {room:shareboxId}
@@ -2339,18 +2382,22 @@ IDE_Morph.prototype.showViewMembersPopup = function() {
     this.sharer.socket.on('UPDATE_MEMBERS', function(data){
         console.log("[SOCKET-RECEIVE] UPDATE_MEMBERS: " + JSON.stringify(data));
 
-        var pendingMembers = [];
+        pendingMembers = [];
+        groupMembers = [tempIdentifier];
+        groupMembersIsOnline = [true];
+
         for (var i = data.length - 1; i >= 0; i--) {
-            pendingMembers.push(data[i].clientId);
+            if(data[i].isPending) {
+                pendingMembers.push(data[i].clientId);
+            } else {
+                groupMembers.push(data[i].clientId);
+                groupMembersIsOnline.push(true);
+            }
+            
         };
 
         console.log(pendingMembers);
-        // these are just dummy lists and values.
-        // replace these values with actual sharebox group member data.
-        var showingToCreator = true; // creator view. you can delete members
-        var groupMembers = ["john_the_creator", "seraphim_undisputed", "tang_huan_song"]; // first member is creator!
-        var groupMembersIsOnline = [true, false, true]; // stores whether each official member is online
-
+        console.log(groupMembers);
 
         // set up the frames to contain the member list "viewMembersPopup" and "membersViewFrame"
         if (myself.viewMembersPopup) {
@@ -2896,6 +2943,9 @@ IDE_Morph.prototype.showLeaveGroupPopup = function() {
     confirmButton.action = function () {
         // call a function here that lets member leave group. return success/failure value.
         // IF A CREATOR LEAVES, THE ENTIRE SHAREBOX SESSION IS TERMINATED.
+        var socketData = {id: tempIdentifier, room: myself.shareboxId}
+        myself.sharer.socket.emit('LEAVE_SHAREBOX', socketData);
+        console.log("[SOCKET-SEND] LEAVE_SHAREBOX: " + JSON.stringify(socketData));
 
         //var result = "failure"; // DUMMY VALUE FOR NOW. Can be success failure.
         var result = "success";
@@ -3070,7 +3120,7 @@ IDE_Morph.prototype.showYouHaveBeenRemovedPopup = function() {
     okButton = new PushButtonMorph(null, null, "Alrighty", null, null, null, "green");
     okButton.setCenter(this.youHaveBeenRemovedPopup.center());
     okButton.setBottom(this.youHaveBeenRemovedPopup.bottom() - 20);
-    okButton.action = function() { myself.youHaveBeenRemovedPopup.cancel(); };
+    okButton.action = function() { myself.youHaveBeenRemovedPopup.cancel(); myself.destroyShareBox(); };
     this.youHaveBeenRemovedPopup.add(okButton);
 
     // popup
@@ -3147,9 +3197,12 @@ IDE_Morph.prototype.showRemoveMemberPopup = function(username) {
     confirmButton.setWidth(120);
     confirmButton.action = function () {
         // call a function here that lets creator delete the member. return success/failure value.
-        var result = "failure"; // DUMMY VALUE FOR NOW. Can be success || failure.
+        var result = "success"; // DUMMY VALUE FOR NOW. Can be success || failure.
         //var result = "success";
         if (result === "success") {
+            var socketData = {room: myself.shareboxId, removeId: username}
+            myself.sharer.socket.emit('REMOVE_USER', socketData);
+            console.log("[SOCKET-SEND] REMOVE_USER: " + JSON.stringify(socketData));
             myself.removeMemberPopup.cancel();
             if (myself.viewMembersPopup) {
                 myself.viewMembersPopup.destroy();
