@@ -427,7 +427,6 @@ IDE_Morph.prototype.buildPanes = function () {
     this.createShareBoxConnectBar();
     this.createShareBoxConnect();
     this.showNewGroupScreen();
-    
 };
 
 IDE_Morph.prototype.createLogo = function () {
@@ -2071,7 +2070,6 @@ IDE_Morph.prototype.showNewGroupScreen = function() {
         this.createShareBoxConnect();
     }
 
-
     // *****************************
      // screen 1: CREATE A NEW GROUP
      // *****************************
@@ -2127,6 +2125,7 @@ IDE_Morph.prototype.showNewGroupScreen = function() {
      this.newGroupScreen.add(groupButton);
 
      this.shareBoxConnect.drawNew();
+     //myself.fixLayout();
 }
 
 // xinni: Creates the request received screen.
@@ -2140,21 +2139,22 @@ IDE_Morph.prototype.showRequestReceivedMessage = function (inviteData) {
     var padding = 10;
 
     // make sure parent is there
-    if (!this.shareBoxConnect) {
+  //  if (!this.shareBoxConnect) {
         this.createShareBoxConnect();
-    }
+   // }
 
     // init req received screen
     if (this.requestReceivedScreen) {
         this.requestReceivedScreen.destroy();
     }
-    this.requestReceivedScreen = new FrameMorph();
-    this.requestReceivedScreen.color = this.shareBoxConnect.color;
-
     // delete new group screen
     if (this.newGroupScreen) {
         this.newGroupScreen.destroy();
+        console.log("new group destroyed");
     }
+
+    this.requestReceivedScreen = new FrameMorph();
+    this.requestReceivedScreen.color = this.shareBoxConnect.color;
 
     // screen 3: Awaiting reply logo
     if (this.requestReceivedLogo) {
@@ -2208,16 +2208,15 @@ IDE_Morph.prototype.showRequestReceivedMessage = function (inviteData) {
     // add to shareBoxConnect
     this.shareBoxConnect.addContents(this.requestReceivedScreen);
 
-
     //to be deleted later
     var socketData = {id: tempIdentifier, room: inviteData.room}
 
     myself.sharer.socket.emit('INVITE_ACCEPT',socketData);
     console.log("[SOCKET-SEND] INVITE_ACCEPT: " + JSON.stringify(socketData))
     // show the screen.
-    this.requestReceivedScreen.show();
     this.shareBoxConnect.drawNew();
-
+    this.requestReceivedScreen.show();
+    myself.fixLayout();
 };
 
 // xinni: Show this when a sharebox session exists but there are no scripts added yet
@@ -3383,7 +3382,12 @@ IDE_Morph.prototype.fixLayout = function (situation) {
             this.shareBoxConnect.setLeft(this.shareBox.left());
             this.shareBoxConnect.setWidth(this.stage.width());
             this.shareBoxConnect.setHeight(this.bottom() - this.stage.bottom() + shareBoxInternalTopPadding);
-            this.newGroupScreen.setExtent(new Point(this.shareBoxConnect.width(), this.shareBoxConnect.height()));
+            if (this.newGroupScreen) {
+                this.newGroupScreen.setExtent(new Point(this.shareBoxConnect.width(), this.shareBoxConnect.height()));
+            }
+            if (this.requestReceivedScreen) {
+                this.requestReceivedScreen.setExtent(new Point(this.shareBoxConnect.width(), this.shareBoxConnect.height()));
+            }
         }
 
         // ShareBox Group Request Received (under sharebox connect)
