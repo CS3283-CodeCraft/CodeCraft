@@ -8,6 +8,11 @@ QUnit.module("Environment Setup", {
         new IDE_Morph().openIn(this.world);
         this.world.doOneCycle();
         this.ide = this.world.children[0];
+    },
+
+    afterEach: function() {
+        this.world = null;
+        this.ide = null;
     }
 });
 
