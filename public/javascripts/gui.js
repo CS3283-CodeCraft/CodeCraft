@@ -187,6 +187,7 @@ function IDE_Morph(isAutoFill) {
 
 IDE_Morph.prototype.init = function (isAutoFill) {
     // global font setting
+
     MorphicPreferences.globalFontFamily = 'Helvetica, Arial';
 
     // restore saved user preferences
@@ -209,6 +210,7 @@ IDE_Morph.prototype.init = function (isAutoFill) {
     this.projectName = '';
     this.projectNotes = '';
     this.sharer = IDE_Morph.makeSocket.call(this, this, '42');
+    this.shareboxId = 0;
 
     this.logo = null;
     this.controlBar = null;
@@ -1596,7 +1598,7 @@ IDE_Morph.prototype.createShareBoxBar = function () {
             }
         });
         active.refresh(); // needed when programmatically tabbing
-        myself.createShareBox();
+        myself.createShareBox(this.shareboxId);
         myself.fixLayout('tabEditor');
     };
     //---------------------------------------------
@@ -1750,12 +1752,13 @@ IDE_Morph.makeSocket = function (myself, shareboxId) {
 
 
 // xinni: shows the whole share box and hide the connection screens and tabs
-IDE_Morph.prototype.createShareBox = function (shareboxId) {
+IDE_Morph.prototype.createShareBox = function () {
     // Initialization of Sharebox and its default behavior
     var scripts = this.shareBoxPlaceholderSprite.scripts,
         myself = this;
 
-    shareboxId = typeof shareboxId !== 'undefined' ? shareboxId : 42;
+    shareboxId = typeof myself.shareboxId !== 'undefined' ? myself.shareboxId : 42;
+    
 
     // Destroy if sharebox exists
     if (this.shareBox) {
@@ -2061,7 +2064,7 @@ IDE_Morph.prototype.showEntireShareBoxComponent = function() {
     // create share box
     myself = this;
     SnapCloud.createSharebox(tempIdentifier, function(data) {
-        var shareboxId = prompt("sharebox id?", data.data[0].id);
+        myself.shareboxId = prompt("sharebox id?", data.data[0].id);
         console.log("show entire share box");
         myself.createShareBoxBar();
         myself.createShareBox(shareboxId);
