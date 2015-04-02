@@ -3985,7 +3985,8 @@ IDE_Morph.prototype.openLibrary = function () {
 	db.createImage(
         function(){return new SpriteMorph(new Image())}, 
         screen.width * 0.3, 
-        screen.height * 0.15
+        screen.height * 0.15,
+		myself
     );
 };
 
@@ -4591,7 +4592,8 @@ IDE_Morph.prototype.projectMenu = function () {
     menu.addItem(
             localize(graphicsName) + '...',
         function () {
-            var dir = graphicsName,
+            //var dir = graphicsName,
+			var dir = 'api/library/costumes',
                 names = myself.getCostumesList(dir),
                 libMenu = new MenuMorph(
                     myself,
@@ -4599,7 +4601,8 @@ IDE_Morph.prototype.projectMenu = function () {
                 );
 
             function loadCostume(name) {
-                var url = dir + '/' + name,
+                //var url = dir + '/' + name,
+				var url = name,
                     img = new Image();
                 img.onload = function () {
                     var canvas = newCanvas(new Point(img.width, img.height));
@@ -4610,14 +4613,16 @@ IDE_Morph.prototype.projectMenu = function () {
             }
 
             names.forEach(function (line) {
-                if (line.length > 0) {
+				//console.log(line.length);
+				//debugger;
+                //if (line.length > 0) {
                     libMenu.addItem(
-                        line,
+                        line.name,
                         function () {
-                            loadCostume(line);
+                            loadCostume(line.url);
                         }
                     );
-                }
+                //}
             });
             libMenu.popup(world, pos);
         },
@@ -4659,7 +4664,11 @@ IDE_Morph.prototype.getCostumesList = function (dirname) {
     var dir,
         costumes = [];
 
-    dir = this.getURL(dirname);
+    dir = JSON.parse(this.getURL(dirname));
+	costumes = dir.data;
+	//debugger;
+	/*
+	debugger;
     dir.split('\n').forEach(
         function (line) {
             var startIdx = line.search(new RegExp('href="[^./?].*"')),
@@ -4677,6 +4686,7 @@ IDE_Morph.prototype.getCostumesList = function (dirname) {
     costumes.sort(function (x, y) {
         return x < y ? -1 : 1;
     });
+	*/
     return costumes;
 };
 
@@ -8794,6 +8804,7 @@ ScriptIconMorph.prototype.fontSize = 9;
 
 // ScriptIconMorph instance creation:
 
+// aScript is a BlockMorph
 function ScriptIconMorph(aScript, aTemplate) {
     this.init(aScript, aTemplate);
 }
@@ -8819,7 +8830,9 @@ ScriptIconMorph.prototype.init = function (aScript, aTemplate) {
     };
 
     // additional properties:
-    this.object = aScript; // mandatory, actually
+    var ide = this.parentThatIsA('IDE_Morph');
+    var xml = this.serializer.serialize(aScript);
+    this.object = xml; // mandatory, actually
     this.version = this.object.version;
     this.thumbnail = null;
 
@@ -8871,39 +8884,34 @@ ScriptIconMorph.prototype.fixLayout
 
 ScriptIconMorph.prototype.userMenu = function () {
     var menu = new MenuMorph(this);
-    if (!(this.object instanceof Sound)) {
-        return null;
-    }
-    menu.addItem('rename', 'renameSound');
-    menu.addItem('delete', 'removeSound');
+    menu.addItem('rename', 'renameScript');
+    menu.addItem('delete', 'removeScript');
     return menu;
 };
 
-
-ScriptIconMorph.prototype.renameSound = function () {
-    var sound = this.object,
+ScriptIconMorph.prototype.renameScript = function () {
+    var script = this.object,
         ide = this.parentThatIsA('IDE_Morph'),
         myself = this;
     (new DialogBoxMorph(
         null,
         function (answer) {
-            if (answer && (answer !== sound.name)) {
-                sound.name = answer;
-                sound.version = Date.now();
+            if (answer && (answer !== script.name)) {
+                script.name = answer;
+                script.version = Date.now();
                 myself.createLabel(); // can be omitted once I'm stepping
                 myself.fixLayout(); // can be omitted once I'm stepping
                 ide.hasChangedMedia = true;
             }
         }
     )).prompt(
-        'rename sound',
-        sound.name,
+        'rename script',
+        script.name,
         this.world()
     );
 };
 
-// NEED TO CHANGE THIS
-ScriptIconMorph.prototype.removeSound = function () {
+ScriptIconMorph.prototype.removeScript = function () {
     var jukebox = this.parentThatIsA('ShareBoxScriptsMorph'),
         idx = this.parent.children.indexOf(this);
     jukebox.removeSound(idx);
@@ -9010,18 +9018,18 @@ ShareBoxScriptsMorph.prototype.removeScript = function (idx) {
 // Jukebox drag & drop
 
 ShareBoxScriptsMorph.prototype.wantsDropOf = function (morph) {
-    return morph instanceof ScriptIconMorph;
+    return morph instanceof BlockMorph;
 };
 
 // Fix this add
-ShareBoxScriptsMorph.prototype.reactToDropOf = function (icon) {
+ShareBoxScriptsMorph.prototype.reactToDropOf = function (blockMorph) {
     var idx = 0,
-        script = icon.object,
-        top = icon.top();
+        script = new ScriptIconMorph(blockMorph),
+        top = script.top();
 
-    icon.destroy();
-    this.contents.children.forEach(function (item) {
-        if (item.top() < top - 4) {
+    blockMorph.destroy();
+    this.contents.children.forEach(function (script) {
+        if (script.top() < top - 4) {
             idx += 1;
         }
     });
