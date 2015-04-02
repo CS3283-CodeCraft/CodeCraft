@@ -16,9 +16,8 @@ var ScrollFrameMorph = require('./ScrollFrameMorph');
 // WardrobeMorph inherits from ScrollFrameMorph
 
 var WardrobeMorph = Class.create(ScrollFrameMorph, {
+	intialize: function() {
 
-	intialize: function(aSprite, sliderColor) {
-		this.init(aSprite, sliderColor);
 	},
 
 	init: function ($super, aSprite, sliderColor) {

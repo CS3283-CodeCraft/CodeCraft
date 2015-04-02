@@ -49,14 +49,6 @@ global.BlockHighlightMorph = require('./BlockHighlightMorph');
 global.SymbolMorph = require('./SymbolMorph');
 
 // gui.js
-global.IDE_Morph = require('./IDE_Morph');
-global.ProjectDialogMorph = require('./ProjectDialogMorph');
-global.SpriteIconMorph = require('./SpriteIconMorph');
-global.TurtleIconMorph = require('./TurtleIconMorph');
-global.WardrobeMorph = require('./WardrobeMorph');
-global.SoundIconMorph = require('./SoundIconMorph');
-global.JukeboxMorph = require('./JukeboxMorph');
-global.ShareBoxAssetsMorph = require('./ShareBoxAssetsMorph');
 
 // cloud.js
 global.Cloud = require('./Cloud');

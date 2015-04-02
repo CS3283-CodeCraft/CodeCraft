@@ -208,8 +208,9 @@ var SliderButtonMorph = Class.create(CircleBoxMorph, {
 	mouseMove: function () {
 	    // prevent my parent from getting picked up
 	    nop();
-	}
-});
+	},
+
+})
 
 SliderButtonMorph.uber = CircleBoxMorph.prototype;
 SliderButtonMorph.className = 'SliderButtonMorph';

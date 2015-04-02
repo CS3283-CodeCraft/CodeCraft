@@ -20,7 +20,7 @@ var MouseSensorMorph = require('./MouseSensorMorph');
 var BouncerMorph = require('./BouncerMorph');
 var PenMorph = require('./PenMorph');
 var SliderMorph = require('./SliderMorph');
-var CursorMorph = require('./CursorMorph');
+
 
 var WorldMorph = Class.create(FrameMorph, {
 	
@@ -964,10 +964,13 @@ var WorldMorph = Class.create(FrameMorph, {
 		        new RingReporterSlotMorph(true)
 		    ];
 		*/
-	}
-});
+	},
+
+})
 
 WorldMorph.uber = FrameMorph.prototype;
 WorldMorph.className = 'WorldMorph';
 
 module.exports = WorldMorph;
+
+

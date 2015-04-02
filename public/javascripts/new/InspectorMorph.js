@@ -493,7 +493,9 @@ var InspectorMorph = Class.create(BoxMorph, {
         this.label.drawNew();
         this.fixLayout();
     }
-});
+
+
+})
 
 InspectorMorph.uber = BoxMorph.prototype;
 InspectorMorph.className = 'InspectorMorph';

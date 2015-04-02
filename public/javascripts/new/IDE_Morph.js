@@ -26,13 +26,11 @@ var AlignmentMorph = require('./AlignmentMorph');
 
 var IDE_Morph = Class.create(Morph, {
 
-	initialize: function(isAutoFill) {
-		this.init(isAutoFill);
+	initialize: function() {
+
 	},
 
 	init: function($super, isAutoFill) {
-		$super();
-
 		// global font setting
 		MorphicPreferences.globalFontFamily = 'Helvetica, Arial';
 
@@ -3712,14 +3710,9 @@ var IDE_Morph = Class.create(Morph, {
 		db.createCheckBox(db.length,db.height);
 
 		db.createImage(
-			function() {
-				return new SpriteMorph(new Image());
-			},
+			function(){return new SpriteMorph(new Image())},
 			screen.width * 0.3,
-			screen.height * 0.15,
-			myself,
-			currentPage,
-			maxPage
+			screen.height * 0.15
 		);
 	},
 

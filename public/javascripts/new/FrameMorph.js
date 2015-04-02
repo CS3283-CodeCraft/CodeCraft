@@ -192,9 +192,14 @@ var FrameMorph = Class.create(Morph, {
             m.keepWithin(myself);
         });
     }
-});
+
+
+
+})
 
 FrameMorph.uber = Morph.prototype;
 FrameMorph.className = 'FrameMorph';
 
 module.exports = FrameMorph;
+
+    

@@ -359,8 +359,11 @@ var SliderMorph = Class.create(CircleBoxMorph, {
 	            this.step = null;
 	        }
 	    };
-	}
-});
+	},
+
+
+
+})
 
 SliderMorph.uber = CircleBoxMorph.prototype;
 SliderMorph.className = 'SliderMorph';

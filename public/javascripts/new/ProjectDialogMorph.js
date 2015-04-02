@@ -22,8 +22,8 @@ var StringMorph = require('./StringMorph');
 
 var ProjectDialogMorph = Class.create(DialogBoxMorph, {
 
-	initialize: function(ide, task) {
-		this.init(ide, task);
+	initialize: function() {
+
 	},
 
 	init: function($super, ide, task) {

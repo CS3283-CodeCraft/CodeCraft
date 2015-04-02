@@ -27,8 +27,8 @@ var SpriteIconMorph = Class.create(ToggleButtonMorph, {
 	labelColor: new Color(255, 255, 255),
 	fontSize: 9,
 
-	intialize: function(aSprite, aTemplate) {
-		this.init(aSprite, aTemplate);
+	intialize: function() {
+
 	},
 
 	init: function($super, aSprite, aTemplate) {

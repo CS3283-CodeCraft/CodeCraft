@@ -1,10 +1,4 @@
-var Point = require('./Point');
-var Color = require('./Color');
 var Morph = require('./Morph');
-var StringMorph = require('./StringMorph');
-var TextMorph = require('./TextMorph');
-var SpeechBubbleMorph = require('./SpeechBubbleMorph');
-// TODO: Something for BooleanMorph??
 
 var SyntaxElementMorph = Class.create(Morph, {
 
@@ -70,6 +64,8 @@ var SyntaxElementMorph = Class.create(Morph, {
 	
 	initialize: function(){
 		this.init();
+
+		
 	},
 
 	init: function(){
@@ -1516,10 +1512,13 @@ var SyntaxElementMorph = Class.create(Morph, {
 	endLayout: function () {
 	    Morph.prototype.trackChanges = true;
 	    this.topBlock().fullChanged();
-	}
-});
+	},
+
+
+})
 
 SyntaxElementMorph.uber = Morph.prototype;
 SyntaxElementMorph.className = 'SyntaxElementMorph';
 
 module.exports = SyntaxElementMorph;
+

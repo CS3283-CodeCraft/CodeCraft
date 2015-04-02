@@ -24,9 +24,11 @@ var GrayPaletteMorph = Class.create(ColorPaletteMorph, {
 	    context.fillStyle = gradient;
 	    context.fillRect(0, 0, ext.x, ext.y);
 	}
-});
+
+})
 
 GrayPaletteMorph.uber = ColorPaletteMorph.prototype;
 GrayPaletteMorph.className = 'GrayPaletteMorph';
 
 module.exports = GrayPaletteMorph;
+

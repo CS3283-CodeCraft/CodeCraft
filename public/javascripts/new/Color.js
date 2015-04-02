@@ -154,7 +154,8 @@ var Color = Class.create({
 	    result.set_hsv(hsv[0], hsv[1], vv);
 	    return result;
 	}
-});
+
+})
 
 Color.className = 'Color';
 

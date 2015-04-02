@@ -44,13 +44,14 @@ var DialogBoxMorph = Class.create(Morph, {
     buttonOutline: 3,
     buttonOutlineColor: PushButtonMorph.prototype.color,
     buttonOutlineGradient: true,
-    //currentpage: 1,
-    //maxpage: 3,
+    currentpage: 1,
+    maxpage: 1,
     instances: {}, // prevent multiple instances
     
     initialize: function(target, action, environment){
         this.init(target, action, environment);
     },
+
 
     init: function ($super, target, action, environment) {
         // additional properties:
@@ -120,77 +121,22 @@ var DialogBoxMorph = Class.create(Morph, {
             this.popUp(world);
         }
     },
-	
-	createAddButton: function(
-		myself
-	){
-		var button;     //next button
-		//var myself = this;
-        button = new PushButtonMorph(
-            this,
-            function () {
-				//debugger;
-				var inp = document.createElement('input');
-				if (myself.filePicker) {
-					document.body.removeChild(myself.filePicker);
-					myself.filePicker = null;
-				}
-				inp.type = 'file';
-				inp.style.color = "transparent";
-				inp.style.backgroundColor = "transparent";
-				inp.style.border = "none";
-				inp.style.outline = "none";
-				inp.style.position = "absolute";
-				inp.style.top = "0px";
-				inp.style.left = "0px";
-				inp.style.width = "0px";
-				inp.style.height = "0px";
-				inp.addEventListener(
-					"change",
-					function () {
-						document.body.removeChild(inp);
-						myself.filePicker = null;
-						world.hand.processDrop(inp.files);
-					},
-					false
-				);
-				document.body.appendChild(inp);
-				myself.filePicker = inp;
-				inp.click();
-			},
-            "Add",
-            null,
-            null,
-            null
-        );
-
-        button.setWidth(50);
-        button.setHeight(20);
-
-        button.setPosition(new Point(screen.width * 0.27, screen.height * 0.08));
-
-        this.add(button);
-		
-	},
 
     createImage: function (
         spriteCreator,
         spacelength,
-        spaceheight,
-		theworld,
-		curpage,
-		maxpage){
+        spaceheight){
         
         //var sprite = new SpriteMorph(new Image()),
             //cos = new Costume(newCanvas(new Point(100, 100));
             //myself = this;
         var picsize = 40;
-        maxpage = Math.ceil(picsize / 15);
+        this.maxpage = Math.ceil(picsize / 15);
         
-        //var sprite = spriteCreator();
+        var sprite = spriteCreator();
 
-        for(var i = 0; i < 15; i++){
-            var sprite = spriteCreator(); 
+        for(i = 0; i < 15; i++){
+            sprite = spriteCreator(); 
             
             //sprite.setCenter(this.stage.center());
             sprite.setWidth(100);
@@ -198,65 +144,14 @@ var DialogBoxMorph = Class.create(Morph, {
             
             sprite.setPosition(new Point(spacelength + (i%5)*150, spaceheight + Math.floor(i/5) * 180));
             sprite.isDraggable = false;
-			sprite.name = 'Sprite' + i;
-			
-			this.add(sprite);
             
-			var buttonforadding;		//button to add sprite
-			buttonforadding = new PushButtonMorph(
-				this,
-				function () {
-					var img = new Image();
-					//img.src = 'merlion.jpg';
-
-					//sprite.image = img;
-
-					//sprite.name = this.newSpriteName('Merlion');
-					//sprite.name = 'Merlion';
-					//sprite.setCenter(this.stage.center());
-					theworld.stage.add(sprite);
-
-					theworld.sprites.add(sprite);
-					theworld.corral.addSprite(sprite);
-					theworld.selectSprite(sprite);
-
-					//myself.removeSprite(sprite);
-					//sprite.addCostume(cos);
-					//sprite.wearCostume(cos);
-				},
-				"+",
-				null,
-				null,
-				null,
-				'show green button'
-			);
-			
-		
-			
-			buttonforadding.setWidth(70);
-			buttonforadding.setHeight(70);
-
-			buttonforadding.setPosition(new Point(spacelength + (i%5)*150, spaceheight + Math.floor(i/5) * 180));
-
-			this.add(buttonforadding);
+            this.add(sprite);
         }
-		
-		var text = new TextMorph(curpage.toString() + " / " + maxpage.toString());
-        //this.fontSize = 10;
-        text.setPosition(new Point(screen.width*0.49,screen.height*0.755)); 
-        this.add(text);
         
         var button;     //next button
         button = new PushButtonMorph(
             this,
-            function (){        
-				curpage++;
-				if(curpage > maxpage){
-					curpage -= maxpage;
-				}
-				//text.refresh();
-				//this.createImage(screen.width * 0.3, screen.height * 0.15);
-			},
+            'goNextPage',
             "Next",
             null,
             null,
@@ -270,7 +165,7 @@ var DialogBoxMorph = Class.create(Morph, {
 
         this.add(button);
         
-        var button2;        //prev button
+        var button2;        //next button
         button2 = new PushButtonMorph(
             this,
             'goPrevPage',
@@ -287,7 +182,10 @@ var DialogBoxMorph = Class.create(Morph, {
 
         this.add(button2);
         
-        
+        var text = new TextMorph(this.currentpage.toString() + " / " + this.maxpage.toString());
+        //this.fontSize = 10;
+        text.setPosition(new Point(screen.width*0.49,screen.height*0.755)); 
+        this.add(text);
         
         //this.stage.add(sprite);
 
@@ -1235,6 +1133,13 @@ var DialogBoxMorph = Class.create(Morph, {
         }
     },
 
+    destroy: function () {
+        DialogBoxMorph.uber.destroy.call(this);
+        if (this.key) {
+            delete this.instances[this.key];
+        }
+    },
+
     ok: function () {
         this.accept();
     },
@@ -1268,10 +1173,6 @@ var DialogBoxMorph = Class.create(Morph, {
         world.keyboardReceiver = null;
         world.hand.destroyTemporaries();
         DialogBoxMorph.uber.destroy.call(this);
-
-        if (this.key) {
-            delete this.instances[this.key];
-        }
     },
 
     normalizeSpaces: function (string) {

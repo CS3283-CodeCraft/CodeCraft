@@ -2,8 +2,6 @@ var Morph = require('./Morph');
 var StringFieldMorph = require('./StringFieldMorph');
 var ArrowMorph = require('./ArrowMorph');
 var Color = require('./Color');
-var Point = require('./Point');
-var MenuMorph = require('./MenuMorph');
 
 var InputFieldMorph = Class.create(Morph, {
 
@@ -11,6 +9,7 @@ var InputFieldMorph = Class.create(Morph, {
     fontSize: 12,
     typeInPadding: 2,
     contrast: 65,
+
     
     // InputFieldMorph //////////////////////////////////////////////////////
     
@@ -368,9 +367,14 @@ var InputFieldMorph = Class.create(Morph, {
         context.lineTo(this.width() - shift, this.height() - this.edge);
         context.stroke();
     }
-});
+
+})
 
 InputFieldMorph.uber = Morph.prototype;
 InputFieldMorph.className = 'InputFieldMorph';
 
 module.exports = InputFieldMorph;
+
+
+
+

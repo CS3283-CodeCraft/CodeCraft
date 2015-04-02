@@ -61,9 +61,12 @@ var MouseSensorMorph = Class.create(BoxMorph, {
 	mouseClickLeft: function () {
 	    this.unTouch();
 	}
-});
+
+
+})
 
 MouseSensorMorph.uber = BoxMorph.prototype;
 MouseSensorMorph.className = 'MouseSensorMorph';
 
 module.exports = MouseSensorMorph;
+

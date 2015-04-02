@@ -42,6 +42,7 @@ out/
 
 # mpeltonen/sbt-idea plugin
 .idea_modules/
+node_modules/
 
 # JIRA plugin
 atlassian-ide-plugin.xml
@@ -50,6 +51,3 @@ atlassian-ide-plugin.xml
 com_crashlytics_export_strings.xml
 crashlytics.properties
 crashlytics-build.properties
-
-public/javascripts/new/bundle.js
-public/javascripts/new/.bundle.js

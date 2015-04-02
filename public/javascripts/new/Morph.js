@@ -1,9 +1,6 @@
 var Node = require('./Node');
-var Point = require('./Point');
 var Rectangle = require('./Rectangle');
 var Color = require('./Color');
-
-var ShadowMorph = require('./ShadowMorph');
 
 var Morph = Class.create(Node, {
 
@@ -32,6 +29,7 @@ var Morph = Class.create(Node, {
 
 	    methods of SyntaxElementMorph in the Snap application.
 	*/
+
 
 	trackChanges: true,
 	shadowBlur: 4,
@@ -332,7 +330,7 @@ var Morph = Class.create(Node, {
 	    if (rightOff > 0) {
 	        this.moveBy(new Point(-rightOff, 0));
 	    }
-	    topOff = this.fullBounds().top - aMorph.top();
+	    topOff = this.fullBounds().top() - aMorph.top();
 	    if (topOff < 0) {
 	        this.moveBy(new Point(0, -topOff));
 	    }
@@ -1536,7 +1534,8 @@ var Morph = Class.create(Node, {
 	    );
 	    return oImg;
 	}
-});
+
+})
 
 Morph.uber = Node.prototype;
 Morph.className = 'Morph';

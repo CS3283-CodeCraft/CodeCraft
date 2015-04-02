@@ -128,9 +128,16 @@ var ColorPaletteMorph = Class.create(Morph, {
 	        menu.popUpAtHand(this.world());
 	    }
 	}
-});
+
+
+})
 
 ColorPaletteMorph.uber = Morph.prototype;
 ColorPaletteMorph.className = 'ColorPaletteMorph';
 
 module.exports = ColorPaletteMorph;
+
+
+
+
+	
