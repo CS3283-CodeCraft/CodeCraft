@@ -2057,9 +2057,11 @@ IDE_Morph.prototype.showNewGroupScreen = function() {
     var myself = this;
     var padding = 10;
 
+    // make sure parent is there
     if (!this.shareBoxConnect) {
-        console.log("Tried to show new group screen without a sharebox connect")
+        this.createShareBoxConnect();
     }
+
 
     // *****************************
      // screen 1: CREATE A NEW GROUP
@@ -2080,19 +2082,19 @@ IDE_Morph.prototype.showNewGroupScreen = function() {
 
      // screen 1: NEW GROUP logo
      if (this.newGroupLogo) {
-     this.newGroupLogo.destroy();
+        this.newGroupLogo.destroy();
      }
      newGroupLogo = new Morph();
      newGroupLogo.texture = 'images/share.png';
      newGroupLogo.drawNew = function () {
-     this.image = newCanvas(this.extent());
-     var context = this.image.getContext('2d');
-     var picBgColor = myself.shareBoxConnect.color;
-     context.fillStyle = picBgColor.toString();
-     context.fillRect(0, 0, this.width(), this.height());
-     if (this.texture) {
-     this.drawTexture(this.texture);
-     }
+         this.image = newCanvas(this.extent());
+         var context = this.image.getContext('2d');
+         var picBgColor = myself.shareBoxConnect.color;
+         context.fillStyle = picBgColor.toString();
+         context.fillRect(0, 0, this.width(), this.height());
+         if (this.texture) {
+             this.drawTexture(this.texture);
+         }
      };
 
      newGroupLogo.setExtent(new Point(181, 123));
@@ -2127,7 +2129,12 @@ IDE_Morph.prototype.showRequestReceivedMessage = function (inviteData) {
     var myself = this;
     var padding = 10;
 
-    // init screen
+    // make sure parent is there
+    if (!this.shareBoxConnect) {
+        this.createShareBoxConnect();
+    }
+
+    // init req received screen
     if (this.requestReceivedScreen) {
         this.requestReceivedScreen.destroy();
     }
@@ -2189,11 +2196,7 @@ IDE_Morph.prototype.showRequestReceivedMessage = function (inviteData) {
     this.requestReceivedScreen.add(rejectButton);
 
     // add to shareBoxConnect
-    if (this.shareBoxConnect) {
-        this.shareBoxConnect.addContents(this.requestReceivedScreen);
-    } else {
-        console.log("Tried to show request received in non existing sharebox");
-    }
+    this.shareBoxConnect.addContents(this.requestReceivedScreen);
 
 
     //to be deleted later
