@@ -1760,7 +1760,7 @@ IDE_Morph.makeSocket = function (myself, shareboxId) {
             shareObject.destroy();
         }
         console.log(myself.shareBox);
-        myself.shareBox.updateList();
+
         myself.shareBox.changed();
         myself.spriteEditor.updateList();
         myself.spriteEditor.changed();
@@ -2083,7 +2083,6 @@ IDE_Morph.prototype.showNewGroupScreen = function() {
         this.createShareBoxConnect();
     }
 
-
     // *****************************
      // screen 1: CREATE A NEW GROUP
      // *****************************
@@ -2139,6 +2138,7 @@ IDE_Morph.prototype.showNewGroupScreen = function() {
      this.newGroupScreen.add(groupButton);
 
      this.shareBoxConnect.drawNew();
+     //myself.fixLayout();
 }
 
 // xinni: Creates the request received screen.
@@ -2152,21 +2152,22 @@ IDE_Morph.prototype.showRequestReceivedMessage = function (inviteData) {
     var padding = 10;
 
     // make sure parent is there
-    if (!this.shareBoxConnect) {
+  //  if (!this.shareBoxConnect) {
         this.createShareBoxConnect();
-    }
+   // }
 
     // init req received screen
     if (this.requestReceivedScreen) {
         this.requestReceivedScreen.destroy();
     }
-    this.requestReceivedScreen = new FrameMorph();
-    this.requestReceivedScreen.color = this.shareBoxConnect.color;
-
     // delete new group screen
     if (this.newGroupScreen) {
         this.newGroupScreen.destroy();
+        console.log("new group destroyed");
     }
+
+    this.requestReceivedScreen = new FrameMorph();
+    this.requestReceivedScreen.color = this.shareBoxConnect.color;
 
     // screen 3: Awaiting reply logo
     if (this.requestReceivedLogo) {
@@ -2202,7 +2203,11 @@ IDE_Morph.prototype.showRequestReceivedMessage = function (inviteData) {
     acceptButton.setPosition(new Point(myself.stage.width() / 2 - acceptButton.width() - padding, txt.bottom() + padding));
     acceptButton.action = function () {
         console.log("Accept button pressed. Launch Sharebox.");
-        this.showEntireShareBoxComponent(false);
+        myself.showEntireShareBoxComponent(false);
+        var socketData = {id: tempIdentifier, room: inviteData.room}
+        myself.sharer.socket.emit('INVITE_ACCEPT',socketData);
+        myself.shareboxId = socketData.room;
+        console.log("[SOCKET-SEND] INVITE_ACCEPT: " + JSON.stringify(socketData))
     };
     this.requestReceivedScreen.add(acceptButton);
 
@@ -2220,18 +2225,9 @@ IDE_Morph.prototype.showRequestReceivedMessage = function (inviteData) {
     // add to shareBoxConnect
     this.shareBoxConnect.addContents(this.requestReceivedScreen);
 
-
-    // show the screen.
-    this.requestReceivedScreen.show();
     this.shareBoxConnect.drawNew();
-
-    //to be deleted later
-    var socketData = {id: tempIdentifier, room: inviteData.room}
-
-    myself.sharer.socket.emit('INVITE_ACCEPT',socketData);
-    myself.shareboxId = socketData.room;
-    console.log("[SOCKET-SEND] INVITE_ACCEPT: " + JSON.stringify(socketData))
-    this.showEntireShareBoxComponent(false);
+    this.requestReceivedScreen.show();
+    myself.fixLayout();
 
 };
 
@@ -3398,7 +3394,12 @@ IDE_Morph.prototype.fixLayout = function (situation) {
             this.shareBoxConnect.setLeft(this.shareBox.left());
             this.shareBoxConnect.setWidth(this.stage.width());
             this.shareBoxConnect.setHeight(this.bottom() - this.stage.bottom() + shareBoxInternalTopPadding);
-            this.newGroupScreen.setExtent(new Point(this.shareBoxConnect.width(), this.shareBoxConnect.height()));
+            if (this.newGroupScreen) {
+                this.newGroupScreen.setExtent(new Point(this.shareBoxConnect.width(), this.shareBoxConnect.height()));
+            }
+            if (this.requestReceivedScreen) {
+                this.requestReceivedScreen.setExtent(new Point(this.shareBoxConnect.width(), this.shareBoxConnect.height()));
+            }
         }
 
         // ShareBox Group Request Received (under sharebox connect)
