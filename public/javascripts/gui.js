@@ -1719,9 +1719,14 @@ IDE_Morph.makeSocket = function (myself, shareboxId) {
     //sharer.socket.emit('join', {id: tempIdentifier, room: room });
     //console.log(tempIdentifier +": join room " + room);
 
+    sharer.socket.on('NEW_MEMBER_JOINED', function(data) {
+        console.log("[SOCKET-RECEIVE] NEW_MEMBER_JOINED: " + JSON.stringify(data))
+    })
+
     sharer.socket.on('INVITE_JOIN', function(data){
-        console.log("[SOCKET-RECEIVE] INVITE_JOIN: " + data);
-        myself.showRequestReceivedMessage();
+        console.log("[SOCKET-RECEIVE] INVITE_JOIN: " + JSON.stringify(data));
+        myself.showRequestReceivedMessage(data);
+
     })
 
     // When I receive data, I parse objectData and add it to my data list
@@ -1782,7 +1787,10 @@ IDE_Morph.prototype.createShareBox = function () {
     //var sharer = IDE_Morph.makeSocket.call(this, myself, shareboxId);
     var sharer = this.sharer;
     // join the room that was created
-    sharer.socket.emit('join', {id: tempIdentifier, room: room });
+    var socketData = {id: tempIdentifier, room: room }
+    sharer.socket.emit('CREATE_SHAREBOX', socketData);
+    console.log("[SOCKET-SEND] CREATE_SHAREBOX: " + JSON.stringify(socketData));
+
 
     if (this.currentShareBoxTab === 'scripts') {
         scripts.isDraggable = false;
@@ -2098,7 +2106,7 @@ IDE_Morph.prototype.showEntireShareBoxComponent = function() {
 
 // xinni: Creates the request received screen.
 // i.e. "You have a group invite" message. Show this to the user who is requested!!
-IDE_Morph.prototype.showRequestReceivedMessage = function () {
+IDE_Morph.prototype.showRequestReceivedMessage = function (inviteData) {
     // *****************************
     // screen 3: Request received
     // *****************************
@@ -2172,6 +2180,11 @@ IDE_Morph.prototype.showRequestReceivedMessage = function () {
         console.log("Tried to show request received in non existing sharebox");
     }
 
+    //to be deleted later
+    var socketData = {id: tempIdentifier, room: inviteData.room}
+
+    myself.sharer.socket.emit('INVITE_ACCEPT',socketData);
+    console.log("[SOCKET-SEND] INVITE_ACCEPT: " + JSON.stringify(socketData))
     // show the screen.
     this.requestReceivedScreen.show();
 
@@ -8726,28 +8739,6 @@ ShareBoxAssetsMorph.prototype.reactToDropOf = function (icon) {
         icon.destroy();
     }
 };
-<<<<<<< HEAD
-=======
-
-
-
-// ShareBoxScriptsMorph ///////////////////////////////////////////////////////
-
-// I am a watcher on the Sharebox for shared costumes
-
-// ShareBoxScriptsMorph inherits from WardrobeMorph
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 // ScriptIconMorph ///////////////////////////////////////////////////////
@@ -9007,4 +8998,4 @@ ShareBoxScriptsMorph.prototype.reactToDropOf = function (icon) {
     this.sprite.scripts.add(script, idx);
     this.updateList();
 };
->>>>>>> origin/master
+
