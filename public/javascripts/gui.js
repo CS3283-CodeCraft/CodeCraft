@@ -210,7 +210,7 @@ IDE_Morph.prototype.init = function (isAutoFill) {
     this.projectName = '';
     this.projectNotes = '';
     this.sharer = IDE_Morph.makeSocket.call(this, this, '42');
-    this.shareboxId = 0;
+    this.shareboxId = 'common';
 
     this.logo = null;
     this.controlBar = null;
@@ -1707,15 +1707,19 @@ IDE_Morph.makeSocket = function (myself, shareboxId) {
     //this.shareBox.add(shareBoxBGEmpty);
     var serializer = this.serializer,
         ide = this,
-        room = shareboxId.toString(), 
         socket = io();
 
     console.log(socket);
 
     var sharer = new ShareBoxItemSharer(serializer, ide, socket);
 
-    sharer.socket.emit('join', {id: tempIdentifier, room: room });
-    console.log(tempIdentifier +": join room " + room);
+    //sharer.socket.emit('join', {id: tempIdentifier, room: room });
+    //console.log(tempIdentifier +": join room " + room);
+
+    sharer.socket.on('INVITE_JOIN', function(data){
+        console.log("[SOCKET-RECEIVE] INVITE_JOIN: " + data);
+        myself.showRequestReceivedMessage();
+    })
 
     // When I receive data, I parse objectData and add it to my data list
     sharer.socket.on('message', function (objectData) {
@@ -1756,9 +1760,11 @@ IDE_Morph.prototype.createShareBox = function () {
     // Initialization of Sharebox and its default behavior
     var scripts = this.shareBoxPlaceholderSprite.scripts,
         myself = this;
+        
 
-    shareboxId = typeof myself.shareboxId !== 'undefined' ? myself.shareboxId : 42;
+    shareboxId = typeof myself.shareboxId !== 'undefined' ? myself.shareboxId : 'common';
     
+    var room = shareboxId.toString();
 
     // Destroy if sharebox exists
     if (this.shareBox) {
@@ -1772,6 +1778,9 @@ IDE_Morph.prototype.createShareBox = function () {
 
     //var sharer = IDE_Morph.makeSocket.call(this, myself, shareboxId);
     var sharer = this.sharer;
+    // join the room that was created
+    sharer.socket.emit('join', {id: tempIdentifier, room: room });
+
     if (this.currentShareBoxTab === 'scripts') {
         scripts.isDraggable = false;
         scripts.color = this.groupColor;
@@ -2090,7 +2099,7 @@ IDE_Morph.prototype.showRequestReceivedMessage = function () {
     // *****************************
     // screen 3: Request received
     // *****************************
-
+    var myself = this;
     var padding = 10;
 
     // init screen
@@ -2529,6 +2538,7 @@ IDE_Morph.prototype.showAddMemberPopup = function() {
         var username = usernameInput.getValue();
         var txtColor = new Color(204, 0, 0);
 
+
         if (username == "") {
             // show error message for blank username
             if (this.txt) {
@@ -2543,10 +2553,15 @@ IDE_Morph.prototype.showAddMemberPopup = function() {
             myself.addMemberPopup.fixLayout();
             myself.addMemberPopup.drawNew();
         } else {
+
             // add member to pending members, and feedback result to the user (success/fail)
             // this result value is returned from an internal add member function (NOT ADDED YET)
-            var result = "group_full"; // EITHER: success, connection_error, user_offline, user_nonexistent, user_has_group, group_full
+            //var result = "group_full"; // EITHER: success, connection_error, user_offline, user_nonexistent, user_has_group, group_full
+            var result = "success"
             if (result === "success") {
+                socketData = { room: myself.shareboxId, inviteUser: username};
+                myself.sharer.socket.emit('ADD_USER', { room: myself.shareboxId, inviteUser: username});
+                console.log("[SOCKET-SEND] ADD_USER: " + socketData);
                 myself.addMemberPopup.cancel();
                 myself.showAddMemberSuccessPopup(username);
             } else { // return result as any of the following:
@@ -2798,8 +2813,8 @@ IDE_Morph.prototype.showLeaveGroupPopup = function() {
         // call a function here that lets member leave group. return success/failure value.
         // IF A CREATOR LEAVES, THE ENTIRE SHAREBOX SESSION IS TERMINATED.
 
-        var result = "failure"; // DUMMY VALUE FOR NOW. Can be success failure.
-
+        //var result = "failure"; // DUMMY VALUE FOR NOW. Can be success failure.
+        var result = "success";
         if (result === "success") {
             // destroy sharebox morph and show sharebox connect
             myself.destroyShareBox();
@@ -3049,7 +3064,7 @@ IDE_Morph.prototype.showRemoveMemberPopup = function(username) {
     confirmButton.action = function () {
         // call a function here that lets creator delete the member. return success/failure value.
         var result = "failure"; // DUMMY VALUE FOR NOW. Can be success || failure.
-
+        //var result = "success";
         if (result === "success") {
             myself.removeMemberPopup.cancel();
             if (myself.viewMembersPopup) {
@@ -8703,4 +8718,3 @@ ShareBoxAssetsMorph.prototype.reactToDropOf = function (icon) {
         icon.destroy();
     }
 };
-

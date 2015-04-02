@@ -47,6 +47,10 @@ io.on('connection', function(socket){
         console.log("send received" + socket.id)
     });
 
+    socket.on('ADD_USER', function(data) {
+      socket.broadcast.emit('INVITE_JOIN', data);
+    })
+
 });
 
 
