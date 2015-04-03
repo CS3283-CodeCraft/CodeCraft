@@ -71,9 +71,20 @@ ShareBoxItemSharer.prototype.shareObject = function (room, shareItem, shareName)
             }
             shareObject.destroy();
         }
-        myself.shareBox.changed();
+        //myself.shareBox.changed();
+        this.ide.hasChangedMedia = true;
     }
 };
+
+ShareBoxItemSharer.prototype.buildDataList = function() {
+    var dataList = { data: [] };
+    var myself = this;
+    this.ide.shareBox.contents.children.forEach(function(item){
+        if (item instanceof CostumeIconMorph || item instanceof SoundIconMorph)
+            dataList.data.push(_.escape(myself.serializeItem(item)));
+    });
+    return dataList;
+}
 
 /**
  * Gets a script, costume or sound from the ShareBox. The 'R' part of CRUD. Part of the API for GUI.

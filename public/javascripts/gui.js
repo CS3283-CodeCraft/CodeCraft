@@ -1763,7 +1763,8 @@ IDE_Morph.makeSocket = function (myself, shareboxId) {
             }
             shareObject.destroy();
         }
-        myself.shareBox.changed();
+        console.log(myself);
+        this.ide.hasChangedMedia = true;
     }.bind(sharer));
 
     
@@ -7988,6 +7989,12 @@ CostumeIconMorph.prototype.removeCostume = function () {
     if (ide.currentSprite.costume === this.object) {
         ide.currentSprite.wearCostume(null);
     }
+
+    if (wardrobe instanceof ShareBoxAssetsMorph) {
+        var ide = this.parentThatIsA('IDE_Morph');
+        var dataList = ide.sharer.buildDataList();
+        ide.sharer.socket.emit('send', dataList);
+    }
 };
 
 CostumeIconMorph.prototype.exportCostume = function () {
@@ -8576,6 +8583,12 @@ SoundIconMorph.prototype.removeSound = function () {
     var jukebox = this.parentThatIsA('JukeboxMorph'),
         idx = this.parent.children.indexOf(this);
     jukebox.removeSound(idx);
+
+    if (this.parentThatIsA('WardrobeMorph')) {
+        var ide = this.parentThatIsA('IDE_Morph');
+        var dataList = ide.sharer.buildDataList();
+        ide.sharer.socket.emit('send', dataList);
+    }
 };
 
 SoundIconMorph.prototype.createBackgrounds
@@ -8741,7 +8754,8 @@ ShareBoxAssetsMorph.prototype.changed = function () {
     }
     if (this.parent) {
         this.parent.childChanged(this);
-    }};
+    }
+};
 
 ShareBoxAssetsMorph.init = function (aSprite, sliderColor) {
     // additional properties
@@ -8959,6 +8973,7 @@ ScriptIconMorph.prototype.userMenu = function () {
     var menu = new MenuMorph(this);
     menu.addItem('rename', 'renameScript');
     menu.addItem('delete', 'removeScript');
+    //if (this.parent instanceof shareBox
     return menu;
 };
 
