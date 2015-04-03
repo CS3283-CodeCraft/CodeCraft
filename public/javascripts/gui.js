@@ -1751,16 +1751,11 @@ IDE_Morph.makeSocket = function (myself, shareboxId) {
         shareBoxPlaceholderSprite.sounds = new List();
         shareBoxPlaceholderSprite.costumes = new List();
         shareBoxPlaceholderSprite.costume = null;
-        alert("received:" + objectData);
-        // Build array object to update list
-        var arrayItem = objectData;
-        arrayItem.xml = _.unescape(arrayItem.xml);
         // Update local list
-        sharer.data.items.push(arrayItem);
-        console.log("draw following code in sharebox: \n" + JSON.stringify(this.data.items, null, '\t'));
-        var costume_idx = 0;
-        for (var i = 0; i < this.data.items.length; i++) {
-            var shareObject = sharer.getObject(this.data.items[i].xml);
+        sharer.data.data = objectData;
+        console.log("draw following code in sharebox: \n" + JSON.stringify(sharer.data, null, '\t'));
+        for (var i = 0; i < sharer.data.data.length; i++) {
+            var shareObject = sharer.getObject(_.unescape(sharer.data.data[i]));
             if (shareObject instanceof CostumeIconMorph) {
                 shareBoxPlaceholderSprite.addCostume(shareObject.object);
             } else if (shareObject instanceof SoundIconMorph) {
@@ -1768,11 +1763,7 @@ IDE_Morph.makeSocket = function (myself, shareboxId) {
             }
             shareObject.destroy();
         }
-        console.log(myself.shareBox);
-
         myself.shareBox.changed();
-        myself.spriteEditor.updateList();
-        myself.spriteEditor.changed();
     }.bind(sharer));
 
     
@@ -8831,7 +8822,18 @@ ShareBoxAssetsMorph.prototype.updateList = function () {
     });
     this.costumesVersion = this.sprite.costumes.lastChanged;
 
+
+    this.sprite.sounds.asArray().forEach(function (sound) {
+        template = icon = new SoundIconMorph(sound, template);
+        icon.setPosition(new Point(x, y));
+        myself.addContents(icon);
+        y = icon.bottom() + padding;
+    });
+
+
     this.contents.setPosition(oldPos);
+
+
     this.adjustScrollBars();
     Morph.prototype.trackChanges = oldFlag;
     this.changed();
@@ -8839,7 +8841,7 @@ ShareBoxAssetsMorph.prototype.updateList = function () {
     this.updateSelection();
 };
 
-
+/*
 // Huan Song: Slightly modified version of the original WardrobeMorph reactToDropOf
 ShareBoxAssetsMorph.prototype.reactToDropOf = function (icon) {
     // Primarily differs in preventing the costume from being removed from WardrobeMorph on sharing
@@ -8870,7 +8872,7 @@ ShareBoxAssetsMorph.prototype.reactToDropOf = function (icon) {
         icon.destroy();
     }
 };
-
+*/
 
 // ScriptIconMorph ///////////////////////////////////////////////////////
 

@@ -19,7 +19,7 @@
 function ShareBoxItemSharer(serializer, ide, socket) {
     this.serializer = serializer || [];
     this.ide = ide || [];
-    this.data = {sharebox: "sharebox1", items: []};
+    this.data = { data: [] };
     this.socket = socket;
 }
 
@@ -42,16 +42,38 @@ ShareBoxItemSharer.prototype.shareObject = function (room, shareItem, shareName)
     } else {
         // Share the item
         // Build array object to update list
-        var objectData = {
-            name: shareName,
+        /*var objectData = {
+            //name: shareName,
             xml: _.escape(xml),
             status: 0
         };
         console.log(room);
-        var string = { room: room, data: objectData };
-        this.socket.emit('send', string);
-        console.log("send:" + string);
-        this.ide.shareBoxPlaceholderSprite.addCostume(shareItem.object);
+        var string = { room: room, data: objectData };*/
+        var string = _.escape(xml);
+        this.data.data.push(string);
+        var sendItem = this.data;
+        console.log(JSON.stringify(sendItem));
+        this.socket.emit('send', sendItem);
+        //this.ide.shareBoxPlaceholderSprite.addCostume(shareItem.object);
+        shareItem.destroy();
+        // Clean up shareBoxPlaceholderSprite
+        this.ide.shareBoxPlaceholderSprite.sounds = new List();
+        this.ide.shareBoxPlaceholderSprite.costumes = new List();
+        this.ide.shareBoxPlaceholderSprite.costume = null;
+        // Update local list
+        console.log("draw following code in sharebox: \n" + JSON.stringify(this.data, null, '\t'));
+        for (var i = 0; i < this.data.data.length; i++) {
+            var shareObject = this.getObject(_.unescape(this.data.data[i]));
+            if (shareObject instanceof CostumeIconMorph) {
+                this.ide.shareBoxPlaceholderSprite.addCostume(shareObject.object);
+            } else if (shareObject instanceof SoundIconMorph) {
+                this.ide.shareBoxPlaceholderSprite.addSound(shareObject.object, shareObject.name);
+            }
+            shareObject.destroy();
+        }
+        myself.shareBox.changed();
+
+
     }
 };
 
