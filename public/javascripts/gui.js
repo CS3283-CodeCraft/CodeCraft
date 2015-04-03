@@ -1764,7 +1764,7 @@ IDE_Morph.makeSocket = function (myself, shareboxId) {
             shareObject.destroy();
         }
         console.log(myself);
-        this.ide.hasChangedMedia = true;
+        this.hasChangedMedia = true;
     }.bind(sharer));
 
     
@@ -8580,12 +8580,16 @@ SoundIconMorph.prototype.renameSound = function () {
 };
 
 SoundIconMorph.prototype.removeSound = function () {
-    var jukebox = this.parentThatIsA('JukeboxMorph'),
-        idx = this.parent.children.indexOf(this);
-    jukebox.removeSound(idx);
-
-    if (this.parentThatIsA('WardrobeMorph')) {
+    if (this.parentThatIsA('JukeboxMorph')) {
+        var jukebox = this.parentThatIsA('JukeboxMorph'),
+            idx = this.parent.children.indexOf(this);
+        jukebox.removeSound(idx);
+    }
+    if ((this.parent.parent instanceof ShareBoxAssetsMorph)) {
         var ide = this.parentThatIsA('IDE_Morph');
+        var idx = this.parent.children.indexOf(this);
+        ide.shareBoxPlaceholderSprite.sounds.contents.splice(idx, 1);
+        this.parent.children.splice(idx, 1);
         var dataList = ide.sharer.buildDataList();
         ide.sharer.socket.emit('send', dataList);
     }
