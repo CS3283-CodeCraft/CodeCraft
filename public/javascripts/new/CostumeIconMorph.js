@@ -21,8 +21,8 @@ var MenuMorph = require('./MenuMorph');
 // ... and copies methods from SpriteIconMorph
 
 var CostumeIconMorph = Class.create(ToggleButtonMorph, {
-	initialize: function() {
-
+	initialize: function(aCostume, aTemplate) {
+		this.init(aCostume, aTemplate);
 	},
 
 	init: function($super, aCostume, aTemplate) {
@@ -200,7 +200,6 @@ var CostumeIconMorph = Class.create(ToggleButtonMorph, {
 		this.mouseClickLeft(); // select me
 		this.removeCostume();
 	}
-
 });
 
 CostumeIconMorph.uber = ToggleButtonMorph.prototype;
