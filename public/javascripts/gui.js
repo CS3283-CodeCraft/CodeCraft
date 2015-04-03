@@ -1744,6 +1744,11 @@ IDE_Morph.makeSocket = function (myself, shareboxId) {
         }
     })
 
+    sharer.socket.on('DISBAND_SHAREBOX', function(data){
+        myself.showYouHaveBeenRemovedPopup();
+        console.log("[SOCKET-RECEIVE] DISBAND_SHAREBOX: " + JSON.stringify(data));
+    })
+
 
     // When I receive data, I parse objectData and add it to my data list
     sharer.socket.on('message', function (objectData) {
@@ -2361,7 +2366,7 @@ IDE_Morph.prototype.showViewMembersPopup = function() {
     var popupWidth = 500;
     var popupHeight = 400;
     var myself = this;
-    var showingToCreator = true;
+    var showingToCreator = false;
     var pendingMembers = [];
     var groupMembers = [tempIdentifier];
     var groupMembersIsOnline = [true];
@@ -2377,12 +2382,14 @@ IDE_Morph.prototype.showViewMembersPopup = function() {
         pendingMembers = [];
         groupMembers = [tempIdentifier];
         groupMembersIsOnline = [true];
+        console.log("ownder info: " + JSON.stringify(data.owner))
+        showingToCreator = (data.owner.clientId == tempIdentifier);
 
-        for (var i = data.length - 1; i >= 0; i--) {
-            if(data[i].isPending) {
-                pendingMembers.push(data[i].clientId);
+        for (var i = data.members.length - 1; i >= 0; i--) {
+            if(data.members[i].isPending) {
+                pendingMembers.push(data.members[i].clientId);
             } else {
-                groupMembers.push(data[i].clientId);
+                groupMembers.push(data.members[i].clientId);
                 groupMembersIsOnline.push(true);
             }
             

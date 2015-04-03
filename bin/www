@@ -46,10 +46,10 @@ io.sockets.on('connection', function(socket){
         if(data.room !== 'common'){
           socket.join(data.room);
           if(clients[data.room]){
-            for (var i = clients[data.room].length - 1; i >= 0; i--) {
-              if(clients[data.room][i].clientId == data.id) {
-                clients[data.room][i].isPending = false;
-                clients[data.room][i].socketId = socket.id;
+            for (var i = clients[data.room].members.length - 1; i >= 0; i--) {
+              if(clients[data.room].members[i].clientId == data.id) {
+                clients[data.room].members[i].isPending = false;
+                clients[data.room].members[i].socketId = socket.id;
               }
             };
             
@@ -59,8 +59,10 @@ io.sockets.on('connection', function(socket){
               socketId: socket.id,
               isPending: false
             }
-            clients[data.room] = [];
-            clients[data.room].push(clientInfo);
+            clients[data.room] = {
+              owner: clientInfo,
+              members: [clientInfo] 
+            };
           }
           console.log(data.id + "is joining " + data.room);
           io.to(data.room).emit('UPDATE_MEMBERS', clients[data.room])
@@ -108,7 +110,7 @@ io.sockets.on('connection', function(socket){
           socketId: 0,
           isPending: true
       }
-      clients[data.room].push(clientInfo);
+      clients[data.room].members.push(clientInfo);
       socket.broadcast.emit('INVITE_JOIN', data);
       io.to(data.room).emit('UPDATE_MEMBERS', clients[data.room])
     })
@@ -126,17 +128,40 @@ io.sockets.on('connection', function(socket){
 
     socket.on('disconnect', function () {
       console.log("disconnected")
-      var rooms = []
-      clients = _.mapObject(clients, function(val, key){
-        console.log(key);
-        return _.reject(val, function(el){
-          return el.socketId == socket.id
-        })
-      })
-      _.mapObject(clients, function(val, key){
-        io.to(key).emit('UPDATE_MEMBERS', val)
-      })
-      
+
+      var resultRoom = []
+      var currentRoom = _.allKeys(clients);
+      console.log(currentRoom)
+
+      for (var i = currentRoom.length - 1; i >= 0; i--) {
+        var roomName = currentRoom[i];
+
+        var roomInfo = clients[roomName];
+        console.log(roomInfo)
+        var isOwner = (roomInfo.owner.socketId === socket.id)
+        if (isOwner) {
+          // owner quit then disbande the group
+          clients[roomName] = null;
+          io.to(roomName).emit('DISBAND_SHAREBOX');
+        } else {
+          clients[roomName].members = _.reject(clients[roomName].members, function (member){
+            if(member.socketId === socket.id) {
+              resultRoom.push(roomName);
+              return true;
+            } else {
+              return false;
+            }
+
+          })
+        }
+      };
+
+      for (var i = resultRoom.length - 1; i >= 0; i--) {
+        var roomKey = resultRoom[i]
+        io.to(roomKey).emit('UPDATE_MEMBERS', clients[roomKey])
+      };
+
+
     })
 
 });
