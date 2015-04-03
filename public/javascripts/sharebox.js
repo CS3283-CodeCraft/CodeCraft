@@ -73,13 +73,15 @@ ShareBoxItemSharer.prototype.shareObject = function (room, shareItem, shareName)
             shareObject.destroy();
         }
         this.ide.hasChangedMedia = true;
-        this.ide.shareBox.refresh();
+        this.ide.drawNew();
+        this.ide.fixLayout();
     }
 };
 
 ShareBoxItemSharer.prototype.buildDataList = function() {
-    var dataList = { data: [] };
+    var dataList = { room: this.room, data: [] };
     var myself = this;
+    this.ide.fixLayout();
     this.ide.shareBox.contents.children.forEach(function(item){
         if (item instanceof CostumeIconMorph || item instanceof SoundIconMorph)
             dataList.data.push(_.escape(myself.serializeItem(item)));
