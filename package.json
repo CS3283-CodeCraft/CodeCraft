@@ -16,6 +16,7 @@
     "stylus": "0.42.3",
     "socket.io": "~1.3.3",
     "browserify": "~9.0.3",
-    "watchify": "~2.4.0"
+    "watchify": "~2.4.0",
+    "underscore": "~1.8.3"
   }
 }

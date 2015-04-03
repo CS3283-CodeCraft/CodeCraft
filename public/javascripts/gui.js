@@ -190,6 +190,7 @@ function IDE_Morph(isAutoFill) {
 IDE_Morph.prototype.init = function (isAutoFill) {
     // global font setting
 
+
     MorphicPreferences.globalFontFamily = 'Helvetica, Arial';
 
     // restore saved user preferences
@@ -1510,7 +1511,7 @@ IDE_Morph.prototype.createShareBoxTitleBar = function () {
 
     // initialize title "ShareBox"
     this.shareBoxTitle = new StringMorph(
-        "ShareBox",
+        "ShareBox: " + this.shareboxId,
         14,
         'sans-serif',
         true,
@@ -1519,6 +1520,8 @@ IDE_Morph.prototype.createShareBoxTitleBar = function () {
         null,
         this.frameColor.darker(this.buttonContrast)
     );
+
+    console.log(this.shareboxId);
 
     this.shareBoxTitle.setLeft(this.shareBoxTitleBar.left() + 5);
     this.shareBoxTitle.setTop(this.shareBoxTitleBar.top() + 5);
@@ -1687,7 +1690,7 @@ function drawShareBoxPrototypeUsingImage(myself, image) {
     sharebox.setLeft(this.stage.width() / 2 - sharebox.width() / 2);
     sharebox.setTop(-2);
     return sharebox;
-}
+};
 
 function buildInvisibleButton(action, point, left, top) {
     var button = new TriggerMorph(
@@ -1699,7 +1702,7 @@ function buildInvisibleButton(action, point, left, top) {
     button.setTop(top);
     button.setAlphaScaled(0);
     return button;
-}
+};
 
 // Tang Huan Song: I'll be Morphing this prototype function slowly into the fully-functional function (puns intended)
 
@@ -1713,22 +1716,34 @@ IDE_Morph.makeSocket = function (myself, shareboxId) {
         ide = this,
         socket = io();
 
-    console.log(socket);
+    console.log(myself);
+    console.log(ide);
+
+    
 
     var sharer = new ShareBoxItemSharer(serializer, ide, socket);
+
+
 
     //sharer.socket.emit('join', {id: tempIdentifier, room: room });
     //console.log(tempIdentifier +": join room " + room);
 
     sharer.socket.on('NEW_MEMBER_JOINED', function(data) {
         console.log("[SOCKET-RECEIVE] NEW_MEMBER_JOINED: " + JSON.stringify(data))
+    });
+
+    sharer.socket.on('BE_REMOVED', function(data){
+        myself.showYouHaveBeenRemovedPopup();
+        console.log("[SOCKET-RECEIVE] BE_REMOVED: " + JSON.stringify(data));
     })
 
     sharer.socket.on('INVITE_JOIN', function(data){
-        console.log("[SOCKET-RECEIVE] INVITE_JOIN: " + JSON.stringify(data));
-        myself.showRequestReceivedMessage(data);
-
+        if(data.inviteId == tempIdentifier){
+            myself.showRequestReceivedMessage(data);
+            console.log("[SOCKET-RECEIVE] INVITE_JOIN: " + JSON.stringify(data));
+        }
     })
+
 
     // When I receive data, I parse objectData and add it to my data list
     sharer.socket.on('message', function (objectData) {
@@ -1736,32 +1751,25 @@ IDE_Morph.makeSocket = function (myself, shareboxId) {
         shareBoxPlaceholderSprite.sounds = new List();
         shareBoxPlaceholderSprite.costumes = new List();
         shareBoxPlaceholderSprite.costume = null;
-        alert("received:" + objectData);
-        // Build array object to update list
-        var arrayItem = objectData;
-        arrayItem.xml = _.unescape(arrayItem.xml);
         // Update local list
-        sharer.data.items.push(arrayItem);
-        console.log("draw following code in sharebox: \n" + JSON.stringify(this.data.items, null, '\t'));
-        var costume_idx = 0;
-        for (var i = 0; i < this.data.items.length; i++) {
-            var shareObject = sharer.getObject(this.data.items[i].xml);
+        sharer.data.data = objectData;
+        console.log("draw following code in sharebox: \n" + JSON.stringify(sharer.data, null, '\t'));
+        for (var i = 0; i < sharer.data.data.length; i++) {
+            var shareObject = sharer.getObject(_.unescape(sharer.data.data[i]));
             if (shareObject instanceof CostumeIconMorph) {
-                costume_idx += 1;
-                shareBoxPlaceholderSprite.costumes.add(shareObject.object, costume_idx);
+                shareBoxPlaceholderSprite.addCostume(shareObject.object);
             } else if (shareObject instanceof SoundIconMorph) {
-                shareBoxPlaceholderSprite.sounds.push(shareObject.object);
+                shareBoxPlaceholderSprite.addSound(shareObject.object, shareObject.name);
             }
             shareObject.destroy();
         }
-        console.log(myself.shareBox);
-        myself.shareBox.updateList();
         myself.shareBox.changed();
-        myself.spriteEditor.updateList();
-        myself.spriteEditor.changed();
     }.bind(sharer));
+
+    
+    
     return sharer;
-}
+};
 
 
 // xinni: shows the whole share box and hide the connection screens and tabs
@@ -1789,8 +1797,8 @@ IDE_Morph.prototype.createShareBox = function () {
     var sharer = this.sharer;
     // join the room that was created
     var socketData = {id: tempIdentifier, room: room }
-    sharer.socket.emit('CREATE_SHAREBOX', socketData);
-    console.log("[SOCKET-SEND] CREATE_SHAREBOX: " + JSON.stringify(socketData));
+    sharer.socket.emit('JOIN_SHAREBOX', socketData);
+    console.log("[SOCKET-SEND] JOIN_SHAREBOX: " + JSON.stringify(socketData));
 
 
     if (this.currentShareBoxTab === 'scripts') {
@@ -1841,7 +1849,6 @@ IDE_Morph.prototype.createShareBox = function () {
         this.add(this.shareBox);
     }
 
-    console.log("sharebox created with id " + shareboxId)
 
 };
 
@@ -1864,7 +1871,7 @@ IDE_Morph.prototype.destroyShareBox = function() {
     this.createShareBoxConnect();
     this.showNewGroupScreen();
     this.fixLayout();
-}
+};
 
 IDE_Morph.prototype.createShareAssetsBox = function () {
     // Initialization of ShareAssetsBox and its default behavior
@@ -2003,7 +2010,7 @@ IDE_Morph.prototype.createShareBoxConnect = function () {
 
 
 // xinni: shows sharebox and title bar buttons (settings and add)
-IDE_Morph.prototype.showEntireShareBoxComponent = function() {
+IDE_Morph.prototype.showEntireShareBoxComponent = function(isOwner) {
 
     console.log("showEntireShareBoxComponent triggered.");
 
@@ -2021,28 +2028,73 @@ IDE_Morph.prototype.showEntireShareBoxComponent = function() {
         this.shareBoxConnectBar.destroy();
     }
 
+
+
+
+
+
+
     console.log("sharebox about to be created. previous screens destroyed.");
-
-    // create title bar buttons
-    if (!this.shareBoxTitleBarButtons) {
-        this.createShareBoxTitleBarButtons();
-    }
-
-    // create share box
     myself = this;
-    SnapCloud.createSharebox(tempIdentifier, function(data) {
-        myself.shareboxId = prompt("sharebox id?", data.data[0].id);
+
+    if(isOwner){
+
+        // create share box
+        // SnapCloud.createSharebox(tempIdentifier, function(data) {
+        //     myself.shareboxId = prompt("sharebox id?", data.data[0].id);
+        //     console.log("show entire share box");
+        //     myself.createShareBoxBar();
+        //     // create title bar buttons
+        //     myself.createShareBoxTitleBar();
+        //     myself.createShareBoxTitleBarButtons();
+        //     myself.createShareBox();
+            
+        //     myself.fixLayout();
+
+        //     var txt = new TextMorph(data.data[0].id.toString());
+        //     txt.setColor(SpriteMorph.prototype.paletteTextColor);
+        //     txt.setPosition(new Point(5, 5));
+        //     txt.show();
+        //     myself.shareBox.add(txt);
+        // });
+
+        myself.shareboxId = prompt("sharebox id?");
         console.log("show entire share box");
         myself.createShareBoxBar();
-        myself.createShareBox(shareboxId);
+        // create title bar buttons
+        myself.createShareBoxTitleBar();
+        myself.createShareBoxTitleBarButtons();
+        myself.createShareBox();
+        
         myself.fixLayout();
 
-        var txt = new TextMorph(data.data[0].id.toString());
+        var txt = new TextMorph(myself.shareboxId);
         txt.setColor(SpriteMorph.prototype.paletteTextColor);
         txt.setPosition(new Point(5, 5));
         txt.show();
         myself.shareBox.add(txt);
-    });
+
+    } else {
+        
+        console.log("show entire share box");
+        myself.createShareBoxBar();
+        // create title bar buttons
+        myself.createShareBoxTitleBar();
+        myself.createShareBoxTitleBarButtons();
+        myself.createShareBox();
+        
+        myself.fixLayout();
+
+        var txt = new TextMorph(myself.shareboxId);
+        txt.setColor(SpriteMorph.prototype.paletteTextColor);
+        txt.setPosition(new Point(5, 5));
+        txt.show();
+        myself.shareBox.add(txt);
+    }
+
+
+
+
 };
 
 
@@ -2057,8 +2109,9 @@ IDE_Morph.prototype.showNewGroupScreen = function() {
     var myself = this;
     var padding = 10;
 
+    // make sure parent is there
     if (!this.shareBoxConnect) {
-        console.log("Tried to show new group screen without a sharebox connect")
+        this.createShareBoxConnect();
     }
 
     // *****************************
@@ -2080,19 +2133,19 @@ IDE_Morph.prototype.showNewGroupScreen = function() {
 
      // screen 1: NEW GROUP logo
      if (this.newGroupLogo) {
-     this.newGroupLogo.destroy();
+        this.newGroupLogo.destroy();
      }
      newGroupLogo = new Morph();
      newGroupLogo.texture = 'images/share.png';
      newGroupLogo.drawNew = function () {
-     this.image = newCanvas(this.extent());
-     var context = this.image.getContext('2d');
-     var picBgColor = myself.shareBoxConnect.color;
-     context.fillStyle = picBgColor.toString();
-     context.fillRect(0, 0, this.width(), this.height());
-     if (this.texture) {
-     this.drawTexture(this.texture);
-     }
+         this.image = newCanvas(this.extent());
+         var context = this.image.getContext('2d');
+         var picBgColor = myself.shareBoxConnect.color;
+         context.fillStyle = picBgColor.toString();
+         context.fillRect(0, 0, this.width(), this.height());
+         if (this.texture) {
+             this.drawTexture(this.texture);
+         }
      };
 
      newGroupLogo.setExtent(new Point(181, 123));
@@ -2111,11 +2164,12 @@ IDE_Morph.prototype.showNewGroupScreen = function() {
      groupButton.setPosition(new Point(this.stage.width() / 2 - groupButton.width() / 2, txt.bottom() + padding));
      groupButton.action = function() {
      console.log("Creating a new group and initializing a new session.");
-     myself.showEntireShareBoxComponent();
+        myself.showEntireShareBoxComponent(true);
      }
      this.newGroupScreen.add(groupButton);
 
      this.shareBoxConnect.drawNew();
+     //myself.fixLayout();
 }
 
 // xinni: Creates the request received screen.
@@ -2124,20 +2178,27 @@ IDE_Morph.prototype.showRequestReceivedMessage = function (inviteData) {
     // *****************************
     // screen 3: Request received
     // *****************************
+
     var myself = this;
     var padding = 10;
 
-    // init screen
+    // make sure parent is there
+  //  if (!this.shareBoxConnect) {
+        this.createShareBoxConnect();
+   // }
+
+    // init req received screen
     if (this.requestReceivedScreen) {
         this.requestReceivedScreen.destroy();
     }
-    this.requestReceivedScreen = new FrameMorph();
-    this.requestReceivedScreen.color = this.shareBoxConnect.color;
-
     // delete new group screen
     if (this.newGroupScreen) {
         this.newGroupScreen.destroy();
+        console.log("new group destroyed");
     }
+
+    this.requestReceivedScreen = new FrameMorph();
+    this.requestReceivedScreen.color = this.shareBoxConnect.color;
 
     // screen 3: Awaiting reply logo
     if (this.requestReceivedLogo) {
@@ -2162,7 +2223,7 @@ IDE_Morph.prototype.showRequestReceivedMessage = function (inviteData) {
     this.requestReceivedScreen.add(requestReceivedLogo);
 
     // screen 3: Awaiting reply text
-    txt = new TextMorph("'marylim' would like to invite you to their collaboration group.");
+    txt = new TextMorph(inviteData.ownerId  + " would like to invite you to their collaboration group.");
 
     txt.setColor(SpriteMorph.prototype.paletteTextColor);
     txt.setPosition(new Point(this.stage.width() / 2 - txt.width() / 2, requestReceivedLogo.bottom() + padding));
@@ -2173,7 +2234,15 @@ IDE_Morph.prototype.showRequestReceivedMessage = function (inviteData) {
     acceptButton.setPosition(new Point(myself.stage.width() / 2 - acceptButton.width() - padding, txt.bottom() + padding));
     acceptButton.action = function () {
         console.log("Accept button pressed. Launch Sharebox.");
-        this.showEntireShareBoxComponent();
+        
+        var socketData = {id: tempIdentifier, room: inviteData.room}
+        
+        myself.sharer.socket.emit('INVITE_ACCEPT', socketData);
+        console.log("[SOCKET-SEND] INVITE_ACCEPT: " + JSON.stringify(socketData))
+
+        myself.shareboxId = socketData.room;
+        myself.showEntireShareBoxComponent(false);
+        
     };
     this.requestReceivedScreen.add(acceptButton);
 
@@ -2189,21 +2258,12 @@ IDE_Morph.prototype.showRequestReceivedMessage = function (inviteData) {
     this.requestReceivedScreen.add(rejectButton);
 
     // add to shareBoxConnect
-    if (this.shareBoxConnect) {
-        this.shareBoxConnect.addContents(this.requestReceivedScreen);
-    } else {
-        console.log("Tried to show request received in non existing sharebox");
-    }
+    this.shareBoxConnect.addContents(this.requestReceivedScreen);
 
-
-    //to be deleted later
-    var socketData = {id: tempIdentifier, room: inviteData.room}
-
-    myself.sharer.socket.emit('INVITE_ACCEPT',socketData);
-    console.log("[SOCKET-SEND] INVITE_ACCEPT: " + JSON.stringify(socketData))
-    // show the screen.
-    this.requestReceivedScreen.show();
     this.shareBoxConnect.drawNew();
+    this.requestReceivedScreen.show();
+    myself.fixLayout();
+
 };
 
 // xinni: Show this when a sharebox session exists but there are no scripts added yet
@@ -2299,66 +2359,91 @@ IDE_Morph.prototype.showViewMembersPopup = function() {
     var world = this.world();
     var popupWidth = 500;
     var popupHeight = 400;
-
-    // these are just dummy lists and values.
-    // replace these values with actual sharebox group member data.
-    var showingToCreator = true; // creator view. you can delete members
-    var groupMembers = ["john_the_creator", "seraphim_undisputed", "tang_huan_song"]; // first member is creator!
-    var pendingMembers = ["chng_xinni", "zhang_yiwen"];
-    var groupMembersIsOnline = [true, false, true]; // stores whether each official member is online
+    var myself = this;
+    var showingToCreator = true;
+    var pendingMembers = [];
+    var groupMembers = [tempIdentifier];
+    var groupMembersIsOnline = [true];
 
 
-    // set up the frames to contain the member list "viewMembersPopup" and "membersViewFrame"
-    if (this.viewMembersPopup) {
-        this.viewMembersPopup.destroy();
-    }
-    this.viewMembersPopup = new DialogBoxMorph();
-    this.viewMembersPopup.setExtent(new Point(popupWidth, popupHeight));
+    // ask for members right now
+    var socketData = {room:shareboxId}
+    this.sharer.socket.emit('GET_MEMBERS', socketData);
+    console.log("[SOCKET-SEND] GET_MEMBERS: " + JSON.stringify(socketData));
+    this.sharer.socket.on('UPDATE_MEMBERS', function(data){
+        console.log("[SOCKET-RECEIVE] UPDATE_MEMBERS: " + JSON.stringify(data));
 
-    if (this.membersViewFrame) {
-        this.membersViewFrame.destroy();
-    }
-    this.membersViewFrame = new ScrollFrameMorph();
-    this.membersViewFrame.setColor(this.viewMembersPopup.color);
-    this.membersViewFrame.setExtent(new Point(640, 350));
-    this.membersViewFrame.setTop(this.viewMembersPopup.top() + 30);
-    this.membersViewFrame.setLeft(this.viewMembersPopup.left());
-    this.membersViewFrame.setWidth(this.viewMembersPopup.width());
-    this.membersViewFrame.drawNew();
-    this.viewMembersPopup.add(this.membersViewFrame);
+        pendingMembers = [];
+        groupMembers = [tempIdentifier];
+        groupMembersIsOnline = [true];
 
-    // list group members
-    this.showGroupMemberTitle(groupMembers.length);
-    for (var i = 0; i < groupMembers.length; i++) {
-        if (i === 0) { // assumes first member is always the creator
-            this.showMemberRow(true, groupMembersIsOnline[i], groupMembers[i], i + 1, showingToCreator);
-        } else { // not creator, is normal member
-            this.showMemberRow(false, groupMembersIsOnline[i], groupMembers[i], i + 1, showingToCreator);
+        for (var i = data.length - 1; i >= 0; i--) {
+            if(data[i].isPending) {
+                pendingMembers.push(data[i].clientId);
+            } else {
+                groupMembers.push(data[i].clientId);
+                groupMembersIsOnline.push(true);
+            }
+            
+        };
+
+        console.log(pendingMembers);
+        console.log(groupMembers);
+
+        // set up the frames to contain the member list "viewMembersPopup" and "membersViewFrame"
+        if (myself.viewMembersPopup) {
+            myself.viewMembersPopup.destroy();
         }
-    }
+        myself.viewMembersPopup = new DialogBoxMorph();
+        myself.viewMembersPopup.setExtent(new Point(popupWidth, popupHeight));
 
-    // list pending group members
-    this.showPendingMemberTitle(pendingMembers.length, groupMembers.length);
-    for (var j = 0; j < pendingMembers.length; j++) {
-        this.showMemberRow(false, false, pendingMembers[j], j + groupMembers.length + 2, showingToCreator);
-    }
+        if (myself.membersViewFrame) {
+            myself.membersViewFrame.destroy();
+        }
+        myself.membersViewFrame = new ScrollFrameMorph();
+        myself.membersViewFrame.setColor(myself.viewMembersPopup.color);
+        myself.membersViewFrame.setExtent(new Point(640, 350));
+        myself.membersViewFrame.setTop(myself.viewMembersPopup.top() + 30);
+        myself.membersViewFrame.setLeft(myself.viewMembersPopup.left());
+        myself.membersViewFrame.setWidth(myself.viewMembersPopup.width());
+        myself.membersViewFrame.drawNew();
+        myself.viewMembersPopup.add(myself.membersViewFrame);
+
+        // list group members
+        myself.showGroupMemberTitle(groupMembers.length);
+        for (var i = 0; i < groupMembers.length; i++) {
+            if (i === 0) { // assumes first member is always the creator
+                myself.showMemberRow(true, groupMembersIsOnline[i], groupMembers[i], i + 1, showingToCreator);
+            } else { // not creator, is normal member
+                myself.showMemberRow(false, groupMembersIsOnline[i], groupMembers[i], i + 1, showingToCreator);
+            }
+        }
+
+        // list pending group members
+        myself.showPendingMemberTitle(pendingMembers.length, groupMembers.length);
+        for (var j = 0; j < pendingMembers.length; j++) {
+            myself.showMemberRow(false, false, pendingMembers[j], j + groupMembers.length + 2, showingToCreator);
+        }
 
 
-    // add close button
-    var button = new PushButtonMorph(null, null, "Close me", null, null, null, "green");
-    button.action = function() { myself.viewMembersPopup.cancel(); };
-    button.setCenter(this.viewMembersPopup.center());
-    button.setBottom(this.viewMembersPopup.bottom() - 10);
-    this.viewMembersPopup.add(button);
+        // add close button
+        var button = new PushButtonMorph(null, null, "Close me", null, null, null, "green");
+        button.action = function() { myself.viewMembersPopup.cancel(); };
+        button.setCenter(myself.viewMembersPopup.center());
+        button.setBottom(myself.viewMembersPopup.bottom() - 10);
+        myself.viewMembersPopup.add(button);
 
-    // add title
-    this.viewMembersPopup.labelString = "View Sharebox Members";
-    this.viewMembersPopup.createLabel();
+        // add title
+        myself.viewMembersPopup.labelString = "View Sharebox Members";
+        myself.viewMembersPopup.createLabel();
 
-    // popup the popup
-    this.viewMembersPopup.drawNew();
-    this.viewMembersPopup.fixLayout();
-    this.viewMembersPopup.popUp(world);
+        // popup the popup
+        myself.viewMembersPopup.drawNew();
+        myself.viewMembersPopup.fixLayout();
+        myself.viewMembersPopup.popUp(world);
+    })
+
+    
 };
 
 IDE_Morph.prototype.showGroupMemberTitle = function(numberOfGroupMembers) {
@@ -2597,8 +2682,8 @@ IDE_Morph.prototype.showAddMemberPopup = function() {
             var result = "success"
             if (result === "success") {
                 socketData = { room: myself.shareboxId, inviteUser: username};
-                myself.sharer.socket.emit('ADD_USER', { room: myself.shareboxId, inviteUser: username});
-                console.log("[SOCKET-SEND] ADD_USER: " + socketData);
+                myself.sharer.socket.emit('ADD_USER', { room: myself.shareboxId, inviteId: username, ownerId: tempIdentifier});
+                console.log("[SOCKET-SEND] ADD_USER: " + JSON.stringify(socketData));
                 myself.addMemberPopup.cancel();
                 myself.showAddMemberSuccessPopup(username);
             } else { // return result as any of the following:
@@ -2849,6 +2934,9 @@ IDE_Morph.prototype.showLeaveGroupPopup = function() {
     confirmButton.action = function () {
         // call a function here that lets member leave group. return success/failure value.
         // IF A CREATOR LEAVES, THE ENTIRE SHAREBOX SESSION IS TERMINATED.
+        var socketData = {id: tempIdentifier, room: myself.shareboxId}
+        myself.sharer.socket.emit('LEAVE_SHAREBOX', socketData);
+        console.log("[SOCKET-SEND] LEAVE_SHAREBOX: " + JSON.stringify(socketData));
 
         //var result = "failure"; // DUMMY VALUE FOR NOW. Can be success failure.
         var result = "success";
@@ -3023,7 +3111,7 @@ IDE_Morph.prototype.showYouHaveBeenRemovedPopup = function() {
     okButton = new PushButtonMorph(null, null, "Alrighty", null, null, null, "green");
     okButton.setCenter(this.youHaveBeenRemovedPopup.center());
     okButton.setBottom(this.youHaveBeenRemovedPopup.bottom() - 20);
-    okButton.action = function() { myself.youHaveBeenRemovedPopup.cancel(); };
+    okButton.action = function() { myself.youHaveBeenRemovedPopup.cancel(); myself.destroyShareBox(); };
     this.youHaveBeenRemovedPopup.add(okButton);
 
     // popup
@@ -3100,9 +3188,12 @@ IDE_Morph.prototype.showRemoveMemberPopup = function(username) {
     confirmButton.setWidth(120);
     confirmButton.action = function () {
         // call a function here that lets creator delete the member. return success/failure value.
-        var result = "failure"; // DUMMY VALUE FOR NOW. Can be success || failure.
+        var result = "success"; // DUMMY VALUE FOR NOW. Can be success || failure.
         //var result = "success";
         if (result === "success") {
+            var socketData = {room: myself.shareboxId, removeId: username}
+            myself.sharer.socket.emit('REMOVE_USER', socketData);
+            console.log("[SOCKET-SEND] REMOVE_USER: " + JSON.stringify(socketData));
             myself.removeMemberPopup.cancel();
             if (myself.viewMembersPopup) {
                 myself.viewMembersPopup.destroy();
@@ -3369,7 +3460,12 @@ IDE_Morph.prototype.fixLayout = function (situation) {
             this.shareBoxConnect.setLeft(this.shareBox.left());
             this.shareBoxConnect.setWidth(this.stage.width());
             this.shareBoxConnect.setHeight(this.bottom() - this.stage.bottom() + shareBoxInternalTopPadding);
-            this.newGroupScreen.setExtent(new Point(this.shareBoxConnect.width(), this.shareBoxConnect.height()));
+            if (this.newGroupScreen) {
+                this.newGroupScreen.setExtent(new Point(this.shareBoxConnect.width(), this.shareBoxConnect.height()));
+            }
+            if (this.requestReceivedScreen) {
+                this.requestReceivedScreen.setExtent(new Point(this.shareBoxConnect.width(), this.shareBoxConnect.height()));
+            }
         }
 
         // ShareBox Group Request Received (under sharebox connect)
@@ -8632,6 +8728,9 @@ function ShareBoxAssetsMorph(aSprite, sliderColor) {
     this.init(aSprite, sliderColor);
 };
 
+ShareBoxAssetsMorph.prototype.wantsDropOf = function (morph) {
+    return morph instanceof SoundIconMorph || morph instanceof CostumeIconMorph;
+};
 
 ShareBoxAssetsMorph.init = function (aSprite, sliderColor) {
     // additional properties
@@ -8726,7 +8825,24 @@ ShareBoxAssetsMorph.prototype.updateList = function () {
     });
     this.costumesVersion = this.sprite.costumes.lastChanged;
 
+
+    this.sprite.sounds.asArray().forEach(function (sound) {
+        template = icon = new SoundIconMorph(sound, template);
+        icon.setPosition(new Point(x, y));
+        myself.addContents(icon);
+        numCostumes++;
+        if (numCostumes != 0 && numCostumes%5 == 0) {
+            y = icon.bottom() + padding;
+            x = myself.left() + 5;
+        } else {
+            x = icon.right() + padding;
+        }
+    });
+
+
     this.contents.setPosition(oldPos);
+
+
     this.adjustScrollBars();
     Morph.prototype.trackChanges = oldFlag;
     this.changed();
@@ -8734,7 +8850,7 @@ ShareBoxAssetsMorph.prototype.updateList = function () {
     this.updateSelection();
 };
 
-
+/*
 // Huan Song: Slightly modified version of the original WardrobeMorph reactToDropOf
 ShareBoxAssetsMorph.prototype.reactToDropOf = function (icon) {
     // Primarily differs in preventing the costume from being removed from WardrobeMorph on sharing
@@ -8765,7 +8881,7 @@ ShareBoxAssetsMorph.prototype.reactToDropOf = function (icon) {
         icon.destroy();
     }
 };
-
+*/
 
 // ScriptIconMorph ///////////////////////////////////////////////////////
 
@@ -8790,6 +8906,7 @@ ScriptIconMorph.prototype.fontSize = 9;
 
 // ScriptIconMorph instance creation:
 
+// aScript is a BlockMorph
 function ScriptIconMorph(aScript, aTemplate) {
     this.init(aScript, aTemplate);
 }
@@ -8815,7 +8932,9 @@ ScriptIconMorph.prototype.init = function (aScript, aTemplate) {
     };
 
     // additional properties:
-    this.object = aScript; // mandatory, actually
+    var ide = this.parentThatIsA('IDE_Morph');
+    var xml = this.serializer.serialize(aScript);
+    this.object = xml; // mandatory, actually
     this.version = this.object.version;
     this.thumbnail = null;
 
@@ -8867,39 +8986,34 @@ ScriptIconMorph.prototype.fixLayout
 
 ScriptIconMorph.prototype.userMenu = function () {
     var menu = new MenuMorph(this);
-    if (!(this.object instanceof Sound)) {
-        return null;
-    }
-    menu.addItem('rename', 'renameSound');
-    menu.addItem('delete', 'removeSound');
+    menu.addItem('rename', 'renameScript');
+    menu.addItem('delete', 'removeScript');
     return menu;
 };
 
-
-ScriptIconMorph.prototype.renameSound = function () {
-    var sound = this.object,
+ScriptIconMorph.prototype.renameScript = function () {
+    var script = this.object,
         ide = this.parentThatIsA('IDE_Morph'),
         myself = this;
     (new DialogBoxMorph(
         null,
         function (answer) {
-            if (answer && (answer !== sound.name)) {
-                sound.name = answer;
-                sound.version = Date.now();
+            if (answer && (answer !== script.name)) {
+                script.name = answer;
+                script.version = Date.now();
                 myself.createLabel(); // can be omitted once I'm stepping
                 myself.fixLayout(); // can be omitted once I'm stepping
                 ide.hasChangedMedia = true;
             }
         }
     )).prompt(
-        'rename sound',
-        sound.name,
+        'rename script',
+        script.name,
         this.world()
     );
 };
 
-// NEED TO CHANGE THIS
-ScriptIconMorph.prototype.removeSound = function () {
+ScriptIconMorph.prototype.removeScript = function () {
     var jukebox = this.parentThatIsA('ShareBoxScriptsMorph'),
         idx = this.parent.children.indexOf(this);
     jukebox.removeSound(idx);
@@ -9006,18 +9120,18 @@ ShareBoxScriptsMorph.prototype.removeScript = function (idx) {
 // Jukebox drag & drop
 
 ShareBoxScriptsMorph.prototype.wantsDropOf = function (morph) {
-    return morph instanceof ScriptIconMorph;
+    return morph instanceof BlockMorph;
 };
 
 // Fix this add
-ShareBoxScriptsMorph.prototype.reactToDropOf = function (icon) {
+ShareBoxScriptsMorph.prototype.reactToDropOf = function (blockMorph) {
     var idx = 0,
-        script = icon.object,
-        top = icon.top();
+        script = new ScriptIconMorph(blockMorph),
+        top = script.top();
 
-    icon.destroy();
-    this.contents.children.forEach(function (item) {
-        if (item.top() < top - 4) {
+    blockMorph.destroy();
+    this.contents.children.forEach(function (script) {
+        if (script.top() < top - 4) {
             idx += 1;
         }
     });

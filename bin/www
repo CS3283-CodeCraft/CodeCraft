@@ -7,6 +7,7 @@
 var app = require('../app');
 var debug = require('debug')('codecraft-socket:server');
 var http = require('http');
+var _ = require('underscore');
 
 
 /**
@@ -26,35 +27,116 @@ var server = http.createServer(app);
  * Listen on provided port, on all network interfaces.
  */
 
+
 server.listen(port);
 server.on('error', onError);
 server.on('listening', onListening);
 
 var io = require('socket.io')(server);
 
-io.on('connection', function(socket){
+var clients = {}
+
+io.sockets.on('connection', function(socket){
 //    socket.on('send', function(data){
 //        socket.broadcast.emit('message', data.data);
 //    });
 
-    socket.on('CREATE_SHAREBOX', function(data) {
-        socket.join(data.room);
-        console.log(data.id + "is joining " + data.room)
+    socket.on('JOIN_SHAREBOX', function(data) {
+
+        if(data.room !== 'common'){
+          socket.join(data.room);
+          if(clients[data.room]){
+            for (var i = clients[data.room].length - 1; i >= 0; i--) {
+              if(clients[data.room][i].clientId == data.id) {
+                clients[data.room][i].isPending = false;
+                clients[data.room][i].socketId = socket.id;
+              }
+            };
+            
+          } else {
+            var clientInfo = {
+              clientId: data.id,
+              socketId: socket.id,
+              isPending: false
+            }
+            clients[data.room] = [];
+            clients[data.room].push(clientInfo);
+          }
+          console.log(data.id + "is joining " + data.room);
+          io.to(data.room).emit('UPDATE_MEMBERS', clients[data.room])
+          console.log(clients);
+        }
+
+        
     });
 
+    socket.on('LEAVE_SHAREBOX', function(data){
+      for (var i = clients[data.room].length - 1; i >= 0; i--) {
+        if(clients[data.room][i].clientId == data.id){
+          clients[data.room].splice(index, i);
+          io.to(data.room).emit('UPDATE_MEMBERS', clients[data.room])
+        }
+        
+      };
+      
+    })
+    
+    socket.on('REMOVE_USER', function(data){
+      for (var i = clients[data.room].length - 1; i >= 0; i--) {
+        if(clients[data.room][i].clientId == data.removeId){
+          var sid = clients[data.room][i].socketId
+          clients[data.room].splice(i, 1);
+          io.to(sid).emit('BE_REMOVED')
+          console.log(sid)
+          io.to(data.room).emit('UPDATE_MEMBERS', clients[data.room])
+        }
+        console.log(clients)
+        
+      };
+      
+    })
+
     socket.on('send', function(data) {
-        socket.broadcast.emit('message', data.data);
+      console.log(data.room)
+        socket.broadcast.to(data.room).emit('message', data.data);
         console.log("send received" + socket.id)
     });
 
     socket.on('ADD_USER', function(data) {
+      var clientInfo = {
+          clientId: data.inviteId,
+          socketId: 0,
+          isPending: true
+      }
+      clients[data.room].push(clientInfo);
       socket.broadcast.emit('INVITE_JOIN', data);
+      io.to(data.room).emit('UPDATE_MEMBERS', clients[data.room])
     })
 
     socket.on('INVITE_ACCEPT', function(data){
       socket.join(data.room);
       console.log(data.id + "is joining " + data.room)
-      socket.to(data.room).emit('NEW_MEMBER_JOINED', data);
+      io.to(data.room).emit('NEW_MEMBER_JOINED', data);
+    })
+
+    socket.on('GET_MEMBERS', function(data){
+      console.log(clients[data.room])
+      io.to(data.room).emit('UPDATE_MEMBERS', clients[data.room])
+    })
+
+    socket.on('disconnect', function () {
+      console.log("disconnected")
+      var rooms = []
+      clients = _.mapObject(clients, function(val, key){
+        console.log(key);
+        return _.reject(val, function(el){
+          return el.socketId == socket.id
+        })
+      })
+      _.mapObject(clients, function(val, key){
+        io.to(key).emit('UPDATE_MEMBERS', val)
+      })
+      
     })
 
 });
