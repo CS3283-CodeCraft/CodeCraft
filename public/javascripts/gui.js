@@ -8732,6 +8732,17 @@ ShareBoxAssetsMorph.prototype.wantsDropOf = function (morph) {
     return morph instanceof SoundIconMorph || morph instanceof CostumeIconMorph;
 };
 
+ShareBoxAssetsMorph.prototype.changed = function () {
+    if (this.trackChanges) {
+        var w = this.root();
+        if (w.instanceOf('WorldMorph')) {
+            w.broken.push(this.visibleBounds().spread());
+        }
+    }
+    if (this.parent) {
+        this.parent.childChanged(this);
+    }};
+
 ShareBoxAssetsMorph.init = function (aSprite, sliderColor) {
     // additional properties
     this.sprite = aSprite || new SpriteMorph();
@@ -8770,46 +8781,6 @@ ShareBoxAssetsMorph.prototype.updateList = function () {
     };
     this.addBack(this.contents);
 
-    /*
-     icon = new TurtleIconMorph(this.sprite);
-     icon.setPosition(new Point(x, y));
-     myself.addContents(icon);
-     y = icon.bottom() + padding;
-
-     paintbutton = new PushButtonMorph(
-     this,
-     "paintNew",
-     new SymbolMorph("brush", 15)
-     );
-     paintbutton.padding = 0;
-     paintbutton.corner = 12;
-     paintbutton.color = IDE_Morph.prototype.groupColor;
-     paintbutton.highlightColor = IDE_Morph.prototype.frameColor.darker(50);
-     paintbutton.pressColor = paintbutton.highlightColor;
-     paintbutton.labelMinExtent = new Point(36, 18);
-     paintbutton.labelShadowOffset = new Point(-1, -1);
-     paintbutton.labelShadowColor = paintbutton.highlightColor;
-     paintbutton.labelColor = TurtleIconMorph.prototype.labelColor;
-     paintbutton.contrast = this.buttonContrast;
-     paintbutton.drawNew();
-     paintbutton.hint = "Paint a new costume";
-     paintbutton.setPosition(new Point(x, y));
-     paintbutton.fixLayout();
-     paintbutton.setCenter(icon.center());
-     paintbutton.setLeft(icon.right() + padding * 4);
-
-
-     this.addContents(paintbutton);
-     txt = new TextMorph(localize(
-     "costumes tab help" // look up long string in translator
-     ));
-     txt.fontSize = 9;
-     txt.setColor(SpriteMorph.prototype.paletteTextColor);
-
-     txt.setPosition(new Point(x, y));
-     this.addContents(txt);
-     y = txt.bottom() + padding;
-     */
     var numCostumes = 0;
     this.sprite.costumes.asArray().forEach(function (costume) {
         template = icon = new CostumeIconMorph(costume, template);

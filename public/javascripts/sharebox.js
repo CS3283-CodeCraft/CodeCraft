@@ -72,8 +72,6 @@ ShareBoxItemSharer.prototype.shareObject = function (room, shareItem, shareName)
             shareObject.destroy();
         }
         myself.shareBox.changed();
-
-
     }
 };
 
