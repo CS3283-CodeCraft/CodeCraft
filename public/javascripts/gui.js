@@ -8830,7 +8830,13 @@ ShareBoxAssetsMorph.prototype.updateList = function () {
         template = icon = new SoundIconMorph(sound, template);
         icon.setPosition(new Point(x, y));
         myself.addContents(icon);
-        y = icon.bottom() + padding;
+        numCostumes++;
+        if (numCostumes != 0 && numCostumes%5 == 0) {
+            y = icon.bottom() + padding;
+            x = myself.left() + 5;
+        } else {
+            x = icon.right() + padding;
+        }
     });
 
 
