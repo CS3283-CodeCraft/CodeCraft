@@ -8728,6 +8728,9 @@ function ShareBoxAssetsMorph(aSprite, sliderColor) {
     this.init(aSprite, sliderColor);
 };
 
+ShareBoxAssetsMorph.prototype.wantsDropOf = function (morph) {
+    return morph instanceof SoundIconMorph || morph instanceof CostumeIconMorph;
+};
 
 ShareBoxAssetsMorph.init = function (aSprite, sliderColor) {
     // additional properties
