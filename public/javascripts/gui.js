@@ -1630,7 +1630,6 @@ IDE_Morph.prototype.createShareBoxBar = function () {
     tab.drawNew();
     tab.fixLayout();
     tabBar.add(tab);
-
     tab = new TabMorph(
         tabColors,
         null, // target
@@ -1719,7 +1718,7 @@ IDE_Morph.makeSocket = function (myself, shareboxId) {
     console.log(myself);
     console.log(ide);
 
-    
+
 
     var sharer = new ShareBoxItemSharer(serializer, ide, socket);
 
@@ -1770,9 +1769,11 @@ IDE_Morph.makeSocket = function (myself, shareboxId) {
         }
         console.log(myself);
         this.hasChangedMedia = true;
+        sharer.ide.drawNew();
+        sharer.ide.fixLayout();
     }.bind(sharer));
 
-    
+
     
     return sharer;
 };
@@ -1801,6 +1802,7 @@ IDE_Morph.prototype.createShareBox = function () {
 
     //var sharer = IDE_Morph.makeSocket.call(this, myself, shareboxId);
     var sharer = this.sharer;
+    this.sharer.room = room;
     // join the room that was created
     var socketData = {id: tempIdentifier, room: room }
     sharer.socket.emit('JOIN_SHAREBOX', socketData);
@@ -7918,21 +7920,25 @@ CostumeIconMorph.prototype.userMenu = function () {
     if (!(this.object instanceof Costume)) {
         return null;
     }
-    menu.addItem("edit", "editCostume");
-    if (this.world().currentKey === 16) { // shift clicked
-        menu.addItem(
-            'edit rotation point only...',
-            'editRotationPointOnly',
-            null,
-            new Color(100, 0, 0)
-        );
+    if (!(this.parentThatIsA('WardrobeMorph') instanceof ShareBoxAssetsMorph)) {
+        menu.addItem("edit", "editCostume");
+        if (this.world().currentKey === 16) { // shift clicked
+            menu.addItem(
+                'edit rotation point only...',
+                'editRotationPointOnly',
+                null,
+                new Color(100, 0, 0)
+            );
+        }
+        menu.addItem("rename", "renameCostume");
+        menu.addLine();
+        menu.addItem("duplicate", "duplicateCostume");
     }
-    menu.addItem("rename", "renameCostume");
-    menu.addLine();
-    menu.addItem("duplicate", "duplicateCostume");
     menu.addItem("delete", "removeCostume");
-    menu.addLine();
-    menu.addItem("export", "exportCostume");
+    if (!(this.parentThatIsA('WardrobeMorph') instanceof ShareBoxAssetsMorph)) {
+        menu.addLine();
+        menu.addItem("export", "exportCostume");
+    }
     return menu;
 };
 
@@ -8001,6 +8007,10 @@ CostumeIconMorph.prototype.removeCostume = function () {
         var ide = this.parentThatIsA('IDE_Morph');
         var dataList = ide.sharer.buildDataList();
         ide.sharer.socket.emit('send', dataList);
+
+        ide.hasChangedMedia = true;
+        ide.drawNew();
+        ide.fixLayout();
     }
 };
 
@@ -8558,7 +8568,9 @@ SoundIconMorph.prototype.userMenu = function () {
     if (!(this.object instanceof Sound)) {
         return null;
     }
-    menu.addItem('rename', 'renameSound');
+    if (!(this.parent.parent instanceof ShareBoxAssetsMorph)) {
+        menu.addItem('rename', 'renameSound');
+    }
     menu.addItem('delete', 'removeSound');
     return menu;
 };
@@ -8599,6 +8611,10 @@ SoundIconMorph.prototype.removeSound = function () {
         this.parent.children.splice(idx, 1);
         var dataList = ide.sharer.buildDataList();
         ide.sharer.socket.emit('send', dataList);
+
+        ide.hasChangedMedia = true;
+        ide.drawNew();
+        ide.fixLayout();
     }
 };
 

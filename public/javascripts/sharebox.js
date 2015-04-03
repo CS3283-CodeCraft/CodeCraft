@@ -19,7 +19,7 @@
 function ShareBoxItemSharer(serializer, ide, socket) {
     this.serializer = serializer || [];
     this.ide = ide || [];
-    this.data = { data: [] };
+    this.data = { room: -1, data: [] };
     this.socket = socket;
 }
 
@@ -40,6 +40,7 @@ ShareBoxItemSharer.prototype.shareObject = function (room, shareItem, shareName)
         // ERROR HANDLING
         throw "Null XML";
     } else {
+        this.data.room = room;
         // Share the item
         // Build array object to update list
         /*var objectData = {
@@ -72,13 +73,15 @@ ShareBoxItemSharer.prototype.shareObject = function (room, shareItem, shareName)
             shareObject.destroy();
         }
         this.ide.hasChangedMedia = true;
-        this.ide.shareBox.changed();
+        this.ide.drawNew();
+        this.ide.fixLayout();
     }
 };
 
 ShareBoxItemSharer.prototype.buildDataList = function() {
-    var dataList = { data: [] };
+    var dataList = { room: this.room, data: [] };
     var myself = this;
+    this.ide.fixLayout();
     this.ide.shareBox.contents.children.forEach(function(item){
         if (item instanceof CostumeIconMorph || item instanceof SoundIconMorph)
             dataList.data.push(_.escape(myself.serializeItem(item)));
