@@ -1630,7 +1630,6 @@ IDE_Morph.prototype.createShareBoxBar = function () {
     tab.drawNew();
     tab.fixLayout();
     tabBar.add(tab);
-
     tab = new TabMorph(
         tabColors,
         null, // target
@@ -1765,6 +1764,7 @@ IDE_Morph.makeSocket = function (myself, shareboxId) {
         }
         console.log(myself);
         this.hasChangedMedia = true;
+        sharer.ide.refresh();
     }.bind(sharer));
 
     
