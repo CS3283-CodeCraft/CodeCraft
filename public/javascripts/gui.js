@@ -2698,12 +2698,12 @@ IDE_Morph.prototype.showAddMemberPopup = function() {
         var txtColor = new Color(204, 0, 0);
 
 
-        if (username == "") {
+        if (username.length < 5) {
             // show error message for blank username
             if (this.txt) {
                 this.txt.destroy();
             }
-            this.txt = new TextMorph("Please enter a non-blank username.");
+            this.txt = new TextMorph("Usernames are at least 5 characters.");
             this.txt.setColor(txtColor);
             this.txt.setCenter(myself.addMemberPopup.center());
             this.txt.setTop(addButton.bottom() + 20);
@@ -2711,8 +2711,23 @@ IDE_Morph.prototype.showAddMemberPopup = function() {
             this.txt.drawNew();
             myself.addMemberPopup.fixLayout();
             myself.addMemberPopup.drawNew();
-        } else {
 
+        } else if (username.length > 20) {
+
+            // show error message for long username
+            if (this.txt) {
+                this.txt.destroy();
+            }
+            this.txt = new TextMorph("Usernames can't exceed 20 characters.");
+            this.txt.setColor(txtColor);
+            this.txt.setCenter(myself.addMemberPopup.center());
+            this.txt.setTop(addButton.bottom() + 20);
+            myself.addMemberPopup.add(this.txt);
+            this.txt.drawNew();
+            myself.addMemberPopup.fixLayout();
+            myself.addMemberPopup.drawNew();
+
+        } else {
             // add member to pending members, and feedback result to the user (success/fail)
             // this result value is returned from an internal add member function (NOT ADDED YET)
             //var result = "group_full"; // EITHER: success, connection_error, user_offline, user_nonexistent, user_has_group, group_full
