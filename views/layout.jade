@@ -2,7 +2,7 @@ doctype html
 html
 	head
 		meta(http-equiv='Content-Type', content='text/html; charset=UTF-8')
-		title Snap! Build Your Own Blocks. Beta
+		title CodeCraft - Visual Programming Platform
 		link(rel='shortcut icon', href='http://snap.berkeley.edu/fav3.gif', type='image/gif')
 		link(rel='stylesheet', type='text/css', href='codecraft/css/main.css')
 		script(type='text/javascript', src='//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js')
@@ -37,7 +37,12 @@ html
 			    //'http://codecraft-api.herokuapp.com/'
 			);
 
-			var tempIdentifier = prompt("what's your id?")
+			var tempIdentifier = encodeURI(prompt("what's your id?"))
+			while(tempIdentifier.length < 5 || tempIdentifier.length > 20){
+				console.log("invalid")
+				tempIdentifier = encodeURI(prompt("Please enter a valid id"));
+			}
+
 			var world;
 			window.onload = function () {
 			world = new WorldMorph(document.getElementById('world'));
