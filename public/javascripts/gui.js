@@ -141,6 +141,7 @@ IDE_Morph.prototype.setDefaultDesign = function () {
 
 IDE_Morph.prototype.setFlatDesign = function () {
     MorphicPreferences.isFlat = true;
+
     SpriteMorph.prototype.paletteColor = new Color(255, 255, 255);
     SpriteMorph.prototype.paletteTextColor = new Color(70, 70, 70);
     StageMorph.prototype.paletteTextColor
@@ -189,13 +190,12 @@ function IDE_Morph(isAutoFill) {
 
 IDE_Morph.prototype.init = function (isAutoFill) {
     // global font setting
-
-
     MorphicPreferences.globalFontFamily = 'Helvetica, Arial';
 
     // restore saved user preferences
     this.userLanguage = null; // user language preference for startup
     this.applySavedSettings();
+    IDE_Morph.prototype.setFlatDesign(); // flat design
 
     // additional properties:
     this.cloudMsg = null;
@@ -752,6 +752,7 @@ IDE_Morph.prototype.createControlBar = function () {
         projectButton.setRight(cloudButton.left() - padding);
 
         this.updateLabel();
+        this.updateUsernameLabel();
     };
 
     this.controlBar.updateLabel = function () {
@@ -780,6 +781,32 @@ IDE_Morph.prototype.createControlBar = function () {
         this.add(this.label);
         this.label.setCenter(this.center());
         this.label.setLeft(this.settingsButton.right() + padding);
+    };
+
+    this.controlBar.updateUsernameLabel = function () {
+
+        if (this.usernameLabel) {
+            this.usernameLabel.destroy();
+        }
+        if (myself.isAppMode) {
+            return;
+        }
+
+        this.usernameLabel = new StringMorph(
+            "Logged in as: " + tempIdentifier,
+            12,
+            'sans-serif',
+            true,
+            false,
+            false,
+            MorphicPreferences.isFlat ? null : new Point(2, 1),
+            myself.frameColor.darker(myself.buttonContrast)
+        );
+        this.usernameLabel.color = new Color(60, 158, 0);
+        this.usernameLabel.drawNew();
+        this.add(this.usernameLabel);
+        this.usernameLabel.setCenter(this.center());
+        this.usernameLabel.setRight(myself.controlBar.stageSizeButton.left() - padding*3);
     };
 };
 
