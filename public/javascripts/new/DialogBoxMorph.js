@@ -72,7 +72,7 @@ var DialogBoxMorph = Class.create(Morph, {
 
         // override inherited properites:
         this.isDraggable = true;
-        this.color = PushButtonMorph.prototype.color;
+        this.color = PushButtonMorph.prototype.color.lighter(50);
         this.createLabel();
         this.createButtons();
         this.setExtent(new Point(300, 150));
@@ -128,12 +128,14 @@ var DialogBoxMorph = Class.create(Morph, {
         spaceheight,
 		myself){
 		var sprite = new SpriteMorph(new Image());
-		
+		var spriteonepage = 15;
 		var mine = this;
 		//------------------------------------------
 		var dir = 'api/library/costumes',
                 names = myself.getCostumesList(dir),
 				i = 0;
+		var minIndex = (myself.currentPage - 1) * spriteonepage;
+		var maxIndex = (myself.currentPage * spriteonepage) - 1;
                 //libMenu = new MenuMorph(
                 //    myself,
                 //        localize('Import') + ' ' + localize(dir)
@@ -178,11 +180,46 @@ var DialogBoxMorph = Class.create(Morph, {
 				sprite.image = imagetoshow;
 				sprite.name = line.name;
 				//debugger;
-				
-				sprite.setPosition(new Point(spacelength + (i%6)*150, spaceheight + Math.floor(i/6) * 100));
+				var heightindex = Math.floor(i/5);
+				sprite.setPosition(new Point(spacelength + (i%5)*150, spaceheight + (heightindex%3) * 180));
 				sprite.isDraggable = false;
-            
-				mine.add(sprite);
+				
+				//debugger;
+				
+				if(myself.tag1people){
+					//console.log(line.tag1);
+					if(line.tag1 === 'people'){
+						if(i >= minIndex && i <= maxIndex){
+							mine.add(sprite);
+						}
+					}
+					if(line.tag1 === 'animal' && myself.tag1animal){
+						if(i >= minIndex && i <= maxIndex){
+							mine.add(sprite);
+						}
+					}
+					if(line.tag1 === 'object' && myself.tag1object){
+						if(i >= minIndex && i <= maxIndex){
+							mine.add(sprite);
+						}
+					}
+				}else if(myself.tag1animal){
+					if(line.tag1 === 'animal'){
+						if(i >= minIndex && i <= maxIndex){
+							mine.add(sprite);
+						}
+					}
+					if(line.tag1 === 'object' && myself.tag1object){
+						if(i >= minIndex && i <= maxIndex){
+							mine.add(sprite);
+						}
+					}
+				}
+				else{
+					if(i >= minIndex && i <= maxIndex){
+						mine.add(sprite);
+					}
+				}
 				
 				var buttonforadding;		//button to add sprite
 				buttonforadding = new PushButtonMorph(
@@ -201,11 +238,51 @@ var DialogBoxMorph = Class.create(Morph, {
 				buttonforadding.setWidth(70);
 				buttonforadding.setHeight(70);
 
-				buttonforadding.setPosition(new Point(spacelength + (i%6)*150, spaceheight + Math.floor(i/6) * 100));
+				buttonforadding.setPosition(new Point(spacelength + (i%5)*150, spaceheight + (heightindex % 3) * 180));
 
-				mine.add(buttonforadding);
-				
-				i++;
+				//mine.add(buttonforadding);
+				if(myself.tag1people){
+					//debugger;
+					if(line.tag1 === 'people'){
+						if(i >= minIndex && i <= maxIndex){
+							mine.add(buttonforadding);
+						}
+						i++;
+					}
+					if(line.tag1 === 'animal' && myself.tag1animal){
+						if(i >= minIndex && i <= maxIndex){
+							mine.add(buttonforadding);
+						}
+						i++;
+					}
+					if(line.tag1 === 'object' && myself.tag1object){
+						if(i >= minIndex && i <= maxIndex){
+							mine.add(buttonforadding);
+						}
+						i++;
+					}
+				}else if(myself.tag1animal){
+					if(line.tag1 === 'animal'){
+						if(i >= minIndex && i <= maxIndex){
+							mine.add(buttonforadding);
+						}
+						i++;
+					}
+					if(line.tag1 === 'object' && myself.tag1object){
+						if(i >= minIndex && i <= maxIndex){
+							mine.add(buttonforadding);
+						}
+						i++;
+					}
+				}
+				else{
+					if(i >= minIndex && i <= maxIndex){
+						mine.add(buttonforadding);
+					}
+					i++;
+				}
+				//myself.currentPage = 1;
+				myself.maxPage = Math.ceil(i / 15);
 				
             });
             //libMenu.popup(world, pos);
@@ -274,7 +351,15 @@ var DialogBoxMorph = Class.create(Morph, {
         var button;     //next button
         button = new PushButtonMorph(
             this,
-            'goNextPage',
+            function(){
+				//debugger;	
+				myself.currentPage++;
+				if(myself.currentPage > myself.maxPage){
+					myself.currentPage = 1;
+				}
+				myself.openLibrary();
+				mine.destroy();
+			},
             "Next",
             null,
             null,
@@ -291,7 +376,15 @@ var DialogBoxMorph = Class.create(Morph, {
         var button2;        //next button
         button2 = new PushButtonMorph(
             this,
-            'goPrevPage',
+            function(){
+				//debugger;	
+				myself.currentPage--;
+				if(myself.currentPage <= 0){
+					myself.currentPage = myself.maxPage;
+				}
+				myself.openLibrary();
+				mine.destroy();
+			},
             "Prev",
             null,
             null,
@@ -305,7 +398,8 @@ var DialogBoxMorph = Class.create(Morph, {
 
         this.add(button2);
         
-        var text = new TextMorph(this.currentpage.toString() + " / " + this.maxpage.toString());
+		console.log(myself.currentPage);
+        var text = new TextMorph(myself.currentPage.toString() + " / " + myself.maxPage.toString());
         //this.fontSize = 10;
         text.setPosition(new Point(screen.width*0.49,screen.height*0.755)); 
         this.add(text);
@@ -339,8 +433,10 @@ var DialogBoxMorph = Class.create(Morph, {
 
     createCheckBox: function (
         librarylength,
-        libraryheight){
-            
+        libraryheight,
+		myself){
+        
+		var mine = this;
         this.labelString = 'Sprite Library';
         this.createLabel();
         
@@ -353,11 +449,42 @@ var DialogBoxMorph = Class.create(Morph, {
             'checkbox',
             null,
             function () {
-                this.typefilter = !this.typefilter;
+                //this.typefilter = !this.typefilter;
+				//console.log(myself.tag1people);
+				//debugger;
+				myself.tag1people = !myself.tag1people;
+				myself.currentPage = 1;
+				myself.openLibrary();
+				mine.destroy();
+				//this.drawNew();
+				//this.destroy();
+				//myself.tag1bool = !myself.tag1bool;
+				//myself.tag1animal = !myself.tag1animal;
+				/*
+				if(!myself.tag1bool){
+					myself.tag1people = true;
+					//myself.tag1animal = false;
+					//myself.tag1object = false;
+					myself.tag1bool = !myself.tag1bool;
+					//debugger;
+				}else if(myself.tag1bool){
+					if(myself.tag1people){
+						myself.tag1bool = !myself.tag1bool;
+						myself.tag1people = false;
+						myself.tag1animal = false;
+						myself.tag1object = false;
+					} else{
+						myself.tag1people = true;
+						myself.tag1animal = false;
+						myself.tag1object = false;
+					}
+				}
+				*/
             },
             localize('People'),
             function () {
-                return this.typefilter;
+				//console.log(myself.tag1people);
+                return myself.tag1people;
             }
         );
         
@@ -368,11 +495,34 @@ var DialogBoxMorph = Class.create(Morph, {
             'checkbox',
             null,
             function () {
-                this.typefilter = !this.typefilter;
+				myself.tag1animal = !myself.tag1animal;
+				myself.currentPage = 1;
+				myself.openLibrary();
+				mine.destroy();
+				/*
+                //this.typefilter = !this.typefilter;
+				if(myself.tag1bool == false){
+					myself.tag1people = false;
+					myself.tag1animal = true;
+					myself.tag1object = false;
+					myself.tag1bool = true;
+				}else if(myself.tag1bool == true){
+					if(myself.tag1animal == true){
+						myself.tag1bool = false;
+						myself.tag1people = false;
+						myself.tag1animal = false;
+						myself.tag1object = false;
+					} else{
+						myself.tag1people = false;
+						myself.tag1animal = true;
+						myself.tag1object = false;
+					}
+				}
+				*/
             },
             localize('Animal'),
             function () {
-                return this.typefilter;
+                return myself.tag1animal;
             }
         );
         
@@ -383,11 +533,35 @@ var DialogBoxMorph = Class.create(Morph, {
             'checkbox',
             null,
             function () {
-                this.typefilter = !this.typefilter;
+				myself.tag1object = !myself.tag1object;
+				myself.currentPage = 1;
+				myself.openLibrary();
+				mine.destroy();
+				/*
+                //this.typefilter = !this.typefilter;
+				if(myself.tag1bool === false){
+					myself.tag1people = false;
+					myself.tag1animal = false;
+					myself.tag1object = true;
+					myself.tag1bool = true;
+				}else if(myself.tag1bool === true){
+					if(myself.tag1object === true){
+						myself.tag1bool = false;
+						myself.tag1people = false;
+						myself.tag1animal = false;
+						myself.tag1object = false;
+					} else{
+						myself.tag1people = false;
+						myself.tag1animal = false;
+						myself.tag1object = true;
+					}
+				}
+				*/
             },
             localize('Object'),
             function () {
-                return this.typefilter;
+                //return this.typefilter;
+				return myself.tag1object;
             }
         );
         

@@ -86,8 +86,14 @@ var JukeboxMorph;
 var ScriptIconMorph;
 var ShareBoxScriptsMorph;
 var ShareBoxAssetsMorph;
+var tag1people;
+var tag1animal;
+var tag1object;
+var tag2;
+var tag1bool;
 
-var currentPage = 1;
+var currentPage;
+var maxPage;
 
 // IDE_Morph ///////////////////////////////////////////////////////////
 
@@ -205,7 +211,7 @@ IDE_Morph.prototype.init = function (isAutoFill) {
     this.globalVariables = new VariableFrame();
     this.currentSprite = new SpriteMorph(this.globalVariables);
     this.shareBoxPlaceholderSprite = new SpriteMorph(this.globalVariables);
-    this.shareBoxPlaceholderSprite.scripts = [];
+    this.shareBoxPlaceholderSprite.scriptsList = new List();
     this.sprites = new List([this.currentSprite]);
     this.currentCategory = 'motion';
     this.currentTab = 'scripts';
@@ -249,6 +255,8 @@ IDE_Morph.prototype.init = function (isAutoFill) {
 
     // override inherited properites:
     this.color = this.backgroundColor;
+	
+	this.currentPage = 1;
 };
 
 IDE_Morph.prototype.openIn = function (world) {
@@ -1789,9 +1797,8 @@ IDE_Morph.makeSocket = function (myself, shareboxId) {
             } else if (shareObject instanceof SoundIconMorph) {
                 sharer.ide.shareBoxPlaceholderSprite.addSound(shareObject.object, shareObject.name);
             } else if (shareObject instanceof CommandBlockMorph) {
-                var scriptIcon = new ScriptIconMorph(shareObject, sharer.ide);
-                sharer.ide.shareBox.addContents(scriptIcon);
-                sharer.ide.shareBoxPlaceholderSprite.scripts.push(shareObject);
+                sharer.ide.shareBoxPlaceholderSprite.scriptsList.add(shareObject);
+                sharer.ide.shareBox.updateList();
             }
             shareObject.destroy();
         }
@@ -1800,11 +1807,10 @@ IDE_Morph.makeSocket = function (myself, shareboxId) {
         this.ide.removeSprite(curr);
         this.ide.currentSprite = duplicate;
         this.ide.currentSprite.appearIn(this.ide);
+        this.ide.selectSprite(this.ide.currentSprite);
         sharer.ide.shareBoxPlaceholderSprite.hasChangedMedia = true;
         sharer.ide.drawNew();
         sharer.ide.fixLayout();
-        console.log("Placeholder costume list length: " + shareBoxPlaceholderSprite.costumes.length());
-        console.log("Main sprite costume list length: " + sharer.ide.currentSprite.costumes.length());
     }.bind(sharer));
 
 
@@ -1848,7 +1854,7 @@ IDE_Morph.prototype.createShareBox = function () {
         scripts.color = this.groupColor;
         scripts.texture = this.scriptsPaneTexture;
 
-        this.shareBox = new FrameMorph();
+        this.shareBox = new ShareBoxScriptsMorph(this.shareBoxPlaceholderSprite, this);
         this.shareBox.color = this.groupColor;
         this.shareBox.acceptsDrops = true;
         this.add(this.shareBox);
@@ -4129,7 +4135,7 @@ IDE_Morph.prototype.openLibrary = function () {
 	db.setWidth(screen.width*0.7);
 	db.setHeight(screen.height*0.7);
 	//db.fontSize = 40;
-	db.createCheckBox(db.length,db.height);
+	db.createCheckBox(db.length,db.height, myself);
 	
 	db.createImage(
         function(){return new SpriteMorph(new Image())}, 
@@ -9063,7 +9069,7 @@ ScriptIconMorph.prototype.userMenu = function () {
 
 ScriptIconMorph.prototype.renameScript = function () {
     var script = this.object,
-        ide = this.parentThatIsA('IDE_Morph'),
+        ide = this.ide,
         myself = this;
     (new DialogBoxMorph(
         null,
@@ -9086,7 +9092,7 @@ ScriptIconMorph.prototype.renameScript = function () {
 ScriptIconMorph.prototype.removeScript = function () {
     var jukebox = this.parentThatIsA('ShareBoxScriptsMorph'),
         idx = this.parent.children.indexOf(this);
-    jukebox.removeSound(idx);
+    jukebox.removeScript(idx);
 };
 
 ScriptIconMorph.prototype.createBackgrounds
@@ -9114,15 +9120,16 @@ ShareBoxScriptsMorph.prototype.constructor = ShareBoxScriptsMorph;
 ShareBoxScriptsMorph.uber = ScrollFrameMorph.prototype;
 ShareBoxScriptsMorph.className = 'ShareBoxScriptsMorph';
 
-function ShareBoxScriptsMorph(aSprite, sliderColor) {
-    this.init(aSprite, sliderColor);
+function ShareBoxScriptsMorph(aSprite, ide, sliderColor) {
+    this.init(aSprite, ide, sliderColor);
 }
 
-ShareBoxScriptsMorph.prototype.init = function (aSprite, sliderColor) {
+ShareBoxScriptsMorph.prototype.init = function (aSprite, ide, sliderColor) {
     // additional properties
     this.sprite = aSprite || new SpriteMorph();
     this.costumesVersion = null;
     this.spriteVersion = null;
+    this.ide = ide;
 
     // initialize inherited properties
     ShareBoxScriptsMorph.uber.init.call(this, null, null, sliderColor);
@@ -9143,8 +9150,8 @@ ShareBoxScriptsMorph.prototype.updateList = function () {
         oldFlag = Morph.prototype.trackChanges,
         icon,
         template,
-        txt;
-
+        txt,
+        ide = this.ide;
     this.changed();
     oldFlag = Morph.prototype.trackChanges;
     Morph.prototype.trackChanges = false;
@@ -9157,8 +9164,8 @@ ShareBoxScriptsMorph.prototype.updateList = function () {
     };
     this.addBack(this.contents);
 
-    this.sprite.scripts.asArray().forEach(function (script) {
-        template = icon = new ScriptIconMorph(script, template);
+    this.sprite.scriptsList.asArray().forEach(function (script) {
+        template = icon = new ScriptIconMorph(script, ide, template);
         icon.setPosition(new Point(x, y));
         myself.addContents(icon);
         y = icon.bottom() + padding;
@@ -9183,7 +9190,7 @@ ShareBoxScriptsMorph.prototype.updateSelection = function () {
 
 // Fix this remove
 ShareBoxScriptsMorph.prototype.removeScript = function (idx) {
-    this.sprite.scripts.remove(idx);
+    this.sprite.scriptsList.remove(idx);
     this.updateList();
 };
 
@@ -9205,7 +9212,7 @@ ShareBoxScriptsMorph.prototype.reactToDropOf = function (blockMorph) {
             idx += 1;
         }
     });
-    this.sprite.scripts.add(script, idx);
+    this.sprite.scriptsList.add(script, idx);
     this.add(script);
     this.updateList();
 };
