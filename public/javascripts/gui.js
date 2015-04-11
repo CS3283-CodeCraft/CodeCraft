@@ -86,6 +86,11 @@ var JukeboxMorph;
 var ScriptIconMorph;
 var ShareBoxScriptsMorph;
 var ShareBoxAssetsMorph;
+var tag1people;
+var tag1animal;
+var tag1object;
+var tag2;
+var tag1bool;
 
 var currentPage = 1;
 
@@ -4131,7 +4136,7 @@ IDE_Morph.prototype.openLibrary = function () {
 	db.setWidth(screen.width*0.7);
 	db.setHeight(screen.height*0.7);
 	//db.fontSize = 40;
-	db.createCheckBox(db.length,db.height);
+	db.createCheckBox(db.length,db.height, myself);
 	
 	db.createImage(
         function(){return new SpriteMorph(new Image())}, 

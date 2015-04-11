@@ -181,8 +181,25 @@ var DialogBoxMorph = Class.create(Morph, {
 				
 				sprite.setPosition(new Point(spacelength + (i%5)*150, spaceheight + Math.floor(i/5) * 180));
 				sprite.isDraggable = false;
-            
-				mine.add(sprite);
+				
+				//debugger;
+				
+				if(myself.tag1people){
+					//console.log(line.tag1);
+					if(line.tag1 === 'people'){
+						mine.add(sprite);
+					}
+					if(line.tag1 === 'animal' && myself.tag1animal){
+						mine.add(sprite);
+					}
+				}else if(myself.tag1animal){
+					if(line.tag1 === 'animal'){
+						mine.add(sprite);
+					}
+				}
+				else{
+					mine.add(sprite);
+				}
 				
 				var buttonforadding;		//button to add sprite
 				buttonforadding = new PushButtonMorph(
@@ -203,9 +220,29 @@ var DialogBoxMorph = Class.create(Morph, {
 
 				buttonforadding.setPosition(new Point(spacelength + (i%5)*150, spaceheight + Math.floor(i/5) * 180));
 
-				mine.add(buttonforadding);
+				//mine.add(buttonforadding);
+				if(myself.tag1people){
+					//debugger;
+					if(line.tag1 === 'people'){
+						mine.add(buttonforadding);
+						i++;
+					}
+					if(line.tag1 === 'animal' && myself.tag1animal){
+						mine.add(buttonforadding);
+						i++;
+					}
+				}else if(myself.tag1animal){
+					if(line.tag1 === 'animal'){
+						mine.add(buttonforadding);
+						i++;
+					}
+				}
+				else{
+					mine.add(buttonforadding);
+					i++;
+				}
 				
-				i++;
+				
 				
             });
             //libMenu.popup(world, pos);
@@ -339,8 +376,10 @@ var DialogBoxMorph = Class.create(Morph, {
 
     createCheckBox: function (
         librarylength,
-        libraryheight){
-            
+        libraryheight,
+		myself){
+        
+		var mine = this;
         this.labelString = 'Sprite Library';
         this.createLabel();
         
@@ -353,11 +392,41 @@ var DialogBoxMorph = Class.create(Morph, {
             'checkbox',
             null,
             function () {
-                this.typefilter = !this.typefilter;
+                //this.typefilter = !this.typefilter;
+				//console.log(myself.tag1people);
+				//debugger;
+				myself.tag1people = !myself.tag1people;
+				myself.openLibrary();
+				mine.destroy();
+				//this.drawNew();
+				//this.destroy();
+				//myself.tag1bool = !myself.tag1bool;
+				//myself.tag1animal = !myself.tag1animal;
+				/*
+				if(!myself.tag1bool){
+					myself.tag1people = true;
+					//myself.tag1animal = false;
+					//myself.tag1object = false;
+					myself.tag1bool = !myself.tag1bool;
+					//debugger;
+				}else if(myself.tag1bool){
+					if(myself.tag1people){
+						myself.tag1bool = !myself.tag1bool;
+						myself.tag1people = false;
+						myself.tag1animal = false;
+						myself.tag1object = false;
+					} else{
+						myself.tag1people = true;
+						myself.tag1animal = false;
+						myself.tag1object = false;
+					}
+				}
+				*/
             },
             localize('People'),
             function () {
-                return this.typefilter;
+				//console.log(myself.tag1people);
+                return myself.tag1people;
             }
         );
         
@@ -368,11 +437,33 @@ var DialogBoxMorph = Class.create(Morph, {
             'checkbox',
             null,
             function () {
-                this.typefilter = !this.typefilter;
+				myself.tag1animal = !myself.tag1animal;
+				myself.openLibrary();
+				mine.destroy();
+				/*
+                //this.typefilter = !this.typefilter;
+				if(myself.tag1bool == false){
+					myself.tag1people = false;
+					myself.tag1animal = true;
+					myself.tag1object = false;
+					myself.tag1bool = true;
+				}else if(myself.tag1bool == true){
+					if(myself.tag1animal == true){
+						myself.tag1bool = false;
+						myself.tag1people = false;
+						myself.tag1animal = false;
+						myself.tag1object = false;
+					} else{
+						myself.tag1people = false;
+						myself.tag1animal = true;
+						myself.tag1object = false;
+					}
+				}
+				*/
             },
             localize('Animal'),
             function () {
-                return this.typefilter;
+                return myself.tag1animal;
             }
         );
         
@@ -383,11 +474,32 @@ var DialogBoxMorph = Class.create(Morph, {
             'checkbox',
             null,
             function () {
-                this.typefilter = !this.typefilter;
+				myself.tag1object = !myself.tag1object;
+				/*
+                //this.typefilter = !this.typefilter;
+				if(myself.tag1bool === false){
+					myself.tag1people = false;
+					myself.tag1animal = false;
+					myself.tag1object = true;
+					myself.tag1bool = true;
+				}else if(myself.tag1bool === true){
+					if(myself.tag1object === true){
+						myself.tag1bool = false;
+						myself.tag1people = false;
+						myself.tag1animal = false;
+						myself.tag1object = false;
+					} else{
+						myself.tag1people = false;
+						myself.tag1animal = false;
+						myself.tag1object = true;
+					}
+				}
+				*/
             },
             localize('Object'),
             function () {
-                return this.typefilter;
+                //return this.typefilter;
+				return myself.tag1object;
             }
         );
         
