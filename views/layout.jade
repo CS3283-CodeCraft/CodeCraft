@@ -37,22 +37,31 @@ html
 			    //'http://codecraft-api.herokuapp.com/'
 			);
 
-			var tempIdentifier = encodeURI(prompt("what's your id?"))
-			while(tempIdentifier.length < 5 || tempIdentifier.length > 20){
-				console.log("invalid")
-				tempIdentifier = encodeURI(prompt("Please enter a valid id"));
-			}
+			var tempIdentifier = encodeURI('https://openid.nus.edu.sg/' + prompt("what's your id?"))
+			window.open('/api/auth/openid?openid_identifier='+tempIdentifier, 'openid_popup', 'width=790,height=580');
 
 			var world;
-			window.onload = function () {
-			world = new WorldMorph(document.getElementById('world'));
-			world.worldCanvas.focus();
-			new IDE_Morph().openIn(world);
-			setInterval(loop, 1);
-			};
-			function loop() {
-			world.doOneCycle();
+
+			function handleOpenIDResponse(openid_args) {
+				tempIdentifier = openid_args.split('&')[15].split('=')[1].replace('+', ' ');
+				initEverything();
 			}
+
+			function initEverything(){
+
+				world = new WorldMorph(document.getElementById('world'));
+				world.worldCanvas.focus();
+				new IDE_Morph().openIn(world);
+				setInterval(loop, 1);
+
+				function loop() {
+				world.doOneCycle();
+				}
+			}
+
+			
+
+
 	body(style='margin: 0;')
 		block content
 		
