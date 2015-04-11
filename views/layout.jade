@@ -41,18 +41,30 @@ html
 		script(type='text/javascript', src='javascripts/store.js')
 
 		script(type='text/javascript').
+
 			var SnapCloud = new Cloud(
 			    'http://localhost:3000/api/'
 			    //'http://codecraft-api.herokuapp.com/'
 			);
 
 			var tempIdentifier = encodeURI('https://openid.nus.edu.sg/' + prompt("what's your id?"))
+			if(openID){
 			window.open('/api/auth/openid?openid_identifier='+tempIdentifier, 'openid_popup', 'width=790,height=580');
+				var tempIdentifier = encodeURI('https://openid.nus.edu.sg/' + prompt("what's your id?"));
+				window.open('/api/auth/openid?openid_identifier='+tempIdentifier.toLowerCase(), 'openid_popup', 'width=790,height=580');
+				var world;
+			} else {
+				var tempIdentifier = prompt("what's your id?");
+				var world;
+				$( document ).ready(initEverything)
+			}
 
-			var world;
+			//- if(isDev){
+			//- 	initEverything();
+			//- }
 
 			function handleOpenIDResponse(openid_args) {
-				tempIdentifier = openid_args.split('&')[15].split('=')[1].replace('+', ' ');
+				tempIdentifier = openid_args.split('&')[15].split('=')[1].split('+').join(' ');
 				initEverything();
 			}
 

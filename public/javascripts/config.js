@@ -44,6 +44,8 @@ var touchScreenSettings = {
 
 var MorphicPreferences = standardSettings;
 
+var openID = false;
+
 // cloud.js
 
 modules.cloud = '2014-May-26';
