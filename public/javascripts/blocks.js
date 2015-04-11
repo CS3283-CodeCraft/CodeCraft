@@ -5170,10 +5170,16 @@ ScriptsMorph.prototype.fixMultiArgs = function () {
 ScriptsMorph.prototype.wantsDropOf = function (aMorph) {
     // override the inherited method
     return aMorph instanceof SyntaxElementMorph ||
-        aMorph instanceof CommentMorph;
+        aMorph instanceof CommentMorph || aMorph instanceof ScriptIconMorph;
 };
 
 ScriptsMorph.prototype.reactToDropOf = function (droppedMorph, hand) {
+    if (droppedMorph instanceof ScriptIconMorph) {
+        var ide = this.parentThatIsA('IDE_Morph');
+        var blocks = ide.sharer.getObject(droppedMorph.object);
+        blocks.parent = this;
+        blocks.snap(hand);
+    }
     if (droppedMorph instanceof BlockMorph ||
             droppedMorph instanceof CommentMorph) {
         droppedMorph.snap(hand);

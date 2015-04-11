@@ -50,9 +50,9 @@ ShareBoxItemSharer.prototype.shareObject = function (room, shareItem, shareName)
         };
         console.log(room);
         var string = { room: room, data: objectData };*/
-        var duplicate = this.ide.currentSprite.fullCopy();
-        var curr = this.ide.currentSprite;
-        var string = _.escape(xml);
+        var duplicate = this.ide.currentSprite.fullCopy(),
+            curr = this.ide.currentSprite,
+            string = _.escape(xml);
         this.data.data.push(string);
         var sendItem = this.data;
         console.log(JSON.stringify(sendItem));
@@ -71,13 +71,16 @@ ShareBoxItemSharer.prototype.shareObject = function (room, shareItem, shareName)
                 this.ide.shareBoxPlaceholderSprite.addCostume(shareObject.object);
             } else if (shareObject instanceof SoundIconMorph) {
                 this.ide.shareBoxPlaceholderSprite.addSound(shareObject.object, shareObject.name);
+            } else if (shareObject instanceof BlockMorph) {
+                this.ide.shareBoxPlaceholderSprite.scriptsList.add(shareObject);
+                this.ide.shareBox.updateList();
             }
             shareObject.destroy();
         }
         this.ide.removeSprite(curr);
         this.ide.currentSprite = duplicate;
         this.ide.currentSprite.appearIn(this.ide);
-
+        this.ide.selectSprite(this.ide.currentSprite);
         this.ide.hasChangedMedia = true;
         this.ide.drawNew();
         this.ide.fixLayout();
