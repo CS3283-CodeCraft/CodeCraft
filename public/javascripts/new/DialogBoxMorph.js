@@ -355,7 +355,7 @@ var DialogBoxMorph = Class.create(Morph, {
 				//debugger;	
 				myself.currentPage++;
 				if(myself.currentPage > myself.maxPage){
-					myself.currentPage -= myself.maxPage;
+					myself.currentPage = 1;
 				}
 				myself.openLibrary();
 				mine.destroy();
@@ -453,6 +453,7 @@ var DialogBoxMorph = Class.create(Morph, {
 				//console.log(myself.tag1people);
 				//debugger;
 				myself.tag1people = !myself.tag1people;
+				myself.currentPage = 1;
 				myself.openLibrary();
 				mine.destroy();
 				//this.drawNew();
@@ -495,6 +496,7 @@ var DialogBoxMorph = Class.create(Morph, {
             null,
             function () {
 				myself.tag1animal = !myself.tag1animal;
+				myself.currentPage = 1;
 				myself.openLibrary();
 				mine.destroy();
 				/*
@@ -532,6 +534,7 @@ var DialogBoxMorph = Class.create(Morph, {
             null,
             function () {
 				myself.tag1object = !myself.tag1object;
+				myself.currentPage = 1;
 				myself.openLibrary();
 				mine.destroy();
 				/*

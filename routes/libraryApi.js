@@ -161,8 +161,8 @@ router.get('/costumes', function(req, res) {
 			tag1: "people"
 		},
 		{
-			url: "codecraft/Costumes/unicorn.png",
-			name: "unicorn.png",
+			url: "codecraft/Costumes/unicorn1.png",
+			name: "unicorn1.png",
 			tag1: "animal"
 		}
 	]

@@ -92,8 +92,8 @@ var tag1object;
 var tag2;
 var tag1bool;
 
-var currentPage = 1;
-var maxPage = 1;
+var currentPage;
+var maxPage;
 
 // IDE_Morph ///////////////////////////////////////////////////////////
 
