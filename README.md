@@ -9,7 +9,6 @@ Prerequisites: Nodejs installed
 
 You should see CodeCraft now.
 
-Open another browser window or tab and navigate to morphthing.herokuapp.com to see the online preview.
 
 ##How to contribute
 
