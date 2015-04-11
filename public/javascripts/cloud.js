@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 /*
 
     cloud.js
@@ -668,5 +667,3 @@ Cloud.prototype.encodeDict = function (dict) {
 Cloud.prototype.message = function (string) {
     alert(string);
 };
-=======
->>>>>>> 48ba53abbff289bcdfa4de56b973eae655a0bf3d
