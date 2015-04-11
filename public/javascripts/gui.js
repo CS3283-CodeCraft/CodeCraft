@@ -1779,25 +1779,39 @@ IDE_Morph.makeSocket = function (myself, shareboxId) {
     // When I receive data, I parse objectData and add it to my data list
     sharer.socket.on('message', function (objectData) {
         // Clean up shareBoxPlaceholderSprite
-        shareBoxPlaceholderSprite.sounds = new List();
-        shareBoxPlaceholderSprite.costumes = new List();
-        shareBoxPlaceholderSprite.costume = null;
+        var duplicate = this.ide.currentSprite.fullCopy();
+        var curr = this.ide.currentSprite;
+        sharer.ide.shareBoxPlaceholderSprite.sounds = new List();
+        sharer.ide.shareBoxPlaceholderSprite.costumes = new List();
+        sharer.ide.shareBoxPlaceholderSprite.costume = null;
+        //var duplicate = sharer.ide.currentSprite.fullCopy();
+
         // Update local list
         sharer.data.data = objectData;
         console.log("draw following code in sharebox: \n" + JSON.stringify(sharer.data, null, '\t'));
         for (var i = 0; i < sharer.data.data.length; i++) {
             var shareObject = sharer.getObject(_.unescape(sharer.data.data[i]));
             if (shareObject instanceof CostumeIconMorph) {
-                shareBoxPlaceholderSprite.addCostume(shareObject.object);
+                sharer.ide.shareBoxPlaceholderSprite.addCostume(shareObject.object);
             } else if (shareObject instanceof SoundIconMorph) {
-                shareBoxPlaceholderSprite.addSound(shareObject.object, shareObject.name);
+                sharer.ide.shareBoxPlaceholderSprite.addSound(shareObject.object, shareObject.name);
+            } else if (shareObject instanceof CommandBlockMorph) {
+                var scriptIcon = new ScriptIconMorph(shareObject, sharer.ide);
+                sharer.ide.shareBox.addContents(scriptIcon);
+                sharer.ide.shareBoxPlaceholderSprite.scripts.push(shareObject);
             }
             shareObject.destroy();
         }
         console.log(myself);
-        this.hasChangedMedia = true;
+        //sharer.ide.currentSprite = duplicate;
+        this.ide.removeSprite(curr);
+        this.ide.currentSprite = duplicate;
+        this.ide.currentSprite.appearIn(this.ide);
+        sharer.ide.shareBoxPlaceholderSprite.hasChangedMedia = true;
         sharer.ide.drawNew();
         sharer.ide.fixLayout();
+        console.log("Placeholder costume list length: " + shareBoxPlaceholderSprite.costumes.length());
+        console.log("Main sprite costume list length: " + sharer.ide.currentSprite.costumes.length());
     }.bind(sharer));
 
 
@@ -1858,6 +1872,7 @@ IDE_Morph.prototype.createShareBox = function () {
         );
         this.shareBox.color = this.groupColor;
         this.add(this.shareBox);
+        //this.addChild(this.shareBox);
         this.shareBox.updateSelection();
 
         this.shareBox.acceptsDrops = true;
@@ -1869,7 +1884,9 @@ IDE_Morph.prototype.createShareBox = function () {
         };
 
     } else {
-        this.shareBox = new Morph();
+
+        //this.shareBox = new Morph();
+        this.shareBox = new ShareBoxScriptsMorph(this.shareBoxPlaceholderSprite, this);
 
         this.shareBox.color = this.groupColor;
         this.shareBox.acceptsDrops = true;
@@ -1881,7 +1898,7 @@ IDE_Morph.prototype.createShareBox = function () {
                 droppedMorph.destroy();
             }
         };
-        this.add(this.shareBox);
+        this.addChild(this.shareBox);
     }
 
 
@@ -8805,6 +8822,7 @@ JukeboxMorph.prototype.reactToDropOf = function (icon) {
 
 // Huan Song: Some interesting inheritance going here. I still need to figure out what's going on, but this works atm.
 ShareBoxAssetsMorph.prototype = Object.create(WardrobeMorph.prototype);
+ShareBoxAssetsMorph.className = 'ShareBoxAssetsMorph';
 
 function ShareBoxAssetsMorph(aSprite, sliderColor) {
     this.init(aSprite, sliderColor);
@@ -8961,13 +8979,13 @@ ScriptIconMorph.prototype.fontSize = 9;
 // ScriptIconMorph instance creation:
 
 // aScript is a BlockMorph
-function ScriptIconMorph(aScript, aTemplate) {
-    this.init(aScript, aTemplate);
+function ScriptIconMorph(aScript, ide, aTemplate) {
+    this.init(aScript, ide, aTemplate);
 }
 
-ScriptIconMorph.prototype.init = function (aScript, aTemplate) {
+ScriptIconMorph.prototype.init = function (aScript, ide, aTemplate) {
     var colors, action, query;
-
+    this.ide = ide;
     if (!aTemplate) {
         colors = [
             IDE_Morph.prototype.groupColor,
@@ -8986,9 +9004,8 @@ ScriptIconMorph.prototype.init = function (aScript, aTemplate) {
     };
 
     // additional properties:
-    var ide = this.parentThatIsA('IDE_Morph');
-    var xml = this.serializer.serialize(aScript);
-    this.object = xml; // mandatory, actually
+    //var ide = this.parentThatIsA('IDE_Morph');
+    this.object = this.ide.sharer.serializeItem(aScript); // mandatory, actually
     this.version = this.object.version;
     this.thumbnail = null;
 
@@ -9175,7 +9192,7 @@ ShareBoxScriptsMorph.prototype.removeScript = function (idx) {
 // Jukebox drag & drop
 
 ShareBoxScriptsMorph.prototype.wantsDropOf = function (morph) {
-    return morph instanceof BlockMorph;
+    return morph instanceof CommandBlockMorph;
 };
 
 // Fix this add
@@ -9191,6 +9208,7 @@ ShareBoxScriptsMorph.prototype.reactToDropOf = function (blockMorph) {
         }
     });
     this.sprite.scripts.add(script, idx);
+    this.add(script);
     this.updateList();
 };
 
