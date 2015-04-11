@@ -272,6 +272,7 @@ var Cloud = Class.create({
 	        },
 	        errorCall
 	    );
+		
 	},
 
 	rawLogin: function (
@@ -281,6 +282,8 @@ var Cloud = Class.create({
 	    errorCall
 	) {
 	    // both callBack and errorCall are two-argument functions
+	    
+
 	    var myself = this,
 	        pwHash = hex_sha512("miosoft%20miocon,"
 	            + this.session.split('=')[1] + ","
