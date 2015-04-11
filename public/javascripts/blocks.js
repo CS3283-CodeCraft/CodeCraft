@@ -5176,9 +5176,15 @@ ScriptsMorph.prototype.wantsDropOf = function (aMorph) {
 ScriptsMorph.prototype.reactToDropOf = function (droppedMorph, hand) {
     if (droppedMorph instanceof ScriptIconMorph) {
         var ide = this.parentThatIsA('IDE_Morph');
-        var blocks = ide.sharer.getObject(droppedMorph.object);
-        blocks.parent = this;
-        blocks.snap(hand);
+        var deserializedItem = ide.sharer.deserializeItem(droppedMorph.object);
+        // Further conversion is needed to make the object grabbable
+        var grabbableItem = ide.sharer.returnGrabbableDeserializedItem(deserializedItem);
+        // Thereafter, we put the item into the cursor's hand, and let the cursor carry it around.
+        grabbableItem.setPosition(world.hand.position());
+        world.hand.grab(grabbableItem);
+        grabbableItem.parent = this;
+        grabbableItem.snap(hand);
+        droppedMorph.destroy();
     }
     if (droppedMorph instanceof BlockMorph ||
             droppedMorph instanceof CommentMorph) {
