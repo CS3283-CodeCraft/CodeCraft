@@ -85,7 +85,7 @@ io.sockets.on('connection', function(socket){
     
     socket.on('REMOVE_USER', function(data){
       for (var i = clients[data.room].members.length - 1; i >= 0; i--) {
-        if(clients[data.room].members[i].clientId == data.removeId){
+        if(clients[data.room].members[i].clientId === data.removeId){
           var sid = clients[data.room].members[i].socketId
           clients[data.room].members.splice(i, 1);
           io.to(sid).emit('BE_REMOVED')

@@ -2415,9 +2415,10 @@ IDE_Morph.prototype.showViewMembersPopup = function() {
     var socketData = {room:shareboxId}
     this.sharer.socket.emit('GET_MEMBERS', socketData);
     console.log("[SOCKET-SEND] GET_MEMBERS: " + JSON.stringify(socketData));
+    
+    // TO BE REFRACTORED
     this.sharer.socket.on('UPDATE_MEMBERS', function(data){
-        console.log("[SOCKET-RECEIVE] UPDATE_MEMBERS: " + JSON.stringify(data));
-
+        console.log("[SOCKET-RECEIVE] FIRST_UPDATE_MEMBERS: " + JSON.stringify(data));
         pendingMembers = [];
         groupMembers = [tempIdentifier];
         groupMembersIsOnline = [true];
@@ -2475,7 +2476,12 @@ IDE_Morph.prototype.showViewMembersPopup = function() {
 
         // add close button
         var button = new PushButtonMorph(null, null, "Close me", null, null, null, "green");
-        button.action = function() { myself.viewMembersPopup.cancel(); };
+        button.action = function() { 
+            myself.sharer.socket.on('UPDATE_MEMBERS', function(){
+                // do nothing
+            })
+            myself.viewMembersPopup.cancel(); 
+        };
         button.setCenter(myself.viewMembersPopup.center());
         button.setBottom(myself.viewMembersPopup.bottom() - 10);
         myself.viewMembersPopup.add(button);
@@ -2489,7 +2495,6 @@ IDE_Morph.prototype.showViewMembersPopup = function() {
         myself.viewMembersPopup.fixLayout();
         myself.viewMembersPopup.popUp(world);
     })
-
     
 };
 
