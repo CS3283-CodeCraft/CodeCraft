@@ -179,7 +179,7 @@ var DialogBoxMorph = Class.create(Morph, {
 				sprite.name = line.name;
 				//debugger;
 				
-				sprite.setPosition(new Point(spacelength + (i%5)*150, spaceheight + Math.floor(i/5) * 180));
+				sprite.setPosition(new Point(spacelength + (i%6)*150, spaceheight + Math.floor(i/6) * 100));
 				sprite.isDraggable = false;
             
 				mine.add(sprite);
@@ -201,7 +201,7 @@ var DialogBoxMorph = Class.create(Morph, {
 				buttonforadding.setWidth(70);
 				buttonforadding.setHeight(70);
 
-				buttonforadding.setPosition(new Point(spacelength + (i%5)*150, spaceheight + Math.floor(i/5) * 180));
+				buttonforadding.setPosition(new Point(spacelength + (i%6)*150, spaceheight + Math.floor(i/6) * 100));
 
 				mine.add(buttonforadding);
 				
