@@ -72,7 +72,7 @@ var DialogBoxMorph = Class.create(Morph, {
 
         // override inherited properites:
         this.isDraggable = true;
-        this.color = PushButtonMorph.prototype.color;
+        this.color = PushButtonMorph.prototype.color.lighter(50);
         this.createLabel();
         this.createButtons();
         this.setExtent(new Point(300, 150));

@@ -145,7 +145,7 @@ var ToggleMorph = Class.create(PushButtonMorph, {
             if (this.captionString) {
                 this.label = new TextMorph(
                     localize(this.captionString),
-                    this.fontSize,
+                    this.fontSize + 4,
                     this.fontStyle,
                     true
                 );
@@ -155,7 +155,7 @@ var ToggleMorph = Class.create(PushButtonMorph, {
         if (this.tick === null) {
             this.tick = new StringMorph(
                 localize(this.labelString),
-                this.fontSize,
+                this.fontSize + 5,
                 this.fontStyle,
                 true,
                 false,
