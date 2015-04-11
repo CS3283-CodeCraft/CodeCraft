@@ -79,7 +79,7 @@ var ToggleElementMorph = Class.create(TriggerMorph, {
     createBackgrounds: function () {
         var shading = !MorphicPreferences.isFlat || this.is3D;
 
-        this.color = this.element.color;
+        this.color = this.element.color.darker(30);
         this.element.removeShadow();
         this.element[this.builder]();
         if (shading) {
