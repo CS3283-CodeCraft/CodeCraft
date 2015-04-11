@@ -50,13 +50,15 @@ ShareBoxItemSharer.prototype.shareObject = function (room, shareItem, shareName)
         };
         console.log(room);
         var string = { room: room, data: objectData };*/
+        var duplicate = this.ide.currentSprite.fullCopy();
+        var curr = this.ide.currentSprite;
         var string = _.escape(xml);
         this.data.data.push(string);
         var sendItem = this.data;
         console.log(JSON.stringify(sendItem));
         this.socket.emit('send', sendItem);
         //this.ide.shareBoxPlaceholderSprite.addCostume(shareItem.object);
-        shareItem.destroy();
+        //shareItem.destroy();
         // Clean up shareBoxPlaceholderSprite
         this.ide.shareBoxPlaceholderSprite.sounds = new List();
         this.ide.shareBoxPlaceholderSprite.costumes = new List();
@@ -72,6 +74,10 @@ ShareBoxItemSharer.prototype.shareObject = function (room, shareItem, shareName)
             }
             shareObject.destroy();
         }
+        this.ide.removeSprite(curr);
+        this.ide.currentSprite = duplicate;
+        this.ide.currentSprite.appearIn(this.ide);
+
         this.ide.hasChangedMedia = true;
         this.ide.drawNew();
         this.ide.fixLayout();
@@ -124,7 +130,7 @@ ShareBoxItemSharer.prototype.deleteObject = function (shareName, objectType) {
  */
 ShareBoxItemSharer.prototype.serializeItem = function(shareItem) {
     var xml = null;
-    if (shareItem instanceof BlockMorph) {
+    if (shareItem instanceof CommandBlockMorph) {
         xml = this.serializer.serialize(shareItem);
     } else if (shareItem instanceof CostumeIconMorph) {
         xml = this.serializer.serialize(shareItem.object.copy());
