@@ -93,6 +93,7 @@ var tag2;
 var tag1bool;
 
 var currentPage = 1;
+var maxPage = 1;
 
 // IDE_Morph ///////////////////////////////////////////////////////////
 
@@ -254,6 +255,8 @@ IDE_Morph.prototype.init = function (isAutoFill) {
 
     // override inherited properites:
     this.color = this.backgroundColor;
+	
+	this.currentPage = 1;
 };
 
 IDE_Morph.prototype.openIn = function (world) {

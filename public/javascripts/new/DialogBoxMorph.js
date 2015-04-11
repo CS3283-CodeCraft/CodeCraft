@@ -128,12 +128,14 @@ var DialogBoxMorph = Class.create(Morph, {
         spaceheight,
 		myself){
 		var sprite = new SpriteMorph(new Image());
-		
+		var spriteonepage = 15;
 		var mine = this;
 		//------------------------------------------
 		var dir = 'api/library/costumes',
                 names = myself.getCostumesList(dir),
 				i = 0;
+		var minIndex = (myself.currentPage - 1) * spriteonepage;
+		var maxIndex = (myself.currentPage * spriteonepage) - 1;
                 //libMenu = new MenuMorph(
                 //    myself,
                 //        localize('Import') + ' ' + localize(dir)
@@ -178,8 +180,8 @@ var DialogBoxMorph = Class.create(Morph, {
 				sprite.image = imagetoshow;
 				sprite.name = line.name;
 				//debugger;
-				
-				sprite.setPosition(new Point(spacelength + (i%5)*150, spaceheight + Math.floor(i/5) * 180));
+				var heightindex = Math.floor(i/5);
+				sprite.setPosition(new Point(spacelength + (i%5)*150, spaceheight + (heightindex%3) * 180));
 				sprite.isDraggable = false;
 				
 				//debugger;
@@ -187,18 +189,36 @@ var DialogBoxMorph = Class.create(Morph, {
 				if(myself.tag1people){
 					//console.log(line.tag1);
 					if(line.tag1 === 'people'){
-						mine.add(sprite);
+						if(i >= minIndex && i <= maxIndex){
+							mine.add(sprite);
+						}
 					}
 					if(line.tag1 === 'animal' && myself.tag1animal){
-						mine.add(sprite);
+						if(i >= minIndex && i <= maxIndex){
+							mine.add(sprite);
+						}
+					}
+					if(line.tag1 === 'object' && myself.tag1object){
+						if(i >= minIndex && i <= maxIndex){
+							mine.add(sprite);
+						}
 					}
 				}else if(myself.tag1animal){
 					if(line.tag1 === 'animal'){
-						mine.add(sprite);
+						if(i >= minIndex && i <= maxIndex){
+							mine.add(sprite);
+						}
+					}
+					if(line.tag1 === 'object' && myself.tag1object){
+						if(i >= minIndex && i <= maxIndex){
+							mine.add(sprite);
+						}
 					}
 				}
 				else{
-					mine.add(sprite);
+					if(i >= minIndex && i <= maxIndex){
+						mine.add(sprite);
+					}
 				}
 				
 				var buttonforadding;		//button to add sprite
@@ -218,31 +238,51 @@ var DialogBoxMorph = Class.create(Morph, {
 				buttonforadding.setWidth(70);
 				buttonforadding.setHeight(70);
 
-				buttonforadding.setPosition(new Point(spacelength + (i%5)*150, spaceheight + Math.floor(i/5) * 180));
+				buttonforadding.setPosition(new Point(spacelength + (i%5)*150, spaceheight + (heightindex % 3) * 180));
 
 				//mine.add(buttonforadding);
 				if(myself.tag1people){
 					//debugger;
 					if(line.tag1 === 'people'){
-						mine.add(buttonforadding);
+						if(i >= minIndex && i <= maxIndex){
+							mine.add(buttonforadding);
+						}
 						i++;
 					}
 					if(line.tag1 === 'animal' && myself.tag1animal){
-						mine.add(buttonforadding);
+						if(i >= minIndex && i <= maxIndex){
+							mine.add(buttonforadding);
+						}
+						i++;
+					}
+					if(line.tag1 === 'object' && myself.tag1object){
+						if(i >= minIndex && i <= maxIndex){
+							mine.add(buttonforadding);
+						}
 						i++;
 					}
 				}else if(myself.tag1animal){
 					if(line.tag1 === 'animal'){
-						mine.add(buttonforadding);
+						if(i >= minIndex && i <= maxIndex){
+							mine.add(buttonforadding);
+						}
+						i++;
+					}
+					if(line.tag1 === 'object' && myself.tag1object){
+						if(i >= minIndex && i <= maxIndex){
+							mine.add(buttonforadding);
+						}
 						i++;
 					}
 				}
 				else{
-					mine.add(buttonforadding);
+					if(i >= minIndex && i <= maxIndex){
+						mine.add(buttonforadding);
+					}
 					i++;
 				}
-				
-				
+				//myself.currentPage = 1;
+				myself.maxPage = Math.ceil(i / 15);
 				
             });
             //libMenu.popup(world, pos);
@@ -311,7 +351,15 @@ var DialogBoxMorph = Class.create(Morph, {
         var button;     //next button
         button = new PushButtonMorph(
             this,
-            'goNextPage',
+            function(){
+				//debugger;	
+				myself.currentPage++;
+				if(myself.currentPage > myself.maxPage){
+					myself.currentPage -= myself.maxPage;
+				}
+				myself.openLibrary();
+				mine.destroy();
+			},
             "Next",
             null,
             null,
@@ -328,7 +376,15 @@ var DialogBoxMorph = Class.create(Morph, {
         var button2;        //next button
         button2 = new PushButtonMorph(
             this,
-            'goPrevPage',
+            function(){
+				//debugger;	
+				myself.currentPage--;
+				if(myself.currentPage <= 0){
+					myself.currentPage = myself.maxPage;
+				}
+				myself.openLibrary();
+				mine.destroy();
+			},
             "Prev",
             null,
             null,
@@ -342,7 +398,8 @@ var DialogBoxMorph = Class.create(Morph, {
 
         this.add(button2);
         
-        var text = new TextMorph(this.currentpage.toString() + " / " + this.maxpage.toString());
+		console.log(myself.currentPage);
+        var text = new TextMorph(myself.currentPage.toString() + " / " + myself.maxPage.toString());
         //this.fontSize = 10;
         text.setPosition(new Point(screen.width*0.49,screen.height*0.755)); 
         this.add(text);
@@ -475,6 +532,8 @@ var DialogBoxMorph = Class.create(Morph, {
             null,
             function () {
 				myself.tag1object = !myself.tag1object;
+				myself.openLibrary();
+				mine.destroy();
 				/*
                 //this.typefilter = !this.typefilter;
 				if(myself.tag1bool === false){
