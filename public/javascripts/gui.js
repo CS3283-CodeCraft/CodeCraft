@@ -2297,15 +2297,30 @@ IDE_Morph.prototype.showRequestReceivedMessage = function (inviteData) {
     acceptButton = new PushButtonMorph(null, null, "Accept", null, null, null, "green");
     acceptButton.setPosition(new Point(myself.stage.width() / 2 - acceptButton.width() - padding, txt.bottom() + padding));
     acceptButton.action = function () {
-        console.log("Accept button pressed. Launch Sharebox.");
-        
-        var socketData = {id: tempIdentifier, room: inviteData.room}
-        
-        myself.sharer.socket.emit('INVITE_ACCEPT', socketData);
-        console.log("[SOCKET-SEND] INVITE_ACCEPT: " + JSON.stringify(socketData))
 
-        myself.shareboxId = socketData.room;
-        myself.showEntireShareBoxComponent(false);
+        // result of the accepting request
+        var result = "success";
+        if (result === "success") { // ACCEPT REQUEST SUCCEEDED
+
+            // destroy sharebox morph and show sharebox connect
+            console.log("Accept request success. Launch Sharebox.");
+
+            var socketData = {id: tempIdentifier, room: inviteData.room}
+            myself.sharer.socket.emit('INVITE_ACCEPT', socketData);
+            console.log("[SOCKET-SEND] INVITE_ACCEPT: " + JSON.stringify(socketData))
+            myself.shareboxId = socketData.room;
+
+            // change GUI
+            myself.showAcceptRequestSuccessPopup();
+            myself.showEntireShareBoxComponent(false);
+
+        } else { // ACCEPT REQUEST FAILED
+
+            myself.showAcceptRequestFailurePopup();
+            console.log("Accept request failed. Go back to Create group screen.");
+            myself.destroyShareBox();
+            // @yiwen - remove the person from pending members
+        }
         
     };
     this.requestReceivedScreen.add(acceptButton);
@@ -2948,7 +2963,155 @@ IDE_Morph.prototype.showAddMemberFailurePopup = function(username, errorCause) {
     this.addMemberFailurePopup.popUp(world);
 };
 
+// * * * * * * * * * Accept request Popup * * * * * * * * * * * * * * * * *
 
+IDE_Morph.prototype.showAcceptRequestSuccessPopup = function() {
+    var world = this.world();
+    var myself = this;
+    var popupWidth = 400;
+    var popupHeight = 330;
+
+    if (this.acceptRequestSuccessPopup) {
+        this.acceptRequestSuccessPopup.destroy();
+    }
+    this.acceptRequestSuccessPopup = new DialogBoxMorph();
+    this.acceptRequestSuccessPopup.setExtent(new Point(popupWidth, popupHeight));
+
+    // close dialog button
+    button = new PushButtonMorph(
+        this,
+        null,
+        (String.fromCharCode("0xf00d")),
+        null,
+        null,
+        null,
+        "redCircleIconButton"
+    );
+    button.setRight(this.acceptRequestSuccessPopup.right() - 3);
+    button.setTop(this.acceptRequestSuccessPopup.top() + 2);
+    button.action = function () { myself.acceptRequestSuccessPopup.cancel(); };
+    button.drawNew();
+    button.fixLayout();
+    this.acceptRequestSuccessPopup.add(button);
+
+    // add title
+    this.acceptRequestSuccessPopup.labelString = "You got a new group!";
+    this.acceptRequestSuccessPopup.createLabel();
+
+    // success image
+    var successImage = new Morph();
+    successImage.texture = 'images/success.png';
+    successImage.drawNew = function () {
+        this.image = newCanvas(this.extent());
+        var context = this.image.getContext('2d');
+        var picBgColor = myself.acceptRequestSuccessPopup.color;
+        context.fillStyle = picBgColor.toString();
+        context.fillRect(0, 0, this.width(), this.height());
+        if (this.texture) {
+            this.drawTexture(this.texture);
+        }
+    };
+
+    successImage.setExtent(new Point(128, 128));
+    successImage.setCenter(this.acceptRequestSuccessPopup.center());
+    successImage.setTop(this.acceptRequestSuccessPopup.top() + 40);
+    this.acceptRequestSuccessPopup.add(successImage);
+
+    // success message
+    txt = new TextMorph("Hooray!\nYou're now a member of the " + this.shareboxId + " group.\n\nStart sharing scripts and costumes by\ndragging them into the Sharebox.");
+    txt.setCenter(this.acceptRequestSuccessPopup.center());
+    txt.setTop(successImage.bottom() + 20);
+    this.acceptRequestSuccessPopup.add(txt);
+    txt.drawNew();
+
+    // "got it!" button, closes the dialog.
+    okButton = new PushButtonMorph(null, null, "Alright!", null, null, null, "green");
+    okButton.setCenter(this.acceptRequestSuccessPopup.center());
+    okButton.setBottom(this.acceptRequestSuccessPopup.bottom() - 10);
+    okButton.action = function() { myself.acceptRequestSuccessPopup.cancel(); };
+    this.acceptRequestSuccessPopup.add(okButton);
+
+    // popup
+    this.acceptRequestSuccessPopup.drawNew();
+    this.acceptRequestSuccessPopup.fixLayout();
+    this.acceptRequestSuccessPopup.popUp(world);
+
+};
+
+// Show this when user try to accept a request but has DC'ed or the group no longer exists.
+IDE_Morph.prototype.showAcceptRequestFailurePopup = function() {
+    var world = this.world();
+    var myself = this;
+    var popupWidth = 400;
+    var popupHeight = 300;
+
+    if (this.acceptRequestFailurePopup) {
+        this.acceptRequestFailurePopup.destroy();
+    }
+    this.acceptRequestFailurePopup = new DialogBoxMorph();
+    this.acceptRequestFailurePopup.setExtent(new Point(popupWidth, popupHeight));
+
+    // close dialog button
+    button = new PushButtonMorph(
+        this,
+        null,
+        (String.fromCharCode("0xf00d")),
+        null,
+        null,
+        null,
+        "redCircleIconButton"
+    );
+    button.setRight(this.acceptRequestFailurePopup.right() - 3);
+    button.setTop(this.acceptRequestFailurePopup.top() + 2);
+    button.action = function () { myself.acceptRequestFailurePopup.cancel(); };
+    button.drawNew();
+    button.fixLayout();
+    this.acceptRequestFailurePopup.add(button);
+
+    // add title
+    this.acceptRequestFailurePopup.labelString = "Could not join group";
+    this.acceptRequestFailurePopup.createLabel();
+
+    // failure image
+    var failureImage = new Morph();
+    failureImage.texture = 'images/failure.png';
+    failureImage.drawNew = function () {
+        this.image = newCanvas(this.extent());
+        var context = this.image.getContext('2d');
+        var picBgColor = myself.acceptRequestFailurePopup.color;
+        context.fillStyle = picBgColor.toString();
+        context.fillRect(0, 0, this.width(), this.height());
+        if (this.texture) {
+            this.drawTexture(this.texture);
+        }
+    };
+
+    failureImage.setExtent(new Point(128, 128));
+    failureImage.setCenter(this.acceptRequestFailurePopup.center());
+    failureImage.setTop(this.acceptRequestFailurePopup.top() + 40);
+    this.acceptRequestFailurePopup.add(failureImage);
+
+    // failure message
+    txt = new TextMorph("Sorry! Accepting this collaboration request has failed.\nPlease try again later.");
+
+
+    txt.setCenter(this.acceptRequestFailurePopup.center());
+    txt.setTop(failureImage.bottom() + 20);
+    this.acceptRequestFailurePopup.add(txt);
+    txt.drawNew();
+
+    // "OK" button, closes the dialog.
+    okButton = new PushButtonMorph(null, null, "OK :(", null, null, null, "green");
+    okButton.setCenter(this.acceptRequestFailurePopup.center());
+    okButton.setBottom(this.acceptRequestFailurePopup.bottom() - 10);
+    okButton.action = function() { myself.acceptRequestFailurePopup.cancel(); };
+    this.acceptRequestFailurePopup.add(okButton);
+
+    // popup
+    this.acceptRequestFailurePopup.drawNew();
+    this.acceptRequestFailurePopup.fixLayout();
+    this.acceptRequestFailurePopup.popUp(world);
+};
 
 // * * * * * * * * * Leave group Popup * * * * * * * * * * * * * * * * *
 
