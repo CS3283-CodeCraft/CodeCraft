@@ -220,7 +220,7 @@ IDE_Morph.prototype.init = function (isAutoFill) {
     this.projectName = '';
     this.projectNotes = '';
     this.sharer = IDE_Morph.makeSocket.call(this, this, '42');
-    this.shareboxId = 'common';
+    this.shareboxId = 'No Group Yet';
 
     this.logo = null;
     this.controlBar = null;
@@ -1918,8 +1918,16 @@ IDE_Morph.prototype.destroyShareBox = function() {
         this.shareBoxTitleBarButtons.destroy();
     }
 
+    if (this.shareBoxTitleBar) {
+        this.shareBoxTitleBar.destroy();
+    }
+
+    // reset the sharebox ID
+    this.shareboxId = "No Group Yet";
+
     this.createShareBoxConnectBar();
     this.createShareBoxConnect();
+    this.createShareBoxTitleBar();
     this.showNewGroupScreen();
     this.fixLayout();
 };
@@ -2307,9 +2315,6 @@ IDE_Morph.prototype.showRequestReceivedMessage = function (inviteData) {
     rejectButton.setPosition(new Point(myself.stage.width() / 2 + padding, txt.bottom() + padding));
     rejectButton.action = function () {
         console.log("Reject button pressed. Back to Create group screen.");
-        /*this.showNewGroupScreen();
-        myself.newGroupScreen.show();
-        myself.requestReceivedScreen.hide();*/
         myself.destroyShareBox();
     };
     this.requestReceivedScreen.add(rejectButton);
