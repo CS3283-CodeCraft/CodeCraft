@@ -2122,7 +2122,7 @@ IDE_Morph.prototype.showEntireShareBoxComponent = function(isOwner) {
         //     myself.shareBox.add(txt);
         // });
 
-        myself.shareboxId = prompt("sharebox id?");
+        myself.shareboxId = tempIdentifier
         console.log("show entire share box");
         myself.createShareBoxBar();
         // create title bar buttons
