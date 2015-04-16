@@ -44,7 +44,7 @@ var touchScreenSettings = {
 
 var MorphicPreferences = standardSettings;
 
-var openID = true;
+var openID = false;
 
 // cloud.js
 

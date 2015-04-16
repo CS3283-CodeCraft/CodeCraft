@@ -2050,6 +2050,11 @@ IDE_Morph.prototype.createShareBoxConnect = function () {
         this.shareBoxConnect.destroy();
     }
 
+    // show the share box connect bar if it isn't there
+    if (!this.shareBoxConnectBar) {
+        this.createShareBoxConnectBar();
+    }
+
     // init shareBoxConnect
     this.shareBoxConnect = new ScrollFrameMorph();
     this.shareBoxConnect.color = this.groupColor;
@@ -2302,9 +2307,10 @@ IDE_Morph.prototype.showRequestReceivedMessage = function (inviteData) {
     rejectButton.setPosition(new Point(myself.stage.width() / 2 + padding, txt.bottom() + padding));
     rejectButton.action = function () {
         console.log("Reject button pressed. Back to Create group screen.");
-        this.showNewGroupScreen();
+        /*this.showNewGroupScreen();
         myself.newGroupScreen.show();
-        myself.requestReceivedScreen.hide();
+        myself.requestReceivedScreen.hide();*/
+        myself.destroyShareBox();
     };
     this.requestReceivedScreen.add(rejectButton);
 
