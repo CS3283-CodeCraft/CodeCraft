@@ -1538,16 +1538,11 @@ IDE_Morph.prototype.createShareBoxTitleBar = function () {
     this.shareBoxTitleBar.setColor(this.groupColor.darker(20));
 
     // initialize title "ShareBox"
-    this.shareBoxTitle = new StringMorph(
-        "ShareBox: " + this.shareboxId,
-        14,
-        'sans-serif',
-        true,
-        false,
-        false,
-        null,
-        this.frameColor.darker(this.buttonContrast)
-    );
+    if (this.shareboxId == "No Group Yet" || this.shareboxId == null) { // no group
+        this.shareBoxTitle = new StringMorph("ShareBox: No Group Yet", 14, 'sans-serif', true, false, false, null, this.frameColor.darker(this.buttonContrast));
+    } else { // has group
+        this.shareBoxTitle = new StringMorph("ShareBox: " + this.shareboxId + "'s group", 14, 'sans-serif', true, false, false, null, this.frameColor.darker(this.buttonContrast));
+    }
 
     console.log(this.shareboxId);
 
@@ -2122,7 +2117,7 @@ IDE_Morph.prototype.showEntireShareBoxComponent = function(isOwner) {
         //     myself.shareBox.add(txt);
         // });
 
-        myself.shareboxId = prompt("sharebox id?");
+        myself.shareboxId = tempIdentifier;
         console.log("show entire share box");
         myself.createShareBoxBar();
         // create title bar buttons
