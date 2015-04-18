@@ -3909,8 +3909,8 @@ IDE_Morph.prototype.createCheckBox = function() {
 IDE_Morph.prototype.createImage = function() {
 
     spriteCreator = function() { return new SpriteMorph(new Image()); };
-    var spacelength = screen.width * 0.3;
-    var spaceheight = screen.height * 0.15;
+    var spacelength = /*screen.width * 0.3*/ this.library.left() + 150;
+    var spaceheight = /*screen.height * 0.15*/ this.library.top() + 50;
     var myself = this;
     var sprite = new SpriteMorph(new Image());
     var spriteonepage = 15;
@@ -4006,6 +4006,8 @@ IDE_Morph.prototype.createImage = function() {
         buttonforadding.setWidth(70);
         buttonforadding.setHeight(70);
         buttonforadding.setPosition(new Point(spacelength + (i%5)*150, spaceheight + (heightindex % 3) * 180));
+        buttonforadding.label.setCenter(buttonforadding.center());
+
 
         //mine.add(buttonforadding);
         if(myself.tag1people){
@@ -4065,6 +4067,8 @@ IDE_Morph.prototype.showLibraryPages = function() {
 
     console.log("I'm at page " + myself.currentPage);
     pageText = new TextMorph(myself.currentPage.toString() + " / " + myself.maxPage.toString());
+    pageText.isBold = true;
+    pageText.setFontSize(20);
     pageText.setCenter(this.library.center());
     pageText.setBottom(this.library.bottom() - padding);
 
