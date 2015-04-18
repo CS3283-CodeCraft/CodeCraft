@@ -9305,11 +9305,11 @@ ScriptIconMorph.uber = ToggleButtonMorph.prototype;
 ScriptIconMorph.className = 'ScriptIconMorph';
 // ScriptIconMorph settings
 
-ScriptIconMorph.prototype.thumbSize = new Point(this.width - 40, 50);
+ScriptIconMorph.prototype.thumbSize = new Point(440, 50);
 ScriptIconMorph.prototype.labelShadowOffset = null;
 ScriptIconMorph.prototype.labelShadowColor = null;
 ScriptIconMorph.prototype.labelColor = new Color(255, 255, 255);
-ScriptIconMorph.prototype.fontSize = 9;
+ScriptIconMorph.prototype.fontSize = 14;
 
 // ScriptIconMorph instance creation:
 
@@ -9371,13 +9371,19 @@ ScriptIconMorph.prototype.createThumbnail = function (scriptName) {
         this.thumbnail.destroy();
     }
 
-    this.thumbnail = new Morph();
-    this.thumbnail.color = new Color(123, 123, 0);
+    // script box style and position
+    this.thumbnail = new FrameMorph();
+    this.thumbnail.corner = 25;
+    this.thumbnail.color = new Color(138, 138, 138);
     this.thumbnail.setExtent(this.thumbSize);
 
+    // script name style and position
     txt = new TextMorph(scriptName);
-    //txt.setCenter(this.addMemberSuccessPopup.center());
-    //txt.setTop(successImage.bottom() + 20);
+    txt.setLeft(this.thumbnail.left() + 15);
+    txt.setTop(this.thumbnail.top() + 15);
+    txt.setFontSize(16);
+    txt.isBold = true;
+    txt.setColor(new Color(255, 255, 255));
     this.thumbnail.add(txt);
     txt.drawNew();
 
