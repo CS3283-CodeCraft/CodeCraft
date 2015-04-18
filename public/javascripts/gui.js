@@ -1858,6 +1858,7 @@ IDE_Morph.prototype.createShareBox = function () {
             var shareName = prompt("Give the item a name.");
             sharer.shareObject((shareboxId.toString()), droppedMorph, shareName);
             droppedMorph.destroy();
+            myself.fixLayout();
         };
     } else if (this.currentShareBoxTab === 'assets') {
         this.shareBox = new ShareBoxAssetsMorph(
@@ -1875,6 +1876,7 @@ IDE_Morph.prototype.createShareBox = function () {
             var shareName = prompt("Give the item a name.");
             sharer.shareObject((shareboxId.toString()), droppedMorph, shareName);
             droppedMorph.destroy();
+            myself.fixLayout();
         };
 
     } else {
@@ -2964,6 +2966,9 @@ IDE_Morph.prototype.showAddMemberSuccessPopup = function(username) {
 
     if (this.addMemberSuccessPopup) {
         this.addMemberSuccessPopup.destroy();
+    }
+    if (this.viewMembersPopup) {
+        this.viewMembersPopup.destroy();
     }
     this.addMemberSuccessPopup = new DialogBoxMorph();
     this.addMemberSuccessPopup.setExtent(new Point(popupWidth, popupHeight));
@@ -9300,7 +9305,7 @@ ScriptIconMorph.uber = ToggleButtonMorph.prototype;
 ScriptIconMorph.className = 'ScriptIconMorph';
 // ScriptIconMorph settings
 
-ScriptIconMorph.prototype.thumbSize = new Point(80, 60);
+ScriptIconMorph.prototype.thumbSize = new Point(this.width - 40, 50);
 ScriptIconMorph.prototype.labelShadowOffset = null;
 ScriptIconMorph.prototype.labelShadowColor = null;
 ScriptIconMorph.prototype.labelColor = new Color(255, 255, 255);
@@ -9309,11 +9314,11 @@ ScriptIconMorph.prototype.fontSize = 9;
 // ScriptIconMorph instance creation:
 
 // aScript is a BlockMorph
-function ScriptIconMorph(aScript, ide, aTemplate) {
-    this.init(aScript, ide, aTemplate);
+function ScriptIconMorph(aScript, ide, aTemplate, scriptName) {
+    this.init(aScript, ide, aTemplate, scriptName);
 }
 
-ScriptIconMorph.prototype.init = function (aScript, ide, aTemplate) {
+ScriptIconMorph.prototype.init = function (aScript, ide, aTemplate, scriptName) {
     var colors, action, query;
     this.ide = ide;
     if (!aTemplate) {
@@ -9354,20 +9359,28 @@ ScriptIconMorph.prototype.init = function (aScript, ide, aTemplate) {
 
     // override defaults and build additional components
     this.isDraggable = true;
-    this.createThumbnail();
+    this.createThumbnail(scriptName);
     this.padding = 2;
     this.corner = 8;
     this.fixLayout();
     this.fps = 1;
 };
 
-ScriptIconMorph.prototype.createThumbnail = function () {
-    var label;
+ScriptIconMorph.prototype.createThumbnail = function (scriptName) {
     if (this.thumbnail) {
         this.thumbnail.destroy();
     }
+
     this.thumbnail = new Morph();
+    this.thumbnail.color = new Color(123, 123, 0);
     this.thumbnail.setExtent(this.thumbSize);
+
+    txt = new TextMorph(scriptName);
+    //txt.setCenter(this.addMemberSuccessPopup.center());
+    //txt.setTop(successImage.bottom() + 20);
+    this.thumbnail.add(txt);
+    txt.drawNew();
+
     this.add(this.thumbnail);
 };
 
@@ -9468,10 +9481,10 @@ ShareBoxScriptsMorph.prototype.init = function (aSprite, ide, sliderColor) {
 
 // Jukebox updating
 
-ShareBoxScriptsMorph.prototype.updateList = function () {
+ShareBoxScriptsMorph.prototype.updateList = function (scriptName) {
     var myself = this,
-        x = this.left() + 5,
-        y = this.top() + 5,
+        x = this.left() + 20,
+        y = this.top() + 20,
         padding = 4,
         oldFlag = Morph.prototype.trackChanges,
         icon,
@@ -9491,10 +9504,10 @@ ShareBoxScriptsMorph.prototype.updateList = function () {
     this.addBack(this.contents);
 
     this.sprite.scriptsList.asArray().forEach(function (script) {
-        template = icon = new ScriptIconMorph(script, ide, template);
+        template = icon = new ScriptIconMorph(script, ide, template, scriptName);
         icon.setPosition(new Point(x, y));
         myself.addContents(icon);
-        y = icon.bottom() + padding;
+        y = icon.bottom() + padding + 35;
     });
 
     Morph.prototype.trackChanges = oldFlag;
