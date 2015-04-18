@@ -3705,6 +3705,407 @@ IDE_Morph.prototype.showRemoveMemberFailurePopup = function(username) {
 };
 
 
+// ****************************
+// LIBRARY
+// ****************************
+
+IDE_Morph.prototype.openLibrary = function () {
+    if (this.library) {
+        this.library.destroy();
+    }
+
+    this.library = new DialogBoxMorph();
+    var myself = this;
+
+    // style library
+    this.library.setWidth(screen.width * 0.7);
+    this.library.setHeight(screen.height * 0.7);
+
+    this.createCheckBox();
+    this.createImage();
+/*
+    db.createCheckBox(db.length, db.height, myself);
+
+    db.createImage(
+        function(){return new SpriteMorph(new Image())},
+        screen.width * 0.3,
+        screen.height * 0.15,
+        myself
+    );*/
+
+    myself.add(this.library);
+};
+
+
+IDE_Morph.prototype.createCheckBox = function() {
+    var myself = this;
+    var mine = this.library;
+
+    this.library.labelString = 'Sprite Library';
+    this.library.createLabel();
+
+    var text = new TextMorph("Category");
+    text.setPosition(new Point(screen.width * 0.02, screen.height * 0.05));
+    this.library.add(text);
+
+    var peoplebox = new ToggleMorph(
+        'checkbox',
+        null,
+        function () {
+            myself.tag1people = !myself.tag1people;
+            myself.currentPage = 1;
+            myself.openLibrary();
+            mine.destroy();
+        },
+        localize('People'),
+        function () {
+            //console.log(myself.tag1people);
+            return myself.tag1people;
+        }
+    );
+
+    peoplebox.setPosition(new Point(screen.width * 0.02, screen.height * 0.07));
+    this.library.add(peoplebox);
+
+    var animalbox = new ToggleMorph(
+        'checkbox',
+        null,
+        function () {
+            myself.tag1animal = !myself.tag1animal;
+            myself.currentPage = 1;
+            myself.openLibrary();
+            mine.destroy();
+
+        },
+        localize('Animal'),
+        function () {
+            return myself.tag1animal;
+        }
+    );
+
+    animalbox.setPosition(new Point(screen.width*0.02,screen.height*0.095));
+    this.library.add(animalbox);
+
+    var objectbox = new ToggleMorph(
+        'checkbox',
+        null,
+        function () {
+            myself.tag1object = !myself.tag1object;
+            myself.currentPage = 1;
+            myself.openLibrary();
+            mine.destroy();
+        },
+        localize('Object'),
+        function () {
+            return myself.tag1object;
+        }
+    );
+
+    objectbox.setPosition(new Point(screen.width*0.02,screen.height*0.12));
+    this.library.add(objectbox);
+
+    var text2 = new TextMorph("Location");
+    //this.fontSize = 10;
+    text2.setPosition(new Point(screen.width*0.02,screen.height*0.18));
+    this.library.add(text2);
+
+    var singaporebox = new ToggleMorph(
+        'checkbox',
+        null,
+        function () {
+            this.locationfilter = !this.locationfilter;
+        },
+        localize('Singapore'),
+        function () {
+            return this.locationfilter;
+        }
+    );
+
+    singaporebox.setPosition(new Point(screen.width*0.02,screen.height*0.205));
+    this.library.add(singaporebox);
+
+    var malaysiabox = new ToggleMorph(
+        'checkbox',
+        null,
+        function () {
+            this.locationfilter = !this.locationfilter;
+        },
+        localize('Malaysia'),
+        function () {
+            return this.locationfilter;
+        }
+    );
+
+    malaysiabox.setPosition(new Point(screen.width*0.02,screen.height*0.23));
+    this.library.add(malaysiabox);
+
+    var chinabox = new ToggleMorph(
+        'checkbox',
+        null,
+        function () {
+            this.locationfilter = !this.locationfilter;
+        },
+        localize('China'),
+        function () {
+            return this.locationfilter;
+        }
+    );
+
+    chinabox.setPosition(new Point(screen.width*0.02,screen.height*0.255));
+    this.library.add(chinabox);
+
+    var indiabox = new ToggleMorph(
+        'checkbox',
+        null,
+        function () {
+            this.locationfilter = !this.locationfilter;
+        },
+        localize('India'),
+        function () {
+            return this.locationfilter;
+        }
+    );
+
+    indiabox.setPosition(new Point(screen.width*0.02,screen.height*0.28));
+    this.library.add(indiabox);
+
+    var thailandbox = new ToggleMorph(
+        'checkbox',
+        null,
+        function () {
+            this.locationfilter = !this.locationfilter;
+        },
+        localize('Thailand'),
+        function () {
+            return this.locationfilter;
+        }
+    );
+
+    thailandbox.setPosition(new Point(screen.width*0.02,screen.height*0.305));
+    this.library.add(thailandbox);
+
+    this.library.addButton('cancel', 'Close');
+    this.library.drawNew();
+    this.library.fixLayout();
+    this.library.popUp(world);
+};
+
+
+IDE_Morph.prototype.createImage = function() {
+
+    spriteCreator = function() { return new SpriteMorph(new Image()); };
+    var spacelength = screen.width * 0.3;
+    var spaceheight = screen.height * 0.15;
+    var myself = this;
+    var sprite = new SpriteMorph(new Image());
+    var spriteonepage = 15;
+    var mine = this.library;
+
+    //------------------------------------------
+    var dir = 'api/library/costumes',
+        names = myself.getCostumesList(dir),
+        i = 0;
+    var minIndex = (myself.currentPage - 1) * spriteonepage;
+    var maxIndex = (myself.currentPage * spriteonepage) - 1;
+
+    function loadCostume(name) {
+        //var url = dir + '/' + name,
+        var url = name,
+            img = new Image();
+        img.onload = function () {
+            var canvas = newCanvas(new Point(img.width, img.height));
+            canvas.getContext('2d').drawImage(img, 0, 0);
+            myself.droppedImage(canvas, name);
+        };
+        img.src = url;
+
+    }
+
+    //debugger;
+    names.forEach(function (line) {
+
+        var imagetoshow = new Image();
+        imagetoshow.src = line.url;
+        imagetoshow.width = 100;
+        imagetoshow.height = 100;
+
+        sprite.setWidth(100);
+        sprite.setHeight(100);
+
+        sprite.image = imagetoshow;
+        sprite.name = line.name;
+        //debugger;
+        var heightindex = Math.floor(i/5);
+        sprite.setPosition(new Point(spacelength + (i%5)*150, spaceheight + (heightindex%3) * 180));
+        sprite.isDraggable = false;
+
+        //debugger;
+
+        if(myself.tag1people){
+            //console.log(line.tag1);
+            if(line.tag1 === 'people'){
+                if(i >= minIndex && i <= maxIndex){
+                    mine.add(sprite);
+                }
+            }
+            if(line.tag1 === 'animal' && myself.tag1animal){
+                if(i >= minIndex && i <= maxIndex){
+                    mine.add(sprite);
+                }
+            }
+            if(line.tag1 === 'object' && myself.tag1object){
+                if(i >= minIndex && i <= maxIndex){
+                    mine.add(sprite);
+                }
+            }
+        } else if (myself.tag1animal){
+            if(line.tag1 === 'animal'){
+                if(i >= minIndex && i <= maxIndex){
+                    mine.add(sprite);
+                }
+            }
+            if(line.tag1 === 'object' && myself.tag1object){
+                if(i >= minIndex && i <= maxIndex){
+                    mine.add(sprite);
+                }
+            }
+        }
+        else{
+            if(i >= minIndex && i <= maxIndex){
+                mine.add(sprite);
+            }
+        }
+
+        var buttonforadding;		//button to add sprite
+        buttonforadding = new PushButtonMorph(
+            this.library,
+            function () {
+                loadCostume(line.url);
+            },
+            "+",
+            null,
+            null,
+            null,
+            'show green button'
+        );
+        buttonforadding.setWidth(70);
+        buttonforadding.setHeight(70);
+        buttonforadding.setPosition(new Point(spacelength + (i%5)*150, spaceheight + (heightindex % 3) * 180));
+
+        //mine.add(buttonforadding);
+        if(myself.tag1people){
+            //debugger;
+            if(line.tag1 === 'people'){
+                if(i >= minIndex && i <= maxIndex){
+                    mine.add(buttonforadding);
+                }
+                i++;
+            }
+            if(line.tag1 === 'animal' && myself.tag1animal){
+                if(i >= minIndex && i <= maxIndex){
+                    mine.add(buttonforadding);
+                }
+                i++;
+            }
+            if(line.tag1 === 'object' && myself.tag1object){
+                if(i >= minIndex && i <= maxIndex){
+                    mine.add(buttonforadding);
+                }
+                i++;
+            }
+        }else if(myself.tag1animal){
+            if(line.tag1 === 'animal'){
+                if(i >= minIndex && i <= maxIndex){
+                    mine.add(buttonforadding);
+                }
+                i++;
+            }
+            if(line.tag1 === 'object' && myself.tag1object){
+                if(i >= minIndex && i <= maxIndex){
+                    mine.add(buttonforadding);
+                }
+                i++;
+            }
+        }
+        else{
+            if(i >= minIndex && i <= maxIndex){
+                mine.add(buttonforadding);
+            }
+            i++;
+        }
+        //myself.currentPage = 1;
+        myself.maxPage = Math.ceil(i / 15);
+
+    });
+
+    var button;     //next button
+    button = new PushButtonMorph(
+        this.library,
+        function(){
+            //debugger;
+            myself.currentPage++;
+            if(myself.currentPage > myself.maxPage){
+                myself.currentPage = 1;
+            }
+            myself.openLibrary();
+            mine.destroy();
+        },
+        "Next",
+        null,
+        null,
+        null
+    );
+
+    button.setWidth(50);
+    button.setHeight(20);
+    button.setPosition(new Point(screen.width * 0.52, screen.height * 0.75));
+    this.library.add(button);
+
+    var button2;        //next button
+    button2 = new PushButtonMorph(
+        this.library,
+        function(){
+            //debugger;
+            myself.currentPage--;
+            if(myself.currentPage <= 0){
+                myself.currentPage = myself.maxPage;
+            }
+            myself.openLibrary();
+            mine.destroy();
+        },
+        "Prev",
+        null,
+        null,
+        null
+    );
+
+    button2.setWidth(50);
+    button2.setHeight(20);
+    button2.setPosition(new Point(screen.width * 0.44, screen.height * 0.75));
+    this.library.add(button2);
+
+    console.log(myself.currentPage);
+    var text = new TextMorph(myself.currentPage.toString() + " / " + myself.maxPage.toString());
+    text.setPosition(new Point(screen.width*0.49,screen.height*0.755));
+    this.library.add(text);
+}
+
+IDE_Morph.prototype.goNextPage = function() {
+    this.currentpage++;
+    if(this.currentpage > this.maxpage){
+        this.currentpage -= this.maxpage;
+    }
+};
+
+IDE_Morph.prototype.goNextPage = function() {
+    this.currentpage--;
+    if(this.currentpage <= 0){
+        this.currentpage = this.maxpage;
+    }
+};
+
+
+
 // IDE_Morph layout
 
 // xinni: decide width, height, position of frames here.
@@ -4448,33 +4849,6 @@ IDE_Morph.prototype.nextScene = function () {
 
 }
 
-IDE_Morph.prototype.openLibrary = function () {
-    var db = new DialogBoxMorph();
-    //var button;
-    var nextscenebutton;
-    //var txt;
-    var myself = this,
-        world = this.world();
-
-	//db.createLabel();
-	//db.addBody(txt);
-	//db.addButton('ok', 'Ok');
-    //db.addButton('cancel', 'Cancel');
-    //db.fixLayout();
-    //db.drawNew();
-	//this.add(db);
-	db.setWidth(screen.width*0.7);
-	db.setHeight(screen.height*0.7);
-	//db.fontSize = 40;
-	db.createCheckBox(db.length,db.height, myself);
-	
-	db.createImage(
-        function(){return new SpriteMorph(new Image())}, 
-        screen.width * 0.3, 
-        screen.height * 0.15,
-		myself
-    );
-};
 
 IDE_Morph.prototype.duplicateSprite = function (sprite) {
     var duplicate = sprite.fullCopy();
