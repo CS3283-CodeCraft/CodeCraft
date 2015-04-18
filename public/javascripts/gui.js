@@ -3724,6 +3724,23 @@ IDE_Morph.prototype.openLibrary = function () {
     this.createCheckBox();
     this.createImage();
 
+    // close dialog button
+    button = new PushButtonMorph(
+        this,
+        null,
+        (String.fromCharCode("0xf00d")),
+        null,
+        null,
+        null,
+        "redCircleIconButton"
+    );
+    button.setRight(this.library.right() - 3);
+    button.setTop(this.library.top() + 2);
+    button.action = function () { myself.library.cancel(); };
+    button.drawNew();
+    button.fixLayout();
+    this.library.add(button);
+
     myself.add(this.library);
 };
 
