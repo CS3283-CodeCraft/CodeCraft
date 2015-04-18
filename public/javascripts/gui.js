@@ -3723,15 +3723,6 @@ IDE_Morph.prototype.openLibrary = function () {
 
     this.createCheckBox();
     this.createImage();
-/*
-    db.createCheckBox(db.length, db.height, myself);
-
-    db.createImage(
-        function(){return new SpriteMorph(new Image())},
-        screen.width * 0.3,
-        screen.height * 0.15,
-        myself
-    );*/
 
     myself.add(this.library);
 };
@@ -3981,6 +3972,7 @@ IDE_Morph.prototype.createImage = function() {
             this.library,
             function () {
                 loadCostume(line.url);
+                myself.library.cancel();
             },
             "+",
             null,
