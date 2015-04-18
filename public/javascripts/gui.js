@@ -2223,8 +2223,16 @@ IDE_Morph.prototype.showNewGroupScreen = function() {
      var groupButton = new PushButtonMorph(null, null, "Create a Group", null, null, null, "green");
      groupButton.setPosition(new Point(this.stage.width() / 2 - groupButton.width() / 2, txt.bottom() + padding));
      groupButton.action = function() {
-     console.log("Creating a new group and initializing a new session.");
-        myself.showEntireShareBoxComponent(true);
+         var result = "success";
+
+         if (result === "success") {
+             console.log("Creating a new group and initializing a new session.");
+             myself.showEntireShareBoxComponent(true);
+             myself.showGroupCreatedSuccessPopup();
+         } else {
+             console.log("Can't create group.");
+             myself.showGroupCreatedFailurePopup();
+         }
      }
      this.newGroupScreen.add(groupButton);
 
@@ -2685,6 +2693,154 @@ IDE_Morph.prototype.showMemberRow = function(isCreator, isOnline, username, rowN
     groupMemberRow.setWidth(myself.membersViewFrame.width() - titlePadding*2);
     groupMemberRow.drawNew();
     this.membersViewFrame.add(groupMemberRow);
+};
+
+// * * * * * * * * * Create Group Popup * * * * * * * * * * * * * * * * *
+
+IDE_Morph.prototype.showGroupCreatedSuccessPopup = function() {
+    var world = this.world();
+    var myself = this;
+    var popupWidth = 400;
+    var popupHeight = 330;
+
+    if (this.createGroupSuccessPopup) {
+        this.createGroupSuccessPopup.destroy();
+    }
+    this.createGroupSuccessPopup = new DialogBoxMorph();
+    this.createGroupSuccessPopup.setExtent(new Point(popupWidth, popupHeight));
+
+    // close dialog button
+    button = new PushButtonMorph(
+        this,
+        null,
+        (String.fromCharCode("0xf00d")),
+        null,
+        null,
+        null,
+        "redCircleIconButton"
+    );
+    button.setRight(this.createGroupSuccessPopup.right() - 3);
+    button.setTop(this.createGroupSuccessPopup.top() + 2);
+    button.action = function () { myself.createGroupSuccessPopup.cancel(); };
+    button.drawNew();
+    button.fixLayout();
+    this.createGroupSuccessPopup.add(button);
+
+    // add title
+    this.createGroupSuccessPopup.labelString = "Created a group!";
+    this.createGroupSuccessPopup.createLabel();
+
+    // success image
+    var successImage = new Morph();
+    successImage.texture = 'images/success.png';
+    successImage.drawNew = function () {
+        this.image = newCanvas(this.extent());
+        var context = this.image.getContext('2d');
+        var picBgColor = myself.createGroupSuccessPopup.color;
+        context.fillStyle = picBgColor.toString();
+        context.fillRect(0, 0, this.width(), this.height());
+        if (this.texture) {
+            this.drawTexture(this.texture);
+        }
+    };
+
+    successImage.setExtent(new Point(128, 128));
+    successImage.setCenter(this.createGroupSuccessPopup.center());
+    successImage.setTop(this.createGroupSuccessPopup.top() + 40);
+    this.createGroupSuccessPopup.add(successImage);
+
+    // success message
+    txt = new TextMorph("Woohoo!\nYou're now the creator of " + this.shareboxId + "'s (your) group.\n\nStart adding new members by clicking\nthe ( + ) button.");
+    txt.setCenter(this.createGroupSuccessPopup.center());
+    txt.setTop(successImage.bottom() + 20);
+    this.createGroupSuccessPopup.add(txt);
+    txt.drawNew();
+
+    // "got it!" button, closes the dialog.
+    okButton = new PushButtonMorph(null, null, "Alright!", null, null, null, "green");
+    okButton.setCenter(this.createGroupSuccessPopup.center());
+    okButton.setBottom(this.createGroupSuccessPopup.bottom() - 10);
+    okButton.action = function() { myself.createGroupSuccessPopup.cancel(); };
+    this.createGroupSuccessPopup.add(okButton);
+
+    // popup
+    this.createGroupSuccessPopup.drawNew();
+    this.createGroupSuccessPopup.fixLayout();
+    this.createGroupSuccessPopup.popUp(world);
+};
+
+IDE_Morph.prototype.showGroupCreatedFailurePopup = function() {
+    var world = this.world();
+    var myself = this;
+    var popupWidth = 400;
+    var popupHeight = 300;
+
+    if (this.createGroupFailurePopup) {
+        this.createGroupFailurePopup.destroy();
+    }
+    this.createGroupFailurePopup = new DialogBoxMorph();
+    this.createGroupFailurePopup.setExtent(new Point(popupWidth, popupHeight));
+
+    // close dialog button
+    button = new PushButtonMorph(
+        this,
+        null,
+        (String.fromCharCode("0xf00d")),
+        null,
+        null,
+        null,
+        "redCircleIconButton"
+    );
+    button.setRight(this.createGroupFailurePopup.right() - 3);
+    button.setTop(this.createGroupFailurePopup.top() + 2);
+    button.action = function () { myself.createGroupFailurePopup.cancel(); };
+    button.drawNew();
+    button.fixLayout();
+    this.createGroupFailurePopup.add(button);
+
+    // add title
+    this.createGroupFailurePopup.labelString = "Could not create group";
+    this.createGroupFailurePopup.createLabel();
+
+    // failure image
+    var failureImage = new Morph();
+    failureImage.texture = 'images/failure.png';
+    failureImage.drawNew = function () {
+        this.image = newCanvas(this.extent());
+        var context = this.image.getContext('2d');
+        var picBgColor = myself.createGroupFailurePopup.color;
+        context.fillStyle = picBgColor.toString();
+        context.fillRect(0, 0, this.width(), this.height());
+        if (this.texture) {
+            this.drawTexture(this.texture);
+        }
+    };
+
+    failureImage.setExtent(new Point(128, 128));
+    failureImage.setCenter(this.createGroupFailurePopup.center());
+    failureImage.setTop(this.createGroupFailurePopup.top() + 40);
+    this.createGroupFailurePopup.add(failureImage);
+
+    // failure message
+    txt = new TextMorph("Sorry! We couldn't create the group right now.\nPlease try again later.");
+
+
+    txt.setCenter(this.createGroupFailurePopup.center());
+    txt.setTop(failureImage.bottom() + 20);
+    this.createGroupFailurePopup.add(txt);
+    txt.drawNew();
+
+    // "OK" button, closes the dialog.
+    okButton = new PushButtonMorph(null, null, "OK :(", null, null, null, "green");
+    okButton.setCenter(this.createGroupFailurePopup.center());
+    okButton.setBottom(this.createGroupFailurePopup.bottom() - 10);
+    okButton.action = function() { myself.createGroupFailurePopup.cancel(); };
+    this.createGroupFailurePopup.add(okButton);
+
+    // popup
+    this.createGroupFailurePopup.drawNew();
+    this.createGroupFailurePopup.fixLayout();
+    this.createGroupFailurePopup.popUp(world);
 };
 
 // * * * * * * * * * Add Member Popup * * * * * * * * * * * * * * * * *
@@ -3432,7 +3588,7 @@ IDE_Morph.prototype.showRemoveMemberPopup = function(username) {
     confirmButton.action = function () {
         // call a function here that lets creator delete the member. return success/failure value.
         var result = "success"; // DUMMY VALUE FOR NOW. Can be success || failure.
-        //var result = "success";
+
         if (result === "success") {
             var socketData = {room: myself.shareboxId, removeId: username}
             myself.sharer.socket.emit('REMOVE_USER', socketData);
