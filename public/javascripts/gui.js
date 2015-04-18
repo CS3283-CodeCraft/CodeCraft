@@ -3719,7 +3719,7 @@ IDE_Morph.prototype.openLibrary = function () {
     var myself = this;
 
     // style library
-    this.library.setWidth(screen.width * 0.7);
+    this.library.setWidth(screen.width * 0.6);
     this.library.setHeight(screen.height * 0.7);
 
     // draw library window contents
@@ -3909,8 +3909,8 @@ IDE_Morph.prototype.createCheckBox = function() {
 IDE_Morph.prototype.createImage = function() {
 
     spriteCreator = function() { return new SpriteMorph(new Image()); };
-    var spacelength = /*screen.width * 0.3*/ this.library.left() + 150;
-    var spaceheight = /*screen.height * 0.15*/ this.library.top() + 50;
+    var spacelength = /*screen.width * 0.3*/ this.library.left() + 180;
+    var spaceheight = /*screen.height * 0.15*/ this.library.top() + 60;
     var myself = this;
     var sprite = new SpriteMorph(new Image());
     var spriteonepage = 15;
@@ -3937,6 +3937,7 @@ IDE_Morph.prototype.createImage = function() {
 
     //debugger;
     names.forEach(function (line) {
+        sprite = spriteCreator();
 
         var imagetoshow = new Image();
         imagetoshow.src = line.url;

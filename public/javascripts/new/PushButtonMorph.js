@@ -104,27 +104,15 @@ var PushButtonMorph = Class.create(TriggerMorph, {
         this.color = PushButtonMorph.prototype.color;
 
 
-
-        // Delete "fuck you" and "show green" if not needed.
-        if(style === "fuck you, morph"){
-            var col = new Color(255,255,255,0.01);
-            
-            this.color = col;
-            this.highlightColor = col;
-            this.pressColor = col;
-            this.outlineColor = new Color(30,30,30,0.01);
-            this.outline = 0.01;
-            this.edge = 0;
-            this.padding = 0;
-            this.corner = 0;
-        }
         if(style === "show green button"){
+            var greenColor = new Color(60, 158, 0);
+            var lightGreenColor = new Color(80, 209, 0);
             var col = new Color(255,255,255,0.01);
             
             this.color = col;
-            this.labelColor = new Color(0,0,0,0.2);
-            this.highlightColor = new Color(0, 250, 0, 0.75);
-            this.pressColor = col;
+            this.labelColor = new Color(0,0,0,0.1);
+            this.highlightColor = greenColor;
+            this.pressColor = lightGreenColor;
             this.outlineColor = new Color(30,30,30,0.1);
             this.outline = 0.01;
             this.edge = 0;
