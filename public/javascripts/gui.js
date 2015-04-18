@@ -4053,9 +4053,24 @@ IDE_Morph.prototype.createImage = function() {
 
     });
 
-    var button;     //next button
-    button = new PushButtonMorph(
-        this.library,
+    this.showLibraryPages();
+
+}
+
+IDE_Morph.prototype.showLibraryPages = function() {
+    var myself = this;
+    var mine = this.library;
+    var padding = 25;
+
+
+    console.log("I'm at page " + myself.currentPage);
+    pageText = new TextMorph(myself.currentPage.toString() + " / " + myself.maxPage.toString());
+    pageText.setCenter(this.library.center());
+    pageText.setBottom(this.library.bottom() - padding);
+
+    var nextButton;     //next button
+    nextButton = new PushButtonMorph(
+        myself.library,
         function(){
             //debugger;
             myself.currentPage++;
@@ -4071,14 +4086,15 @@ IDE_Morph.prototype.createImage = function() {
         null
     );
 
-    button.setWidth(50);
-    button.setHeight(20);
-    button.setPosition(new Point(screen.width * 0.52, screen.height * 0.75));
-    this.library.add(button);
+    nextButton.setWidth(50);
+    nextButton.setHeight(20);
+    nextButton.setLeft(pageText.right() + padding);
+    nextButton.setTop(pageText.top());
+    nextButton.label.setCenter(nextButton.center());
 
-    var button2;        //next button
-    button2 = new PushButtonMorph(
-        this.library,
+    var prevButton;        //next button
+    prevButton = new PushButtonMorph(
+        myself.library,
         function(){
             //debugger;
             myself.currentPage--;
@@ -4094,15 +4110,16 @@ IDE_Morph.prototype.createImage = function() {
         null
     );
 
-    button2.setWidth(50);
-    button2.setHeight(20);
-    button2.setPosition(new Point(screen.width * 0.44, screen.height * 0.75));
-    this.library.add(button2);
+    prevButton.setWidth(nextButton.width());
+    prevButton.setHeight(nextButton.height());
+    prevButton.setRight(pageText.left() - padding);
+    prevButton.setTop(pageText.top());
+    prevButton.label.setCenter(prevButton.center());
 
-    console.log(myself.currentPage);
-    var text = new TextMorph(myself.currentPage.toString() + " / " + myself.maxPage.toString());
-    text.setPosition(new Point(screen.width*0.49,screen.height*0.755));
-    this.library.add(text);
+
+    this.library.add(prevButton);
+    this.library.add(nextButton);
+    this.library.add(pageText);
 }
 
 IDE_Morph.prototype.goNextPage = function() {
