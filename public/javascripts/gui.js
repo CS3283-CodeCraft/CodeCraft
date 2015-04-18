@@ -3710,6 +3710,7 @@ IDE_Morph.prototype.showRemoveMemberFailurePopup = function(username) {
 // ****************************
 
 IDE_Morph.prototype.openLibrary = function () {
+
     if (this.library) {
         this.library.destroy();
     }
@@ -3721,6 +3722,7 @@ IDE_Morph.prototype.openLibrary = function () {
     this.library.setWidth(screen.width * 0.7);
     this.library.setHeight(screen.height * 0.7);
 
+    // draw library window contents
     this.createCheckBox();
     this.createImage();
 
@@ -3746,6 +3748,8 @@ IDE_Morph.prototype.openLibrary = function () {
 
 
 IDE_Morph.prototype.createCheckBox = function() {
+    var padding = 10;
+    var checkBoxRowHeight = 25;
     var myself = this;
     var mine = this.library;
 
@@ -3753,7 +3757,8 @@ IDE_Morph.prototype.createCheckBox = function() {
     this.library.createLabel();
 
     var text = new TextMorph("Category");
-    text.setPosition(new Point(screen.width * 0.02, screen.height * 0.05));
+    text.setFontSize(20);
+    text.setPosition(new Point(screen.width * 0.02, screen.height * 0.07));
     this.library.add(text);
 
     var peoplebox = new ToggleMorph(
@@ -3772,7 +3777,7 @@ IDE_Morph.prototype.createCheckBox = function() {
         }
     );
 
-    peoplebox.setPosition(new Point(screen.width * 0.02, screen.height * 0.07));
+    peoplebox.setPosition(new Point(text.left(), text.bottom() + padding));
     this.library.add(peoplebox);
 
     var animalbox = new ToggleMorph(
@@ -3791,7 +3796,7 @@ IDE_Morph.prototype.createCheckBox = function() {
         }
     );
 
-    animalbox.setPosition(new Point(screen.width*0.02,screen.height*0.095));
+    animalbox.setPosition(new Point(text.left(), text.bottom() + padding + checkBoxRowHeight));
     this.library.add(animalbox);
 
     var objectbox = new ToggleMorph(
@@ -3809,12 +3814,15 @@ IDE_Morph.prototype.createCheckBox = function() {
         }
     );
 
-    objectbox.setPosition(new Point(screen.width*0.02,screen.height*0.12));
+    objectbox.setPosition(new Point(text.left(), text.bottom() + padding + checkBoxRowHeight*2));
     this.library.add(objectbox);
+
+    nextFilterLocation = objectbox.bottom() + padding*5;
 
     var text2 = new TextMorph("Location");
     //this.fontSize = 10;
-    text2.setPosition(new Point(screen.width*0.02,screen.height*0.18));
+    text2.setPosition(new Point(text.left(), nextFilterLocation));
+    text2.setFontSize(20);
     this.library.add(text2);
 
     var singaporebox = new ToggleMorph(
@@ -3829,7 +3837,7 @@ IDE_Morph.prototype.createCheckBox = function() {
         }
     );
 
-    singaporebox.setPosition(new Point(screen.width*0.02,screen.height*0.205));
+    singaporebox.setPosition(new Point(text.left(), text2.bottom() + padding));
     this.library.add(singaporebox);
 
     var malaysiabox = new ToggleMorph(
@@ -3844,7 +3852,7 @@ IDE_Morph.prototype.createCheckBox = function() {
         }
     );
 
-    malaysiabox.setPosition(new Point(screen.width*0.02,screen.height*0.23));
+    malaysiabox.setPosition(new Point(text.left(), text2.bottom() + padding + checkBoxRowHeight));
     this.library.add(malaysiabox);
 
     var chinabox = new ToggleMorph(
@@ -3859,7 +3867,7 @@ IDE_Morph.prototype.createCheckBox = function() {
         }
     );
 
-    chinabox.setPosition(new Point(screen.width*0.02,screen.height*0.255));
+    chinabox.setPosition(new Point(text.left(), text2.bottom() + padding + checkBoxRowHeight*2));
     this.library.add(chinabox);
 
     var indiabox = new ToggleMorph(
@@ -3874,7 +3882,7 @@ IDE_Morph.prototype.createCheckBox = function() {
         }
     );
 
-    indiabox.setPosition(new Point(screen.width*0.02,screen.height*0.28));
+    indiabox.setPosition(new Point(text.left(), text2.bottom() + padding + checkBoxRowHeight*3));
     this.library.add(indiabox);
 
     var thailandbox = new ToggleMorph(
@@ -3889,10 +3897,9 @@ IDE_Morph.prototype.createCheckBox = function() {
         }
     );
 
-    thailandbox.setPosition(new Point(screen.width*0.02,screen.height*0.305));
+    thailandbox.setPosition(new Point(text.left(), text2.bottom() + padding + checkBoxRowHeight*4));
     this.library.add(thailandbox);
 
-    this.library.addButton('cancel', 'Close');
     this.library.drawNew();
     this.library.fixLayout();
     this.library.popUp(world);
@@ -3926,7 +3933,6 @@ IDE_Morph.prototype.createImage = function() {
             myself.droppedImage(canvas, name);
         };
         img.src = url;
-
     }
 
     //debugger;

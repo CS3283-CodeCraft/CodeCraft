@@ -131,6 +131,7 @@ var PushButtonMorph = Class.create(TriggerMorph, {
             this.padding = 0;
             this.corner = 35;
             this.fontSize = 40;
+            this.label.setCenter(this.center());
         }
 
         // xinni: using demo to style buttons. rename demo to 'style' at a later time
