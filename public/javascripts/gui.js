@@ -3743,6 +3743,9 @@ IDE_Morph.prototype.openLibrary = function () {
     button.fixLayout();
     this.library.add(button);
 
+    this.library.drawNew();
+    this.library.fixLayout();
+    this.library.popUp(world);
     myself.add(this.library);
 };
 
@@ -3900,9 +3903,7 @@ IDE_Morph.prototype.createCheckBox = function() {
     thailandbox.setPosition(new Point(text.left(), text2.bottom() + padding + checkBoxRowHeight*4));
     this.library.add(thailandbox);
 
-    this.library.drawNew();
-    this.library.fixLayout();
-    this.library.popUp(world);
+
 };
 
 
@@ -3949,11 +3950,12 @@ IDE_Morph.prototype.createImage = function() {
 
         sprite.image = imagetoshow;
         sprite.name = line.name;
+
         //debugger;
         var heightindex = Math.floor(i/5);
         sprite.setPosition(new Point(spacelength + (i%5)*150, spaceheight + (heightindex%3) * 180));
         sprite.isDraggable = false;
-
+        
         //debugger;
 
         if(myself.tag1people){
@@ -4134,7 +4136,7 @@ IDE_Morph.prototype.goNextPage = function() {
     }
 };
 
-IDE_Morph.prototype.goNextPage = function() {
+IDE_Morph.prototype.goPrevPage = function() {
     this.currentpage--;
     if(this.currentpage <= 0){
         this.currentpage = this.maxpage;
