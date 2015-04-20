@@ -1784,18 +1784,22 @@ IDE_Morph.makeSocket = function (myself, shareboxId) {
         sharer.ide.shareBoxPlaceholderSprite.sounds = new List();
         sharer.ide.shareBoxPlaceholderSprite.costumes = new List();
         sharer.ide.shareBoxPlaceholderSprite.costume = null;
+        sharer.ide.shareBoxPlaceholderSprite.scriptsList = new List();
         //var duplicate = sharer.ide.currentSprite.fullCopy();
 
         // Update local list
         sharer.data.data = objectData;
         console.log("draw following code in sharebox: \n" + JSON.stringify(sharer.data, null, '\t'));
         for (var i = 0; i < sharer.data.data.length; i++) {
-            var shareObject = sharer.getObject(_.unescape(sharer.data.data[i]));
+            var shareObject = sharer.getObject(_.unescape(sharer.data.data[i].string));
             if (shareObject instanceof CostumeIconMorph) {
+                shareObject.object.name = sharer.data.data[i].name;
                 sharer.ide.shareBoxPlaceholderSprite.addCostume(shareObject.object);
             } else if (shareObject instanceof SoundIconMorph) {
+                shareObject.object.name = sharer.data.data[i].name;
                 sharer.ide.shareBoxPlaceholderSprite.addSound(shareObject.object, shareObject.name);
             } else if (shareObject instanceof CommandBlockMorph) {
+                shareObject.name = sharer.data.data[i].name;
                 sharer.ide.shareBoxPlaceholderSprite.scriptsList.add(shareObject);
                 sharer.ide.shareBox.updateList();
             }
@@ -1862,7 +1866,8 @@ IDE_Morph.prototype.createShareBox = function () {
         this.shareBox.reactToDropOf = function (droppedMorph) {
             var shareName = prompt("Give the item a name.");
             sharer.shareObject((shareboxId.toString()), droppedMorph, shareName);
-            droppedMorph.destroy();
+            droppedMorph.snap(sharer.ide.hand);
+
             myself.fixLayout();
         };
     } else if (this.currentShareBoxTab === 'assets') {
@@ -9788,7 +9793,7 @@ ScriptIconMorph.prototype.init = function (aScript, ide, aTemplate, scriptName) 
 
     // override defaults and build additional components
     this.isDraggable = true;
-    this.createThumbnail(scriptName);
+    this.createThumbnail(aScript.name);
     this.padding = 2;
     this.corner = 8;
     this.fixLayout();
@@ -9916,7 +9921,7 @@ ShareBoxScriptsMorph.prototype.init = function (aSprite, ide, sliderColor) {
 
 // Jukebox updating
 
-ShareBoxScriptsMorph.prototype.updateList = function (scriptName) {
+ShareBoxScriptsMorph.prototype.updateList = function () {
     var myself = this,
         x = this.left() + 20,
         y = this.top() + 20,
@@ -9939,7 +9944,7 @@ ShareBoxScriptsMorph.prototype.updateList = function (scriptName) {
     this.addBack(this.contents);
 
     this.sprite.scriptsList.asArray().forEach(function (script) {
-        template = icon = new ScriptIconMorph(script, ide, template, scriptName);
+        template = icon = new ScriptIconMorph(script, ide, template, script.name);
         icon.setPosition(new Point(x, y));
         myself.addContents(icon);
         y = icon.bottom() + padding + 35;
