@@ -1811,7 +1811,9 @@ IDE_Morph.makeSocket = function (myself, shareboxId) {
         this.ide.currentSprite = duplicate;
         this.ide.currentSprite.appearIn(this.ide);
         this.ide.selectSprite(this.ide.currentSprite);
+
         sharer.ide.shareBoxPlaceholderSprite.hasChangedMedia = true;
+        this.ide.createShareBox();
         sharer.ide.drawNew();
         sharer.ide.fixLayout();
     }.bind(sharer));
@@ -9872,6 +9874,14 @@ ScriptIconMorph.prototype.removeScript = function () {
     var jukebox = this.parentThatIsA('ShareBoxScriptsMorph'),
         idx = this.parent.children.indexOf(this);
     jukebox.removeScript(idx);
+    if ((this.parent.parent instanceof ShareBoxScriptsMorph)) {
+        var ide = this.parentThatIsA('IDE_Morph');
+        var dataList = ide.sharer.buildDataList();
+        ide.sharer.socket.emit('send', dataList);
+        ide.hasChangedMedia = true;
+        ide.drawNew();
+        ide.fixLayout();
+    }
 };
 
 ScriptIconMorph.prototype.createBackgrounds
