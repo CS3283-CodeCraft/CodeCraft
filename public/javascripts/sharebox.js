@@ -52,8 +52,8 @@ ShareBoxItemSharer.prototype.shareObject = function (room, shareItem, shareName)
         var string = { room: room, data: objectData };*/
         var duplicate = this.ide.currentSprite.fullCopy(),
             curr = this.ide.currentSprite,
-            string = _.escape(xml);
-        this.data.data.push(string);
+            obj = { name: shareName, string: _.escape(xml) };
+        this.data.data.push(obj);
         var sendItem = this.data;
         console.log(JSON.stringify(sendItem));
         this.socket.emit('send', sendItem);
@@ -63,16 +63,22 @@ ShareBoxItemSharer.prototype.shareObject = function (room, shareItem, shareName)
         this.ide.shareBoxPlaceholderSprite.sounds = new List();
         this.ide.shareBoxPlaceholderSprite.costumes = new List();
         this.ide.shareBoxPlaceholderSprite.costume = null;
+        this.ide.shareBoxPlaceholderSprite.scriptsList = new List();
+
         // Update local list
         console.log("draw following code in sharebox: \n" + JSON.stringify(this.data, null, '\t'));
         for (var i = 0; i < this.data.data.length; i++) {
-            var shareObject = this.getObject(_.unescape(this.data.data[i]));
+            var shareObject = this.getObject(_.unescape(this.data.data[i].string));
             if (shareObject instanceof CostumeIconMorph) {
+                shareObject.object.name = this.data.data[i].name;
                 this.ide.shareBoxPlaceholderSprite.addCostume(shareObject.object);
             } else if (shareObject instanceof SoundIconMorph) {
+                shareObject.object.name = this.data.data[i].name;
                 this.ide.shareBoxPlaceholderSprite.addSound(shareObject.object, shareObject.name);
             } else if (shareObject instanceof BlockMorph) {
+                shareObject.name = this.data.data[i].name;
                 this.ide.shareBoxPlaceholderSprite.scriptsList.add(shareObject);
+                this.ide.createShareBox();
                 this.ide.shareBox.updateList(shareName);
             }
             shareObject.destroy();

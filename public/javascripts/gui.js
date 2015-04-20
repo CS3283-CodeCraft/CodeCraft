@@ -1789,18 +1789,22 @@ IDE_Morph.makeSocket = function (myself, shareboxId) {
         sharer.ide.shareBoxPlaceholderSprite.sounds = new List();
         sharer.ide.shareBoxPlaceholderSprite.costumes = new List();
         sharer.ide.shareBoxPlaceholderSprite.costume = null;
+        sharer.ide.shareBoxPlaceholderSprite.scriptsList = new List();
         //var duplicate = sharer.ide.currentSprite.fullCopy();
 
         // Update local list
         sharer.data.data = objectData;
         console.log("draw following code in sharebox: \n" + JSON.stringify(sharer.data, null, '\t'));
         for (var i = 0; i < sharer.data.data.length; i++) {
-            var shareObject = sharer.getObject(_.unescape(sharer.data.data[i]));
+            var shareObject = sharer.getObject(_.unescape(sharer.data.data[i].string));
             if (shareObject instanceof CostumeIconMorph) {
+                shareObject.object.name = sharer.data.data[i].name;
                 sharer.ide.shareBoxPlaceholderSprite.addCostume(shareObject.object);
             } else if (shareObject instanceof SoundIconMorph) {
+                shareObject.object.name = sharer.data.data[i].name;
                 sharer.ide.shareBoxPlaceholderSprite.addSound(shareObject.object, shareObject.name);
             } else if (shareObject instanceof CommandBlockMorph) {
+                shareObject.name = sharer.data.data[i].name;
                 sharer.ide.shareBoxPlaceholderSprite.scriptsList.add(shareObject);
                 sharer.ide.shareBox.updateList();
             }
@@ -1812,7 +1816,9 @@ IDE_Morph.makeSocket = function (myself, shareboxId) {
         this.ide.currentSprite = duplicate;
         this.ide.currentSprite.appearIn(this.ide);
         this.ide.selectSprite(this.ide.currentSprite);
+
         sharer.ide.shareBoxPlaceholderSprite.hasChangedMedia = true;
+        this.ide.createShareBox();
         sharer.ide.drawNew();
         sharer.ide.fixLayout();
     }.bind(sharer));
@@ -1822,6 +1828,9 @@ IDE_Morph.makeSocket = function (myself, shareboxId) {
     return sharer;
 };
 
+IDE_Morph.prototype.isValidName = function (shareName) {
+    return !(shareName == null || shareName.length == 0 || shareName.length > 20);
+};
 
 // xinni: shows the whole share box and hide the connection screens and tabs
 IDE_Morph.prototype.createShareBox = function () {
@@ -1830,7 +1839,7 @@ IDE_Morph.prototype.createShareBox = function () {
         myself = this;
         
 
-    shareboxId = typeof myself.shareboxId !== 'undefined' ? myself.shareboxId : 'common';
+    shareboxId = typeof myself.shareboxId !== 'undefined' ? myself.shareboxId : 'No Group Yet';
     
     var room = shareboxId.toString();
 
@@ -1849,9 +1858,10 @@ IDE_Morph.prototype.createShareBox = function () {
     this.sharer.room = room;
     // join the room that was created
     var socketData = {id: tempIdentifier, room: room }
-    sharer.socket.emit('JOIN_SHAREBOX', socketData);
-    console.log("[SOCKET-SEND] JOIN_SHAREBOX: " + JSON.stringify(socketData));
-
+    if (myself.shareboxId !== 'No Group Yet'){
+         sharer.socket.emit('JOIN_SHAREBOX', socketData);
+        console.log("[SOCKET-SEND] JOIN_SHAREBOX: " + JSON.stringify(socketData));
+    }
 
     if (this.currentShareBoxTab === 'scripts') {
         scripts.isDraggable = false;
@@ -1865,7 +1875,11 @@ IDE_Morph.prototype.createShareBox = function () {
 
         this.shareBox.reactToDropOf = function (droppedMorph) {
             var shareName = prompt("Give the item a name.");
+            while (this.isValidName(shareName)) {
+                shareName = prompt("The name has to be between 1 to 20 characters");
+            }
             sharer.shareObject((shareboxId.toString()), droppedMorph, shareName);
+            sharer.ide.spriteEditor.contents.add(sharer.deserializeItem(sharer.serializeItem(droppedMorph)));
             droppedMorph.destroy();
             myself.fixLayout();
         };
@@ -2334,6 +2348,9 @@ IDE_Morph.prototype.showRequestReceivedMessage = function (inviteData) {
             myself.showAcceptRequestFailurePopup();
             console.log("Accept request failed. Go back to Create group screen.");
             myself.destroyShareBox();
+            var socketData = {room: inviteData.room, removeId: tempIdentifier};
+            myself.sharer.socket.emit('REMOVE_USER', socketData);
+            
             // @yiwen - remove the person from pending members
         }
         
@@ -2345,6 +2362,10 @@ IDE_Morph.prototype.showRequestReceivedMessage = function (inviteData) {
     rejectButton.setPosition(new Point(myself.stage.width() / 2 + padding, txt.bottom() + padding));
     rejectButton.action = function () {
         console.log("Reject button pressed. Back to Create group screen.");
+        myself.sharer.socket.emit('INVITE_REJECT', {
+            id: tempIdentifier,
+            room: inviteData.room,
+        })
         myself.destroyShareBox();
     };
     this.requestReceivedScreen.add(rejectButton);
@@ -2476,14 +2497,13 @@ IDE_Morph.prototype.showViewMembersPopup = function() {
             if(data.members[i].isPending) {
                 pendingMembers.push(data.members[i].clientId);
             } else {
-                groupMembers.push(data.members[i].clientId);
-                groupMembersIsOnline.push(true);
+                if(data.members[i].clientId !== tempIdentifier){
+                    groupMembers.push(data.members[i].clientId);
+                    groupMembersIsOnline.push(true);
+                }
             }
             
         };
-
-        console.log(pendingMembers);
-        console.log(groupMembers);
 
         // set up the frames to contain the member list "viewMembersPopup" and "membersViewFrame"
         if (myself.viewMembersPopup) {
@@ -2524,9 +2544,7 @@ IDE_Morph.prototype.showViewMembersPopup = function() {
         // add close button
         var button = new PushButtonMorph(null, null, "Close me", null, null, null, "green");
         button.action = function() { 
-            myself.sharer.socket.on('UPDATE_MEMBERS', function(){
-                // do nothing
-            })
+            myself.sharer.socket.removeAllListeners("UPDATE_MEMBERS");
             myself.viewMembersPopup.cancel(); 
         };
         button.setCenter(myself.viewMembersPopup.center());
@@ -9811,7 +9829,7 @@ ScriptIconMorph.prototype.init = function (aScript, ide, aTemplate, scriptName) 
 
     // override defaults and build additional components
     this.isDraggable = true;
-    this.createThumbnail(scriptName);
+    this.createThumbnail(aScript.name);
     this.padding = 2;
     this.corner = 8;
     this.fixLayout();
@@ -9890,6 +9908,14 @@ ScriptIconMorph.prototype.removeScript = function () {
     var jukebox = this.parentThatIsA('ShareBoxScriptsMorph'),
         idx = this.parent.children.indexOf(this);
     jukebox.removeScript(idx);
+    if ((this.parent.parent instanceof ShareBoxScriptsMorph)) {
+        var ide = this.parentThatIsA('IDE_Morph');
+        var dataList = ide.sharer.buildDataList();
+        ide.sharer.socket.emit('send', dataList);
+        ide.hasChangedMedia = true;
+        ide.drawNew();
+        ide.fixLayout();
+    }
 };
 
 ScriptIconMorph.prototype.createBackgrounds
@@ -9939,7 +9965,7 @@ ShareBoxScriptsMorph.prototype.init = function (aSprite, ide, sliderColor) {
 
 // Jukebox updating
 
-ShareBoxScriptsMorph.prototype.updateList = function (scriptName) {
+ShareBoxScriptsMorph.prototype.updateList = function () {
     var myself = this,
         x = this.left() + 20,
         y = this.top() + 20,
@@ -9962,7 +9988,7 @@ ShareBoxScriptsMorph.prototype.updateList = function (scriptName) {
     this.addBack(this.contents);
 
     this.sprite.scriptsList.asArray().forEach(function (script) {
-        template = icon = new ScriptIconMorph(script, ide, template, scriptName);
+        template = icon = new ScriptIconMorph(script, ide, template, script.name);
         icon.setPosition(new Point(x, y));
         myself.addContents(icon);
         y = icon.bottom() + padding + 35;
@@ -9994,23 +10020,27 @@ ShareBoxScriptsMorph.prototype.removeScript = function (idx) {
 // Jukebox drag & drop
 
 ShareBoxScriptsMorph.prototype.wantsDropOf = function (morph) {
-    return morph instanceof CommandBlockMorph;
+    return morph instanceof CommandBlockMorph && (morph.parentThatIsA('ShareBoxScriptsMorph') == null);
 };
 
 // Fix this add
 ShareBoxScriptsMorph.prototype.reactToDropOf = function (blockMorph) {
-    var idx = 0,
-        script = new ScriptIconMorph(blockMorph),
-        top = script.top();
+    if (this.wantsDropOf(blockMorph)) {
+        var idx = 0,
+            script = new ScriptIconMorph(blockMorph),
+            top = script.top();
 
-    blockMorph.destroy();
-    this.contents.children.forEach(function (script) {
-        if (script.top() < top - 4) {
-            idx += 1;
-        }
-    });
-    this.sprite.scriptsList.add(script, idx);
-    this.add(script);
-    this.updateList();
+        blockMorph.destroy();
+        this.contents.children.forEach(function (script) {
+            if (script.top() < top - 4) {
+                idx += 1;
+            }
+        });
+        this.sprite.scriptsList.add(script, idx);
+        this.add(script);
+        this.updateList();
+    } else {
+        blockMorph.slideBackTo(world.hand.grabOrigin);
+    }
 };
 

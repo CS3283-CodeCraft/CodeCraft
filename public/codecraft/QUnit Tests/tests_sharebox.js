@@ -254,3 +254,23 @@ QUnit.test("Test Placeholder Sprite Properties: Is not a template", function (as
 QUnit.test("Test Placeholder Sprite Properties: Is visible", function (assert) {
     assert.ok(this.ide.shareBoxPlaceholderSprite.isVisible == true);
 });
+
+QUnit.test("Test Boundary Value for Shared Item Name: Empty String", function(assert) {
+    assert.ok(!this.ide.isValidName(""));
+});
+
+QUnit.test("Test Boundary Value for Shared Item Name: null value", function(assert) {
+    assert.ok(!this.ide.isValidName(null));
+});
+
+QUnit.test("Test Boundary Value for Shared Item Name: 20 characters", function(assert) {
+    assert.ok(this.ide.isValidName("11111111111111111111"));
+});
+
+QUnit.test("Test Boundary Value for Shared Item Name: 19 characters", function(assert) {
+    assert.ok(this.ide.isValidName("1111111111111111111"));
+});
+
+QUnit.test("Test Boundary Value for Shared Item Name: 21 characters", function(assert) {
+    assert.ok(!this.ide.isValidName("111111111111111111111"));
+});
