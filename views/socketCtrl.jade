@@ -1,6 +1,87 @@
 extends socketLayout
 
 block content
-	script(type='text/javascript', src='javascripts/socket-controller.js')
+	.container-fluid
 
-	button(onclick="sendInvitation()") Send Invite
+		.row
+			.col-md-12
+				h1 Socket Control Panel
+			hr
+		.row
+			.col-md-6
+				.row
+					.col-md-12
+						h2 Identity
+					.col-md-6
+						.form-group
+							label USERNAME
+							input.form-control(ng-model="username")
+					.col-md-6
+						.form-group
+							label SHAREBOX ID
+							input.form-control(ng-model="shareboxId")
+				.row
+					.col-md-12
+						table.table
+							tr
+								th USERNAME
+								th SOCKET ID
+								th ACTION
+							tr
+								td *
+								td {{mySocket.id}}
+								td NA
+							tr(ng-repeat="user in socketList")
+								td {{user.id}}
+								td {{user.socket.id }} 
+								td 
+									button.btn.btn-primary.btn-xs(ng-click="selectSocket($index)") Select
+									button.btn.btn-default.btn-xs(ng-click="addDummyToRoom($index)") Join {{shareboxId}}
+									button.btn.btn-success.btn-xs(ng-click="dummyCreateRoom($index)") Create {{shareboxId}}
+									button.btn.btn-info.btn-xs(ng-click="dummyLeaveRoom($index)") Leave
+									button.btn.btn-warning.btn-xs(ng-click="dummyReject($index)") Reject
+									button.btn.btn-danger.btn-xs(ng-click="removeFromRoom($index)") Remove
+									button.btn.btn-success.btn-xs(ng-click="dummyConnect($index)") Connect
+									button.btn.btn-danger.btn-xs(ng-click="dummyDisconnect($index)") Disconnect
+									
+				.row
+					.col-md-12
+						h2 Action
+					.col-md-3
+						button.btn.btn-default(ng-click="createRoom()") Create Sharebox
+					.col-md-3
+						button.btn.btn-default(ng-click="leaveRoom()") Leave Sharebox
+					.col-md-3
+						button.btn.btn-default(ng-click="createSockets(10)") Create 10 Dummy
+					.col-md-3
+						button.btn.btn-default(ng-click="joinAllSocket()") Add All Dummy
+					.col-md-3
+						button.btn.btn-default(ng-click="refresh()") REFRESH
+
+
+			.col-md-6
+				.row(ng-repeat="(key, value) in socketClients")
+					.col-md-12
+						h3 {{ key }}
+					.col-md-12
+						table.table
+							tr
+								th CLIENT ID
+								th SOCKET ID
+								th PENDING
+							tr.danger
+								td {{ value.owner.clientId }}
+								td {{ value.owner.socketId }}
+								td {{ value.owner.isPending }}
+							tr(ng-repeat="m in value.members")
+								td {{ m.clientId }}
+								td {{ m.socketId }}
+								td {{ m.isPending }}
+
+				.row
+					.col-md-12
+						{{ socketClients }}
+
+
+
+				

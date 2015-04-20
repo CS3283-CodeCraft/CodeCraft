@@ -73,7 +73,7 @@ ShareBoxItemSharer.prototype.shareObject = function (room, shareItem, shareName)
                 this.ide.shareBoxPlaceholderSprite.addSound(shareObject.object, shareObject.name);
             } else if (shareObject instanceof BlockMorph) {
                 this.ide.shareBoxPlaceholderSprite.scriptsList.add(shareObject);
-                this.ide.shareBox.updateList();
+                this.ide.shareBox.updateList(shareName);
             }
             shareObject.destroy();
         }
