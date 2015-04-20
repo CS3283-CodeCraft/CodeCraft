@@ -1823,6 +1823,9 @@ IDE_Morph.makeSocket = function (myself, shareboxId) {
     return sharer;
 };
 
+IDE_Morph.prototype.isValidName = function (shareName) {
+    return !(shareName == null || shareName.length == 0 || shareName.length > 20);
+};
 
 // xinni: shows the whole share box and hide the connection screens and tabs
 IDE_Morph.prototype.createShareBox = function () {
@@ -1867,9 +1870,12 @@ IDE_Morph.prototype.createShareBox = function () {
 
         this.shareBox.reactToDropOf = function (droppedMorph) {
             var shareName = prompt("Give the item a name.");
+            while (this.isValidName(shareName)) {
+                shareName = prompt("The name has to be between 1 to 20 characters");
+            }
             sharer.shareObject((shareboxId.toString()), droppedMorph, shareName);
-            droppedMorph.snap(sharer.ide.hand);
-
+            sharer.ide.spriteEditor.contents.add(sharer.deserializeItem(sharer.serializeItem(droppedMorph)));
+            droppedMorph.destroy();
             myself.fixLayout();
         };
     } else if (this.currentShareBoxTab === 'assets') {
@@ -9986,23 +9992,27 @@ ShareBoxScriptsMorph.prototype.removeScript = function (idx) {
 // Jukebox drag & drop
 
 ShareBoxScriptsMorph.prototype.wantsDropOf = function (morph) {
-    return morph instanceof CommandBlockMorph;
+    return morph instanceof CommandBlockMorph && (morph.parentThatIsA('ShareBoxScriptsMorph') == null);
 };
 
 // Fix this add
 ShareBoxScriptsMorph.prototype.reactToDropOf = function (blockMorph) {
-    var idx = 0,
-        script = new ScriptIconMorph(blockMorph),
-        top = script.top();
+    if (this.wantsDropOf(blockMorph)) {
+        var idx = 0,
+            script = new ScriptIconMorph(blockMorph),
+            top = script.top();
 
-    blockMorph.destroy();
-    this.contents.children.forEach(function (script) {
-        if (script.top() < top - 4) {
-            idx += 1;
-        }
-    });
-    this.sprite.scriptsList.add(script, idx);
-    this.add(script);
-    this.updateList();
+        blockMorph.destroy();
+        this.contents.children.forEach(function (script) {
+            if (script.top() < top - 4) {
+                idx += 1;
+            }
+        });
+        this.sprite.scriptsList.add(script, idx);
+        this.add(script);
+        this.updateList();
+    } else {
+        blockMorph.slideBackTo(world.hand.grabOrigin);
+    }
 };
 
