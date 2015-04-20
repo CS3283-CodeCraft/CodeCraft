@@ -1821,7 +1821,7 @@ IDE_Morph.prototype.createShareBox = function () {
         myself = this;
         
 
-    shareboxId = typeof myself.shareboxId !== 'undefined' ? myself.shareboxId : 'common';
+    shareboxId = typeof myself.shareboxId !== 'undefined' ? myself.shareboxId : 'No Group Yet';
     
     var room = shareboxId.toString();
 
@@ -1840,9 +1840,10 @@ IDE_Morph.prototype.createShareBox = function () {
     this.sharer.room = room;
     // join the room that was created
     var socketData = {id: tempIdentifier, room: room }
-    sharer.socket.emit('JOIN_SHAREBOX', socketData);
-    console.log("[SOCKET-SEND] JOIN_SHAREBOX: " + JSON.stringify(socketData));
-
+    if (myself.shareboxId !== 'No Group Yet'){
+         sharer.socket.emit('JOIN_SHAREBOX', socketData);
+        console.log("[SOCKET-SEND] JOIN_SHAREBOX: " + JSON.stringify(socketData));
+    }
 
     if (this.currentShareBoxTab === 'scripts') {
         scripts.isDraggable = false;
@@ -2315,6 +2316,9 @@ IDE_Morph.prototype.showRequestReceivedMessage = function (inviteData) {
             myself.showAcceptRequestFailurePopup();
             console.log("Accept request failed. Go back to Create group screen.");
             myself.destroyShareBox();
+            var socketData = {room: inviteData.room, removeId: tempIdentifier};
+            myself.sharer.socket.emit('REMOVE_USER', socketData);
+            
             // @yiwen - remove the person from pending members
         }
         
@@ -2326,6 +2330,10 @@ IDE_Morph.prototype.showRequestReceivedMessage = function (inviteData) {
     rejectButton.setPosition(new Point(myself.stage.width() / 2 + padding, txt.bottom() + padding));
     rejectButton.action = function () {
         console.log("Reject button pressed. Back to Create group screen.");
+        myself.sharer.socket.emit('INVITE_REJECT', {
+            id: tempIdentifier,
+            room: inviteData.room,
+        })
         myself.destroyShareBox();
     };
     this.requestReceivedScreen.add(rejectButton);
@@ -2457,14 +2465,13 @@ IDE_Morph.prototype.showViewMembersPopup = function() {
             if(data.members[i].isPending) {
                 pendingMembers.push(data.members[i].clientId);
             } else {
-                groupMembers.push(data.members[i].clientId);
-                groupMembersIsOnline.push(true);
+                if(data.members[i].clientId !== tempIdentifier){
+                    groupMembers.push(data.members[i].clientId);
+                    groupMembersIsOnline.push(true);
+                }
             }
             
         };
-
-        console.log(pendingMembers);
-        console.log(groupMembers);
 
         // set up the frames to contain the member list "viewMembersPopup" and "membersViewFrame"
         if (myself.viewMembersPopup) {
@@ -2505,9 +2512,7 @@ IDE_Morph.prototype.showViewMembersPopup = function() {
         // add close button
         var button = new PushButtonMorph(null, null, "Close me", null, null, null, "green");
         button.action = function() { 
-            myself.sharer.socket.on('UPDATE_MEMBERS', function(){
-                // do nothing
-            })
+            myself.sharer.socket.removeAllListeners("UPDATE_MEMBERS");
             myself.viewMembersPopup.cancel(); 
         };
         button.setCenter(myself.viewMembersPopup.center());
