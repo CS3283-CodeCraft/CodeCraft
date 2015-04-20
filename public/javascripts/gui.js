@@ -1276,6 +1276,8 @@ IDE_Morph.prototype.createSpriteEditor = function () {
 };
 
 IDE_Morph.prototype.createCorralBar = function () {
+	var myself = this;
+	var mine = this.library;
     // assumes the stage has already been created
     var padding = 5,
         newbutton,
@@ -1335,7 +1337,10 @@ IDE_Morph.prototype.createCorralBar = function () {
     // IMPORT FROM LIBRARY /////////////////////////////////////////
     button = new PushButtonMorph(
         this,
-        "openLibrary",
+        function (){
+			myself.openLibrary();
+			//mine.destroy();
+		},
         (String.fromCharCode("0xf03e")),
         null,
         null,
@@ -3732,7 +3737,7 @@ IDE_Morph.prototype.showRemoveMemberFailurePopup = function(username) {
 // ****************************
 
 IDE_Morph.prototype.openLibrary = function () {
-
+	
     if (this.library) {
         this.library.destroy();
     }
@@ -3769,6 +3774,8 @@ IDE_Morph.prototype.openLibrary = function () {
     this.library.fixLayout();
     this.library.popUp(world);
     myself.add(this.library);
+	//this.goNextPage();
+	//this.goPrevPage();
 };
 
 
@@ -3933,7 +3940,7 @@ IDE_Morph.prototype.createImage = function() {
 
     spriteCreator = function() { return new SpriteMorph(new Image()); };
     var spacelength = /*screen.width * 0.3*/ this.library.width() * 0.2;
-    var spaceheight = /*screen.height * 0.15*/ this.library.height() *0.09;
+    var spaceheight = /*screen.height * 0.15*/ this.library.height() * 0.09;
     var myself = this;
     var sprite = new SpriteMorph(new Image());
     var spriteonepage = 15;
@@ -3945,6 +3952,7 @@ IDE_Morph.prototype.createImage = function() {
         i = 0;
     var minIndex = (myself.currentPage - 1) * spriteonepage;
     var maxIndex = (myself.currentPage * spriteonepage) - 1;
+	var thumbSize = new Point(60, 60);
 
     function loadCostume(name) {
         //var url = dir + '/' + name,
@@ -3965,60 +3973,69 @@ IDE_Morph.prototype.createImage = function() {
         //var imagetoshow = new Image();
         var imagetoshow = new Image();
 		
+		
         //imagetoshow.width = screen.width * 0.1;
         //imagetoshow.height = screen.width * 0.1;
 		//imagetoshow.setWidth(screen.width * 0.1);
 		//imagetoshow.setHeight(screen.width * 0.1);
 		
-        sprite.setWidth(screen.width * 0.1);
-        sprite.setHeight(screen.width * 0.1);
+        //sprite.setWidth(screen.width * 0.1);
+        //sprite.setHeight(screen.width * 0.1);
 		//sprite.width = screen.width *0.2;
 
         sprite.image = imagetoshow;
         sprite.name = line.name;
 		
 		imagetoshow.src = line.url;
-
+		//imagetoshow.size = 10;
         //debugger;
         var heightindex = Math.floor(i/5);
         //sprite.setPosition(new Point(spacelength + (i%5)*150, spaceheight + (heightindex%3) * 180));
 		sprite.setPosition(new Point(spacelength + (i%5)*myself.library.width() * 0.17, spaceheight + (heightindex%3) * myself.library.height() * 0.3));
         sprite.isDraggable = false;
         
+		//imagetoshow.setExtent(thumbSize);
+		thumbnail = new Morph();
+		
+		thumbnail.setExtent(thumbSize);
+		thumbnail.image = sprite.thumbnail(thumbSize);
+		thumbnail.setPosition(
+        new Point(spacelength + (i%5)*myself.library.width() * 0.17, spaceheight + (heightindex%3) * myself.library.height() * 0.3)
+		);
         //debugger;
 
         if(myself.tag1people){
             //console.log(line.tag1);
             if(line.tag1 === 'people'){
                 if(i >= minIndex && i <= maxIndex){
-                    mine.add(sprite);
+                    mine.add(thumbnail);
                 }
             }
             if(line.tag1 === 'animal' && myself.tag1animal){
                 if(i >= minIndex && i <= maxIndex){
-                    mine.add(sprite);
+                    mine.add(thumbnail);
                 }
             }
             if(line.tag1 === 'object' && myself.tag1object){
                 if(i >= minIndex && i <= maxIndex){
-                    mine.add(sprite);
+                    mine.add(thumbnail);
                 }
             }
         } else if (myself.tag1animal){
             if(line.tag1 === 'animal'){
                 if(i >= minIndex && i <= maxIndex){
-                    mine.add(sprite);
+                    mine.add(thumbnail);
                 }
             }
             if(line.tag1 === 'object' && myself.tag1object){
                 if(i >= minIndex && i <= maxIndex){
-                    mine.add(sprite);
+                    mine.add(thumbnail);
                 }
             }
         }
         else{
             if(i >= minIndex && i <= maxIndex){
-                mine.add(sprite);
+                mine.add(thumbnail);
             }
         }
 
@@ -4156,20 +4173,31 @@ IDE_Morph.prototype.showLibraryPages = function() {
     this.library.add(prevButton);
     this.library.add(nextButton);
     this.library.add(pageText);
+	
+	this.library.changed;
+	//this.goNextPage();
 }
 
 IDE_Morph.prototype.goNextPage = function() {
-    this.currentpage++;
-    if(this.currentpage > this.maxpage){
-        this.currentpage -= this.maxpage;
+    var myself = this;
+    var mine = this.library;
+    myself.currentPage++;
+    if(myself.currentPage > myself.maxPage){
+        myself.currentPage = 1;
     }
+    myself.openLibrary();
+    mine.destroy();
 };
 
 IDE_Morph.prototype.goPrevPage = function() {
-    this.currentpage--;
-    if(this.currentpage <= 0){
-        this.currentpage = this.maxpage;
+	var myself = this;
+    var mine = this.library;
+    myself.currentPage--;
+    if(myself.currentPage <= 0){
+        myself.currentPage = myself.maxPage;
     }
+    myself.openLibrary();
+    mine.destroy();
 };
 
 
