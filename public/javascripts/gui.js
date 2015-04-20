@@ -89,7 +89,11 @@ var ShareBoxAssetsMorph;
 var tag1people;
 var tag1animal;
 var tag1object;
-var tag2;
+var tag2singapore;
+var tag2malaysia;
+var tag2china;
+var tag2india;
+var tag2thailand;
 var tag1bool;
 
 var currentPage;
@@ -3837,11 +3841,11 @@ IDE_Morph.prototype.createCheckBox = function() {
         'checkbox',
         null,
         function () {
-            this.locationfilter = !this.locationfilter;
+            myself.tag2singapore = !myself.tag2singapore;
         },
         localize('Singapore'),
         function () {
-            return this.locationfilter;
+            return myself.tag2singapore;
         }
     );
 
@@ -3852,11 +3856,11 @@ IDE_Morph.prototype.createCheckBox = function() {
         'checkbox',
         null,
         function () {
-            this.locationfilter = !this.locationfilter;
+            myself.tag2malaysia = !myself.tag2malaysia;
         },
         localize('Malaysia'),
         function () {
-            return this.locationfilter;
+            return myself.tag2malaysia;
         }
     );
 
@@ -3867,11 +3871,11 @@ IDE_Morph.prototype.createCheckBox = function() {
         'checkbox',
         null,
         function () {
-            this.locationfilter = !this.locationfilter;
+            myself.tag2china = !myself.tag2china;
         },
         localize('China'),
         function () {
-            return this.locationfilter;
+            return myself.tag2china;
         }
     );
 
@@ -3882,11 +3886,11 @@ IDE_Morph.prototype.createCheckBox = function() {
         'checkbox',
         null,
         function () {
-            this.locationfilter = !this.locationfilter;
+            myself.tag2india = !myself.tag2india;
         },
         localize('India'),
         function () {
-            return this.locationfilter;
+            return myself.tag2india;
         }
     );
 
@@ -3897,11 +3901,11 @@ IDE_Morph.prototype.createCheckBox = function() {
         'checkbox',
         null,
         function () {
-            this.locationfilter = !this.locationfilter;
+            myself.tag2thailand = !myself.tag2thailand;
         },
         localize('Thailand'),
         function () {
-            return this.locationfilter;
+            return myself.tag2thailand;
         }
     );
 
@@ -3915,8 +3919,8 @@ IDE_Morph.prototype.createCheckBox = function() {
 IDE_Morph.prototype.createImage = function() {
 
     spriteCreator = function() { return new SpriteMorph(new Image()); };
-    var spacelength = /*screen.width * 0.3*/ this.library.left() + 180;
-    var spaceheight = /*screen.height * 0.15*/ this.library.top() + 60;
+    var spacelength = /*screen.width * 0.3*/ this.library.width() * 0.2;
+    var spaceheight = /*screen.height * 0.15*/ this.library.height() *0.09;
     var myself = this;
     var sprite = new SpriteMorph(new Image());
     var spriteonepage = 15;
@@ -3945,20 +3949,27 @@ IDE_Morph.prototype.createImage = function() {
     names.forEach(function (line) {
         sprite = spriteCreator();
 
+        //var imagetoshow = new Image();
         var imagetoshow = new Image();
-        imagetoshow.src = line.url;
-        imagetoshow.width = 100;
-        imagetoshow.height = 100;
-
-        sprite.setWidth(100);
-        sprite.setHeight(100);
+		
+        //imagetoshow.width = screen.width * 0.1;
+        //imagetoshow.height = screen.width * 0.1;
+		//imagetoshow.setWidth(screen.width * 0.1);
+		//imagetoshow.setHeight(screen.width * 0.1);
+		
+        sprite.setWidth(screen.width * 0.1);
+        sprite.setHeight(screen.width * 0.1);
+		//sprite.width = screen.width *0.2;
 
         sprite.image = imagetoshow;
         sprite.name = line.name;
+		
+		imagetoshow.src = line.url;
 
         //debugger;
         var heightindex = Math.floor(i/5);
-        sprite.setPosition(new Point(spacelength + (i%5)*150, spaceheight + (heightindex%3) * 180));
+        //sprite.setPosition(new Point(spacelength + (i%5)*150, spaceheight + (heightindex%3) * 180));
+		sprite.setPosition(new Point(spacelength + (i%5)*myself.library.width() * 0.17, spaceheight + (heightindex%3) * myself.library.height() * 0.3));
         sprite.isDraggable = false;
         
         //debugger;
@@ -4013,7 +4024,7 @@ IDE_Morph.prototype.createImage = function() {
         );
         buttonforadding.setWidth(70);
         buttonforadding.setHeight(70);
-        buttonforadding.setPosition(new Point(spacelength + (i%5)*150, spaceheight + (heightindex % 3) * 180));
+        buttonforadding.setPosition(new Point(spacelength + (i%5)*myself.library.width() * 0.17, spaceheight + (heightindex % 3) * myself.library.height() * 0.3));
         buttonforadding.label.setCenter(buttonforadding.center());
 
 
