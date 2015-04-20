@@ -1859,6 +1859,7 @@ IDE_Morph.prototype.createShareBox = function () {
             var shareName = prompt("Give the item a name.");
             sharer.shareObject((shareboxId.toString()), droppedMorph, shareName);
             droppedMorph.destroy();
+            myself.fixLayout();
         };
     } else if (this.currentShareBoxTab === 'assets') {
         this.shareBox = new ShareBoxAssetsMorph(
@@ -1876,6 +1877,7 @@ IDE_Morph.prototype.createShareBox = function () {
             var shareName = prompt("Give the item a name.");
             sharer.shareObject((shareboxId.toString()), droppedMorph, shareName);
             droppedMorph.destroy();
+            myself.fixLayout();
         };
 
     } else {
@@ -2224,8 +2226,16 @@ IDE_Morph.prototype.showNewGroupScreen = function() {
      var groupButton = new PushButtonMorph(null, null, "Create a Group", null, null, null, "green");
      groupButton.setPosition(new Point(this.stage.width() / 2 - groupButton.width() / 2, txt.bottom() + padding));
      groupButton.action = function() {
-     console.log("Creating a new group and initializing a new session.");
-        myself.showEntireShareBoxComponent(true);
+         var result = "success";
+
+         if (result === "success") {
+             console.log("Creating a new group and initializing a new session.");
+             myself.showEntireShareBoxComponent(true);
+             myself.showGroupCreatedSuccessPopup();
+         } else {
+             console.log("Can't create group.");
+             myself.showGroupCreatedFailurePopup();
+         }
      }
      this.newGroupScreen.add(groupButton);
 
@@ -2692,6 +2702,154 @@ IDE_Morph.prototype.showMemberRow = function(isCreator, isOnline, username, rowN
     this.membersViewFrame.add(groupMemberRow);
 };
 
+// * * * * * * * * * Create Group Popup * * * * * * * * * * * * * * * * *
+
+IDE_Morph.prototype.showGroupCreatedSuccessPopup = function() {
+    var world = this.world();
+    var myself = this;
+    var popupWidth = 400;
+    var popupHeight = 330;
+
+    if (this.createGroupSuccessPopup) {
+        this.createGroupSuccessPopup.destroy();
+    }
+    this.createGroupSuccessPopup = new DialogBoxMorph();
+    this.createGroupSuccessPopup.setExtent(new Point(popupWidth, popupHeight));
+
+    // close dialog button
+    button = new PushButtonMorph(
+        this,
+        null,
+        (String.fromCharCode("0xf00d")),
+        null,
+        null,
+        null,
+        "redCircleIconButton"
+    );
+    button.setRight(this.createGroupSuccessPopup.right() - 3);
+    button.setTop(this.createGroupSuccessPopup.top() + 2);
+    button.action = function () { myself.createGroupSuccessPopup.cancel(); };
+    button.drawNew();
+    button.fixLayout();
+    this.createGroupSuccessPopup.add(button);
+
+    // add title
+    this.createGroupSuccessPopup.labelString = "Created a group!";
+    this.createGroupSuccessPopup.createLabel();
+
+    // success image
+    var successImage = new Morph();
+    successImage.texture = 'images/success.png';
+    successImage.drawNew = function () {
+        this.image = newCanvas(this.extent());
+        var context = this.image.getContext('2d');
+        var picBgColor = myself.createGroupSuccessPopup.color;
+        context.fillStyle = picBgColor.toString();
+        context.fillRect(0, 0, this.width(), this.height());
+        if (this.texture) {
+            this.drawTexture(this.texture);
+        }
+    };
+
+    successImage.setExtent(new Point(128, 128));
+    successImage.setCenter(this.createGroupSuccessPopup.center());
+    successImage.setTop(this.createGroupSuccessPopup.top() + 40);
+    this.createGroupSuccessPopup.add(successImage);
+
+    // success message
+    txt = new TextMorph("Woohoo!\nYou're now the creator of " + this.shareboxId + "'s (your) group.\n\nStart adding new members by clicking\nthe ( + ) button.");
+    txt.setCenter(this.createGroupSuccessPopup.center());
+    txt.setTop(successImage.bottom() + 20);
+    this.createGroupSuccessPopup.add(txt);
+    txt.drawNew();
+
+    // "got it!" button, closes the dialog.
+    okButton = new PushButtonMorph(null, null, "Alright!", null, null, null, "green");
+    okButton.setCenter(this.createGroupSuccessPopup.center());
+    okButton.setBottom(this.createGroupSuccessPopup.bottom() - 10);
+    okButton.action = function() { myself.createGroupSuccessPopup.cancel(); };
+    this.createGroupSuccessPopup.add(okButton);
+
+    // popup
+    this.createGroupSuccessPopup.drawNew();
+    this.createGroupSuccessPopup.fixLayout();
+    this.createGroupSuccessPopup.popUp(world);
+};
+
+IDE_Morph.prototype.showGroupCreatedFailurePopup = function() {
+    var world = this.world();
+    var myself = this;
+    var popupWidth = 400;
+    var popupHeight = 300;
+
+    if (this.createGroupFailurePopup) {
+        this.createGroupFailurePopup.destroy();
+    }
+    this.createGroupFailurePopup = new DialogBoxMorph();
+    this.createGroupFailurePopup.setExtent(new Point(popupWidth, popupHeight));
+
+    // close dialog button
+    button = new PushButtonMorph(
+        this,
+        null,
+        (String.fromCharCode("0xf00d")),
+        null,
+        null,
+        null,
+        "redCircleIconButton"
+    );
+    button.setRight(this.createGroupFailurePopup.right() - 3);
+    button.setTop(this.createGroupFailurePopup.top() + 2);
+    button.action = function () { myself.createGroupFailurePopup.cancel(); };
+    button.drawNew();
+    button.fixLayout();
+    this.createGroupFailurePopup.add(button);
+
+    // add title
+    this.createGroupFailurePopup.labelString = "Could not create group";
+    this.createGroupFailurePopup.createLabel();
+
+    // failure image
+    var failureImage = new Morph();
+    failureImage.texture = 'images/failure.png';
+    failureImage.drawNew = function () {
+        this.image = newCanvas(this.extent());
+        var context = this.image.getContext('2d');
+        var picBgColor = myself.createGroupFailurePopup.color;
+        context.fillStyle = picBgColor.toString();
+        context.fillRect(0, 0, this.width(), this.height());
+        if (this.texture) {
+            this.drawTexture(this.texture);
+        }
+    };
+
+    failureImage.setExtent(new Point(128, 128));
+    failureImage.setCenter(this.createGroupFailurePopup.center());
+    failureImage.setTop(this.createGroupFailurePopup.top() + 40);
+    this.createGroupFailurePopup.add(failureImage);
+
+    // failure message
+    txt = new TextMorph("Sorry! We couldn't create the group right now.\nPlease try again later.");
+
+
+    txt.setCenter(this.createGroupFailurePopup.center());
+    txt.setTop(failureImage.bottom() + 20);
+    this.createGroupFailurePopup.add(txt);
+    txt.drawNew();
+
+    // "OK" button, closes the dialog.
+    okButton = new PushButtonMorph(null, null, "OK :(", null, null, null, "green");
+    okButton.setCenter(this.createGroupFailurePopup.center());
+    okButton.setBottom(this.createGroupFailurePopup.bottom() - 10);
+    okButton.action = function() { myself.createGroupFailurePopup.cancel(); };
+    this.createGroupFailurePopup.add(okButton);
+
+    // popup
+    this.createGroupFailurePopup.drawNew();
+    this.createGroupFailurePopup.fixLayout();
+    this.createGroupFailurePopup.popUp(world);
+};
+
 // * * * * * * * * * Add Member Popup * * * * * * * * * * * * * * * * *
 
 // xinni: Popup when creator chooses "Add new Member"
@@ -2813,6 +2971,9 @@ IDE_Morph.prototype.showAddMemberSuccessPopup = function(username) {
 
     if (this.addMemberSuccessPopup) {
         this.addMemberSuccessPopup.destroy();
+    }
+    if (this.viewMembersPopup) {
+        this.viewMembersPopup.destroy();
     }
     this.addMemberSuccessPopup = new DialogBoxMorph();
     this.addMemberSuccessPopup.setExtent(new Point(popupWidth, popupHeight));
@@ -3437,7 +3598,7 @@ IDE_Morph.prototype.showRemoveMemberPopup = function(username) {
     confirmButton.action = function () {
         // call a function here that lets creator delete the member. return success/failure value.
         var result = "success"; // DUMMY VALUE FOR NOW. Can be success || failure.
-        //var result = "success";
+
         if (result === "success") {
             var socketData = {room: myself.shareboxId, removeId: username}
             myself.sharer.socket.emit('REMOVE_USER', socketData);
@@ -3547,6 +3708,446 @@ IDE_Morph.prototype.showRemoveMemberFailurePopup = function(username) {
     this.removeMemberFailurePopup.fixLayout();
     this.removeMemberFailurePopup.popUp(world);
 };
+
+
+// ****************************
+// LIBRARY
+// ****************************
+
+IDE_Morph.prototype.openLibrary = function () {
+
+    if (this.library) {
+        this.library.destroy();
+    }
+
+    this.library = new DialogBoxMorph();
+    var myself = this;
+
+    // style library
+    this.library.setWidth(screen.width * 0.6);
+    this.library.setHeight(screen.height * 0.7);
+
+    // draw library window contents
+    this.createCheckBox();
+    this.createImage();
+
+    // close dialog button
+    button = new PushButtonMorph(
+        this,
+        null,
+        (String.fromCharCode("0xf00d")),
+        null,
+        null,
+        null,
+        "redCircleIconButton"
+    );
+    button.setRight(this.library.right() - 3);
+    button.setTop(this.library.top() + 2);
+    button.action = function () { myself.library.cancel(); };
+    button.drawNew();
+    button.fixLayout();
+    this.library.add(button);
+
+    this.library.drawNew();
+    this.library.fixLayout();
+    this.library.popUp(world);
+    myself.add(this.library);
+};
+
+
+IDE_Morph.prototype.createCheckBox = function() {
+    var padding = 10;
+    var checkBoxRowHeight = 25;
+    var myself = this;
+    var mine = this.library;
+
+    this.library.labelString = 'Sprite Library';
+    this.library.createLabel();
+
+    var text = new TextMorph("Category");
+    text.setFontSize(20);
+    text.setPosition(new Point(screen.width * 0.02, screen.height * 0.07));
+    this.library.add(text);
+
+    var peoplebox = new ToggleMorph(
+        'checkbox',
+        null,
+        function () {
+            myself.tag1people = !myself.tag1people;
+            myself.currentPage = 1;
+            myself.openLibrary();
+            mine.destroy();
+        },
+        localize('People'),
+        function () {
+            //console.log(myself.tag1people);
+            return myself.tag1people;
+        }
+    );
+
+    peoplebox.setPosition(new Point(text.left(), text.bottom() + padding));
+    this.library.add(peoplebox);
+
+    var animalbox = new ToggleMorph(
+        'checkbox',
+        null,
+        function () {
+            myself.tag1animal = !myself.tag1animal;
+            myself.currentPage = 1;
+            myself.openLibrary();
+            mine.destroy();
+
+        },
+        localize('Animal'),
+        function () {
+            return myself.tag1animal;
+        }
+    );
+
+    animalbox.setPosition(new Point(text.left(), text.bottom() + padding + checkBoxRowHeight));
+    this.library.add(animalbox);
+
+    var objectbox = new ToggleMorph(
+        'checkbox',
+        null,
+        function () {
+            myself.tag1object = !myself.tag1object;
+            myself.currentPage = 1;
+            myself.openLibrary();
+            mine.destroy();
+        },
+        localize('Object'),
+        function () {
+            return myself.tag1object;
+        }
+    );
+
+    objectbox.setPosition(new Point(text.left(), text.bottom() + padding + checkBoxRowHeight*2));
+    this.library.add(objectbox);
+
+    nextFilterLocation = objectbox.bottom() + padding*5;
+
+    var text2 = new TextMorph("Location");
+    //this.fontSize = 10;
+    text2.setPosition(new Point(text.left(), nextFilterLocation));
+    text2.setFontSize(20);
+    this.library.add(text2);
+
+    var singaporebox = new ToggleMorph(
+        'checkbox',
+        null,
+        function () {
+            this.locationfilter = !this.locationfilter;
+        },
+        localize('Singapore'),
+        function () {
+            return this.locationfilter;
+        }
+    );
+
+    singaporebox.setPosition(new Point(text.left(), text2.bottom() + padding));
+    this.library.add(singaporebox);
+
+    var malaysiabox = new ToggleMorph(
+        'checkbox',
+        null,
+        function () {
+            this.locationfilter = !this.locationfilter;
+        },
+        localize('Malaysia'),
+        function () {
+            return this.locationfilter;
+        }
+    );
+
+    malaysiabox.setPosition(new Point(text.left(), text2.bottom() + padding + checkBoxRowHeight));
+    this.library.add(malaysiabox);
+
+    var chinabox = new ToggleMorph(
+        'checkbox',
+        null,
+        function () {
+            this.locationfilter = !this.locationfilter;
+        },
+        localize('China'),
+        function () {
+            return this.locationfilter;
+        }
+    );
+
+    chinabox.setPosition(new Point(text.left(), text2.bottom() + padding + checkBoxRowHeight*2));
+    this.library.add(chinabox);
+
+    var indiabox = new ToggleMorph(
+        'checkbox',
+        null,
+        function () {
+            this.locationfilter = !this.locationfilter;
+        },
+        localize('India'),
+        function () {
+            return this.locationfilter;
+        }
+    );
+
+    indiabox.setPosition(new Point(text.left(), text2.bottom() + padding + checkBoxRowHeight*3));
+    this.library.add(indiabox);
+
+    var thailandbox = new ToggleMorph(
+        'checkbox',
+        null,
+        function () {
+            this.locationfilter = !this.locationfilter;
+        },
+        localize('Thailand'),
+        function () {
+            return this.locationfilter;
+        }
+    );
+
+    thailandbox.setPosition(new Point(text.left(), text2.bottom() + padding + checkBoxRowHeight*4));
+    this.library.add(thailandbox);
+
+
+};
+
+
+IDE_Morph.prototype.createImage = function() {
+
+    spriteCreator = function() { return new SpriteMorph(new Image()); };
+    var spacelength = /*screen.width * 0.3*/ this.library.left() + 180;
+    var spaceheight = /*screen.height * 0.15*/ this.library.top() + 60;
+    var myself = this;
+    var sprite = new SpriteMorph(new Image());
+    var spriteonepage = 15;
+    var mine = this.library;
+
+    //------------------------------------------
+    var dir = 'api/library/costumes',
+        names = myself.getCostumesList(dir),
+        i = 0;
+    var minIndex = (myself.currentPage - 1) * spriteonepage;
+    var maxIndex = (myself.currentPage * spriteonepage) - 1;
+
+    function loadCostume(name) {
+        //var url = dir + '/' + name,
+        var url = name,
+            img = new Image();
+        img.onload = function () {
+            var canvas = newCanvas(new Point(img.width, img.height));
+            canvas.getContext('2d').drawImage(img, 0, 0);
+            myself.droppedImage(canvas, name);
+        };
+        img.src = url;
+    }
+
+    //debugger;
+    names.forEach(function (line) {
+        sprite = spriteCreator();
+
+        var imagetoshow = new Image();
+        imagetoshow.src = line.url;
+        imagetoshow.width = 100;
+        imagetoshow.height = 100;
+
+        sprite.setWidth(100);
+        sprite.setHeight(100);
+
+        sprite.image = imagetoshow;
+        sprite.name = line.name;
+
+        //debugger;
+        var heightindex = Math.floor(i/5);
+        sprite.setPosition(new Point(spacelength + (i%5)*150, spaceheight + (heightindex%3) * 180));
+        sprite.isDraggable = false;
+        
+        //debugger;
+
+        if(myself.tag1people){
+            //console.log(line.tag1);
+            if(line.tag1 === 'people'){
+                if(i >= minIndex && i <= maxIndex){
+                    mine.add(sprite);
+                }
+            }
+            if(line.tag1 === 'animal' && myself.tag1animal){
+                if(i >= minIndex && i <= maxIndex){
+                    mine.add(sprite);
+                }
+            }
+            if(line.tag1 === 'object' && myself.tag1object){
+                if(i >= minIndex && i <= maxIndex){
+                    mine.add(sprite);
+                }
+            }
+        } else if (myself.tag1animal){
+            if(line.tag1 === 'animal'){
+                if(i >= minIndex && i <= maxIndex){
+                    mine.add(sprite);
+                }
+            }
+            if(line.tag1 === 'object' && myself.tag1object){
+                if(i >= minIndex && i <= maxIndex){
+                    mine.add(sprite);
+                }
+            }
+        }
+        else{
+            if(i >= minIndex && i <= maxIndex){
+                mine.add(sprite);
+            }
+        }
+
+        var buttonforadding;		//button to add sprite
+        buttonforadding = new PushButtonMorph(
+            this.library,
+            function () {
+                loadCostume(line.url);
+                myself.library.cancel();
+            },
+            "+",
+            null,
+            null,
+            null,
+            'show green button'
+        );
+        buttonforadding.setWidth(70);
+        buttonforadding.setHeight(70);
+        buttonforadding.setPosition(new Point(spacelength + (i%5)*150, spaceheight + (heightindex % 3) * 180));
+        buttonforadding.label.setCenter(buttonforadding.center());
+
+
+        //mine.add(buttonforadding);
+        if(myself.tag1people){
+            //debugger;
+            if(line.tag1 === 'people'){
+                if(i >= minIndex && i <= maxIndex){
+                    mine.add(buttonforadding);
+                }
+                i++;
+            }
+            if(line.tag1 === 'animal' && myself.tag1animal){
+                if(i >= minIndex && i <= maxIndex){
+                    mine.add(buttonforadding);
+                }
+                i++;
+            }
+            if(line.tag1 === 'object' && myself.tag1object){
+                if(i >= minIndex && i <= maxIndex){
+                    mine.add(buttonforadding);
+                }
+                i++;
+            }
+        }else if(myself.tag1animal){
+            if(line.tag1 === 'animal'){
+                if(i >= minIndex && i <= maxIndex){
+                    mine.add(buttonforadding);
+                }
+                i++;
+            }
+            if(line.tag1 === 'object' && myself.tag1object){
+                if(i >= minIndex && i <= maxIndex){
+                    mine.add(buttonforadding);
+                }
+                i++;
+            }
+        }
+        else{
+            if(i >= minIndex && i <= maxIndex){
+                mine.add(buttonforadding);
+            }
+            i++;
+        }
+        //myself.currentPage = 1;
+        myself.maxPage = Math.ceil(i / 15);
+
+    });
+
+    this.showLibraryPages();
+
+}
+
+IDE_Morph.prototype.showLibraryPages = function() {
+    var myself = this;
+    var mine = this.library;
+    var padding = 25;
+
+
+    console.log("I'm at page " + myself.currentPage);
+    pageText = new TextMorph(myself.currentPage.toString() + " / " + myself.maxPage.toString());
+    pageText.isBold = true;
+    pageText.setFontSize(20);
+    pageText.setCenter(this.library.center());
+    pageText.setBottom(this.library.bottom() - padding);
+
+    var nextButton;     //next button
+    nextButton = new PushButtonMorph(
+        myself.library,
+        function(){
+            //debugger;
+            myself.currentPage++;
+            if(myself.currentPage > myself.maxPage){
+                myself.currentPage = 1;
+            }
+            myself.openLibrary();
+            mine.destroy();
+        },
+        "Next",
+        null,
+        null,
+        null
+    );
+
+    nextButton.setWidth(50);
+    nextButton.setHeight(20);
+    nextButton.setLeft(pageText.right() + padding);
+    nextButton.setTop(pageText.top());
+    nextButton.label.setCenter(nextButton.center());
+
+    var prevButton;        //next button
+    prevButton = new PushButtonMorph(
+        myself.library,
+        function(){
+            //debugger;
+            myself.currentPage--;
+            if(myself.currentPage <= 0){
+                myself.currentPage = myself.maxPage;
+            }
+            myself.openLibrary();
+            mine.destroy();
+        },
+        "Prev",
+        null,
+        null,
+        null
+    );
+
+    prevButton.setWidth(nextButton.width());
+    prevButton.setHeight(nextButton.height());
+    prevButton.setRight(pageText.left() - padding);
+    prevButton.setTop(pageText.top());
+    prevButton.label.setCenter(prevButton.center());
+
+
+    this.library.add(prevButton);
+    this.library.add(nextButton);
+    this.library.add(pageText);
+}
+
+IDE_Morph.prototype.goNextPage = function() {
+    this.currentpage++;
+    if(this.currentpage > this.maxpage){
+        this.currentpage -= this.maxpage;
+    }
+};
+
+IDE_Morph.prototype.goPrevPage = function() {
+    this.currentpage--;
+    if(this.currentpage <= 0){
+        this.currentpage = this.maxpage;
+    }
+};
+
 
 
 // IDE_Morph layout
@@ -4292,33 +4893,6 @@ IDE_Morph.prototype.nextScene = function () {
 
 }
 
-IDE_Morph.prototype.openLibrary = function () {
-    var db = new DialogBoxMorph();
-    //var button;
-    var nextscenebutton;
-    //var txt;
-    var myself = this,
-        world = this.world();
-
-	//db.createLabel();
-	//db.addBody(txt);
-	//db.addButton('ok', 'Ok');
-    //db.addButton('cancel', 'Cancel');
-    //db.fixLayout();
-    //db.drawNew();
-	//this.add(db);
-	db.setWidth(screen.width*0.7);
-	db.setHeight(screen.height*0.7);
-	//db.fontSize = 40;
-	db.createCheckBox(db.length,db.height, myself);
-	
-	db.createImage(
-        function(){return new SpriteMorph(new Image())}, 
-        screen.width * 0.3, 
-        screen.height * 0.15,
-		myself
-    );
-};
 
 IDE_Morph.prototype.duplicateSprite = function (sprite) {
     var duplicate = sprite.fullCopy();
@@ -9149,20 +9723,20 @@ ScriptIconMorph.uber = ToggleButtonMorph.prototype;
 ScriptIconMorph.className = 'ScriptIconMorph';
 // ScriptIconMorph settings
 
-ScriptIconMorph.prototype.thumbSize = new Point(80, 60);
+ScriptIconMorph.prototype.thumbSize = new Point(440, 50);
 ScriptIconMorph.prototype.labelShadowOffset = null;
 ScriptIconMorph.prototype.labelShadowColor = null;
 ScriptIconMorph.prototype.labelColor = new Color(255, 255, 255);
-ScriptIconMorph.prototype.fontSize = 9;
+ScriptIconMorph.prototype.fontSize = 14;
 
 // ScriptIconMorph instance creation:
 
 // aScript is a BlockMorph
-function ScriptIconMorph(aScript, ide, aTemplate) {
-    this.init(aScript, ide, aTemplate);
+function ScriptIconMorph(aScript, ide, aTemplate, scriptName) {
+    this.init(aScript, ide, aTemplate, scriptName);
 }
 
-ScriptIconMorph.prototype.init = function (aScript, ide, aTemplate) {
+ScriptIconMorph.prototype.init = function (aScript, ide, aTemplate, scriptName) {
     var colors, action, query;
     this.ide = ide;
     if (!aTemplate) {
@@ -9203,20 +9777,34 @@ ScriptIconMorph.prototype.init = function (aScript, ide, aTemplate) {
 
     // override defaults and build additional components
     this.isDraggable = true;
-    this.createThumbnail();
+    this.createThumbnail(scriptName);
     this.padding = 2;
     this.corner = 8;
     this.fixLayout();
     this.fps = 1;
 };
 
-ScriptIconMorph.prototype.createThumbnail = function () {
-    var label;
+ScriptIconMorph.prototype.createThumbnail = function (scriptName) {
     if (this.thumbnail) {
         this.thumbnail.destroy();
     }
-    this.thumbnail = new Morph();
+
+    // script box style and position
+    this.thumbnail = new FrameMorph();
+    this.thumbnail.corner = 25;
+    this.thumbnail.color = new Color(138, 138, 138);
     this.thumbnail.setExtent(this.thumbSize);
+
+    // script name style and position
+    txt = new TextMorph(scriptName);
+    txt.setLeft(this.thumbnail.left() + 15);
+    txt.setTop(this.thumbnail.top() + 15);
+    txt.setFontSize(16);
+    txt.isBold = true;
+    txt.setColor(new Color(255, 255, 255));
+    this.thumbnail.add(txt);
+    txt.drawNew();
+
     this.add(this.thumbnail);
 };
 
@@ -9317,10 +9905,10 @@ ShareBoxScriptsMorph.prototype.init = function (aSprite, ide, sliderColor) {
 
 // Jukebox updating
 
-ShareBoxScriptsMorph.prototype.updateList = function () {
+ShareBoxScriptsMorph.prototype.updateList = function (scriptName) {
     var myself = this,
-        x = this.left() + 5,
-        y = this.top() + 5,
+        x = this.left() + 20,
+        y = this.top() + 20,
         padding = 4,
         oldFlag = Morph.prototype.trackChanges,
         icon,
@@ -9340,10 +9928,10 @@ ShareBoxScriptsMorph.prototype.updateList = function () {
     this.addBack(this.contents);
 
     this.sprite.scriptsList.asArray().forEach(function (script) {
-        template = icon = new ScriptIconMorph(script, ide, template);
+        template = icon = new ScriptIconMorph(script, ide, template, scriptName);
         icon.setPosition(new Point(x, y));
         myself.addContents(icon);
-        y = icon.bottom() + padding;
+        y = icon.bottom() + padding + 35;
     });
 
     Morph.prototype.trackChanges = oldFlag;
