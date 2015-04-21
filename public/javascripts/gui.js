@@ -1885,12 +1885,15 @@ IDE_Morph.prototype.createShareBox = function () {
                 shareName = prompt("The name has to be between 1 to 20 characters");
             }
             sharer.shareObject((shareboxId.toString()), droppedMorph, shareName);
-            var duplicate = sharer.deserializeItem(sharer.serializeItem(droppedMorph));
-            sharer.ide.spriteEditor.contents.add(duplicate);
-            duplicate.setPosition(world.hand.grabOrigin.position);
-            droppedMorph.destroy();
+            var restored = world.hand.children[0].fullCopy();
+            world.hand.children = [];
+            myself.spriteEditor.contents.add(restored);
+            restored.setPosition(world.hand.grabOrigin.position);
+            restored.changed();
+            restored.removeShadow();
+            world.hand.drop();
+            //sharer.ide.createShareBox();
             myself.fixLayout();
-            sharer.ide.createShareBox();
         };
     } else if (this.currentShareBoxTab === 'assets') {
         this.shareBox = new ShareBoxAssetsMorph(
@@ -9820,6 +9823,7 @@ function ScriptIconMorph(aScript, ide, aTemplate, scriptName) {
 ScriptIconMorph.prototype.init = function (aScript, ide, aTemplate, scriptName) {
     var colors, action, query;
     this.ide = ide;
+    this.isTemplate = true;
     if (!aTemplate) {
         colors = [
             IDE_Morph.prototype.groupColor,
