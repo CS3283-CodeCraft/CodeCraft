@@ -90,7 +90,7 @@ var tag1people;
 var tag1animal;
 var tag1object;
 var tag2singapore;
-var tag2malaysia;
+var tag2other;
 var tag2china;
 var tag2india;
 var tag2thailand;
@@ -98,6 +98,7 @@ var tag1bool;
 
 var currentPage;
 var maxPage;
+var refreshPage;
 
 // IDE_Morph ///////////////////////////////////////////////////////////
 
@@ -261,6 +262,10 @@ IDE_Morph.prototype.init = function (isAutoFill) {
     this.color = this.backgroundColor;
 	
 	this.currentPage = 1;
+	this.refreshPage = 0;
+	
+	this.openLibrary();
+	//this.library.destroy();
 };
 
 IDE_Morph.prototype.openIn = function (world) {
@@ -1338,6 +1343,7 @@ IDE_Morph.prototype.createCorralBar = function () {
     button = new PushButtonMorph(
         this,
         function (){
+			myself.refreshPage = 1;
 			myself.openLibrary();
 			//mine.destroy();
 		},
@@ -3750,11 +3756,16 @@ IDE_Morph.prototype.openLibrary = function () {
 
     this.library = new DialogBoxMorph();
     var myself = this;
-
+	
+	//console.log();
     // style library
-    this.library.setWidth(screen.width * 0.6);
-    this.library.setHeight(screen.height * 0.7);
-
+	if(myself.refreshPage === 0){
+		this.library.setWidth(screen.width * 0.0);
+		this.library.setHeight(screen.height * 0.0);
+	}else{
+		this.library.setWidth(screen.width * 0.6);
+		this.library.setHeight(screen.height * 0.7);
+	}
     // draw library window contents
     this.createCheckBox();
     this.createImage();
@@ -3779,9 +3790,12 @@ IDE_Morph.prototype.openLibrary = function () {
     this.library.drawNew();
     this.library.fixLayout();
     this.library.popUp(world);
+	//this.library.drawNew();
     myself.add(this.library);
-	//this.goNextPage();
-	//this.goPrevPage();
+	//if(myself.refreshPage === 0){
+	//	this.goNextPage();
+	//	this.goPrevPage();
+	//}
 };
 
 
@@ -3878,20 +3892,20 @@ IDE_Morph.prototype.createCheckBox = function() {
     singaporebox.setPosition(new Point(text.left(), text2.bottom() + padding));
     this.library.add(singaporebox);
 
-    var malaysiabox = new ToggleMorph(
+    var otherbox = new ToggleMorph(
         'checkbox',
         null,
         function () {
-            myself.tag2malaysia = !myself.tag2malaysia;
+            myself.tag2other = !myself.tag2other;
         },
-        localize('Malaysia'),
+        localize('Others'),
         function () {
-            return myself.tag2malaysia;
+            return myself.tag2other;
         }
     );
 
-    malaysiabox.setPosition(new Point(text.left(), text2.bottom() + padding + checkBoxRowHeight));
-    this.library.add(malaysiabox);
+    otherbox.setPosition(new Point(text.left(), text2.bottom() + padding + checkBoxRowHeight*4));
+    this.library.add(otherbox);
 
     var chinabox = new ToggleMorph(
         'checkbox',
@@ -3905,7 +3919,7 @@ IDE_Morph.prototype.createCheckBox = function() {
         }
     );
 
-    chinabox.setPosition(new Point(text.left(), text2.bottom() + padding + checkBoxRowHeight*2));
+    chinabox.setPosition(new Point(text.left(), text2.bottom() + padding + checkBoxRowHeight*1));
     this.library.add(chinabox);
 
     var indiabox = new ToggleMorph(
@@ -3920,7 +3934,7 @@ IDE_Morph.prototype.createCheckBox = function() {
         }
     );
 
-    indiabox.setPosition(new Point(text.left(), text2.bottom() + padding + checkBoxRowHeight*3));
+    indiabox.setPosition(new Point(text.left(), text2.bottom() + padding + checkBoxRowHeight*2));
     this.library.add(indiabox);
 
     var thailandbox = new ToggleMorph(
@@ -3935,7 +3949,7 @@ IDE_Morph.prototype.createCheckBox = function() {
         }
     );
 
-    thailandbox.setPosition(new Point(text.left(), text2.bottom() + padding + checkBoxRowHeight*4));
+    thailandbox.setPosition(new Point(text.left(), text2.bottom() + padding + checkBoxRowHeight*3));
     this.library.add(thailandbox);
 
 
@@ -3979,7 +3993,13 @@ IDE_Morph.prototype.createImage = function() {
         //var imagetoshow = new Image();
         var imagetoshow = new Image();
 		
-		
+		imagetoshow.onload = function () {
+            var canvas = newCanvas(new Point(imagetoshow.width, imagetoshow.height));
+            canvas.getContext('2d').drawImage(imagetoshow, 0, 0);
+			//sprite.image = canvas;
+            //myself.droppedImage(canvas, name);
+        };
+		imagetoshow.src = line.url;
         //imagetoshow.width = screen.width * 0.1;
         //imagetoshow.height = screen.width * 0.1;
 		//imagetoshow.setWidth(screen.width * 0.1);
@@ -3992,7 +4012,7 @@ IDE_Morph.prototype.createImage = function() {
         sprite.image = imagetoshow;
         sprite.name = line.name;
 		
-		imagetoshow.src = line.url;
+		
 		//imagetoshow.size = 10;
         //debugger;
         var heightindex = Math.floor(i/5);
@@ -4008,6 +4028,7 @@ IDE_Morph.prototype.createImage = function() {
 		thumbnail.setPosition(
         new Point(spacelength + (i%5)*myself.library.width() * 0.17, spaceheight + (heightindex%3) * myself.library.height() * 0.3)
 		);
+		thumbnail.fps = 3;
         //debugger;
 
         if(myself.tag1people){
@@ -4191,6 +4212,7 @@ IDE_Morph.prototype.goNextPage = function() {
     if(myself.currentPage > myself.maxPage){
         myself.currentPage = 1;
     }
+	myself.refreshPage++;
     myself.openLibrary();
     mine.destroy();
 };
@@ -4202,6 +4224,7 @@ IDE_Morph.prototype.goPrevPage = function() {
     if(myself.currentPage <= 0){
         myself.currentPage = myself.maxPage;
     }
+	myself.refreshPage++;
     myself.openLibrary();
     mine.destroy();
 };
