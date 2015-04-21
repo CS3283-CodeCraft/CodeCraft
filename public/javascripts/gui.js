@@ -1787,9 +1787,10 @@ IDE_Morph.makeSocket = function (myself, shareboxId) {
     })
 
     sharer.socket.on('UPDATE_SHAREBOX_VIEW', function(data) {
+        console.log("UPDATE_SHAREBOX_VIEW");
         ide.sharer.data.data = data;
-        console.log(data);
-        ide.createShareBox(this.shareboxId);
+        ide.createShareBox();
+        ide.shareBox.updateList();
     })
 
     // When I receive data, I parse objectData and add it to my data list
