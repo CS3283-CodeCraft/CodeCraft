@@ -1788,6 +1788,7 @@ IDE_Morph.makeSocket = function (myself, shareboxId) {
 
     sharer.socket.on('UPDATE_SHAREBOX_VIEW', function(data) {
         ide.sharer.data.data = data;
+        console.log(data);
         ide.createShareBox(this.shareboxId);
     })
 

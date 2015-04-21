@@ -41,12 +41,11 @@ io.sockets.on('connection', function(socket){
 		socket.on('SEND_ITEM', function(data){
 			if(!(_.isUndefined(clients[data.room]))){
 				if(!(_.isUndefined(clients[data.room].items))){
-					
 					clients[data.room].items.push(data.data);
 				}else{
 					clients[data.room].items = [];
 				}
-				socket.broadcast.to(data.room).emit('UPDATE_SHAREBOX_VIEW', clients[data.room].items);
+				io.to(data.room).emit('UPDATE_SHAREBOX_VIEW', clients[data.room].items);
 				io.emit('SOCKET_CONTROL_UPDATE', clients);	
 			}
 			
@@ -65,7 +64,7 @@ io.sockets.on('connection', function(socket){
 				}else{
 					clients[data.room].items = [];
 				}
-				socket.broadcast.to(data.room).emit('UPDATE_SHAREBOX_VIEW', clients[data.room].items);
+				io.to(data.room).emit('UPDATE_SHAREBOX_VIEW', clients[data.room].items);
 				io.emit('SOCKET_CONTROL_UPDATE', clients);	
 			}
 			
