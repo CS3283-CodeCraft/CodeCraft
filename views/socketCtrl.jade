@@ -64,6 +64,12 @@ block content
 					.col-md-12
 						h3 {{ key }}
 					.col-md-12
+						h4 Items
+						ul
+							li(ng-repeat="item in value.items")
+								{{item.name}}
+					.col-md-12
+						h4 Members
 						table.table
 							tr
 								th CLIENT ID

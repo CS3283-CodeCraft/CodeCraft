@@ -1886,6 +1886,7 @@ IDE_Morph.prototype.createShareBox = function () {
             }
             sharer.shareObject((shareboxId.toString()), droppedMorph, shareName);
             var restored = world.hand.children[0].fullCopy();
+            console.log(restored)
             world.hand.children = [];
             myself.spriteEditor.contents.add(restored);
             restored.setPosition(world.hand.grabOrigin.position);
