@@ -1786,6 +1786,10 @@ IDE_Morph.makeSocket = function (myself, shareboxId) {
         console.log("[SOCKET-RECEIVE] DISBAND_SHAREBOX: " + JSON.stringify(data));
     })
 
+    sharer.socket.on('UPDATE_SHAREBOX_VIEW', function(data) {
+        ide.sharer.data.data = data;
+        ide.createShareBox(this.shareboxId);
+    })
 
     // When I receive data, I parse objectData and add it to my data list
     sharer.socket.on('message', function (objectData) {
@@ -1893,7 +1897,6 @@ IDE_Morph.prototype.createShareBox = function () {
             restored.changed();
             restored.removeShadow();
             world.hand.drop();
-            //sharer.ide.createShareBox();
             myself.fixLayout();
         };
     } else if (this.currentShareBoxTab === 'assets') {
@@ -8903,7 +8906,7 @@ CostumeIconMorph.prototype.removeCostume = function () {
     if (wardrobe instanceof ShareBoxAssetsMorph) {
         var ide = this.parentThatIsA('IDE_Morph');
         var dataList = ide.sharer.buildDataList();
-        ide.sharer.socket.emit('send', dataList);
+        ide.sharer.socket.emit('SEND_ITEM', dataList);
 
         ide.hasChangedMedia = true;
         ide.drawNew();
@@ -9507,7 +9510,7 @@ SoundIconMorph.prototype.removeSound = function () {
         ide.shareBoxPlaceholderSprite.sounds.contents.splice(idx, 1);
         this.parent.children.splice(idx, 1);
         var dataList = ide.sharer.buildDataList();
-        ide.sharer.socket.emit('send', dataList);
+        ide.sharer.socket.emit('REMOVE_ITEM', dataList);
 
         ide.hasChangedMedia = true;
         ide.drawNew();
@@ -9945,7 +9948,7 @@ ScriptIconMorph.prototype.removeScript = function () {
     if ((this.parent.parent instanceof ShareBoxScriptsMorph)) {
         var ide = this.parentThatIsA('IDE_Morph');
         var dataList = ide.sharer.buildDataList();
-        ide.sharer.socket.emit('send', dataList);
+        ide.sharer.socket.emit('REMOVE_ITEM', dataList);
         ide.hasChangedMedia = true;
         ide.drawNew();
         ide.fixLayout();
