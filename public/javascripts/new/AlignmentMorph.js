@@ -71,10 +71,9 @@ var AlignmentMorph = Class.create(Morph, {
         this.bounds = newBounds;
     }
 
-})
+});
 
 AlignmentMorph.uber = Morph.prototype;
 AlignmentMorph.className = 'AlignmentMorph';
 
 module.exports = AlignmentMorph;
-

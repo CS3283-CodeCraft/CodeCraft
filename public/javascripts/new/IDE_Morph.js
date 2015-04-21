@@ -1839,7 +1839,7 @@ var IDE_Morph = Class.create(Morph, {
 		groupButton.action = function() {
 			console.log("Creating a new group and initializing a new session.");
 			myself.showEntireShareBoxComponent();
-		}
+		};
 		this.newGroupScreen.add(groupButton);
 
 		this.shareBoxConnect.drawNew();

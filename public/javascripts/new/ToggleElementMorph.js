@@ -157,16 +157,11 @@ var ToggleElementMorph = Class.create(TriggerMorph, {
 
     mouseDownLeft: ToggleButtonMorph.prototype.mouseDownLeft,
 
-    mouseClickLeft: ToggleButtonMorph.prototype.mouseClickLeft,
+    mouseClickLeft: ToggleButtonMorph.prototype.mouseClickLeft
 
-})
+});
 
 ToggleElementMorph.uber = TriggerMorph.prototype;
 ToggleElementMorph.className = 'ToggleElementMorph';
 
 module.exports = ToggleElementMorph;
-
-
-
-
-

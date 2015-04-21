@@ -528,14 +528,10 @@ var TextMorph = Class.create(Morph, {
 	        world.add(inspector);
 	        inspector.changed();
 	    }
-	},
-
-
-
-})
+	}
+});
 
 TextMorph.uber = Morph.prototype;
 TextMorph.className = 'TextMorph';
 
 module.exports = TextMorph;
-

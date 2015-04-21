@@ -7,11 +7,9 @@ var BlockHighlightMorph = Class.create(Morph, {
 	initialize: function(){
 		this.init();
 	}
-
-})
+});
 
 BlockHighlightMorph.uber = Morph.prototype;
 BlockHighlightMorph.className = 'BlockHighlightMorph';
 
 module.exports = BlockHighlightMorph;
-

@@ -10,7 +10,7 @@ var BouncerMorph = Class.create(Morph, {
 	},
 
 	init: function ($super, type, speed) {
-	    $super()
+	    $super();
 	    this.fps = 50;
 
 	    // additional properties:
@@ -77,11 +77,9 @@ var BouncerMorph = Class.create(Morph, {
 	        }
 	    }
 	}
-
-})
+});
 
 BouncerMorph.uber = Morph.prototype;
 BouncerMorph.className = 'BouncerMorph';
 
 module.exports = BouncerMorph;
-

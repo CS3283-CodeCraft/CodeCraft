@@ -1534,11 +1534,9 @@ var Morph = Class.create(Node, {
 	    );
 	    return oImg;
 	}
-
-})
+});
 
 Morph.uber = Node.prototype;
 Morph.className = 'Morph';
-
 
 module.exports = Morph;

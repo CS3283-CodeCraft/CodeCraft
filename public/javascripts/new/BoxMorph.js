@@ -91,7 +91,6 @@ var BoxMorph = Class.create(Morph, {
         );
     },
 
-
     // BoxMorph menus:
 
     developersMenu: function ($super) {
@@ -194,13 +193,9 @@ var BoxMorph = Class.create(Morph, {
         list.push('setBorderWidth', 'setCornerSize');
         return list;
     }
-
-})
+});
 
 BoxMorph.uber = Morph.prototype;
 BoxMorph.className = 'BoxMorph';
 
 module.exports = BoxMorph;
-
-
-    

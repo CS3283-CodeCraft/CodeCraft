@@ -368,13 +368,9 @@ var InputFieldMorph = Class.create(Morph, {
         context.stroke();
     }
 
-})
+});
 
 InputFieldMorph.uber = Morph.prototype;
 InputFieldMorph.className = 'InputFieldMorph';
 
 module.exports = InputFieldMorph;
-
-
-
-

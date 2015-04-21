@@ -297,13 +297,9 @@ var MenuMorph = Class.create(BoxMorph, {
 	        )
 	    );
 	}
-
-
-
-})
+});
 
 MenuMorph.uber = BoxMorph.prototype;
 MenuMorph.className = 'MenuMorph';
 
 module.exports = MenuMorph;
-

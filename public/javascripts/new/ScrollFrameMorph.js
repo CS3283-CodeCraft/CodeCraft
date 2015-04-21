@@ -373,16 +373,10 @@ var ScrollFrameMorph = Class.create(FrameMorph, {
 	toggleTextLineWrapping: function () {
 	    this.isTextLineWrapping = !this.isTextLineWrapping;
 	
-	},
-
-
-})
+	}
+});
 
 ScrollFrameMorph.uber = FrameMorph.prototype;
 ScrollFrameMorph.className = 'ScrollFrameMorph';
 
 module.exports = ScrollFrameMorph;
-
-
-
-	
