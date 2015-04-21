@@ -263,14 +263,14 @@ QUnit.test("Test Boundary Value for Shared Item Name: null value", function(asse
     assert.ok(!this.ide.isValidName(null));
 });
 
-QUnit.test("Test Boundary Value for Shared Item Name: 20 characters", function(assert) {
-    assert.ok(this.ide.isValidName("11111111111111111111"));
+QUnit.test("Test Boundary Value for Shared Item Name: 50 characters", function(assert) {
+    assert.ok(this.ide.isValidName("11111111111111111111111111111111111111111111111111"));
 });
 
 QUnit.test("Test Boundary Value for Shared Item Name: 19 characters", function(assert) {
-    assert.ok(this.ide.isValidName("1111111111111111111"));
+    assert.ok(this.ide.isValidName("1111111111111111111111111111111111111111111111111"));
 });
 
-QUnit.test("Test Boundary Value for Shared Item Name: 21 characters", function(assert) {
-    assert.ok(!this.ide.isValidName("111111111111111111111"));
+QUnit.test("Test Boundary Value for Shared Item Name: 51 characters", function(assert) {
+    assert.ok(!this.ide.isValidName("111111111111111111111111111111111111111111111111111"));
 });

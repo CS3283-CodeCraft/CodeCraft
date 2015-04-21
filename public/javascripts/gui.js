@@ -1829,7 +1829,7 @@ IDE_Morph.makeSocket = function (myself, shareboxId) {
 };
 
 IDE_Morph.prototype.isValidName = function (shareName) {
-    return !(shareName == null || shareName.length == 0 || shareName.length > 20);
+    return !(shareName == null || shareName.length == 0 || shareName.length > 50);
 };
 
 // xinni: shows the whole share box and hide the connection screens and tabs
