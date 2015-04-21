@@ -8395,6 +8395,7 @@ SpriteIconMorph.prototype.init = function (aSprite, aTemplate) {
 
     // override defaults and build additional components
     this.isDraggable = true;
+    this.acceptsDrops = false;
     this.createThumbnail();
     this.padding = 2;
     this.corner = 8;
@@ -8408,6 +8409,7 @@ SpriteIconMorph.prototype.createThumbnail = function () {
     }
 
     this.thumbnail = new Morph();
+    this.thumbnail.acceptsDrops = false;
     this.thumbnail.setExtent(this.thumbSize);
     if (this.object instanceof SpriteMorph) { // support nested sprites
         this.thumbnail.image = this.object.fullThumbnail(this.thumbSize);
@@ -9895,6 +9897,7 @@ ScriptIconMorph.prototype.createThumbnail = function (scriptName) {
     this.thumbnail.corner = 25;
     this.thumbnail.color = new Color(138, 138, 138);
     this.thumbnail.setExtent(this.thumbSize);
+    this.thumbnail.acceptsDrops = false;
 
     // script name style and position
     txt = new TextMorph(scriptName);
