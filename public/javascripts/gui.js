@@ -1875,13 +1875,16 @@ IDE_Morph.prototype.createShareBox = function () {
 
         this.shareBox.reactToDropOf = function (droppedMorph) {
             var shareName = prompt("Give the item a name.");
-            while (this.isValidName(shareName)) {
+            while (!sharer.ide.isValidName(shareName)) {
                 shareName = prompt("The name has to be between 1 to 20 characters");
             }
             sharer.shareObject((shareboxId.toString()), droppedMorph, shareName);
-            sharer.ide.spriteEditor.contents.add(sharer.deserializeItem(sharer.serializeItem(droppedMorph)));
+            var duplicate = sharer.deserializeItem(sharer.serializeItem(droppedMorph));
+            sharer.ide.spriteEditor.contents.add(duplicate);
+            duplicate.setPosition(world.hand.grabOrigin.position);
             droppedMorph.destroy();
             myself.fixLayout();
+            sharer.ide.createShareBox();
         };
     } else if (this.currentShareBoxTab === 'assets') {
         this.shareBox = new ShareBoxAssetsMorph(
@@ -1897,6 +1900,9 @@ IDE_Morph.prototype.createShareBox = function () {
 
         this.shareBox.reactToDropOf = function (droppedMorph) {
             var shareName = prompt("Give the item a name.");
+            while (!sharer.ide.isValidName(shareName)) {
+                shareName = prompt("The name has to be between 1 to 20 characters");
+            }
             sharer.shareObject((shareboxId.toString()), droppedMorph, shareName);
             droppedMorph.destroy();
             myself.fixLayout();

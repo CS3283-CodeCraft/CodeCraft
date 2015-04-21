@@ -72,7 +72,7 @@ io.sockets.on('connection', function(socket){
 			}
 			io.emit('SOCKET_CONTROL_UPDATE', clients);
 
-				
+
 		});
 
 		socket.on('LEAVE_SHAREBOX', function(data){
