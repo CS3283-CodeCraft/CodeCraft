@@ -8906,7 +8906,7 @@ CostumeIconMorph.prototype.removeCostume = function () {
     if (wardrobe instanceof ShareBoxAssetsMorph) {
         var ide = this.parentThatIsA('IDE_Morph');
         var dataList = ide.sharer.buildDataList();
-        ide.sharer.socket.emit('SEND_ITEM', dataList);
+        ide.sharer.socket.emit('REMOVE_ITEM', dataList);
 
         ide.hasChangedMedia = true;
         ide.drawNew();
