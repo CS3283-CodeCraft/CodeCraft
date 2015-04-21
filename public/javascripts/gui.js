@@ -1794,7 +1794,7 @@ IDE_Morph.makeSocket = function (myself, shareboxId) {
     })
 
     // When I receive data, I parse objectData and add it to my data list
-    sharer.socket.on('message', function (objectData) {
+    sharer.socket.on('UPDATE_SHAREBOX_VIEW', function (objectData) {
         // Clean up shareBoxPlaceholderSprite
         var duplicate = this.ide.currentSprite.fullCopy();
         var curr = this.ide.currentSprite;
@@ -1814,7 +1814,7 @@ IDE_Morph.makeSocket = function (myself, shareboxId) {
                 sharer.ide.shareBoxPlaceholderSprite.addCostume(shareObject.object);
             } else if (shareObject instanceof SoundIconMorph) {
                 shareObject.object.name = sharer.data.data[i].name;
-                sharer.ide.shareBoxPlaceholderSprite.addSound(shareObject.object, shareObject.name);
+                sharer.ide.shareBoxPlaceholderSprite.addSound(shareObject.object, shareObject.object.name);
             } else if (shareObject instanceof CommandBlockMorph) {
                 shareObject.name = sharer.data.data[i].name;
                 sharer.ide.shareBoxPlaceholderSprite.scriptsList.add(shareObject);
@@ -1914,13 +1914,16 @@ IDE_Morph.prototype.createShareBox = function () {
         this.shareBox.acceptsDrops = true;
 
         this.shareBox.reactToDropOf = function (droppedMorph) {
-            var shareName = prompt("Give the item a name.");
-            while (!sharer.ide.isValidName(shareName)) {
-                shareName = prompt("The name has to be between 1 to 20 characters");
+            if (droppedMorph instanceof SoundIconMorph || droppedMorph instanceof CostumeIconMorph) {
+                var shareName = prompt("Give the item a name.");
+                while (!sharer.ide.isValidName(shareName)) {
+                    shareName = prompt("The name has to be between 1 to 20 characters");
+                }
+                sharer.shareObject((shareboxId.toString()), droppedMorph, shareName);
+                droppedMorph.destroy();
+                myself.fixLayout();
             }
-            sharer.shareObject((shareboxId.toString()), droppedMorph, shareName);
             droppedMorph.destroy();
-            myself.fixLayout();
         };
 
     } else {
@@ -8908,9 +8911,14 @@ CostumeIconMorph.prototype.removeCostume = function () {
     if (wardrobe instanceof ShareBoxAssetsMorph) {
         var ide = this.parentThatIsA('IDE_Morph');
         var dataList = ide.sharer.buildDataList();
-        ide.sharer.socket.emit('REMOVE_ITEM', dataList);
-
+        //ide.sharer.socket.emit('REMOVE_ITEM', dataList);
+        ide.sharer.socket.emit('REMOVE_ITEM',
+            { room: ide.sharer.room,
+                data: {name: this.object.name}
+            })
+        console.log(dataList);
         ide.hasChangedMedia = true;
+        ide.createShareBox();
         ide.drawNew();
         ide.fixLayout();
     }
@@ -9511,10 +9519,12 @@ SoundIconMorph.prototype.removeSound = function () {
         var idx = this.parent.children.indexOf(this);
         ide.shareBoxPlaceholderSprite.sounds.contents.splice(idx, 1);
         this.parent.children.splice(idx, 1);
-        var dataList = ide.sharer.buildDataList();
-        ide.sharer.socket.emit('REMOVE_ITEM', dataList);
-
+        ide.sharer.socket.emit('REMOVE_ITEM',
+            { room: ide.sharer.room,
+              data: {name: this.object.name}
+            });
         ide.hasChangedMedia = true;
+        ide.createShareBox();
         ide.drawNew();
         ide.fixLayout();
     }
@@ -9838,7 +9848,7 @@ ScriptIconMorph.prototype.init = function (aScript, ide, aTemplate, scriptName) 
         ];
 
     }
-
+    this.name = scriptName;
     action = function () {
         nop(); // When I am selected (which is never the case for sounds)
     };
@@ -9949,8 +9959,11 @@ ScriptIconMorph.prototype.removeScript = function () {
     jukebox.removeScript(idx);
     if ((this.parent.parent instanceof ShareBoxScriptsMorph)) {
         var ide = this.parentThatIsA('IDE_Morph');
-        var dataList = ide.sharer.buildDataList();
-        ide.sharer.socket.emit('REMOVE_ITEM', dataList);
+        ide.sharer.socket.emit('REMOVE_ITEM',
+            { room: ide.sharer.room,
+                data: {name: this.name}
+            });
+        ide.createShareBox();
         ide.hasChangedMedia = true;
         ide.drawNew();
         ide.fixLayout();

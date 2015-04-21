@@ -52,6 +52,7 @@ io.sockets.on('connection', function(socket){
 		})
 
 		socket.on('REMOVE_ITEM', function(data){
+            console.log(data);
 			if(!(_.isUndefined(clients[data.room]))){
 				if(!(_.isUndefined(clients[data.room].items))){
 					clients[data.room].items = _.reject(clients[data.room].items, function (item){
