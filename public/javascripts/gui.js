@@ -93,7 +93,7 @@ var tag2singapore;
 var tag2other;
 var tag2china;
 var tag2india;
-var tag2thailand;
+var tag2japan;
 var tag1bool;
 
 var currentPage;
@@ -3894,6 +3894,9 @@ IDE_Morph.prototype.createCheckBox = function() {
         null,
         function () {
             myself.tag2singapore = !myself.tag2singapore;
+			myself.currentPage = 1;
+            myself.openLibrary();
+            mine.destroy();
         },
         localize('Singapore'),
         function () {
@@ -3909,6 +3912,9 @@ IDE_Morph.prototype.createCheckBox = function() {
         null,
         function () {
             myself.tag2other = !myself.tag2other;
+			myself.currentPage = 1;
+            myself.openLibrary();
+            mine.destroy();
         },
         localize('Others'),
         function () {
@@ -3924,6 +3930,9 @@ IDE_Morph.prototype.createCheckBox = function() {
         null,
         function () {
             myself.tag2china = !myself.tag2china;
+			myself.currentPage = 1;
+            myself.openLibrary();
+            mine.destroy();
         },
         localize('China'),
         function () {
@@ -3939,6 +3948,9 @@ IDE_Morph.prototype.createCheckBox = function() {
         null,
         function () {
             myself.tag2india = !myself.tag2india;
+			myself.currentPage = 1;
+            myself.openLibrary();
+            mine.destroy();
         },
         localize('India'),
         function () {
@@ -3949,20 +3961,23 @@ IDE_Morph.prototype.createCheckBox = function() {
     indiabox.setPosition(new Point(text.left(), text2.bottom() + padding + checkBoxRowHeight*2));
     this.library.add(indiabox);
 
-    var thailandbox = new ToggleMorph(
+    var japanbox = new ToggleMorph(
         'checkbox',
         null,
         function () {
-            myself.tag2thailand = !myself.tag2thailand;
+            myself.tag2japan = !myself.tag2japan;
+			myself.currentPage = 1;
+            myself.openLibrary();
+            mine.destroy();
         },
-        localize('Thailand'),
+        localize('Japan'),
         function () {
-            return myself.tag2thailand;
+            return myself.tag2japan;
         }
     );
 
-    thailandbox.setPosition(new Point(text.left(), text2.bottom() + padding + checkBoxRowHeight*3));
-    this.library.add(thailandbox);
+    japanbox.setPosition(new Point(text.left(), text2.bottom() + padding + checkBoxRowHeight*3));
+    this.library.add(japanbox);
 
 
 };
@@ -4060,6 +4075,31 @@ IDE_Morph.prototype.createImage = function() {
                     mine.add(thumbnail);
                 }
             }
+			if(line.tag1 === 'singapore' && myself.tag2singapore){
+                if(i >= minIndex && i <= maxIndex){
+                    mine.add(thumbnail);
+                }
+            }
+			if(line.tag1 === 'china' && myself.tag2china){
+                if(i >= minIndex && i <= maxIndex){
+                    mine.add(thumbnail);
+                }
+            }
+			if(line.tag1 === 'india' && myself.tag2india){
+                if(i >= minIndex && i <= maxIndex){
+                    mine.add(thumbnail);
+                }
+            }
+			if(line.tag1 === 'thailand' && myself.tag2thailand){
+                if(i >= minIndex && i <= maxIndex){
+                    mine.add(thumbnail);
+                }
+            }
+			if(line.tag1 === 'other' && myself.tag2other){
+                if(i >= minIndex && i <= maxIndex){
+                    mine.add(thumbnail);
+                }
+            }
         } else if (myself.tag1animal){
             if(line.tag1 === 'animal'){
                 if(i >= minIndex && i <= maxIndex){
@@ -4071,7 +4111,143 @@ IDE_Morph.prototype.createImage = function() {
                     mine.add(thumbnail);
                 }
             }
-        }
+			if(line.tag1 === 'singapore' && myself.tag2singapore){
+                if(i >= minIndex && i <= maxIndex){
+                    mine.add(thumbnail);
+                }
+            }
+			if(line.tag1 === 'china' && myself.tag2china){
+                if(i >= minIndex && i <= maxIndex){
+                    mine.add(thumbnail);
+                }
+            }
+			if(line.tag1 === 'india' && myself.tag2india){
+                if(i >= minIndex && i <= maxIndex){
+                    mine.add(thumbnail);
+                }
+            }
+			if(line.tag1 === 'thailand' && myself.tag2thailand){
+                if(i >= minIndex && i <= maxIndex){
+                    mine.add(thumbnail);
+                }
+            }
+			if(line.tag1 === 'other' && myself.tag2other){
+                if(i >= minIndex && i <= maxIndex){
+                    mine.add(thumbnail);
+                }
+            }
+        }else if (myself.tag1object){
+			if(line.tag1 === 'object'){
+                if(i >= minIndex && i <= maxIndex){
+                    mine.add(thumbnail);
+                }
+            }
+			if(line.tag1 === 'singapore' && myself.tag2singapore){
+                if(i >= minIndex && i <= maxIndex){
+                    mine.add(thumbnail);
+                }
+            }
+			if(line.tag1 === 'china' && myself.tag2china){
+                if(i >= minIndex && i <= maxIndex){
+                    mine.add(thumbnail);
+                }
+            }
+			if(line.tag1 === 'india' && myself.tag2india){
+                if(i >= minIndex && i <= maxIndex){
+                    mine.add(thumbnail);
+                }
+            }
+			if(line.tag1 === 'japan' && myself.tag2japan){
+                if(i >= minIndex && i <= maxIndex){
+                    mine.add(thumbnail);
+                }
+            }
+			if(line.tag1 === 'other' && myself.tag2other){
+                if(i >= minIndex && i <= maxIndex){
+                    mine.add(thumbnail);
+                }
+            }
+		}else if (myself.tag2singapore){
+			if(line.tag1 === 'singapore'){
+                if(i >= minIndex && i <= maxIndex){
+                    mine.add(thumbnail);
+                }
+            }
+			if(line.tag1 === 'china' && myself.tag2china){
+                if(i >= minIndex && i <= maxIndex){
+                    mine.add(thumbnail);
+                }
+            }
+			if(line.tag1 === 'india' && myself.tag2india){
+                if(i >= minIndex && i <= maxIndex){
+                    mine.add(thumbnail);
+                }
+            }
+			if(line.tag1 === 'japan' && myself.tag2japan){
+                if(i >= minIndex && i <= maxIndex){
+                    mine.add(thumbnail);
+                }
+            }
+			if(line.tag1 === 'other' && myself.tag2other){
+                if(i >= minIndex && i <= maxIndex){
+                    mine.add(thumbnail);
+                }
+            }
+		}else if (myself.tag2china){
+			if(line.tag1 === 'china'){
+                if(i >= minIndex && i <= maxIndex){
+                    mine.add(thumbnail);
+                }
+            }
+			if(line.tag1 === 'india' && myself.tag2india){
+                if(i >= minIndex && i <= maxIndex){
+                    mine.add(thumbnail);
+                }
+            }
+			if(line.tag1 === 'japan' && myself.tag2japan){
+                if(i >= minIndex && i <= maxIndex){
+                    mine.add(thumbnail);
+                }
+            }
+			if(line.tag1 === 'other' && myself.tag2other){
+                if(i >= minIndex && i <= maxIndex){
+                    mine.add(thumbnail);
+                }
+            }
+		}else if (myself.tag2india){
+			if(line.tag1 === 'india'){
+                if(i >= minIndex && i <= maxIndex){
+                    mine.add(thumbnail);
+                }
+            }
+			if(line.tag1 === 'japan' && myself.tag2japan){
+                if(i >= minIndex && i <= maxIndex){
+                    mine.add(thumbnail);
+                }
+            }
+			if(line.tag1 === 'other' && myself.tag2other){
+                if(i >= minIndex && i <= maxIndex){
+                    mine.add(thumbnail);
+                }
+            }
+		}else if (myself.tag2japan){
+			if(line.tag1 === 'japan'){
+                if(i >= minIndex && i <= maxIndex){
+                    mine.add(thumbnail);
+                }
+            }
+			if(line.tag1 === 'other' && myself.tag2other){
+                if(i >= minIndex && i <= maxIndex){
+                    mine.add(thumbnail);
+                }
+            }
+		}else if (myself.tag2other){
+			if(line.tag1 === 'other'){
+                if(i >= minIndex && i <= maxIndex){
+                    mine.add(thumbnail);
+                }
+            }
+		}
         else{
             if(i >= minIndex && i <= maxIndex){
                 mine.add(thumbnail);
@@ -4118,6 +4294,36 @@ IDE_Morph.prototype.createImage = function() {
                 }
                 i++;
             }
+			if(line.tag1 === 'singapore' && myself.tag2singapore){
+                if(i >= minIndex && i <= maxIndex){
+                    mine.add(buttonforadding);
+                }
+                i++;
+            }
+			if(line.tag1 === 'china' && myself.tag2china){
+                if(i >= minIndex && i <= maxIndex){
+                    mine.add(buttonforadding);
+                }
+                i++;
+            }
+			if(line.tag1 === 'india' && myself.tag2india){
+                if(i >= minIndex && i <= maxIndex){
+                    mine.add(buttonforadding);
+                }
+                i++;
+            }
+			if(line.tag1 === 'japan' && myself.tag2japan){
+                if(i >= minIndex && i <= maxIndex){
+                    mine.add(buttonforadding);
+                }
+                i++;
+            }
+			if(line.tag1 === 'other' && myself.tag2other){
+                if(i >= minIndex && i <= maxIndex){
+                    mine.add(buttonforadding);
+                }
+                i++;
+            }
         }else if(myself.tag1animal){
             if(line.tag1 === 'animal'){
                 if(i >= minIndex && i <= maxIndex){
@@ -4131,7 +4337,169 @@ IDE_Morph.prototype.createImage = function() {
                 }
                 i++;
             }
-        }
+			if(line.tag1 === 'singapore' && myself.tag2singapore){
+                if(i >= minIndex && i <= maxIndex){
+                    mine.add(buttonforadding);
+                }
+                i++;
+            }
+			if(line.tag1 === 'china' && myself.tag2china){
+                if(i >= minIndex && i <= maxIndex){
+                    mine.add(buttonforadding);
+                }
+                i++;
+            }
+			if(line.tag1 === 'india' && myself.tag2india){
+                if(i >= minIndex && i <= maxIndex){
+                    mine.add(buttonforadding);
+                }
+                i++;
+            }
+			if(line.tag1 === 'japan' && myself.tag2japan){
+                if(i >= minIndex && i <= maxIndex){
+                    mine.add(buttonforadding);
+                }
+                i++;
+            }
+			if(line.tag1 === 'other' && myself.tag2other){
+                if(i >= minIndex && i <= maxIndex){
+                    mine.add(buttonforadding);
+                }
+                i++;
+            }
+        }else if(myself.tag1object){
+			if(line.tag1 === 'object'){
+                if(i >= minIndex && i <= maxIndex){
+                    mine.add(buttonforadding);
+                }
+                i++;
+            }
+			if(line.tag1 === 'singapore' && myself.tag2singapore){
+                if(i >= minIndex && i <= maxIndex){
+                    mine.add(buttonforadding);
+                }
+                i++;
+            }
+			if(line.tag1 === 'china' && myself.tag2china){
+                if(i >= minIndex && i <= maxIndex){
+                    mine.add(buttonforadding);
+                }
+                i++;
+            }
+			if(line.tag1 === 'india' && myself.tag2india){
+                if(i >= minIndex && i <= maxIndex){
+                    mine.add(buttonforadding);
+                }
+                i++;
+            }
+			if(line.tag1 === 'japan' && myself.tag2japan){
+                if(i >= minIndex && i <= maxIndex){
+                    mine.add(buttonforadding);
+                }
+                i++;
+            }
+			if(line.tag1 === 'other' && myself.tag2other){
+                if(i >= minIndex && i <= maxIndex){
+                    mine.add(buttonforadding);
+                }
+                i++;
+            }
+		}else if(myself.tag2singapore){
+			if(line.tag1 === 'singapore'){
+                if(i >= minIndex && i <= maxIndex){
+                    mine.add(buttonforadding);
+                }
+                i++;
+            }
+			if(line.tag1 === 'china' && myself.tag2china){
+                if(i >= minIndex && i <= maxIndex){
+                    mine.add(buttonforadding);
+                }
+                i++;
+            }
+			if(line.tag1 === 'india' && myself.tag2india){
+                if(i >= minIndex && i <= maxIndex){
+                    mine.add(buttonforadding);
+                }
+                i++;
+            }
+			if(line.tag1 === 'japan' && myself.tag2japan){
+                if(i >= minIndex && i <= maxIndex){
+                    mine.add(buttonforadding);
+                }
+                i++;
+            }
+			if(line.tag1 === 'other' && myself.tag2other){
+                if(i >= minIndex && i <= maxIndex){
+                    mine.add(buttonforadding);
+                }
+                i++;
+            }
+		}else if(myself.tag2china){
+			if(line.tag1 === 'china'){
+                if(i >= minIndex && i <= maxIndex){
+                    mine.add(buttonforadding);
+                }
+                i++;
+            }
+			if(line.tag1 === 'india' && myself.tag2india){
+                if(i >= minIndex && i <= maxIndex){
+                    mine.add(buttonforadding);
+                }
+                i++;
+            }
+			if(line.tag1 === 'japan' && myself.tag2japan){
+                if(i >= minIndex && i <= maxIndex){
+                    mine.add(buttonforadding);
+                }
+                i++;
+            }
+			if(line.tag1 === 'other' && myself.tag2other){
+                if(i >= minIndex && i <= maxIndex){
+                    mine.add(buttonforadding);
+                }
+                i++;
+            }
+		}else if(myself.tag2india){
+			if(line.tag1 === 'india'){
+                if(i >= minIndex && i <= maxIndex){
+                    mine.add(buttonforadding);
+                }
+                i++;
+            }
+			if(line.tag1 === 'japan' && myself.tag2japan){
+                if(i >= minIndex && i <= maxIndex){
+                    mine.add(buttonforadding);
+                }
+                i++;
+            }
+			if(line.tag1 === 'other' && myself.tag2other){
+                if(i >= minIndex && i <= maxIndex){
+                    mine.add(buttonforadding);
+                }
+                i++;
+            }
+		}else if(myself.tag2japan){
+			if(line.tag1 === 'japan'){
+                if(i >= minIndex && i <= maxIndex){
+                    mine.add(buttonforadding);
+                }
+                i++;
+            }
+			if(line.tag1 === 'other' && myself.tag2other){
+                if(i >= minIndex && i <= maxIndex){
+                    mine.add(buttonforadding);
+                }
+                i++;
+            }
+		}else if(myself.tag2other){
+			if(line.tag1 === 'other'){
+                if(i >= minIndex && i <= maxIndex){
+                    mine.add(buttonforadding);
+                }
+                i++;
+            }
+		}
         else{
             if(i >= minIndex && i <= maxIndex){
                 mine.add(buttonforadding);
