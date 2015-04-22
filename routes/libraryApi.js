@@ -201,11 +201,6 @@ router.get('/costumes', function(req, res) {
 			tag1: "singapore"
 		},
 		{
-			url: "codecraft/Costumes/local/singapore/.png",
-			name: ".png",
-			tag1: "singapore"
-		},
-		{
 			url: "codecraft/Costumes/local/china/china.png",
 			name: "china.png",
 			tag1: "china"
@@ -229,6 +224,46 @@ router.get('/costumes', function(req, res) {
 			url: "codecraft/Costumes/local/china/sheep.png",
 			name: "sheep.png",
 			tag1: "china"
+		},
+		{
+			url: "codecraft/Costumes/local/india/buddha.png",
+			name: "buddha.png",
+			tag1: "india"
+		},
+		{
+			url: "codecraft/Costumes/local/india/spice.png",
+			name: "spice.png",
+			tag1: "india"
+		},
+		{
+			url: "codecraft/Costumes/local/india/boy.png",
+			name: "boy.png",
+			tag1: "india"
+		},
+		{
+			url: "codecraft/Costumes/local/japan/isuzu.png",
+			name: "isuzu.png",
+			tag1: "japan"
+		},
+		{
+			url: "codecraft/Costumes/local/japan/moffu.png",
+			name: "moffu.png",
+			tag1: "japan"
+		},
+		{
+			url: "codecraft/Costumes/local/japan/sushi.png",
+			name: "sushi.png",
+			tag1: "japan"
+		},
+		{
+			url: "codecraft/Costumes/local/japan/sushi2.png",
+			name: "sushi2.png",
+			tag1: "japan"
+		},
+		{
+			url: "codecraft/Costumes/local/japan/sushi3.png",
+			name: "sushi3.png",
+			tag1: "japan"
 		}
 	]
 
