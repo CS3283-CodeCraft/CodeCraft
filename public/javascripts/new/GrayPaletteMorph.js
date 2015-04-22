@@ -16,7 +16,7 @@ var GrayPaletteMorph = Class.create(ColorPaletteMorph, {
 
 	    ext = this.extent();
 	    this.image = newCanvas(this.extent());
-	    context = this.image.getContext('2d');dd
+	    context = this.image.getContext('2d');
 	    this.choice = new Color();
 	    gradient = context.createLinearGradient(0, 0, ext.x, ext.y);
 	    gradient.addColorStop(0, 'black');
@@ -24,11 +24,9 @@ var GrayPaletteMorph = Class.create(ColorPaletteMorph, {
 	    context.fillStyle = gradient;
 	    context.fillRect(0, 0, ext.x, ext.y);
 	}
-
-})
+});
 
 GrayPaletteMorph.uber = ColorPaletteMorph.prototype;
 GrayPaletteMorph.className = 'GrayPaletteMorph';
 
 module.exports = GrayPaletteMorph;
-

@@ -27,21 +27,21 @@ var Cloud = Class.create({
 	    creatorId,
 	    callBack
 	) {
-	    console.log(this.url)
+	    console.log(this.url);
 	    var shareWith = eval("[" + prompt("Who you want to share with?", "1, 2, 3") + "]");
 	    var data = {
 	        creator_id: creatorId,
 	        share_with: shareWith
-	    }
+	    };
 	    var success = function(data){
-	    	console.log("success")
+	    	console.log("success");
 	        callBack.call(null, data);
-	    }
-	    var url = this.url + 'sharebox'
-	    console.log(url)
-	    console.log(data)
-	    $.post(url, data, success, 'json')
-	    console.log("excuted")
+	    };
+	    var url = this.url + 'sharebox';
+	    console.log(url);
+	    console.log(data);
+	    $.post(url, data, success, 'json');
+	    console.log("excuted");
 	},
 
 	signup: function (
@@ -622,7 +622,7 @@ var Cloud = Class.create({
 	    alert(string);
 	}
 
-})
+});
 
 Cloud.className = 'Cloud';
 

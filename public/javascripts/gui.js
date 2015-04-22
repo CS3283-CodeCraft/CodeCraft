@@ -1786,9 +1786,15 @@ IDE_Morph.makeSocket = function (myself, shareboxId) {
         console.log("[SOCKET-RECEIVE] DISBAND_SHAREBOX: " + JSON.stringify(data));
     })
 
+    sharer.socket.on('UPDATE_SHAREBOX_VIEW', function(data) {
+        console.log("UPDATE_SHAREBOX_VIEW");
+        ide.sharer.data.data = data;
+        ide.createShareBox();
+        ide.shareBox.updateList();
+    })
 
     // When I receive data, I parse objectData and add it to my data list
-    sharer.socket.on('message', function (objectData) {
+    sharer.socket.on('UPDATE_SHAREBOX_VIEW', function (objectData) {
         // Clean up shareBoxPlaceholderSprite
         var duplicate = this.ide.currentSprite.fullCopy();
         var curr = this.ide.currentSprite;
@@ -1808,7 +1814,7 @@ IDE_Morph.makeSocket = function (myself, shareboxId) {
                 sharer.ide.shareBoxPlaceholderSprite.addCostume(shareObject.object);
             } else if (shareObject instanceof SoundIconMorph) {
                 shareObject.object.name = sharer.data.data[i].name;
-                sharer.ide.shareBoxPlaceholderSprite.addSound(shareObject.object, shareObject.name);
+                sharer.ide.shareBoxPlaceholderSprite.addSound(shareObject.object, shareObject.object.name);
             } else if (shareObject instanceof CommandBlockMorph) {
                 shareObject.name = sharer.data.data[i].name;
                 sharer.ide.shareBoxPlaceholderSprite.scriptsList.add(shareObject);
@@ -1835,7 +1841,7 @@ IDE_Morph.makeSocket = function (myself, shareboxId) {
 };
 
 IDE_Morph.prototype.isValidName = function (shareName) {
-    return !(shareName == null || shareName.length == 0 || shareName.length > 20);
+    return !(shareName == null || shareName.length == 0 || shareName.length > 50);
 };
 
 // xinni: shows the whole share box and hide the connection screens and tabs
@@ -1881,12 +1887,18 @@ IDE_Morph.prototype.createShareBox = function () {
 
         this.shareBox.reactToDropOf = function (droppedMorph) {
             var shareName = prompt("Give the item a name.");
-            while (this.isValidName(shareName)) {
+            while (!sharer.ide.isValidName(shareName)) {
                 shareName = prompt("The name has to be between 1 to 20 characters");
             }
             sharer.shareObject((shareboxId.toString()), droppedMorph, shareName);
-            sharer.ide.spriteEditor.contents.add(sharer.deserializeItem(sharer.serializeItem(droppedMorph)));
-            droppedMorph.destroy();
+            var restored = world.hand.children[0].fullCopy();
+            console.log(restored)
+            world.hand.children = [];
+            myself.spriteEditor.contents.add(restored);
+            restored.setPosition(world.hand.grabOrigin.position);
+            restored.changed();
+            restored.removeShadow();
+            world.hand.drop();
             myself.fixLayout();
         };
     } else if (this.currentShareBoxTab === 'assets') {
@@ -1902,10 +1914,16 @@ IDE_Morph.prototype.createShareBox = function () {
         this.shareBox.acceptsDrops = true;
 
         this.shareBox.reactToDropOf = function (droppedMorph) {
-            var shareName = prompt("Give the item a name.");
-            sharer.shareObject((shareboxId.toString()), droppedMorph, shareName);
+            if (droppedMorph instanceof SoundIconMorph || droppedMorph instanceof CostumeIconMorph) {
+                var shareName = prompt("Give the item a name.");
+                while (!sharer.ide.isValidName(shareName)) {
+                    shareName = prompt("The name has to be between 1 to 20 characters");
+                }
+                sharer.shareObject((shareboxId.toString()), droppedMorph, shareName);
+                droppedMorph.destroy();
+                myself.fixLayout();
+            }
             droppedMorph.destroy();
-            myself.fixLayout();
         };
 
     } else {
@@ -8377,6 +8395,7 @@ SpriteIconMorph.prototype.init = function (aSprite, aTemplate) {
 
     // override defaults and build additional components
     this.isDraggable = true;
+    this.acceptsDrops = false;
     this.createThumbnail();
     this.padding = 2;
     this.corner = 8;
@@ -8390,6 +8409,7 @@ SpriteIconMorph.prototype.createThumbnail = function () {
     }
 
     this.thumbnail = new Morph();
+    this.thumbnail.acceptsDrops = false;
     this.thumbnail.setExtent(this.thumbSize);
     if (this.object instanceof SpriteMorph) { // support nested sprites
         this.thumbnail.image = this.object.fullThumbnail(this.thumbSize);
@@ -8893,9 +8913,14 @@ CostumeIconMorph.prototype.removeCostume = function () {
     if (wardrobe instanceof ShareBoxAssetsMorph) {
         var ide = this.parentThatIsA('IDE_Morph');
         var dataList = ide.sharer.buildDataList();
-        ide.sharer.socket.emit('send', dataList);
-
+        //ide.sharer.socket.emit('REMOVE_ITEM', dataList);
+        ide.sharer.socket.emit('REMOVE_ITEM',
+            { room: ide.sharer.room,
+                data: {name: this.object.name}
+            })
+        console.log(dataList);
         ide.hasChangedMedia = true;
+        ide.createShareBox();
         ide.drawNew();
         ide.fixLayout();
     }
@@ -9496,10 +9521,12 @@ SoundIconMorph.prototype.removeSound = function () {
         var idx = this.parent.children.indexOf(this);
         ide.shareBoxPlaceholderSprite.sounds.contents.splice(idx, 1);
         this.parent.children.splice(idx, 1);
-        var dataList = ide.sharer.buildDataList();
-        ide.sharer.socket.emit('send', dataList);
-
+        ide.sharer.socket.emit('REMOVE_ITEM',
+            { room: ide.sharer.room,
+              data: {name: this.object.name}
+            });
         ide.hasChangedMedia = true;
+        ide.createShareBox();
         ide.drawNew();
         ide.fixLayout();
     }
@@ -9814,6 +9841,7 @@ function ScriptIconMorph(aScript, ide, aTemplate, scriptName) {
 ScriptIconMorph.prototype.init = function (aScript, ide, aTemplate, scriptName) {
     var colors, action, query;
     this.ide = ide;
+    this.isTemplate = true;
     if (!aTemplate) {
         colors = [
             IDE_Morph.prototype.groupColor,
@@ -9822,7 +9850,7 @@ ScriptIconMorph.prototype.init = function (aScript, ide, aTemplate, scriptName) 
         ];
 
     }
-
+    this.name = scriptName;
     action = function () {
         nop(); // When I am selected (which is never the case for sounds)
     };
@@ -9869,6 +9897,7 @@ ScriptIconMorph.prototype.createThumbnail = function (scriptName) {
     this.thumbnail.corner = 25;
     this.thumbnail.color = new Color(138, 138, 138);
     this.thumbnail.setExtent(this.thumbSize);
+    this.thumbnail.acceptsDrops = false;
 
     // script name style and position
     txt = new TextMorph(scriptName);
@@ -9933,8 +9962,11 @@ ScriptIconMorph.prototype.removeScript = function () {
     jukebox.removeScript(idx);
     if ((this.parent.parent instanceof ShareBoxScriptsMorph)) {
         var ide = this.parentThatIsA('IDE_Morph');
-        var dataList = ide.sharer.buildDataList();
-        ide.sharer.socket.emit('send', dataList);
+        ide.sharer.socket.emit('REMOVE_ITEM',
+            { room: ide.sharer.room,
+                data: {name: this.name}
+            });
+        ide.createShareBox();
         ide.hasChangedMedia = true;
         ide.drawNew();
         ide.fixLayout();

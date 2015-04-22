@@ -542,13 +542,10 @@ var StringMorph = Class.create(Morph, {
 	disableSelecting: function () {
 	    this.isSelectable = false;
 	    delete this.mouseMove;
-	},
-
-
-})
+	}
+});
 
 StringMorph.uber = Morph.prototype;
 StringMorph.className = 'StringMorph';
 
 module.exports = StringMorph;
-

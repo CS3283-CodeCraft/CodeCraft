@@ -123,12 +123,9 @@ var CircleBoxMorph = Class.create(Morph, {
 	    this.drawNew();
 	    this.changed();
 	}
-
-})
+});
 
 CircleBoxMorph.uber = Morph.prototype;
 CircleBoxMorph.className = 'CircleBoxMorph';
 
 module.exports = CircleBoxMorph;
-
-

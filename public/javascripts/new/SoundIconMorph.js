@@ -2,9 +2,6 @@
  * Created by Shurelia on 30/3/2015.
  */
 
-
-
-
 var ToggleButtonMorph = require('./ToggleButtonMorph');
 
 // SoundIconMorph ///////////////////////////////////////////////////////
@@ -69,9 +66,7 @@ var SoundIconMorph = Class.create(ToggleButtonMorph, {
 		this.fixLayout();
 		this.fps = 1;
 	}
-
 });
-
 
 SoundIconMorph.uber = ToggleButtonMorph.prototype;
 SoundIconMorph.className = 'SoundIconMorph';

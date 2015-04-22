@@ -102,14 +102,10 @@ var StringFieldMorph = Class.create(FrameMorph, {
 	        c.text = (dict[this.text]);
 	    }
 	    return c;
-	},
-
-
-})
+	}
+});
 
 StringFieldMorph.uber = FrameMorph.prototype;
 StringFieldMorph.className = 'StringFieldMorph';
 
 module.exports = StringFieldMorph;
-
-	

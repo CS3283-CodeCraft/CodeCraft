@@ -424,15 +424,10 @@ var ToggleButtonMorph = Class.create(PushButtonMorph, {
     show: function () {
         this.isVisible = true;
         this.changed();
-    },
-
-
-})
+    }
+});
 
 ToggleButtonMorph.uber = PushButtonMorph.prototype;
 ToggleButtonMorph.className = 'ToggleButtonMorph';
 
 module.exports = ToggleButtonMorph;
-
-
-

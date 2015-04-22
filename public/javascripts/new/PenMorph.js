@@ -221,16 +221,9 @@ var PenMorph = Class.create(Morph, {
             this.forward(-length);
         }
     }
-
-
-
-
-})
+});
 
 PenMorph.uber = Morph.prototype;
 PenMorph.className = 'PenMorph';
 
 module.exports = PenMorph;
-
-
-    

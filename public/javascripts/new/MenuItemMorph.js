@@ -156,15 +156,9 @@ var MenuItemMorph = Class.create(TriggerMorph, {
 	    }
 	    return false;
 	}
-
-
-
-
-})
+});
 
 MenuItemMorph.uber = TriggerMorph.prototype;
 MenuItemMorph.className = 'MenuItemMorph';
 
 module.exports = MenuItemMorph;
-
-

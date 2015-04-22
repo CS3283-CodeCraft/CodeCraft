@@ -22,9 +22,6 @@ var PushButtonMoprhConfig = {
     PADDING: 3,
 };
 
-
-
-
 var PushButtonMorph = Class.create(TriggerMorph, {
 
     // PushButtonMorph /////////////////////////////////////////////////////
@@ -100,7 +97,7 @@ var PushButtonMorph = Class.create(TriggerMorph, {
         // BUG? TYPO?
         TriggerMorph.uber.init.call(this);
 
-        // override inherited properites:
+        // override inherited properties:
         this.color = PushButtonMorph.prototype.color;
 
 
@@ -583,12 +580,9 @@ var PushButtonMorph = Class.create(TriggerMorph, {
         }
         this.add(this.label);
     }
-
-
-})
+});
 
 PushButtonMorph.uber = TriggerMorph.prototype;
 PushButtonMorph.className = 'PushButtonMorph';
 
 module.exports = PushButtonMorph;
-

@@ -295,10 +295,7 @@ var Rectangle = Class.create({
     asArray_xywh: function () {
         return [this.left(), this.top(), this.width(), this.height()];
     }
-
-
-
-})
+});
 
 Rectangle.className = 'Rectangle';
 

@@ -12,7 +12,6 @@ var Point = Class.create({
         return instanceOf(a, className);
     },
 
-
     // Point string representation: e.g. '12@68'
 
     toString: function () {
@@ -295,8 +294,7 @@ var Point = Class.create({
             return this;
         }
     }
-
-})
+});
 
 Point.className = 'Point';
 

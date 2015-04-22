@@ -21,14 +21,9 @@ var BlinkerMorph = Class.create(Morph, {
 	step: function () {
     	this.toggleVisibility();
 	}
-
-	
-
-
-})
+});
 
 BlinkerMorph.uber = Morph.prototype;
 BlinkerMorph.className = 'BlinkerMorph';
 
 module.exports = BlinkerMorph;
-

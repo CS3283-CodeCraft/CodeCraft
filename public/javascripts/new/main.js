@@ -61,4 +61,3 @@ global.ShareBoxAssetsMorph = require('./ShareBoxAssetsMorph');
 
 // cloud.js
 global.Cloud = require('./Cloud');
-

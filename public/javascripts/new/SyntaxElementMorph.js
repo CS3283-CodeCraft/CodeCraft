@@ -1512,13 +1512,10 @@ var SyntaxElementMorph = Class.create(Morph, {
 	endLayout: function () {
 	    Morph.prototype.trackChanges = true;
 	    this.topBlock().fullChanged();
-	},
-
-
-})
+	}
+});
 
 SyntaxElementMorph.uber = Morph.prototype;
 SyntaxElementMorph.className = 'SyntaxElementMorph';
 
 module.exports = SyntaxElementMorph;
-

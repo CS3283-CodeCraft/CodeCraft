@@ -70,7 +70,7 @@ var DialogBoxMorph = Class.create(Morph, {
         // initialize inherited properties:
         $super();
 
-        // override inherited properites:
+        // override inherited properties:
         this.isDraggable = true;
         this.color = PushButtonMorph.prototype.color.lighter(50);
         this.createLabel();
@@ -1442,11 +1442,9 @@ var DialogBoxMorph = Class.create(Morph, {
             false
         );
     }
-
-})
+});
 
 DialogBoxMorph.uber = Morph.prototype;
 DialogBoxMorph.className = 'DialogBoxMorph';
 
 module.exports = DialogBoxMorph;
-

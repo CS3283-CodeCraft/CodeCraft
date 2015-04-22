@@ -62,11 +62,9 @@ var ColorPickerMorph = Class.create(Morph, {
 	rootForGrab: function () {
 	    return this;
 	}
-
-})
+});
 
 ColorPickerMorph.uber = Morph.prototype;
 ColorPickerMorph.className = 'ColorPickerMorph';
 
 module.exports = ColorPickerMorph;
-
