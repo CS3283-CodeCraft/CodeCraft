@@ -164,6 +164,71 @@ router.get('/costumes', function(req, res) {
 			url: "codecraft/Costumes/unicorn1.png",
 			name: "unicorn1.png",
 			tag1: "animal"
+		},
+		{
+			url: "codecraft/Costumes/local/singapore/bubbletea.png",
+			name: "bubbletea.png",
+			tag1: "singapore"
+		},
+		{
+			url: "codecraft/Costumes/local/singapore/coffeepacket.png",
+			name: "coffeepacket.png",
+			tag1: "singapore"
+		},
+		{
+			url: "codecraft/Costumes/local/singapore/flag.png",
+			name: "flag.png",
+			tag1: "singapore"
+		},
+		{
+			url: "codecraft/Costumes/local/singapore/laksa.png",
+			name: "laksa.png",
+			tag1: "singapore"
+		},
+		{
+			url: "codecraft/Costumes/local/singapore/merlion.png",
+			name: "merlion.png",
+			tag1: "singapore"
+		},
+		{
+			url: "codecraft/Costumes/local/singapore/satay.png",
+			name: "satay.png",
+			tag1: "singapore"
+		},
+		{
+			url: "codecraft/Costumes/local/singapore/sg.png",
+			name: "sg.png",
+			tag1: "singapore"
+		},
+		{
+			url: "codecraft/Costumes/local/singapore/.png",
+			name: ".png",
+			tag1: "singapore"
+		},
+		{
+			url: "codecraft/Costumes/local/china/china.png",
+			name: "china.png",
+			tag1: "china"
+		},
+		{
+			url: "codecraft/Costumes/local/china/chinaboat.png",
+			name: "chinaboat.png",
+			tag1: "china"
+		},
+		{
+			url: "codecraft/Costumes/local/china/dimsum.png",
+			name: "dimsum.png",
+			tag1: "china"
+		},
+		{
+			url: "codecraft/Costumes/local/china/mandarin.png",
+			name: "mandarin.png",
+			tag1: "china"
+		},
+		{
+			url: "codecraft/Costumes/local/china/sheep.png",
+			name: "sheep.png",
+			tag1: "china"
 		}
 	]
 
